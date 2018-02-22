@@ -1,49 +1,43 @@
 [{
 	"id":1,
-	"text":"My Documents",
+	"text":"新建",
 	"children":[{
-		"id":11,
-		"text":"Photos",
-		"state":"closed",
-		"children":[{
-			"id":111,
-			"text":"Friend"
-		},{
-			"id":112,
-			"text":"Wife"
-		},{
-			"id":113,
-			"text":"Company"
-		}]
+		"id":111,
+		"text":"销售订单"
 	},{
-		"id":12,
-		"text":"Program Files",
-		"children":[{
-			"id":121,
-			"text":"Intel"
-		},{
-			"id":122,
-			"text":"Java",
-			"attributes":{
-				"p1":"Custom Attribute1",
-				"p2":"Custom Attribute2"
-			}
-		},{
-			"id":123,
-			"text":"Microsoft Office"
-		},{
-			"id":124,
-			"text":"Games",
-			"checked":true
-		}]
+		"id":112,
+		"text":"销售出库单"
 	},{
-		"id":13,
-		"text":"index.html"
+		"id":113,
+		"text":"销售退货单"
+	}]
+},{
+	"id":2,
+	"text":"打开",
+	"children":[{
+		"id":21,
+		"text":"销售订单"
 	},{
-		"id":14,
-		"text":"about.html"
+		"id":22,
+		"text":"销售出库单"
 	},{
-		"id":15,
-		"text":"welcome.html"
+		"id":23,
+		"text":"销售退货单"
+	}]
+},{
+	"id":3,
+	"text":"查询",
+	"children":[{
+		"id":31,
+		"text":"销售订单查询"
+	},{
+		"id":32,
+		"text":"销售出库单查询"
+	},{
+		"id":33,
+		"text":"销售退货单查询"
+	},{
+		"id":33,
+		"text":"销售汇总查询"
 	}]
 }]
