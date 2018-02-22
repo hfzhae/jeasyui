@@ -1,0 +1,20 @@
+.homelogo{
+	width:35px;
+    position:absolute;
+	left:10px;
+	top:9px;
+}
+.hometitle{
+    position:absolute;
+	left:55px;
+	top:7px;
+	color:#fff;
+	font-size:15px;
+}
+.hometitlecopyright{
+    position:absolute;
+	right:10px;
+	bottom:5px;
+	color:#ccc;
+	font-size:12px;
+}
