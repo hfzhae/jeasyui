@@ -11,7 +11,19 @@ require(['config'], function () {
 		id:'querysale',
 		title:'销售汇总报表',
 		closable: true
-	})
+	}).tabs('add',{
+		id:'querysale',
+		title:'查询设计',
+		closable: true
+	}).tabs('add',{
+		id:'querysale',
+		title:'采购入库',
+		closable: true
+	}).tabs('add',{
+		id:'querysale',
+		title:'用户权限分配',
+		closable: true
+	});
 	$('.easyui-tabs').tabs('select', 1);
 	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
 
