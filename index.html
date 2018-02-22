@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Basic Layout - jQuery EasyUI Demo</title>
+	<title>e商3000 v3.0</title>
 	<link rel="stylesheet" type="text/css" href="client/css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="client/css/icon.css">
 	<link rel="stylesheet" type="text/css" href="client/css/demo.css">
@@ -23,38 +23,17 @@
 			">
 	</table>
 		</div>
-		<div data-options="region:'west',split:true" title="功能菜单" style="width:200px;">
-			<div class="easyui-accordion" data-options="animate:false,fit:true,border:false">
+		<div data-options="region:'west',split:false" title="" style="width:200px;">
+			<div class="easyui-accordion" data-options="animate:true,fit:true,border:false">
 				<div title="销售" data-options="selected:true" style="padding:5px;">
 					<ul class="easyui-tree" data-options="url:'server/json/tree_data1.json',method:'get',animate:true,dnd:true"></ul>
-				</div>
-				<div title="收款" style="padding:10px;">
-					content2
-				</div>
-				<div title="采购" style="padding:10px">
-					content3
-				</div>
-				<div title="付款" style="padding:10px">
-					content3
-				</div>
-				<div title="会员" style="padding:10px">
-					content3
-				</div>
-				<div title="办公" style="padding:10px">
-					content3
-				</div>
-				<div title="设置" style="padding:10px">
-					content3
-				</div>
-				<div title="系统" style="padding:10px">
-					content3
 				</div>
 			</div>
 		</div>
 		<div data-options="region:'center',iconCls:'icon-ok'">
 			<div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
-				<div title="关于我们" data-options="href:'content.html',closable:true" style="padding:10px"></div>
-				<div title="产品信息" style="padding:5px" data-options="selected:true">
+				<div title="关于我们" data-options="href:'content.html'" style="padding:10px"></div>
+				<div title="产品信息" style="padding:5px" data-options="selected:true,closable:true">
 					<table class="easyui-datagrid"
 							data-options="url:'server/json/datagrid_data1.json',method:'get',singleSelect:true,fit:true,fitColumns:false">
 						<thead>
@@ -69,6 +48,7 @@
 						</thead>
 					</table>
 				</div>
+				<div title="销售出库单" data-options="href:'content.html',closable:true" style="padding:10px"></div>
 			</div>
 		</div>
 </body>
@@ -80,5 +60,5 @@
 	//	$('.easyui-layout').css({width:($(window).width()-10),height:($(window).height()-10)});
 	//}
 </script>
-<!--<script data-main="/client/js/main" src="/client/lib/require.js" type="text/javascript"></script>-->
+<script data-main="/client/js/main" src="/client/lib/require.js" type="text/javascript"></script>
 </html>

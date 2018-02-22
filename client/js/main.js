@@ -3,6 +3,56 @@ Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/2/16
 *****************************************************************/
 require(['config'], function () {
+	$('.easyui-tabs').tabs('add',{
+		id:'saleorder',
+		title:'销售订单',
+		closable: true
+	}).tabs('add',{
+		id:'querysale',
+		title:'销售汇总报表',
+		closable: true
+	})
+	$('.easyui-tabs').tabs('select', 1);
+	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
+
+	$('#saleorderdatagrid').datagrid({
+		url:'/server/json/datagrid_data1.json',
+		method:'get',
+		singleSelect:true,
+		fit:true,
+		columns:[[
+			{field:'itemid',title:'Item ID',width:80},
+			{field:'productid',title:'Product ID',width:100},
+			{field:'listprice',title:'List Price',width:80,align:'right'},
+			{field:'unitcost',title:'Unit Cost',width:80,align:'right'},
+			{field:'attr1',title:'Attribute',width:150},
+			{field:'status',title:'Status',width:50,align:'center'}
+		]]
+	});
+
+	$('.easyui-accordion').accordion('add', {
+		id:'s1',
+		title:'收款'
+	}).accordion('add', {
+		id:'s2',
+		title:'采购'
+	}).accordion('add', {
+		id:'s3',
+		title:'付款'
+	}).accordion('add', {
+		id:'s4',
+		title:'会员'
+	}).accordion('add', {
+		id:'s5',
+		title:'办公'
+	}).accordion('add', {
+		id:'s6',
+		title:'设置'
+	}).accordion('add', {
+		id:'s7',
+		title:'系统'
+	});
+	$('.easyui-accordion').accordion('select', 0);
 	//$('body').css({padding:5});
 	//$('.easyui-layout').css({width:($(window).width()-10),height:($(window).height()-10)});
 	//require(['easyui'], function(){
