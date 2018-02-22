@@ -16,7 +16,7 @@ require(['config'], function () {
 	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
 
 	$('#saleorderdatagrid').datagrid({
-		url:'/server/json/datagrid_data1.json',
+		url:'server/json/datagrid_data1.json',
 		method:'get',
 		singleSelect:true,
 		fit:true,
