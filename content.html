@@ -5,29 +5,79 @@
 	<title>AJAX Content</title>
 </head>
 <body>
-	<div class="easyui-panel" style="padding:5px;border-bottom:0px;" data-options="border:true">
-		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">Cancel</a>
-		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Refresh</a>
-		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Search</a>
-		<a href="#" class="easyui-linkbutton" data-options="plain:true">Text Button</a>
-		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print</a>
-		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-help'"> </a>
-		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'"></a>
-		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'"></a>
+	<div id="tb" style="padding:5px;height:auto">
+		<div>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">Cancel</a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Refresh</a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Search</a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true">Text Button</a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">打印</a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-help'"> </a>
+			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'"></a>
+		</div>
+		<div>
+			单据日期: <input class="easyui-datebox" style="width:120px">
+			仓库: 
+			<select class="easyui-combogrid" style="width:150px" data-options="
+					panelWidth: 300,
+					idField: 'itemid',
+					textField: 'productname',
+					url: 'server/json/datagrid_data1.json',
+					method: 'get',
+					columns: [[
+						{field:'itemid',title:'仓库编号',width:80},
+						{field:'productname',title:'仓库名称',width:100}
+					]],
+					fitColumns: false
+				">
+			</select>
+			客户: 
+			<select class="easyui-combogrid" style="width:150px" data-options="
+					panelWidth: 300,
+					idField: 'itemid',
+					textField: 'productname',
+					url: 'server/json/datagrid_data1.json',
+					method: 'get',
+					columns: [[
+						{field:'itemid',title:'客户编号',width:80},
+						{field:'productname',title:'客户名称',width:100}
+					]],
+					fitColumns: false
+				">
+			</select>
+		</div>
 	</div>
-	<table id="dg" title="" 
-			data-options="rownumbers:true,singleSelect:true,pagination:true,fit:false,fitColumns:false,url:'/server/json/datagrid_data1.json',method:'get'">
+	<table id="dg" title="" style="height:100%;"
+			data-options="remoteSort:false,rownumbers:true,singleSelect:true,pagination:true,fit:false,fitColumns:false,url:'server/json/datagrid_data1.json',method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-				<th data-options="field:'itemid',width:80">Item ID</th>
-				<th data-options="field:'productid',width:100">Product</th>
-				<th data-options="field:'listprice',width:80,align:'right'">List Price</th>
-				<th data-options="field:'unitcost',width:80,align:'right'">Unit Cost</th>
-				<th data-options="field:'attr1',width:240">Attribute</th>
-				<th data-options="field:'status',width:60,align:'center'">Status</th>
+				<th data-options="field:'itemid',width:80,sortable:true,sorter:function(a,b){  
+					a = a.split('/');  
+					b = b.split('/');  
+					if (a[2] == b[2]){  
+						if (a[0] == b[0]){  
+							return (a[1]>b[1]?1:-1);  
+						} else {  
+							return (a[0]>b[0]?1:-1);  
+						}  
+					} else {  
+						return (a[2]>b[2]?1:-1);  
+					}  
+				}">Item ID</th>
+				<th data-options="field:'productid',width:100,sortable:true">Product</th>
+				<th data-options="field:'listprice',width:80,align:'right',sortable:true">List Price</th>
+				<th data-options="field:'unitcost',width:80,align:'right',sortable:true">Unit Cost</th>
+				<th data-options="field:'attr1',width:240,sortable:true">Attribute</th>
+				<th data-options="field:'status',width:60,align:'center',sortable:true">Status</th>
 			</tr>
 		</thead>
 	</table>
+
 	<script type="text/javascript">
 		$(function(){
 			var pager = $('#dg').datagrid().datagrid('getPager');	// get the pager of datagrid

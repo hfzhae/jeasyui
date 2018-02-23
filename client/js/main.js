@@ -65,7 +65,7 @@ require(['config'], function () {
 		title:'系统'
 	});
 	$('.easyui-accordion').accordion('select', 0);
-	$('#hometitle').append('<img src="client/images/EBLOGO.png" class="homelogo"><div class="hometitle">e商3000</div><div class="homeversion">v3.0</div><div class="hometitlecopyright">Design by zydsoft™</div>');
+	$('#hometitle').append('<img src="client/images/EBLOGO.png" class="homelogo"><div class="hometitle">e商x</div><div class="homeversion">v1.0</div><div class="hometitlecopyright">Design by zydsoft™</div>');
 	//$('body').css({padding:5});
 	//$('.easyui-layout').css({width:($(window).width()-10),height:($(window).height()-10)});
 	//require(['easyui'], function(){
