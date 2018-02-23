@@ -7,9 +7,16 @@
 .hometitle{
     position:absolute;
 	left:55px;
-	top:7px;
+	top:9px;
 	color:#fff;
 	font-size:15px;
+}
+.homeversion{
+    position:absolute;
+	left:55px;
+	top:28px;
+	color:#ccc;
+	font-size:10px;
 }
 .hometitlecopyright{
     position:absolute;
