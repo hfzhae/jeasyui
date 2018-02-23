@@ -31,7 +31,7 @@
 					method: 'get',
 					columns: [[
 						{field:'itemid',title:'仓库编号',width:80},
-						{field:'productname',title:'仓库名称',width:100}
+						{field:'productname',title:'仓库名称',width:120}
 					]],
 					fitColumns: false
 				">
@@ -45,7 +45,7 @@
 					method: 'get',
 					columns: [[
 						{field:'itemid',title:'客户编号',width:80},
-						{field:'productname',title:'客户名称',width:100}
+						{field:'productname',title:'客户名称',width:120}
 					]],
 					fitColumns: false
 				">
@@ -53,7 +53,16 @@
 		</div>
 	</div>
 	<table id="dg" title="" style="height:100%;"
-			data-options="remoteSort:false,rownumbers:true,singleSelect:true,pagination:true,fit:false,fitColumns:false,url:'server/json/datagrid_data1.json',method:'get',toolbar:'#tb'">
+			data-options="remoteSort:false,
+			rownumbers:true,
+			singleSelect:true,
+			pagination:true,
+			fit:false,
+			fitColumns:false,
+			url:'server/json/datagrid_data1.json',
+			method:'get',
+			toolbar:'#tb',
+			onClickCell: onClickCell">
 		<thead>
 			<tr>
 				<th data-options="field:'itemid',width:80,sortable:true,sorter:function(a,b){  
@@ -68,12 +77,17 @@
 					} else {  
 						return (a[2]>b[2]?1:-1);  
 					}  
-				}">Item ID</th>
-				<th data-options="field:'productid',width:100,sortable:true">Product</th>
-				<th data-options="field:'listprice',width:80,align:'right',sortable:true">List Price</th>
-				<th data-options="field:'unitcost',width:80,align:'right',sortable:true">Unit Cost</th>
-				<th data-options="field:'attr1',width:240,sortable:true">Attribute</th>
-				<th data-options="field:'status',width:60,align:'center',sortable:true">Status</th>
+				},editor:'text'">Item ID</th>
+				<th data-options="field:'productid',width:100,sortable:true,editor:{type:'combobox',options:{
+					url:'server/json/combobox_data1.json',
+					valueField:'id',
+					textField:'text'}}
+				">Product</th>
+				<th data-options="field:'listprice',width:80,align:'right',sortable:true,editor:{type:'numberbox',options:{precision:1}}">List Price</th>
+				<th data-options="field:'unitcost',width:80,align:'right',sortable:true,editor:'numberbox'">Unit Cost</th>
+				<th data-options="field:'attr1',width:240,sortable:true,editor:'validatebox'">Attribute</th>
+				<th data-options="field:'status',width:60,align:'center',sortable:true,editor:{type:'checkbox',options:{on:'P',off:''}}">Status</th>
+				<th data-options="field:'date',width:120,sortable:true,editor:'datebox'">DateTime</th>
 			</tr>
 		</thead>
 	</table>
@@ -99,7 +113,47 @@
 					}
 				}]
 			});			
-		})
+		});
+		$.extend($.fn.datagrid.methods, {
+			editCell: function(jq,param){
+				return jq.each(function(){
+					var opts = $(this).datagrid('options');
+					var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+					for(var i=0; i<fields.length; i++){
+						var col = $(this).datagrid('getColumnOption', fields[i]);
+						col.editor1 = col.editor;
+						if (fields[i] != param.field){
+							col.editor = null;
+						}
+					}
+					$(this).datagrid('beginEdit', param.index);
+					for(var i=0; i<fields.length; i++){
+						var col = $(this).datagrid('getColumnOption', fields[i]);
+						col.editor = col.editor1;
+					}
+				});
+			}
+		});
+		
+		var editIndex = undefined;
+		function endEditing(){
+			if (editIndex == undefined){return true}
+			if ($('#dg').datagrid('validateRow', editIndex)){
+				$('#dg').datagrid('endEdit', editIndex);
+				editIndex = undefined;
+				return true;
+			} else {
+				return false;
+			}
+		}
+		function onClickCell(index, field){
+			if (endEditing()){
+				$('#dg').datagrid('selectRow', index)
+						.datagrid('editCell', {index:index,field:field});
+				editIndex = index;
+			}
+		}
+
 	</script>
 
 </body>
