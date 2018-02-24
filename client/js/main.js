@@ -24,7 +24,7 @@ require(['config'], function () {
 		title:'用户权限分配',
 		closable: true
 	});
-	$('.easyui-tabs').tabs('select', 2);
+	$('.easyui-tabs').tabs('select', 1);
 	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
 		
 	$('#saleorderdatagrid').datagrid({
