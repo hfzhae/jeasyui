@@ -77,13 +77,25 @@
 					} else {  
 						return (a[2]>b[2]?1:-1);  
 					}  
-				},editor:'text'">Item ID</th>
-				<th data-options="field:'productid',width:100,sortable:true,editor:{type:'combobox',options:{
+				},editor:{type:'combobox', options:{
 					url:'server/json/combobox_data1.json',
-					method:'get',
 					valueField:'id',
-					textField:'text'}}
-				">Product</th>
+					textField:'text'
+				}}">Item ID</th>
+				<th data-options="field:'productid',width:100,sortable:true,editor:{type:'combogrid',options:{
+					panelWidth: 300,
+					idField: 'itemid',
+					textField: 'productname',
+					url: 'server/json/datagrid_data1.json',
+					method: 'get',
+					columns: [[
+						{field:'itemid',title:'产品编号',width:80},
+						{field:'productname',title:'产品名称',width:120}
+					]],
+					fitColumns: false,
+					required:true,
+					editable:false
+				}}">Product</th>
 				<th data-options="field:'listprice',width:80,align:'right',sortable:true,editor:{type:'numberbox',options:{precision:1}}">List Price</th>
 				<th data-options="field:'unitcost',width:80,align:'right',sortable:true,editor:'numberbox'">Unit Cost</th>
 				<th data-options="field:'attr1',width:240,sortable:true,editor:'validatebox'">Attribute</th>
@@ -154,7 +166,27 @@
 				editIndex = index;
 			}
 		}
-
+		$.extend($.fn.datagrid.defaults.editors, {
+			combogrid: {
+				init: function(container, options){
+					var input = $('<input type="text" class="datagrid-editable-input">').appendTo(container); 
+					input.combogrid(options);
+					return input;
+				},
+				destroy: function(target){
+					$(target).combogrid('destroy');
+				},
+				getValue: function(target){
+					return $(target).combogrid('getValue');
+				},
+				setValue: function(target, value){
+					$(target).combogrid('setValue', value);
+				},
+				resize: function(target, width){
+					$(target).combogrid('resize',width);
+				}
+			}
+		});
 	</script>
 
 </body>

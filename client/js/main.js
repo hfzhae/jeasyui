@@ -24,9 +24,9 @@ require(['config'], function () {
 		title:'用户权限分配',
 		closable: true
 	});
-	$('.easyui-tabs').tabs('select', 1);
+	$('.easyui-tabs').tabs('select', 2);
 	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
-
+		
 	$('#saleorderdatagrid').datagrid({
 		url:'server/json/datagrid_data1.json',
 		method:'get',
@@ -65,7 +65,7 @@ require(['config'], function () {
 		title:'系统'
 	});
 	$('.easyui-accordion').accordion('select', 0);
-	$('#hometitle').append('<img src="client/images/EBLOGO.png" class="homelogo"><div class="hometitle">e商x</div><div class="homeversion">v1.0</div><div class="hometitlecopyright">Design by zydsoft™</div>');
+	$('#hometitle').append('<img src="client/images/EBLOGO.png" class="homelogo"><div class="hometitle">e商x</div><div class="homeversion">v0.1</div><div class="hometitlecopyright">Design by zydsoft™</div>');
 	//$('body').css({padding:5});
 	//$('.easyui-layout').css({width:($(window).width()-10),height:($(window).height()-10)});
 	//require(['easyui'], function(){

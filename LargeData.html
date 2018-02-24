@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>AJAX Content</title>
+</head>
+<body>    
+    <div style="margin-bottom:10px">
+        <span>Record Count:</span>
+        <input id="total" class="easyui-numberbox" value="100" min="0" max="20000">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" onclick="loaddata()">Load</a>
+    </div>
+    <table id="tt" style="width:700px;height:250px"
+            url="server/json/datagrid27_getdata.php" singleSelect="true"
+            title="Load Large Data" iconCls="icon-ok" autoRowHeight="false">
+        <thead>
+            <tr>
+                <th field="inv" width="80">Inv No</th>
+                <th field="date" width="120">Date</th>
+                <th field="name" width="80">Name</th>
+                <th field="amount" width="80" align="right">Amount</th>
+                <th field="price" width="80" align="right">Price</th>
+                <th field="cost" width="100" align="right">Cost</th>
+                <th field="note" width="130">Note</th>
+            </tr>
+        </thead>
+    </table>
+    <script type="text/javascript">
+        $(function(){
+            $('#tt').datagrid({
+                onLoadSuccess:function(data){
+                    $.messager.show({
+                        title:'Info',
+                        msg:'Load '+data.total+' records successfully'
+                    });
+                }
+            });
+        });
+        function loaddata(){
+            $('#tt').datagrid('load',{
+                total: $('#total').numberbox('getValue')
+            });
+        }
+    </script>
+</body>
+</html>
