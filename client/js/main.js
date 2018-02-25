@@ -45,6 +45,7 @@ require(['config'], function () {
 	$('#saleorderdatagrid').datagrid({
 		url:'server/json/datagrid_data1.json',
 		method:'get',
+		striped:true,
 		singleSelect:true,
 		fit:true,
 		columns:[[
@@ -56,6 +57,7 @@ require(['config'], function () {
 			{field:'status',title:'Status',width:50,align:'center'}
 		]]
 	});
+	$('#saleorderdatagrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
 
 	$('#hometitle').append('<img src="client/images/EBLOGO.png" class="homelogo"><div class="hometitle">e商x</div><div class="homeversion">v0.1</div><div class="hometitlecopyright">Design by zydsoft™</div>');
 	

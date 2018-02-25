@@ -21,6 +21,7 @@
 				toolbar:'#loadfrom',
 				url:'server/json/datagrid27_getdata.json',
 				method:'get',
+				striped:true,
                 idField:'inv',autoRowHeight:false,pageSize:50">
         <thead>
             <tr>
@@ -38,6 +39,7 @@
  		require(['../client/lib/datagrid-scrollview'], function () {
 			$(function(){
 				$('#tt').datagrid();
+				//$('#tt').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
 			});
 		});
         function loadLocal(){
@@ -56,6 +58,7 @@
                 });
             }
             $('#tt').datagrid('loadData', rows);
+
         }
 		function loadlargdata(){
 			var date1=new Date();    //结束时间
@@ -90,6 +93,17 @@
         .datagrid-header-rownumber,.datagrid-cell-rownumber{
             width:50px!important;
         }
-    </style>
-</body>
+        .lines-both .datagrid-body td{
+        }
+        .lines-no .datagrid-body td{
+            border-right:1px dotted transparent;
+            border-bottom:1px dotted transparent;
+        }
+        .lines-right .datagrid-body td{
+            border-bottom:1px dotted transparent;
+        }
+        .lines-bottom .datagrid-body td{
+            border-right:1px dotted transparent;
+        }
+    </style></body>
 </html>
