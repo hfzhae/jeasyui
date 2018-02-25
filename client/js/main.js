@@ -17,12 +17,12 @@ require(['config'], function () {
 		href:'DataGridVirtualScroll.html',
 		selected: true,
 		closable:true
-	}).tabs('add',{
-		id:'jxcquery',
-		title:'进销存汇总表',
-		href:'LargeData.html',
-		selected: false,
-		closable:true
+	//}).tabs('add',{
+	//	id:'jxcquery',
+	//	title:'进销存汇总表',
+	//	href:'LargeData.html',
+	//	selected: false,
+	//	closable:true
 	}).tabs('add',{
 		id:'saleorder',
 		title:'销售订单',

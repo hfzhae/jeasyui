@@ -54,9 +54,9 @@
 	</div>
 	<table id="dg" title="" style="height:100%;"
 			data-options="remoteSort:false,
-			rownumbers:true,
+			rownumbers:false,
 			singleSelect:true,
-			pagination:true,
+			pagination:false,
 			fit:false,
 			fitColumns:false,
 			url:'server/json/datagrid_data1.json',
@@ -125,7 +125,7 @@
 						alert('edit');
 					}
 				}]
-			});			
+			});
 		});
 		$.extend($.fn.datagrid.methods, {
 			editCell: function(jq,param){
