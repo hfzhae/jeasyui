@@ -1,6 +1,6 @@
 define(function($){
     require.config({
-        baseUrl: '/client/',
+        baseUrl: 'client/',
 		//urlArgs:'v='+(new Date()).getTime(),//清除缓存
         paths: {
 			//jquery: 'lib/jquery.min',
