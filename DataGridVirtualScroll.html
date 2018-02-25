@@ -8,8 +8,8 @@
     <div id="loadfrom" style="padding:5px;">
 		日期: <input class="easyui-datebox" style="width:120px">
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('local');">本地数据</a>
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('remote');">服务器数据</a>
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('largdata');">服务器数据（大数据）</a>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('remote');">服务器数据（分页）</a>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('largdata');">服务器数据（一次性）</a>
         <!--<select onchange="load(this.value)">
             <option value="remote">Load Remote Data</option>
             <option value="local">Load Local Data</option>
@@ -59,6 +59,7 @@
         }
 		function loadlargdata(){
 			var date1=new Date();    //结束时间
+			$('#tt').datagrid('loading');
 			$.getJSON('server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(), function(data){
 				$('#tt').datagrid('loadData', data);
 				var date2=new Date();    //结束时间
@@ -69,6 +70,7 @@
 					title:'Info',
 					msg:'Load '+data.total+' records successfully time consuming: ' + date3 + 's'
 				});
+				$('#tt').datagrid('loaded');
 			});
 		}
         function load(mode){
