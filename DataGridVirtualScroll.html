@@ -5,19 +5,22 @@
 	<title>AJAX Content</title>
 </head>
 <body>    
-    <div id="selecttb" style="padding:5px;height:auto">
+    <div id="loadfrom" style="padding:5px;">
 		日期: <input class="easyui-datebox" style="width:120px">
-        Load：<select class="easyui-combobox" onchange="load(this.value)">
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('local');">本地数据</a>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('remote');">服务器数据</a>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('largdata');">服务器数据（大数据）</a>
+        <!--<select onchange="load(this.value)">
             <option value="remote">Load Remote Data</option>
             <option value="local">Load Local Data</option>
-        </select>
+        </select>-->
     </div>
     
     <table id="tt" title="" style="height:100%" data-options="
                 view:scrollview,rownumbers:true,singleSelect:true,
-                url:'server/json/datagrid27_getdata.json',
-				method: 'get',
-				toolbar:'#selecttb',
+				toolbar:'#loadfrom',
+				url:'server/json/datagrid27_getdata.json',
+				method:'get',
                 idField:'inv',autoRowHeight:false,pageSize:50">
         <thead>
             <tr>
@@ -32,11 +35,54 @@
         </thead>
     </table>
     <script type="text/javascript">
-		require(['../client/lib/datagrid-scrollview'], function () {
+ 		require(['../client/lib/datagrid-scrollview'], function () {
 			$(function(){
 				$('#tt').datagrid();
 			});
 		});
+        function loadLocal(){
+            var rows = [];
+            for(var i=1; i<=100000; i++){
+                var amount = Math.floor(Math.random()*1000);
+                var price = Math.floor(Math.random()*1000);
+                rows.push({
+                    inv: 'Inv No '+i,
+                    date: $.fn.datebox.defaults.formatter(new Date()),
+                    name: 'Name '+i,
+                    amount: amount,
+                    price: price,
+                    cost: amount*price,
+                    note: 'Note '+i
+                });
+            }
+            $('#tt').datagrid('loadData', rows);
+        }
+		function loadlargdata(){
+			var date1=new Date();    //结束时间
+			$.getJSON('server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(), function(data){
+				$('#tt').datagrid('loadData', data);
+				var date2=new Date();    //结束时间
+				var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
+				var date2=new Date();    //结束时间
+				var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
+				$.messager.show({
+					title:'Info',
+					msg:'Load '+data.total+' records successfully time consuming: ' + date3 + 's'
+				});
+			});
+		}
+        function load(mode){
+			
+            if (mode == 'local'){
+                loadLocal();
+            } else if(mode == 'remote') {
+                $('#tt').datagrid({
+                    url:'server/json/datagrid27_getdata.json'
+                });
+            }else if(mode == 'largdata'){
+				loadlargdata();
+			}
+        }
     </script>
     <style type="text/css">
         .datagrid-header-rownumber,.datagrid-cell-rownumber{

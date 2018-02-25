@@ -3,28 +3,43 @@ Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/2/16
 *****************************************************************/
 require(['config'], function () {
-	$('.easyui-tabs').tabs('add',{
+	$('#center').append('<div id="tabsCenter">');
+	
+	$('#tabsCenter').tabs({
+		fit:true,
+		border:false,
+		plain:false
+	});
+	
+	$('#tabsCenter').tabs('add',{
+		id:'stockquery',
+		title:'库存查询',
+		href:'DataGridVirtualScroll.html',
+		selected: true,
+		closable:true
+	}).tabs('add',{
+		id:'jxcquery',
+		title:'进销存汇总表',
+		href:'LargeData.html',
+		selected: false,
+		closable:true
+	}).tabs('add',{
 		id:'saleorder',
 		title:'销售订单',
+		selected: false,
 		closable: true
 	}).tabs('add',{
-		id:'querysale',
-		title:'销售汇总报表',
-		closable: true
-	}).tabs('add',{
-		id:'querysale',
-		title:'查询设计',
-		closable: true
-	}).tabs('add',{
-		id:'querysale',
-		title:'采购入库',
-		closable: true
-	}).tabs('add',{
-		id:'querysale',
-		title:'用户权限分配',
-		closable: true
-	});
-	$('.easyui-tabs').tabs('select', 1);
+		id:'saleout',
+		title:'销售出库单',
+		href:'content.html',
+		selected: false,
+		closable:true
+	}).tabs('select', 0);
+	
+	$('#saleout').css({padding:5});
+	$('#stockquery').css({padding:5});
+	$('#jxcquery').css({padding:5});
+	
 	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
 		
 	$('#saleorderdatagrid').datagrid({
@@ -42,7 +57,31 @@ require(['config'], function () {
 		]]
 	});
 
-	$('.easyui-accordion').accordion('add', {
+	$('#hometitle').append('<img src="client/images/EBLOGO.png" class="homelogo"><div class="hometitle">e商x</div><div class="homeversion">v0.1</div><div class="hometitlecopyright">Design by zydsoft™</div>');
+	
+	$('#east').append('<table id="pg">');
+	$('#pg').propertygrid({
+		border:false,
+		url:'server/json/propertygrid_data1.json',
+		method:'get',
+		showGroup:true,
+		scrollbarSize:0,
+		width: '100%',
+		border:false
+	});
+	
+	$('#west').append('<div id="accordionWest">');
+	$('#accordionWest').accordion({
+		animate:false,
+		fit:true,
+		border:false
+	});
+	
+	$('#accordionWest').accordion('add', {
+		id: 'menuWest',
+		title: '销售',
+		width:200
+	}).accordion('add', {
 		id:'s1',
 		title:'收款'
 	}).accordion('add', {
@@ -63,9 +102,15 @@ require(['config'], function () {
 	}).accordion('add', {
 		id:'s7',
 		title:'系统'
-	});
-	$('.easyui-accordion').accordion('select', 0);
-	$('#hometitle').append('<img src="client/images/EBLOGO.png" class="homelogo"><div class="hometitle">e商x</div><div class="homeversion">v0.1</div><div class="hometitlecopyright">Design by zydsoft™</div>');
+	}).accordion('select', 0);
+	
+	$('#menuWest').tree({
+		url: 'server/json/tree_data1.json',
+		method: 'get',
+		animate:true,
+		dnd:true
+	}).css({padding: 5});
+	$.parser.parse();
 	//$('body').css({padding:5});
 	//$('.easyui-layout').css({width:($(window).width()-10),height:($(window).height()-10)});
 	//require(['easyui'], function(){

@@ -5,14 +5,15 @@
 	<title>AJAX Content</title>
 </head>
 <body>    
-    <div style="margin-bottom:10px">
+    <div id="bt1" style="padding:5px;">
         <span>Record Count:</span>
-        <input id="total" class="easyui-numberbox" value="100" min="0" max="20000">
+        <input id="total" class="easyui-numberbox" value="10050" min="10050" max="10050">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" onclick="loaddata()">Load</a>
     </div>
-    <table id="tt" style="width:700px;height:250px"
-            url="server/json/datagrid27_getdata.php" singleSelect="true"
-            title="Load Large Data" iconCls="icon-ok" autoRowHeight="false">
+    <table id="ttl" style="height:100%;"
+            url="server/json/datagrid25_getdata.json" singleSelect="true"
+            title="Load Large Data" iconCls="icon-ok" autoRowHeight="true"
+			data-options="rownumbers:true,toolbar:'#bt1'">
         <thead>
             <tr>
                 <th field="inv" width="80">Inv No</th>
@@ -26,21 +27,25 @@
         </thead>
     </table>
     <script type="text/javascript">
-        $(function(){
-            $('#tt').datagrid({
-                onLoadSuccess:function(data){
-                    $.messager.show({
-                        title:'Info',
-                        msg:'Load '+data.total+' records successfully'
-                    });
-                }
-            });
-        });
-        function loaddata(){
-            $('#tt').datagrid('load',{
-                total: $('#total').numberbox('getValue')
-            });
-        }
-    </script>
+		$(function(){
+			var date1=new Date();  //开始时间
+			
+			$('#ttl').datagrid({
+				onLoadSuccess:function(data){
+					var date2=new Date();    //结束时间
+					var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
+					$.messager.show({
+						title:'Info',
+						msg:'Load '+data.total+' records successfully time consuming: ' + date3 + 's'
+					});
+				}
+			});
+		});
+		function loaddata(){
+			$('#ttl').datagrid('load',{
+				total: $('#total').numberbox('getValue')
+			});
+		}
+   </script>
 </body>
 </html>
