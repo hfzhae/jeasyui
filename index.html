@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="client/css/public.css">
 	<script type="text/javascript" src="client/lib/jquery.min.js"></script>
 	<script type="text/javascript" src="client/lib/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="client/lib/datagrid-scrollview.js"></script>
+    <!--<script type="text/javascript" src="client/lib/datagrid-scrollview.js"></script>-->
 </head>
 <body class="easyui-layout" data-options="border:false">
 		<div data-options="region:'north'" id="hometitle" style="background-color:#345;height:52px;"></div>
@@ -32,7 +32,7 @@
 			</div>
 		</div>
 		<div data-options="region:'center',iconCls:'icon-ok'">
-			<div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
+			<div class="easyui-tabs" data-options="fit:true,border:false,plain:false">
 				<div title="产品信息" style="padding:5px" data-options="selected:true,closable:true">
 					<table class="easyui-datagrid"
 							data-options="url:'server/json/datagrid_data1.json',method:'get',singleSelect:true,fit:true,fitColumns:false">

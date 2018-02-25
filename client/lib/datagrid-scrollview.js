@@ -1,7 +1,7 @@
 $.extend($.fn.datagrid.defaults, {
 	rowHeight: 25,
-	maxDivHeight: 1000000000,
-	maxVisibleHeight: 1500000000,
+	maxDivHeight: 10000000000,
+	maxVisibleHeight: 15000000000,
 	deltaTopHeight: 0,
 	onBeforeFetch: function(page){},
 	onFetch: function(page, rows){},
