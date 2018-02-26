@@ -29,9 +29,12 @@
     <script type="text/javascript">
 		$(function(){
 			$('#ttl').datagrid();
-			/*
-			var date1=new Date();  //开始时间
+			var date1;  //开始时间
 			$('#ttl').datagrid({
+				onBeforeLoad:function(){
+					date1=new Date();
+					console.log(date1)
+				},
 				onLoadSuccess:function(data){
 					var date2=new Date();    //结束时间
 					var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
@@ -41,7 +44,6 @@
 					});
 				}
 			});
-			*/
 		});
 		function loaddata(){
 			$('#ttl').datagrid({

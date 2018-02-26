@@ -30,6 +30,7 @@
 					url: '',
 					method: 'get',
 					striped:true,
+					editable: true,
 					columns: [[
 						{field:'inv',title:'仓库编号',width:80},
 						{field:'name',title:'仓库名称',width:120}
@@ -110,12 +111,76 @@
 	</table>
 
 	<script type="text/javascript">
-		$('#stocklist').combogrid({
-			onShowPanel:function(){
-				var g = $('#stocklist').combogrid('grid');
-				if(g.datagrid('getRows').length == 0){
-					g.parent().append('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>');
-					require(['../client/lib/datagrid-scrollview'], function (){
+		var rows = [];
+		require(['../client/lib/datagrid-scrollview'], function (){
+			$('#stocklist').combogrid({
+				keyHandler: {
+					up: function(){
+						var co = $(this).combogrid('grid');
+						var selected = co.datagrid('getSelected');  
+                        if (selected) {  
+                            var index = co.datagrid('getRowIndex', selected);  
+                            co.datagrid('selectRow', index - 1);  
+                        } else {  
+                            var rows = co.datagrid('getRows');  
+                            co.datagrid('selectRow', rows.length - 1);  
+                        }  
+
+					},
+					down: function(){
+						$(this).combogrid('showPanel');
+						var co = $(this).combogrid('grid');
+						var selected = co.datagrid('getSelected');  
+                        if (selected) {  
+                            var index = co.datagrid('getRowIndex', selected);  
+                            co.datagrid('selectRow', index + 1);  
+                        } else {  
+                            co.datagrid('selectRow', 0);  
+                        }  
+					},
+					enter: function(){
+						var co = $(this);
+						co.combogrid('hidePanel');
+					},
+					query: function(q){
+						//$(this).combogrid("grid").datagrid("reload", { 'name': q });  
+						//$(this).combogrid("setValue", q);
+					    //$('#stocklist').combogrid("grid").datagrid("reload", {'name': q});
+						var co = $(this),
+							t = $.trim(co.combogrid('getText'));
+						console.log(t);
+						co.combogrid('setValue', q);
+						//co.combogrid('clear');
+						var rowsq = [];
+						for (var i in rows['firstRows']) {
+							//console.log(rows['rows'][i].name)
+							if (rows['firstRows'][i].name.toLowerCase().indexOf(t.toLowerCase()) != -1) {
+								//rowsq[i] = rows['firstRows'][i];
+								rowsq.push({
+									inv: rows['firstRows'][i].inv,
+									date: rows['firstRows'][i].date,
+									name: rows['firstRows'][i].name,
+									amount: rows['firstRows'][i].amount,
+									price: rows['firstRows'][i].price,
+									cost: rows['firstRows'][i].cost,
+									note: rows['firstRows'][i].note
+								});
+
+							}
+						}
+						//debugger;
+						co.combogrid('grid').datagrid('loadData', {
+							total:rowsq.length,
+							rows:rowsq
+						});
+
+						//return false;
+					}
+				},
+				onShowPanel:function(){
+					var g = $('#stocklist').combogrid('grid');
+					if(g.datagrid('getRows').length == 0){
+						g.parent().append('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>');
 						$.getJSON('server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(), function(data){
 							g.datagrid({
 								view:scrollview,
@@ -124,13 +189,14 @@
 								autoRowHeight:false,
 								pageSize:50
 							});
-							g.datagrid('loadData', data);
+							rows = data
+							g.datagrid('loadData', rows);
 							$(g).parent().find('.datagrid-mask').remove();
 							$(g).parent().find('.datagrid-mask-msg').remove();
 						});
-					});
+					}
 				}
-			}
+			});
 		});
 
 		$(function(){

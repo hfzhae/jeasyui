@@ -8,15 +8,15 @@
     <div id="loadfrom" style="padding:5px;">
 		日期: <input class="easyui-datebox" style="width:120px">
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('local');">本地数据</a>
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('remote');">服务器数据（分页）</a>
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('largdata');">服务器数据（一次性）</a>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="load('remote');">服务器数据（分页）</a>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-tip'" onclick="load('largdata');">服务器数据（一次性）</a>
         <!--<select onchange="load(this.value)">
             <option value="remote">Load Remote Data</option>
             <option value="local">Load Local Data</option>
         </select>-->
     </div>
     
-    <table id="tt" title="" style="height:100%" data-options="
+    <table id="tt" title="" style="height:100%;display:none;" data-options="
                 view:scrollview,rownumbers:true,singleSelect:true,
 				toolbar:'#loadfrom',
 				url:'server/json/datagrid27_getdata.json',
@@ -39,6 +39,7 @@
  		require(['../client/lib/datagrid-scrollview'], function () {
 			$(function(){
 				$('#tt').datagrid();
+				$('#tt').show();
 				//$('#tt').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
 			});
 		});
