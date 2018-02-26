@@ -36,6 +36,28 @@ require(['config'], function () {
 		closable:true
 	}).tabs('select', 0);
 	
+	$('#tabsCenter').tabs({
+		onUnselect: function(tab, panel){
+			if(panel == 1){
+				$('#ttl').datagrid('loadData', []);
+			}
+		},
+		onBeforeClose: function(title,index){
+			var target = this;
+			console.log(title);
+			$.messager.confirm('Confirm','Are you sure you want to close '+title,function(r){
+				if (r){
+					var opts = $(target).tabs('options');
+					var bc = opts.onBeforeClose;
+					opts.onBeforeClose = function(){};  // allowed to close now
+					$(target).tabs('close',index);
+					opts.onBeforeClose = bc;  // restore the event function
+				}
+			});
+			return false;	// prevent from closing
+		}
+	});
+	
 	$('#saleout').css({padding:5});
 	$('#stockquery').css({padding:5});
 	$('#jxcquery').css({padding:5});

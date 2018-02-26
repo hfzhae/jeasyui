@@ -11,7 +11,7 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" onclick="loaddata()">Load</a>
     </div>
     <table id="ttl" style="height:100%;"
-            url="server/json/datagrid25_getdata.json" singleSelect="true"
+            singleSelect="true"
             title="Load Large Data" iconCls="icon-ok" autoRowHeight="true"
 			data-options="rownumbers:true,method:'get',toolbar:'#bt1'">
         <thead>
@@ -28,8 +28,9 @@
     </table>
     <script type="text/javascript">
 		$(function(){
+			$('#ttl').datagrid();
+			/*
 			var date1=new Date();  //开始时间
-			
 			$('#ttl').datagrid({
 				onLoadSuccess:function(data){
 					var date2=new Date();    //结束时间
@@ -40,11 +41,14 @@
 					});
 				}
 			});
+			*/
 		});
 		function loaddata(){
-			$('#ttl').datagrid('load',{
-				total: $('#total').numberbox('getValue')
+			$('#ttl').datagrid({
+				total: $('#total').numberbox('getValue'),
+				url: 'server/json/datagrid25_getdata.json'
 			});
+			$('#ttl').datagrid('load');
 		}
    </script>
 </body>
