@@ -29,11 +29,15 @@
 					textField: 'name',
 					url: '',
 					method: 'get',
+					striped:true,
 					columns: [[
 						{field:'inv',title:'仓库编号',width:80},
 						{field:'name',title:'仓库名称',width:120}
 					]],
-					fitColumns: false
+					fitColumns: false,
+					filter: function(q, row){
+						return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
+				    }
 				">
 			</select>
 			客户: 
