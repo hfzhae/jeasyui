@@ -23,15 +23,15 @@
 		<div>
 			单据日期: <input class="easyui-datebox" style="width:120px">
 			仓库: 
-			<select class="easyui-combogrid" style="width:150px" data-options="
+			<select id="stocklist" class="easyui-combogrid" style="width:150px" data-options="
 					panelWidth: 300,
-					idField: 'itemid',
-					textField: 'productname',
-					url: 'server/json/datagrid_data1.json',
+					idField: 'inv',
+					textField: 'name',
+					url: '',
 					method: 'get',
 					columns: [[
-						{field:'itemid',title:'仓库编号',width:80},
-						{field:'productname',title:'仓库名称',width:120}
+						{field:'inv',title:'仓库编号',width:80},
+						{field:'name',title:'仓库名称',width:120}
 					]],
 					fitColumns: false
 				">
@@ -106,6 +106,26 @@
 	</table>
 
 	<script type="text/javascript">
+		$('#stocklist').combogrid({
+			onShowPanel:function(){
+				var g = $('#stocklist').combogrid('grid');
+				if(g.datagrid('getRows').length == 0){
+					require(['../client/lib/datagrid-scrollview'], function (){
+						$.getJSON('server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(), function(data){
+							g.datagrid({
+								view:scrollview,
+								//rownumbers:true,
+								singleSelect:true,
+								autoRowHeight:false,
+								pageSize:50
+							});
+							g.datagrid('loadData', data);
+						});
+					});
+				}
+			}
+		});
+
 		$(function(){
 			var pager = $('#dg').datagrid().datagrid('getPager');	// get the pager of datagrid
 			pager.pagination({
