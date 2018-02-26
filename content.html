@@ -110,6 +110,7 @@
 			onShowPanel:function(){
 				var g = $('#stocklist').combogrid('grid');
 				if(g.datagrid('getRows').length == 0){
+					g.parent().append('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>');
 					require(['../client/lib/datagrid-scrollview'], function (){
 						$.getJSON('server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(), function(data){
 							g.datagrid({
@@ -120,6 +121,8 @@
 								pageSize:50
 							});
 							g.datagrid('loadData', data);
+							$(g).parent().find('.datagrid-mask').remove();
+							$(g).parent().find('.datagrid-mask-msg').remove();
 						});
 					});
 				}
