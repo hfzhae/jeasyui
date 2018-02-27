@@ -8,50 +8,71 @@ require(['config'], function () {
 	$('#tabsCenter').tabs({
 		fit:true,
 		border:false,
-		plain:false
+		plain:false,
+		tools:[{
+			iconCls:'icon-cancel',
+			handler:function(){
+				var arrTitle = new Array(),
+					id = "#tabsCenter",
+					tabs = $(id).tabs("tabs"),
+					tCount = tabs.length;
+					
+				if(tCount>0){  
+					for(var i=0;i<tCount;i++){
+						if(tabs[i].panel('options').closable){
+							arrTitle.push(tabs[i].panel('options').title)
+						}  
+					}
+					
+					for(var i=0;i<arrTitle.length;i++){  
+						$(id).tabs("close",arrTitle[i]);  
+					}  
+				}  
+			}
+		}]
 	});
 	
 	$('#tabsCenter').tabs('add',{
-		id:'ribbon',
-		title:'Office',
-		href:'ribbon.html',
-		selected: false,
-		closable:true
-	}).tabs('add',{
+	//	id:'ribbon',
+	//	title:'Office',
+	//	href:'ribbon.html',
+	//	selected: false,
+	//	closable:true
+	//}).tabs('add',{
 		id:'hometab',
 		title:'首页',
 		href:'hometab.html',
 		selected: true,
 		closable:false
-	}).tabs('add',{
-		id:'DataGridTest',
-		title:'DataGrid扩展测试',
-		href:'datagrid23_demo.html',
-		selected: false,
-		closable:false
-	}).tabs('add',{
-		id:'stockquery',
-		title:'库存查询',
-		href:'DataGridVirtualScroll.html',
-		selected: false,
-		closable:true
-	}).tabs('add',{
-		id:'jxcquery',
-		title:'进销存汇总表',
-		href:'LargeData.html',
-		selected: false,
-		closable:true
-	}).tabs('add',{
-		id:'saleorder',
-		title:'销售订单',
-		selected: false,
-		closable: true
-	}).tabs('add',{
-		id:'saleout',
-		title:'销售出库单',
-		href:'content.html',
-		selected: false,
-		closable:true
+	//}).tabs('add',{
+	//	id:'DataGridTest',
+	//	title:'DataGrid扩展测试',
+	//	href:'datagrid23_demo.html',
+	//	selected: false,
+	//	closable:false
+	//}).tabs('add',{
+	//	id:'stockquery',
+	//	title:'库存查询',
+	//	href:'DataGridVirtualScroll.html',
+	//	selected: false,
+	//	closable:true
+	//}).tabs('add',{
+	//	id:'jxcquery',
+	//	title:'进销存汇总表',
+	//	href:'LargeData.html',
+	//	selected: false,
+	//	closable:true
+	//}).tabs('add',{
+	//	id:'saleorder',
+	//	title:'销售订单',
+	//	selected: false,
+	//	closable: true
+	//}).tabs('add',{
+	//	id:'saleout',
+	//	title:'销售出库单',
+	//	href:'content.html',
+	//	selected: false,
+	//	closable:true
 	});
 	
 	$('#tabsCenter').tabs({
@@ -61,6 +82,7 @@ require(['config'], function () {
 			}
 		},
 		onBeforeClose: function(title,index){
+			return true;	// prevent from closing
 			var target = this;
 			console.log(title);
 			$.messager.confirm('Confirm','Are you sure you want to close '+title,function(r){
@@ -76,13 +98,13 @@ require(['config'], function () {
 		}
 	});
 	
+	/*
 	$('#saleout').css({padding:5});
 	$('#stockquery').css({padding:5});
 	$('#jxcquery').css({padding:5});
 	$('#DataGridTest').css({padding:5});
 	$('#hometab').css({padding:0});
 	$('#ribbon').css({padding:10});
-	
 	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
 		
 	$('#saleorderdatagrid').datagrid({
@@ -101,6 +123,7 @@ require(['config'], function () {
 		]]
 	});
 	$('#saleorderdatagrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
+	*/
 
 	$('#hometitle').append('<img src="client/images/EBLOGO.png" class="homelogo"><div class="hometitle">e商x</div><div class="homeversion">v0.1</div><div class="hometitlecopyright">Design by zydsoft™</div>');
 	
@@ -153,7 +176,23 @@ require(['config'], function () {
 		url: 'server/json/tree_data1.json',
 		method: 'get',
 		animate:true,
-		dnd:true
+		dnd:true,
+		onClick: function(node){
+			if(node.id < 10) return;
+			if($('#tabs_'+node.id).length > 0){
+				$('#tabsCenter').tabs('select', $('#tabs_'+node.id).panel('options').index);
+			}else{
+				$('#tabsCenter').tabs('add',{
+					id:'tabs_'+node.id,
+					title:node.text,
+					href:node.href,
+					//href:'ribbon.html',
+					selected: true,
+					closable:true
+				});
+				$('#tabs_'+node.id).css({padding:5});
+			}
+		}
 	}).css({padding: 5});
 	$.parser.parse();
 	//$('body').css({padding:5});

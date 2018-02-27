@@ -114,78 +114,78 @@
 
 	<script type="text/javascript">
 		var rows = [];
-		require(['../client/lib/datagrid-scrollview'], function (){
-			$('#stocklist').combogrid({
-				keyHandler: {
-					up: function(){
-						$(this).combogrid('showPanel');
-						var co = $(this).combogrid('grid');
-						var selected = co.datagrid('getSelected');  
-                        if (selected) {  
-                            var index = co.datagrid('getRowIndex', selected);  
-                            co.datagrid('selectRow', index - 1);  
-                        } else {  
-                            var rows = co.datagrid('getRows');  
-                            co.datagrid('selectRow', rows.length - 1);  
-                        }  
+		$('#stocklist').combogrid({
+			keyHandler: {
+				up: function(){
+					$(this).combogrid('showPanel');
+					var co = $(this).combogrid('grid');
+					var selected = co.datagrid('getSelected');  
+					if (selected) {  
+						var index = co.datagrid('getRowIndex', selected);  
+						co.datagrid('selectRow', index - 1);  
+					} else {  
+						var rows = co.datagrid('getRows');  
+						co.datagrid('selectRow', rows.length - 1);  
+					}  
 
-					},
-					down: function(){
-						$(this).combogrid('showPanel');
-						var co = $(this).combogrid('grid');
-						var selected = co.datagrid('getSelected');  
-                        if (selected) {  
-                            var index = co.datagrid('getRowIndex', selected);  
-                            co.datagrid('selectRow', index + 1);  
-                        } else {  
-                            co.datagrid('selectRow', 0);  
-                        }  
-					},
-					left: function(){},
-					right:function(){},
-					enter: function(){
-						var co = $(this),
-							t = $.trim(co.combogrid('getText'));
-						var selected = co.combogrid('grid').datagrid('getSelected');  
-                        if (selected) {  
-							co.combogrid('hidePanel');
-                        } else {  
-							var rowsq = [];
-							for (var i in rows['firstRows']) {
-								if (rows['firstRows'][i].name.toLowerCase().indexOf(t.toLowerCase()) != -1 || rows['firstRows'][i].inv.toLowerCase().indexOf(t.toLowerCase()) != -1) {
-									rowsq.push(rows['firstRows'][i]);
-								}
-							}
-							co.combogrid('grid').datagrid('loadData', {
-								total:rowsq.length,
-								rows:rowsq
-							});
-							setTimeout(function(){
-								if(t != ''){
-									co.combogrid('grid').datagrid('selectRow', 0);
-								}
-								if(rowsq.length == 1){
-									co.combogrid('hidePanel');
-								}
-							}, 100);
-                        }  
-					},
-					query: function(q){
-						$(this).combogrid('setValue', q);
-					}
 				},
-				onShowPanel:function(){
-					var g = $('#stocklist').combogrid('grid');
+				down: function(){
+					$(this).combogrid('showPanel');
+					var co = $(this).combogrid('grid');
+					var selected = co.datagrid('getSelected');  
+					if (selected) {  
+						var index = co.datagrid('getRowIndex', selected);  
+						co.datagrid('selectRow', index + 1);  
+					} else {  
+						co.datagrid('selectRow', 0);  
+					}  
+				},
+				left: function(){},
+				right:function(){},
+				enter: function(){
+					var co = $(this),
+						t = $.trim(co.combogrid('getText'));
+					var selected = co.combogrid('grid').datagrid('getSelected');  
+					if (selected) {  
+						co.combogrid('hidePanel');
+					} else {  
+						var rowsq = [];
+						for (var i in rows['firstRows']) {
+							if (rows['firstRows'][i].name.toLowerCase().indexOf(t.toLowerCase()) != -1 || rows['firstRows'][i].inv.toLowerCase().indexOf(t.toLowerCase()) != -1) {
+								rowsq.push(rows['firstRows'][i]);
+							}
+						}
+						co.combogrid('grid').datagrid('loadData', {
+							total:rowsq.length,
+							rows:rowsq
+						});
+						setTimeout(function(){
+							if(t != ''){
+								co.combogrid('grid').datagrid('selectRow', 0);
+							}
+							if(rowsq.length == 1){
+								co.combogrid('hidePanel');
+							}
+						}, 100);
+					}  
+				},
+				query: function(q){
+					$(this).combogrid('setValue', q);
+				}
+			},
+			onShowPanel:function(){
+				var g = $(this).combogrid('grid');
+				//require(['../client/lib/datagrid-scrollview'], function (){
+					g.datagrid({
+						view:scrollview,
+						//rownumbers:true,
+						singleSelect:true,
+						autoRowHeight:false,
+						pageSize:50
+					});
 					if(g.datagrid('getRows').length == 0){
 						g.parent().append('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>');
 						$.getJSON('server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(), function(data){
-							g.datagrid({
-								view:scrollview,
-								//rownumbers:true,
-								singleSelect:true,
-								autoRowHeight:false,
-								pageSize:50
-							});
 							//debugger;
 							rows = data
 							g.datagrid('loadData', rows);
@@ -193,8 +193,8 @@
 							$(g).parent().find('.datagrid-mask-msg').remove();
 						});
 					}
-				}
-			});
+				//});
+			}
 		});
 
 		$(function(){

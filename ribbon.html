@@ -6,7 +6,7 @@
 </head>
 <body>
 	<h1>Ribbon</h1>
-	<div id="rr" style="width:100%;">
+	<div name="rr" style="width:100%;">
 	</div>
 	<h1>Ribbon Markup</h1>
 	<div class="easyui-ribbon" style="width:100%;">
@@ -268,7 +268,7 @@
 		};
 		
 		$(function(){
-			$('#rr').ribbon({
+			$('div[name="rr"').ribbon({
 				data:data
 			});
 		});
