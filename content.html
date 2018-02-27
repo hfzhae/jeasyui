@@ -117,6 +117,7 @@
 			$('#stocklist').combogrid({
 				keyHandler: {
 					up: function(){
+						$(this).combogrid('showPanel');
 						var co = $(this).combogrid('grid');
 						var selected = co.datagrid('getSelected');  
                         if (selected) {  

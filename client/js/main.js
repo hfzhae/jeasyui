@@ -12,10 +12,22 @@ require(['config'], function () {
 	});
 	
 	$('#tabsCenter').tabs('add',{
+		id:'hometab',
+		title:'首页',
+		href:'_content.html',
+		selected: true,
+		closable:false
+	}).tabs('add',{
+		id:'DataGridTest',
+		title:'DataGrid扩展测试',
+		href:'datagrid23_demo.html',
+		selected: false,
+		closable:false
+	}).tabs('add',{
 		id:'stockquery',
 		title:'库存查询',
 		href:'DataGridVirtualScroll.html',
-		selected: true,
+		selected: false,
 		closable:true
 	}).tabs('add',{
 		id:'jxcquery',
@@ -34,7 +46,7 @@ require(['config'], function () {
 		href:'content.html',
 		selected: false,
 		closable:true
-	}).tabs('select', 0);
+	});
 	
 	$('#tabsCenter').tabs({
 		onUnselect: function(tab, panel){
@@ -61,6 +73,8 @@ require(['config'], function () {
 	$('#saleout').css({padding:5});
 	$('#stockquery').css({padding:5});
 	$('#jxcquery').css({padding:5});
+	$('#DataGridTest').css({padding:5});
+	$('#hometab').css({padding:0});
 	
 	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
 		
