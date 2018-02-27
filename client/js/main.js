@@ -20,7 +20,7 @@ require(['config'], function () {
 	}).tabs('add',{
 		id:'hometab',
 		title:'首页',
-		href:'_content.html',
+		href:'hometab.html',
 		selected: true,
 		closable:false
 	}).tabs('add',{
