@@ -82,6 +82,7 @@ require(['config'], function () {
 			}
 		},
 		onBeforeClose: function(title,index){
+			$.parser.parse();
 			return true;	// prevent from closing
 			var target = this;
 			console.log(title);
