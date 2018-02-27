@@ -12,6 +12,12 @@ require(['config'], function () {
 	});
 	
 	$('#tabsCenter').tabs('add',{
+		id:'ribbon',
+		title:'Office',
+		href:'ribbon.html',
+		selected: false,
+		closable:true
+	}).tabs('add',{
 		id:'hometab',
 		title:'首页',
 		href:'_content.html',
@@ -75,6 +81,7 @@ require(['config'], function () {
 	$('#jxcquery').css({padding:5});
 	$('#DataGridTest').css({padding:5});
 	$('#hometab').css({padding:0});
+	$('#ribbon').css({padding:10});
 	
 	$('#saleorder').append('<table id="saleorderdatagrid">').css({padding:5});
 		
