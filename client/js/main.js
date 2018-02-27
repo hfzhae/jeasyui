@@ -10,7 +10,7 @@ require(['config'], function () {
 		border:false,
 		plain:false,
 		tools:[{
-			iconCls:'icon-cancel',
+			iconCls:'icon-clear',
 			handler:function(){
 				var arrTitle = new Array(),
 					id = "#tabsCenter",
@@ -138,7 +138,8 @@ require(['config'], function () {
 		border:false
 	});
 	
-	$('#west').append('<div id="accordionWest">');
+	$('#west').append('<div id="menuWest">');
+	/*
 	$('#accordionWest').accordion({
 		animate:false,
 		fit:true,
@@ -171,7 +172,7 @@ require(['config'], function () {
 		id:'s7',
 		title:'系统'
 	}).accordion('select', 0);
-	
+	*/
 	$('#menuWest').tree({
 		url: 'server/json/tree_data1.json',
 		method: 'get',
