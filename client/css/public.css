@@ -25,3 +25,18 @@
 	color:#ccc;
 	font-size:12px;
 }
+.lines-both .datagrid-body td{
+}
+.lines-no .datagrid-body td{
+	border-right:1px dotted transparent;
+	border-bottom:1px dotted transparent;
+}
+.lines-right .datagrid-body td{
+	border-bottom:1px dotted transparent;
+}
+.lines-bottom .datagrid-body td{
+	border-right:1px dotted transparent;
+}
+.datagrid-header-rownumber,.datagrid-cell-rownumber{
+	width:40px!important;
+}

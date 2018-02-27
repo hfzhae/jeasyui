@@ -27,10 +27,11 @@
 					panelWidth: 300,
 					idField: 'inv',
 					textField: 'name',
-					url: '',
-					method: 'get',
 					striped:true,
+					pagination:false,
+					pagePosition:'bottom',
 					editable: true,
+					rownumbers:true,
 					columns: [[
 						{field:'inv',title:'仓库编号',width:80},
 						{field:'name',title:'仓库名称',width:120}
@@ -138,43 +139,37 @@
                             co.datagrid('selectRow', 0);  
                         }  
 					},
+					left: function(){},
+					right:function(){},
 					enter: function(){
-						var co = $(this);
-						co.combogrid('hidePanel');
-					},
-					query: function(q){
-						//$(this).combogrid("grid").datagrid("reload", { 'name': q });  
-						//$(this).combogrid("setValue", q);
-					    //$('#stocklist').combogrid("grid").datagrid("reload", {'name': q});
 						var co = $(this),
 							t = $.trim(co.combogrid('getText'));
-						console.log(t);
-						co.combogrid('setValue', q);
-						//co.combogrid('clear');
-						var rowsq = [];
-						for (var i in rows['firstRows']) {
-							//console.log(rows['rows'][i].name)
-							if (rows['firstRows'][i].name.toLowerCase().indexOf(t.toLowerCase()) != -1) {
-								//rowsq[i] = rows['firstRows'][i];
-								rowsq.push({
-									inv: rows['firstRows'][i].inv,
-									date: rows['firstRows'][i].date,
-									name: rows['firstRows'][i].name,
-									amount: rows['firstRows'][i].amount,
-									price: rows['firstRows'][i].price,
-									cost: rows['firstRows'][i].cost,
-									note: rows['firstRows'][i].note
-								});
-
+						var selected = co.combogrid('grid').datagrid('getSelected');  
+                        if (selected) {  
+							co.combogrid('hidePanel');
+                        } else {  
+							var rowsq = [];
+							for (var i in rows['firstRows']) {
+								if (rows['firstRows'][i].name.toLowerCase().indexOf(t.toLowerCase()) != -1 || rows['firstRows'][i].inv.toLowerCase().indexOf(t.toLowerCase()) != -1) {
+									rowsq.push(rows['firstRows'][i]);
+								}
 							}
-						}
-						//debugger;
-						co.combogrid('grid').datagrid('loadData', {
-							total:rowsq.length,
-							rows:rowsq
-						});
-
-						//return false;
+							co.combogrid('grid').datagrid('loadData', {
+								total:rowsq.length,
+								rows:rowsq
+							});
+							setTimeout(function(){
+								if(t != ''){
+									co.combogrid('grid').datagrid('selectRow', 0);
+								}
+								if(rowsq.length == 1){
+									co.combogrid('hidePanel');
+								}
+							}, 100);
+                        }  
+					},
+					query: function(q){
+						$(this).combogrid('setValue', q);
 					}
 				},
 				onShowPanel:function(){
@@ -189,6 +184,7 @@
 								autoRowHeight:false,
 								pageSize:50
 							});
+							//debugger;
 							rows = data
 							g.datagrid('loadData', rows);
 							$(g).parent().find('.datagrid-mask').remove();
