@@ -191,6 +191,7 @@ require(['config'], function () {
 					closable:true
 				});
 				$('#tabs_'+node.id).css({padding:5});
+				$.parser.parse();
 			}
 		}
 	}).css({padding: 5});
