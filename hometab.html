@@ -12,29 +12,36 @@
 			</div>
 		</div>
 		<div style="width:20%;">
-			<div title="calendar" closable="true" style="height:250px;text-align:center;">
+			<div title="calendar" closable="true" style="height:200px;text-align:center;">
 				<div class="easyui-calendar" border="false" style="width:100%;height:100%;"></div>
 			</div>
 		</div>
 		<div style="width:20%;">
+			<div title="calendar" closable="true" style="height:100px;padding:5px;">
+				仓库: 
+				<select id="stocklist" class="easyui-combogrid" style="width:100%" data-options="
+						panelWidth: 300,
+						idField: 'inv',
+						textField: 'name',
+						striped:true,
+						pagination:false,
+						pagePosition:'bottom',
+						asynurl:'server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(),
+						editable: true,
+						rownumbers:true,
+						columns: [[
+							{field:'inv',title:'仓库编号',width:80,search:true},
+							{field:'name',title:'仓库名称',width:120,search:true}
+						]],
+						fitColumns: false,
+						filter: function(q, row){
+							return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
+						}
+					">
+				</select>
+			</div>
 		</div>
 		<div style="width:40%;">
-			<div id="pgrid" title="DataGrid" closable="true" style="height:300px;">
-				<table class="easyui-datagrid" style="width:100%;height:100%;"
-						fit="true" border="false"
-						singleSelect="true"
-						idField="itemid" url="server/json/datagrid_data_portal.json" method="get">
-					<thead>
-						<tr>
-							<th field="itemid" width="60">Item ID</th>
-							<th field="productid" width="60">Product ID</th>
-							<th field="listprice" width="80" align="right">List Price</th>
-							<th field="unitcost" width="80" align="right">Unit Cost</th>
-							<th field="status" width="50" align="center">Status</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
 			<div title="" closable="true" border="false" style="height:300px;text-align:center;">
 				<div class="easyui-tabs" plain="true" style="width:100%;height:100%">
 					<div title="About" style="padding:10px">
@@ -51,8 +58,21 @@
 					<div title="My Documents" style="padding:10px">
 						<ul class="easyui-tree" data-options="url:'server/json/tree_data2.json',method:'get',animate:true"></ul>
 					</div>
-					<div title="Help" data-options="iconCls:'icon-help',closable:true" style="padding:10px">
-						This is the help content.
+					<div id="pgrid" title="DataGrid" data-options="iconCls:'icon-help',closable:true">
+						<table class="easyui-datagrid" style="width:100%;height:100%;"
+								fit="true" border="false"
+								singleSelect="true"
+								idField="itemid" url="server/json/datagrid_data_portal.json" method="get">
+							<thead>
+								<tr>
+									<th field="itemid" width="60">Item ID</th>
+									<th field="productid" width="60">Product ID</th>
+									<th field="listprice" width="80" align="right">List Price</th>
+									<th field="unitcost" width="80" align="right">Unit Cost</th>
+									<th field="status" width="50" align="center">Status</th>
+								</tr>
+							</thead>
+						</table>
 					</div>
 				</div>
 			</div>

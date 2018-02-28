@@ -81,8 +81,12 @@ require(['config'], function () {
 				$('#ttl').datagrid('loadData', []);
 			}
 		},
+		onSelect: function(){
+			setTimeout(function(){
+				$.parser.parse();//选中时重新渲染页面尺寸
+			},0);
+		},
 		onBeforeClose: function(title,index){
-			$.parser.parse();
 			return true;	// prevent from closing
 			var target = this;
 			console.log(title);
@@ -99,6 +103,13 @@ require(['config'], function () {
 		}
 	});
 	
+	$('#tabsCenter').tabs('bindDblclick', function(index, title){
+		$.messager.show({
+			title:'双击',
+			msg:'你双击里了 '+title+'，index: ' + index
+		});
+    });
+
 	/*
 	$('#saleout').css({padding:5});
 	$('#stockquery').css({padding:5});
@@ -131,7 +142,7 @@ require(['config'], function () {
 	$('#east').append('<table id="pg">');
 	$('#pg').propertygrid({
 		border:false,
-		url:'server/json/propertygrid_data1.json',
+		url:'server/json/propertygrid_data1.json?v=' + (new Date()).getTime(),
 		method:'get',
 		showGroup:true,
 		scrollbarSize:0,
@@ -175,7 +186,7 @@ require(['config'], function () {
 	}).accordion('select', 0);
 	*/
 	$('#menuWest').tree({
-		url: 'server/json/tree_data1.json',
+		url: 'server/json/tree_data1.json?v=' + (new Date()).getTime(),
 		method: 'get',
 		animate:true,
 		dnd:true,
@@ -193,7 +204,7 @@ require(['config'], function () {
 					closable:true
 				});
 				$('#tabs_'+node.id).css({padding:5});
-				$.parser.parse();
+				//$.parser.parse();
 			}
 		}
 	}).css({padding: 5});
