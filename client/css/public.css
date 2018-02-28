@@ -1,27 +1,29 @@
 .homelogo{
-	width:35px;
+	width:60px;
     position:absolute;
 	left:10px;
-	top:9px;
+	bottom:-10px;
+	filter:alpha(opacity=0);
+	-webkit-filter:opacity(0);
 }
 .hometitle{
     position:absolute;
-	left:55px;
-	top:9px;
+	left:10px;
+	bottom:1px;
 	color:#fff;
-	font-size:15px;
+	font-size:16px;
 }
 .homeversion{
     position:absolute;
-	left:55px;
-	top:28px;
+	left:50px;
+	bottom:1px;
 	color:#ccc;
 	font-size:10px;
 }
 .hometitlecopyright{
     position:absolute;
 	right:10px;
-	bottom:5px;
+	bottom:1px;
 	color:#ccc;
 	font-size:12px;
 }
