@@ -63,9 +63,10 @@ $.extend($.fn.combogrid.defaults, {
 				co.combogrid('hidePanel');
 				window.event.keyCode = 9;
 			} else {  
-				var rowsq = [];
+				var rowsq = [],
+					serachon;
 				for (var i in rows) {
-					var serachon = 0
+					serachon = 0
 					for(var j in searchField){
 						if (rows[i][searchField[j]].toLowerCase().indexOf(t.toLowerCase()) != -1) {
 							serachon = 1;
@@ -97,40 +98,39 @@ $.extend($.fn.combogrid.defaults, {
 				if (selected) {  
 					var index = g.datagrid('getRowIndex', selected); 
 					g.datagrid('unselectRow', index);//键盘响应，取消选中的行
-					//console.log(index);
-					//g.datagrid('getRowIndex', index).removeClass("datagrid-row-selected");
-					//co.combogrid('setValue', t);
 				}
 			} catch(err) {}
 		}
 	},
 	onShowPanel:function(){
 		var co = $(this)
-			g = co.combogrid('grid');
-
+			g = co.combogrid('grid'),
+			pageSize = 50;
+		
 		if(g.datagrid('getRows').length == 0){
 			var t = $.trim(co.combogrid('getText')),
-				pageSize = 50,
 				mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
 				ops = co.combogrid('options'),
 				url = ops.asynurl;
 				
-			ops.oRows = [];
 			g.parent().append(mask);
+			
+			g.datagrid({
+				view:scrollview,
+				pageSize:pageSize
+			});
+			
+			ops.oRows = [];
 
 			$.getJSON(url, function(data){				
-				if(data.total > pageSize){
-					g.datagrid({
-						view:scrollview,
-						pageSize:pageSize
-					});
-				}
 
 				for(var i in data['rows']){
 					ops.oRows.push(data['rows'][i]);
 				}
-
-				g.datagrid('loadData', data);
+				g.datagrid('loadData', {
+					total:data.rows.length,
+					rows:data.rows
+				});
 				mask.remove();
 				co.combogrid('setValue', t);
 			});

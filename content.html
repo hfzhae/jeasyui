@@ -37,43 +37,23 @@
 						{field:'inv',title:'仓库编号',width:80,search:true},
 						{field:'name',title:'仓库名称',width:120,search:true}
 					]],
-					fitColumns: false,
+					fitColumns: true,
 					filter: function(q, row){
 						return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
 				    }
 				">
 			</select>
-			业务员: 
-			<select id="ownerlist" class="easyui-combogrid" style="width:150px" data-options="
-					panelWidth: 300,
-					idField: 'inv',
-					textField: 'name',
-					striped:true,
-					pagination:false,
-					pagePosition:'bottom',
-					asynurl:'server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(),
-					editable: true,
-					rownumbers:false,
-					columns: [[
-						{field:'inv',title:'仓库编号',width:80,search:true},
-						{field:'name',title:'仓库名称',width:120,search:true}
-					]],
-					fitColumns: false,
-					filter: function(q, row){
-						return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
-				    }
-				">
-			</select>			客户: 
+			客户: 
 			<select class="easyui-combogrid" style="width:150px" data-options="
 					panelWidth: 300,
-					idField: 'itemid',
+					idField: 'productid',
 					textField: 'productname',
 					asynurl: 'server/json/datagrid_data1.json',
 					columns: [[
-						{field:'itemid',title:'客户编号',width:80,search:true},
+						{field:'productid',title:'客户编号',width:80,search:true},
 						{field:'productname',title:'客户名称',width:120,search:true}
 					]],
-					fitColumns: false
+					fitColumns: true
 				">
 			</select>
 		</div>
