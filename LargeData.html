@@ -6,8 +6,8 @@
 </head>
 <body>    
     <div id="bt1" style="padding:5px;">
-        <span>Record Count:</span>
-        <input id="total" class="easyui-numberbox" value="10050" min="10050" max="10050">
+        <!--<span>Record Count:</span>
+        <input id="total" class="easyui-numberbox" value="10050" min="10050" max="10050">-->
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" onclick="loaddata()">Load</a>
     </div>
     <table id="ttl" style="height:100%;"
@@ -47,7 +47,7 @@
 		});
 		function loaddata(){
 			$('#ttl').datagrid({
-				total: $('#total').numberbox('getValue'),
+				//total: $('#total').numberbox('getValue'),
 				url: 'server/json/datagrid25_getdata.json'
 			});
 			$('#ttl').datagrid('load');

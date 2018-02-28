@@ -24,12 +24,25 @@
 				url:'server/json/datagrid27_getdata.json',
 				method:'get',
 				striped:true,
+				fitColumns: false,
                 idField:'inv',autoRowHeight:false,pageSize:50">
         <thead>
             <tr>
-                <th field="inv" width="80">Inv No</th>
-                <th field="date" width="100">Date</th>
-                <th field="name" width="80">Name</th>
+                <th field="inv" width="80" data-options="sortable:true,sorter:function(a,b){  
+					a = a.split('/');  
+					b = b.split('/');  
+					if (a[2] == b[2]){  
+						if (a[0] == b[0]){  
+							return (a[1]>b[1]?1:-1);  
+						} else {  
+							return (a[0]>b[0]?1:-1);  
+						}  
+					} else {  
+						return (a[2]>b[2]?1:-1);  
+					}  
+				}">Inv No</th>
+                <th field="date" width="100" data-options="sortable:true">Date</th>
+                <th field="name" width="80" data-options="sortable:true">Name</th>
                 <th field="amount" width="80" align="right">Amount</th>
                 <th field="price" width="80" align="right">Price</th>
                 <th field="cost" width="100" align="right">Cost</th>

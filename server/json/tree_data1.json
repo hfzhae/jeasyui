@@ -69,11 +69,11 @@
 		"children":[{
 			"id":401,
 			"text":"预收款单",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":402,
 			"text":"销售收款单",
-			"href":""
+			"href":"public.html"
 		}]
 	},{
 		"id":6,
@@ -81,11 +81,11 @@
 		"children":[{
 			"id":404,
 			"text":"预收款单",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":405,
 			"text":"销售收款单",
-			"href":""
+			"href":"public.html"
 		}]
 	},{
 		"id":7,
@@ -93,23 +93,23 @@
 		"children":[{
 			"id":407,
 			"text":"预收款查询",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":408,
 			"text":"销售收款查询",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":409,
 			"text":"应收余额",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":410,
 			"text":"应收汇总查询",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":403,
 			"text":"客户应收台帐",
-			"href":""
+			"href":"public.html"
 		}]
 	}]
 },{
@@ -122,11 +122,11 @@
 		"children":[{
 			"id":801,
 			"text":"采购订单",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":802,
 			"text":"采购入库单",
-			"href":""
+			"href":"public.html"
 		}]
 	},{
 		"id":10,
@@ -135,11 +135,11 @@
 		"children":[{
 			"id":804,
 			"text":"采购订单",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":805,
 			"text":"采购入库单",
-			"href":""
+			"href":"public.html"
 		}]
 	},{
 		"id":11,
@@ -147,15 +147,15 @@
 		"children":[{
 			"id":807,
 			"text":"采购订单询",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":808,
 			"text":"采购入库单查询",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":809,
 			"text":"采购汇总查询",
-			"href":""
+			"href":"public.html"
 		}]
 	}]
 },{
@@ -168,15 +168,15 @@
 		"children":[{
 			"id":901,
 			"text":"入库单",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":902,
 			"text":"出库单",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":910,
 			"text":"调拨单",
-			"href":""
+			"href":"public.html"
 		}]
 	},{
 		"id":14,
@@ -184,15 +184,15 @@
 		"children":[{
 			"id":904,
 			"text":"入库单",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":905,
 			"text":"出库单",
-			"href":""
+			"href":"public.html"
 		},{
 			"id":911,
 			"text":"调拨单",
-			"href":""
+			"href":"public.html"
 		}]
 	},{
 		"id":15,
@@ -200,27 +200,27 @@
 		"children":[{
 			"id":907,
 			"text":"库存查询",
-			"href":"",
+			"href":"public.html",
 			"iconCls":"icon-search"
 		},{
 			"id":908,
 			"text":"进销存汇总表",
-			"href":"",
+			"href":"public.html",
 			"iconCls":"icon-search"
 		},{
 			"id":909,
 			"text":"入库查询",
-			"href":"",
+			"href":"public.html",
 			"iconCls":"icon-search"
 		},{
 			"id":912,
 			"text":"出库查询",
-			"href":"",
+			"href":"public.html",
 			"iconCls":"icon-search"
 		},{
 			"id":914,
 			"text":"库存产品台账",
-			"href":"",
+			"href":"public.html",
 			"iconCls":"icon-search"
 		}]
 	}]
