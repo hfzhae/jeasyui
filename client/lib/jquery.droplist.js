@@ -45,6 +45,7 @@ $.extend($.fn.combogrid.defaults, {
 		left: function(){},
 		right:function(){},
 		enter: function(){
+			$(this).combogrid('showPanel');
 			var co = $(this),
 				t = $.trim(co.combogrid('getText')),
 				ops = co.combogrid('options'),
@@ -52,7 +53,6 @@ $.extend($.fn.combogrid.defaults, {
 				selected = co.combogrid('grid').datagrid('getSelected'),
 				columns = ops.columns,
 				searchField = [];  
-
 			for (var j in columns[0]){
 				if(columns[0][j].search){
 					searchField.push(columns[0][j].field);//找出需要搜索的字段名
@@ -102,28 +102,22 @@ $.extend($.fn.combogrid.defaults, {
 			} catch(err) {}
 		}
 	},
-	onShowPanel:function(){
+	onShowPanel: function(){
 		var co = $(this)
 			g = co.combogrid('grid'),
 			pageSize = 50;
-		
 		if(g.datagrid('getRows').length == 0){
 			var t = $.trim(co.combogrid('getText')),
 				mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
 				ops = co.combogrid('options'),
 				url = ops.asynurl;
-				
 			g.parent().append(mask);
-			
 			g.datagrid({
 				view:scrollview,
 				pageSize:pageSize
 			});
-			
 			ops.oRows = [];
-
-			$.getJSON(url, function(data){				
-
+			$.getJSON(url, { v: (new Date()).getTime() }, function(data){				
 				for(var i in data['rows']){
 					ops.oRows.push(data['rows'][i]);
 				}
@@ -135,5 +129,54 @@ $.extend($.fn.combogrid.defaults, {
 				co.combogrid('setValue', t);
 			});
 		}
+	},
+	inputEvents: {//键盘事件重造
+		keydown: function(e){
+		var _a2e = e.data.target;
+		var t = $(_a2e);
+		var _a2f = t.data("combo");
+		var opts = t.combo("options");
+		_a2f.panel.panel("options").comboTarget = _a2e;
+		switch (e.keyCode) {
+			case 38:
+				opts.keyHandler.up.call(_a2e, e);
+				break;
+			case 40:
+				opts.keyHandler.down.call(_a2e, e);
+				break;
+			case 37:
+				opts.keyHandler.left.call(_a2e, e);
+				break;
+			case 39:
+				opts.keyHandler.right.call(_a2e, e);
+				break;
+			case 13:
+				e.preventDefault();
+				opts.keyHandler.enter.call(_a2e, e);
+				return false;
+			case 9:
+			case 27:
+				var _a39 = $.data(_a2e, "combo").panel;
+				_a39.panel("close");
+				break;
+			default:
+				if (opts.editable) {
+					if (_a2f.timer) {
+						clearTimeout(_a2f.timer);
+					}
+					_a2f.timer = setTimeout(function() {
+						var q = t.combo("getText");
+						if (_a2f.previousText != q) {
+							_a2f.previousText = q;
+							t.combo("showPanel");
+							opts.keyHandler.query.call(_a2e, q, e);
+							t.combo("validate");
+						}
+					},
+					opts.delay);
+				}
+			}
+		}
 	}
+
 });
