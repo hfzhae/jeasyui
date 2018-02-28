@@ -29,13 +29,15 @@
 					textField: 'name',
 					striped:true,
 					pagination:false,
+					required:true,
 					pagePosition:'bottom',
 					asynurl:'server/json/datagrid25_getdata.json',
 					editable: true,
 					rownumbers:false,
 					columns: [[
 						{field:'inv',title:'仓库编号',width:80,search:true},
-						{field:'name',title:'仓库名称',width:120,search:true}
+						{field:'name',title:'仓库名称',width:120,search:true},
+						{field:'searchcode',hidden:true,search:true},
 					]],
 					fitColumns: true,
 					filter: function(q, row){
@@ -89,19 +91,19 @@
 					valueField:'id',
 					textField:'text'
 				}}">Item ID</th>
-				<th data-options="field:'productid',width:100,sortable:true,editor:{type:'combogrid',options:{
+				<th data-options="field:'productname',width:100,sortable:true,editor:{type:'combogrid',options:{
 					panelWidth: 300,
-					idField: 'itemid',
-					textField: 'productname',
-					url: 'server/json/datagrid_data1.json',
-					method: 'get',
+					idField: 'name',
+					textField: 'name',
+					asynurl: 'server/json/datagrid25_getdata.json',
 					columns: [[
-						{field:'itemid',title:'产品编号',width:80},
-						{field:'productname',title:'产品名称',width:120}
+						{field:'inv',title:'产品编号',width:80,search:true},
+						{field:'name',title:'产品名称',width:120,search:true},
+						{field:'searchcode',hidden:true,search:true},
 					]],
 					fitColumns: false,
-					required:true,
-					editable:false
+					required:false,
+					editable:true
 				}}">Product</th>
 				<th data-options="field:'listprice',width:80,align:'right',sortable:true,editor:{type:'numberbox',options:{precision:1}}">List Price</th>
 				<th data-options="field:'unitcost',width:80,align:'right',sortable:true,editor:'numberbox'">Unit Cost</th>
