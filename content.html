@@ -33,13 +33,13 @@
 					pagePosition:'bottom',
 					asynurl:'server/json/datagrid25_getdata.json',
 					editable: true,
-					rownumbers:false,
+					rownumbers:true,
 					columns: [[
 						{field:'inv',title:'仓库编号',width:80,search:true},
 						{field:'name',title:'仓库名称',width:120,search:true},
 						{field:'searchcode',hidden:true,search:true},
 					]],
-					fitColumns: true,
+					fitColumns: false,
 					filter: function(q, row){
 						return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
 				    }
