@@ -77,16 +77,21 @@ require(['config'], function () {
 	
 	$('#tabsCenter').tabs({
 		onUnselect: function(tab, panel){
+			/*
 			if(panel == 1){
 				$('#ttl').datagrid('loadData', []);
 			}
+			*/
 		},
 		onSelect: function(){
+			/*
 			setTimeout(function(){
 				$.parser.parse();//选中时重新渲染页面尺寸
 			},0);
+			*/
 		},
 		onBeforeClose: function(title,index){
+			/*
 			return true;	// prevent from closing
 			var target = this;
 			console.log(title);
@@ -100,6 +105,7 @@ require(['config'], function () {
 				}
 			});
 			return false;	// prevent from closing
+			*/
 		}
 	});
 	

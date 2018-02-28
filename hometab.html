@@ -18,27 +18,6 @@
 		</div>
 		<div style="width:20%;">
 			<div title="calendar" closable="true" style="height:100px;padding:5px;">
-				仓库: 
-				<select id="stocklist" class="easyui-combogrid" style="width:100%" data-options="
-						panelWidth: 300,
-						idField: 'inv',
-						textField: 'name',
-						striped:true,
-						pagination:false,
-						pagePosition:'bottom',
-						asynurl:'server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(),
-						editable: true,
-						rownumbers:true,
-						columns: [[
-							{field:'inv',title:'仓库编号',width:80,search:true},
-							{field:'name',title:'仓库名称',width:120,search:true}
-						]],
-						fitColumns: false,
-						filter: function(q, row){
-							return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
-						}
-					">
-				</select>
 			</div>
 		</div>
 		<div style="width:40%;">

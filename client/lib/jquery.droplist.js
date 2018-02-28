@@ -7,7 +7,7 @@ dev by zz on 2018/2/16
 
 新增属性：
 options.columns.search（bool）:true的字段支持搜索；
-options.rows:存储原始数据
+options.oRows:存储原始数据
 options.asynurl:异步读取的url地址
 *****************************************************************/
 
@@ -48,7 +48,7 @@ $.extend($.fn.combogrid.defaults, {
 			var co = $(this),
 				t = $.trim(co.combogrid('getText')),
 				ops = co.combogrid('options'),
-				rows = ops.rows,
+				rows = ops.oRows,
 				selected = co.combogrid('grid').datagrid('getSelected'),
 				columns = ops.columns,
 				searchField = [];  
@@ -115,7 +115,7 @@ $.extend($.fn.combogrid.defaults, {
 				ops = co.combogrid('options'),
 				url = ops.asynurl;
 				
-			ops.rows = [];
+			ops.oRows = [];
 			g.parent().append(mask);
 
 			$.getJSON(url, function(data){				
@@ -127,10 +127,10 @@ $.extend($.fn.combogrid.defaults, {
 				}
 
 				for(var i in data['rows']){
-					ops.rows.push(data['rows'][i]);
+					ops.oRows.push(data['rows'][i]);
 				}
 
-				g.datagrid('loadData', ops.rows);
+				g.datagrid('loadData', data);
 				mask.remove();
 				co.combogrid('setValue', t);
 			});
