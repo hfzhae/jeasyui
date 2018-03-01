@@ -6,14 +6,10 @@ require(['config'], function () {
 	$('#center').append('<div id="tabsCenter">');
 	$('#bodylauout').layout({
 		onCollapse: function(){
-				setTimeout(function(){
-					$('#pp').portal('resize');
-				},200);
+			$('#pp').portal('resize');
 		},
 		onExpand: function(){
-				setTimeout(function(){
-					$('#pp').portal('resize');
-				},300);
+			$('#pp').portal('resize');
 		}
 	})
 	$('#tabsCenter').tabs({
@@ -256,7 +252,7 @@ require(['config'], function () {
 					selected: true,
 					closable:true
 				});
-				$('#tabs_'+node.id).css({padding:5});
+				$('#tabs_'+node.id).css({padding:3});
 			}
 		}
 	}).css({padding: 5});
