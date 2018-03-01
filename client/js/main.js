@@ -10,7 +10,7 @@ require(['config'], function () {
 		border:false,
 		plain:false,
 		tools:[{
-			iconCls:'icon-clear',
+			iconCls:'icon-DeclineInvitation',
 			handler:function(){
 				var arrTitle = new Array(),
 					id = "#tabsCenter",
@@ -30,7 +30,7 @@ require(['config'], function () {
 				}  
 			}
 		},{
-			iconCls:'icon-arrow-out',
+			iconCls:'icon-expand2',
 			id:'layoutOutBtn',
 			handler:function(){
 				var tb = $('#bodylauout');
@@ -44,7 +44,7 @@ require(['config'], function () {
 				//$('#tabsCenter').tabs('resize');
 			}
 		},{
-			iconCls:'icon-arrow-in',
+			iconCls:'icon-contract2',
 			id:'layoutInBtn',
 			handler:function(){
 				var tb = $('#bodylauout');
@@ -230,7 +230,7 @@ require(['config'], function () {
 		url: 'server/json/tree_data1.json?v=' + (new Date()).getTime(),
 		method: 'get',
 		animate:true,
-		dnd:true,
+		dnd:false,
 		onClick: function(node){
 			if(node.id < 10) return;
 			if($('#tabs_'+node.id).length > 0){

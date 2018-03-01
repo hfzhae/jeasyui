@@ -45,11 +45,185 @@
 .icon-arrow-out{
 	background:url('icons/arrow-out.png') no-repeat center center;
 }
+.icon-arrow-in{
+	background:url('icons/arrow-in.png') no-repeat center center;
+}
 .icon-home{
 	background:url('icons/home.png') no-repeat center center;
 }
-.icon-arrow-in{
-	background:url('icons/arrow-in.png') no-repeat center center;
+.icon-cross{
+	background:url('icons/cross.png') no-repeat center center;
+}
+.icon-contract{
+	background:url('icons/contract.png') no-repeat center center;
+}
+.icon-expand{
+	background:url('icons/expand.png') no-repeat center center;
+}
+.icon-contract2{
+	background:url('icons/contract2_h.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-expand2{
+	background:url('icons/expand2_h.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-window-resize{
+	background:url('icons/window-resize.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-trash_full{
+	background:url('icons/trash_full.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-DeclineInvitation,.panel-tool-close{
+	background:url('icons/32/DeclineInvitation.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.tree-folder{
+	background:url('icons/32/RecentlyUsedFolder.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.tree-folder-open{
+	background:url('icons/32/FileOpen_custom.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.tree-file{
+	background:url('icons/32/FileNew.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.searchbox-button,.icon-search{
+	background:url('icons/32/ZoomClassic_custom.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-reload{
+	background:url('icons/32/Recurrence.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-cancel{
+	background:url('icons/32/DeclineInvitation.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-print{
+	background:url('icons/32/FilePrint.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-save{
+	background:url('icons/32/Save32.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-edit{
+	background:url('icons/32/ViewsModeMenu.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-add{
+	background:url('icons/32/glyph-add.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-remove{
+	background:url('icons/32/glyph-remove.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-back{
+	background:url('icons/32/arrow-left.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.tree-expanded {
+  background: url('images/tree_icons_h.png') no-repeat -18px 0px;
+  background-size:272px 36px;
+}
+.tree-expanded-hover {
+  background: url('images/tree_icons_h.png') no-repeat -50px 0px;
+  background-size:272px 36px;
+}
+
+.tree-collapsed {
+  background: url('images/tree_icons_h.png') no-repeat 0px 0px;
+  background-size:272px 36px;
+}
+.tree-collapsed-hover {
+  background: url('images/tree_icons_h.png') no-repeat -32px 0px;
+  background-size:272px 36px;
+}
+
+.layout-button-up {
+  background: url('images/layout_arrows_h.png') no-repeat -16px -16px;
+  background-size:32px 32px;
+}
+.layout-button-down {
+  background: url('images/layout_arrows_h.png') no-repeat -16px 0;
+  background-size:32px 32px;
+}
+.layout-button-left {
+  background: url('images/layout_arrows_h.png') no-repeat 0 0;
+  background-size:32px 32px;
+}
+.layout-button-right {
+  background: url('images/layout_arrows_h.png') no-repeat 0 -16px;
+  background-size:32px 32px;
+}
+.icon-help{
+	background:url('icons/32/button-white-help.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.datagrid-sort .datagrid-sort-icon {
+	display: inline;
+	padding: 0 13px 0 0;
+	background: url('images/datagrid_icons_h.png') no-repeat -64px center;
+	background-size:80px 16px;
+}
+.datagrid-sort-desc .datagrid-sort-icon {
+  display: inline;
+  padding: 0 13px 0 0;
+  background: url('images/datagrid_icons_h.png') no-repeat -16px center;
+	background-size:80px 16px;
+}
+.datagrid-sort-asc .datagrid-sort-icon {
+  display: inline;
+  padding: 0 13px 0 0;
+  background: url('images/datagrid_icons.png') no-repeat 0px center;
+}
+.icon-tip{
+	background:url('icons/32/light-bulb-on.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-ok{
+	background:url('icons/32/SharingRequestAllow.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.combo-arrow {
+	background: url('images/combo_arrow_h.png') no-repeat center center;
+	background-size:16px 16px;
+	background-color: #E0ECFF;
+}
+.datebox .combo-arrow {
+	background-image: url('images/datebox_arrow_h.png');
+	background-position: center center;
+	background-size:16px 16px;
+}
+.icon-cut{
+	background:url('icons/32/edit-cut.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.calendar-prevyear {
+	left: 3px;
+	background: url('images/calendar_arrows_h.png') no-repeat -1px -2px;
+	background-size:64px 16px;
+}
+.calendar-nextyear {
+	right: 3px;
+	background: url('images/calendar_arrows_h.png') no-repeat -49px -2px;
+	background-size:64px 16px;
+}
+.calendar-prevmonth {
+	left: 20px;
+	background: url('images/calendar_arrows_h.png') no-repeat -18px -2px;
+	background-size:64px 16px;
+}
+.calendar-nextmonth {
+	right: 20px;
+	background: url('images/calendar_arrows_h.png') no-repeat -34px -2px;
+	background-size:64px 16px;
 }
 
 .tabs-tool{
