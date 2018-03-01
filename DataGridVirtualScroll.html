@@ -5,23 +5,23 @@
 	<title>AJAX Content</title>
 </head>
 <body>    
-    <div id="loadfrom" style="padding:5px;">
+    <!--<div id="loadfrom" style="padding:5px;">
 		日期: <input class="easyui-datebox" style="width:120px">
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('local');">本地数据</a>
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="load('remote');">服务器数据（分页）</a>
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-tip'" onclick="load('largdata');">服务器数据（一次性）</a>
-        <!--<select onchange="load(this.value)">
+        <select onchange="load(this.value)">
             <option value="remote">Load Remote Data</option>
             <option value="local">Load Local Data</option>
-        </select>-->
-    </div>
+        </select>
+    </div>-->
     
     <table id="tt" title="" style="height:100%;display:none;" data-options="
                 view:scrollview,
 				rownumbers:true,
 				singleSelect:true,
-				toolbar:'#loadfrom',
-				url:'server/json/datagrid27_getdata.json',
+				toolbar:toolbar,
+				//url:'server/json/datagrid27_getdata.json',
 				method:'get',
 				striped:true,
 				fitColumns: false,
@@ -51,14 +51,39 @@
         </thead>
     </table>
     <script type="text/javascript">
- 		//require(['../client/lib/datagrid-scrollview'], function () {
-			$(function(){
-				$('#tt').datagrid();
-				$('#tt').show();
-				//$('#tt').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
+		var toolbar = [{
+			text:'local',
+			iconCls:'icon-search',
+			handler:function(){load('local');}
+		},'-',{
+			text:'remote',
+			iconCls:'icon-reload',
+			handler:function(){load('remote');}
+		},{
+			text:'scrollview',
+			iconCls:'icon-ok',
+			handler:function(){loadlargdata()}
+		}], date1;
+		$(function(){
+			$('#tt').datagrid({
+				onLoadSuccess:function(data){
+					$('#tt').datagrid('loaded');
+					var date2=new Date();    //结束时间
+					var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
+					$.messager.show({
+						title:'Info',
+						msg:'Load '+data.total+' records successfully time consuming: ' + date3 + 's'
+					});
+					date1 = new Date();
+				}
+
 			});
-		//});
+			$('#tt').show();
+			//$('#tt').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
+		});
         function loadLocal(){
+			$('#tt').datagrid('loading');
+			date1 = new Date();    //开始时间
             var rows = [];
             for(var i=1; i<=100000; i++){
                 var amount = Math.floor(Math.random()*1000);
@@ -74,22 +99,12 @@
                 });
             }
             $('#tt').datagrid('loadData', rows);
-
         }
 		function loadlargdata(){
-			var date1=new Date();    //结束时间
+			date1 = new Date();    //结束时间
 			$('#tt').datagrid('loading');
-			$.getJSON('server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(), function(data){
+			$.getJSON('server/json/datagrid25_getdata.json', function(data){
 				$('#tt').datagrid('loadData', data);
-				var date2=new Date();    //结束时间
-				var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
-				var date2=new Date();    //结束时间
-				var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
-				$.messager.show({
-					title:'Info',
-					msg:'Load '+data.total+' records successfully time consuming: ' + date3 + 's'
-				});
-				$('#tt').datagrid('loaded');
 			});
 		}
         function load(mode){
@@ -97,6 +112,8 @@
             if (mode == 'local'){
                 loadLocal();
             } else if(mode == 'remote') {
+				$('#tt').datagrid('loading');
+				date1=new Date();    //结束时间
                 $('#tt').datagrid({
                     url:'server/json/datagrid27_getdata.json'
                 });

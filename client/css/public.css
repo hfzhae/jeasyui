@@ -76,7 +76,8 @@
 	background:url('icons/trash_full.png') no-repeat center center;
 	background-size:16px 16px;
 }
-.icon-DeclineInvitation,.panel-tool-close{
+
+.icon-DeclineInvitation{
 	background:url('icons/32/DeclineInvitation.png') no-repeat center center;
 	background-size:16px 16px;
 }
@@ -225,6 +226,15 @@
 	background: url('images/calendar_arrows_h.png') no-repeat -34px -2px;
 	background-size:64px 16px;
 }
+.tabs li a.tabs-close {
+	background: url('images/tabs_icons_h.png') no-repeat -34px center;
+	background-size:48px 16px;
+}
+.panel-tool-close{
+	background:url('icons/32/GroupHeaderFooterClose.png') no-repeat center center;
+	background-size:20px 20px;
+}
+
 
 .tabs-tool{
 	border-top:0px!important;

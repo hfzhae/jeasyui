@@ -130,7 +130,8 @@ $.extend($.fn.combogrid.defaults, {
 			});
 			ops.oRows = [];
 			ops.asyn = 1;
-			$.getJSON(url, { v: (new Date()).getTime() }, function(data){				
+			//$.getJSON(url, { v: (new Date()).getTime() }, function(data){				
+			$.getJSON(url, function(data){				
 				for(var i in data['rows']){
 					ops.oRows.push(data['rows'][i]);
 				}

@@ -4,7 +4,18 @@ dev by zz on 2018/2/16
 *****************************************************************/
 require(['config'], function () {
 	$('#center').append('<div id="tabsCenter">');
-	
+	$('#bodylauout').layout({
+		onCollapse: function(){
+				setTimeout(function(){
+					$('#pp').portal('resize');
+				},200);
+		},
+		onExpand: function(){
+				setTimeout(function(){
+					$('#pp').portal('resize');
+				},300);
+		}
+	})
 	$('#tabsCenter').tabs({
 		fit:true,
 		border:false,
@@ -41,6 +52,7 @@ require(['config'], function () {
 
 				$('#layoutOutBtn').hide();
 				$('#layoutInBtn').show();
+
 				//$('#tabsCenter').tabs('resize');
 			}
 		},{
