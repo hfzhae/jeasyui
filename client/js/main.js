@@ -29,8 +29,40 @@ require(['config'], function () {
 					}  
 				}  
 			}
+		},{
+			iconCls:'icon-arrow-out',
+			id:'layoutOutBtn',
+			handler:function(){
+				var tb = $('#bodylauout');
+				//tb.layout('collapse','north');
+				tb.layout('collapse','south');
+				tb.layout('collapse','east');
+				tb.layout('collapse','west');
+
+				$('#layoutOutBtn').hide();
+				$('#layoutInBtn').show();
+				//$('#tabsCenter').tabs('resize');
+			}
+		},{
+			iconCls:'icon-arrow-in',
+			id:'layoutInBtn',
+			handler:function(){
+				var tb = $('#bodylauout');
+				//tb.layout('collapse','north');
+				tb.layout('expand','south');
+				//tb.layout('expand','east');
+				tb.layout('expand','west');
+
+				$('#layoutOutBtn').show();
+				$('#layoutInBtn').hide();
+				//$('#tabsCenter').tabs('resize');
+			}
 		}]
 	});
+	setTimeout(function(){
+		$('#layoutInBtn').hide();
+		$('#tabsCenter').tabs('resize');
+	},0);
 	
 	$('#tabsCenter').tabs('add',{
 	//	id:'ribbon',
@@ -84,11 +116,14 @@ require(['config'], function () {
 			*/
 		},
 		onSelect: function(){
-			/*
+			//setTimeout(function(){
+			//	$.parser.parse();//选中时重新渲染页面尺寸
+			//},200);
+			var tb = $(this);
 			setTimeout(function(){
-				$.parser.parse();//选中时重新渲染页面尺寸
+				tb.tabs('resize');//重新计算页面尺寸布局
 			},0);
-			*/
+			
 		},
 		onBeforeClose: function(title,index){
 			/*
@@ -210,11 +245,10 @@ require(['config'], function () {
 					closable:true
 				});
 				$('#tabs_'+node.id).css({padding:5});
-				//$.parser.parse();
 			}
 		}
 	}).css({padding: 5});
-	$.parser.parse();
+	//$.parser.parse();
 	//$('body').css({padding:5});
 	//$('.easyui-layout').css({width:($(window).width()-10),height:($(window).height()-10)});
 	//require(['easyui'], function(){

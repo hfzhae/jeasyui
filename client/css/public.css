@@ -9,7 +9,7 @@
 .hometitle{
     position:absolute;
 	left:10px;
-	bottom:1px;
+	bottom:0px;
 	color:#fff;
 	font-size:16px;
 }
@@ -41,4 +41,26 @@
 }
 .datagrid-header-rownumber,.datagrid-cell-rownumber{
 	width:40px!important;
+}
+.icon-arrow-out{
+	background:url('icons/arrow-out.png') no-repeat center center;
+}
+.icon-home{
+	background:url('icons/home.png') no-repeat center center;
+}
+.icon-arrow-in{
+	background:url('icons/arrow-in.png') no-repeat center center;
+}
+
+.tabs-tool{
+	border-top:0px!important;
+	border-right:0px!important;
+}
+.tabs-scroller-right{
+	border-top:0px!important;
+	border-right:0px!important;
+}
+.tabs-scroller-left{
+	border-top:0px!important;
+	border-left:0px!important;
 }

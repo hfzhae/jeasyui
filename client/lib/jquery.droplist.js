@@ -122,6 +122,7 @@ $.extend($.fn.combogrid.defaults, {
 			var t = $.trim(co.combogrid('getText')),
 				mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
 				url = ops.asynurl;
+			if(!url)return;
 			g.parent().append(mask);
 			g.datagrid({
 				view:scrollview,
