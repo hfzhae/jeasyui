@@ -4,7 +4,7 @@ dev by zz on 2018/2/16
 *****************************************************************/
 
 easyloader.base = 'client/lib/easyui/';
-easyloader.theme = 'bootstrap';
+easyloader.theme = 'default';
 easyloader.locale = "zh_CN";
 
 easyloader.load([
@@ -29,7 +29,7 @@ easyloader.load([
 			split: true
 		}).layout('add',{
 			region: 'north',
-			height: 20,
+			height: 23,
 			href:'north.html',
 			border:false,
 			split: false
