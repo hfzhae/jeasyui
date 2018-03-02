@@ -1,64 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Ribbon - jQuery EasyUI</title>
-</head>
-<body>
-	<h1>Ribbon</h1>
-	<div id="rr" style="width:100%;">
-	</div>
-	<h1>Ribbon Markup</h1>
-
-	<div class="easyui-ribbon" style="width:100%;">
-		<div title="Home">
-			<div class="ribbon-group">
-				<div class="ribbon-toolbar">
-					<a href="#" class="easyui-menubutton" data-options="name:'paste',iconCls:'icon-paste-large',iconAlign:'top',size:'large'">Paste</a>
-				</div>
-				<div class="ribbon-toolbar">
-					<a href="#" class="easyui-linkbutton" data-options="name:'cut',iconCls:'icon-cut',plain:true">Cut</a><br>
-					<a href="#" class="easyui-linkbutton" data-options="name:'copy',iconCls:'icon-copy',plain:true">Copy</a><br>
-					<a href="#" class="easyui-linkbutton" data-options="name:'format',iconCls:'icon-format',plain:true">Format</a>
-				</div>
-				<div class="ribbon-group-title">Clipboard</div>
-			</div>
-			<div class="ribbon-group-sep"></div>
-			<div class="ribbon-group">
-				<div class="ribbon-toolbar" style="width:200px">
-					<select id="homestocklist" class="easyui-combogrid" style="width:120px;" data-options="
-							panelWidth: 300,
-							idField: 'inv',
-							textField: 'name',
-							striped:true,
-							pagination:false,
-							pagePosition:'bottom',
-							asynurl:'server/json/datagrid25_getdata.json?v=' + (new Date()).getTime(),
-							editable: true,
-							rownumbers:true,
-							columns: [[
-								{field:'inv',title:'仓库编号',width:80,search:true},
-								{field:'name',title:'仓库名称',width:120,search:true}
-							]],
-							fitColumns: false,
-							filter: function(q, row){
-								return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
-							}
-						">
-					</select><select id="homestocklist" class="easyui-combobox" style="width:40px;" data-options="
-						data:[{text:'8'},{text:'12',selected:true},{text:'14'}],
-						valueField:'text',
-						textField:'text',
-						panelHeight:'auto'
-					">
-					</select>
-				</div>
-				<div class="ribbon-group-title">other title</div>
-			</div>
-			<div class="ribbon-group-sep"></div>
-		</div>
-	</div>
-	<script type="text/javascript">
+<div id="rr" style="width:100%;"></div>
+<div id="rrt"></div>
+<script type="text/javascript">
+	easyloader.load(['ribbon', 'linkbutton', 'splitbutton', 'combobox'], function(){
 		var data = {
 			selected:0,
 			tabs:[{
@@ -115,7 +58,7 @@
 							valueField:'text',
 							textField:'text',
 							data:[{text:'8'},{text:'12',selected:true},{text:'14'}],
-							width:40,
+							width:45,
 							panelHeight:'auto',
 							editable:false
 						}]
@@ -295,11 +238,32 @@
 			}]
 		};
 		
-		$(function(){
-			$('#rr').ribbon({
-				data:data
-			});
+		$('#rr').ribbon({
+			data:data,
+			border: false,
+			plain:true
+		}).css({'padding':0});
+		$('#rrt').datagrid({
+			remoteSort:false,
+			rownumbers:false,
+			singleSelect:true,
+			pagination:false,
+			fit:false,
+			fitColumns:false,
+			url:'server/json/datagrid_data1.json',
+			method:'get',
+			toolbar:'#rr',
+			rownumbers:true,
+			columns:[[
+				{field:'itemid',title:'itemid',width:80,},
+				{field:'productname',title:'productname',width:100},
+				{field:'listprice',title:'listprice',width:80,align:'right'},
+				{field:'unitcost',title:'unitcost',width:80,align:'right'},
+				{field:'attr1',title:'attr1',width:150},
+				{field:'status',title:'status',width:60,align:'center'}
+			]],
+			height: '100%'
 		});
-	</script>
-</body>
-</html>
+
+	});
+</script>

@@ -1,106 +1,96 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Portal - jQuery EasyUI</title>
-</head>
-<body>
-	<div id="pp" style="max-width:1024px;">
-		<div>
-			<div title="" closable="true" border="false" style="height:300px;text-align:center;">
-				<div class="easyui-tabs" plain="true" style="width:100%;height:100%">
-					<div title="About" style="padding:10px">
-						<p style="font-size:14px">jQuery EasyUI framework helps you build your web pages easily.</p>
-						<ul>
-							<li>easyui is a collection of user-interface plugin based on jQuery.</li>
-							<li>easyui provides essential functionality for building modem, interactive, javascript applications.</li>
-							<li>using easyui you don't need to write many javascript code, you usually defines user-interface by writing some HTML markup.</li>
-							<li>complete framework for HTML5 web page.</li>
-							<li>easyui save your time and scales while developing your products.</li>
-							<li>easyui is very easy but powerful.</li>
-						</ul>
-					</div>
-					<div title="My Documents" style="padding:10px">
-						<ul class="easyui-tree" data-options="url:'server/json/tree_data2.json',method:'get',animate:true"></ul>
-					</div>
-					<div id="pgrid" title="DataGrid" data-options="iconCls:'icon-help',closable:true">
-						<table class="easyui-datagrid" style="width:100%;height:100%;"
-								fit="true" border="false"
-								singleSelect="true"
-								idField="itemid" url="server/json/datagrid_data_portal.json" method="get">
-							<thead>
-								<tr>
-									<th field="itemid" width="60">Item ID</th>
-									<th field="productid" width="60">Product ID</th>
-									<th field="listprice" width="80" align="right">List Price</th>
-									<th field="unitcost" width="80" align="right">Unit Cost</th>
-									<th field="status" width="50" align="center">Status</th>
-								</tr>
-							</thead>
-						</table>
-					</div>
+<div id="homeDiv" style="max-width:1024px;">
+	<div>
+		<div title="" closable="true" border="false" style="height:300px;text-align:center;">
+			<div class="easyui-tabs" plain="true" style="width:100%;height:100%">
+				<div title="About" style="padding:10px">
+					<p style="font-size:14px">jQuery EasyUI framework helps you build your web pages easily.</p>
+					<ul>
+						<li>easyui is a collection of user-interface plugin based on jQuery.</li>
+						<li>easyui provides essential functionality for building modem, interactive, javascript applications.</li>
+						<li>using easyui you don't need to write many javascript code, you usually defines user-interface by writing some HTML markup.</li>
+						<li>complete framework for HTML5 web page.</li>
+						<li>easyui save your time and scales while developing your products.</li>
+						<li>easyui is very easy but powerful.</li>
+					</ul>
+				</div>
+				<div title="My Documents" style="padding:10px">
+					<ul class="easyui-tree" data-options="url:'server/json/tree_data2.json',method:'get',animate:true"></ul>
+				</div>
+				<div id="pgrid" title="DataGrid" data-options="iconCls:'icon-help',closable:true">
+					<table class="easyui-datagrid" style="width:100%;height:100%;"
+							fit="true" border="false"
+							singleSelect="true"
+							idField="itemid" url="server/json/datagrid_data_portal.json" method="get">
+						<thead>
+							<tr>
+								<th field="itemid" width="60">Item ID</th>
+								<th field="productid" width="60">Product ID</th>
+								<th field="listprice" width="80" align="right">List Price</th>
+								<th field="unitcost" width="80" align="right">Unit Cost</th>
+								<th field="status" width="50" align="center">Status</th>
+							</tr>
+						</thead>
+					</table>
 				</div>
 			</div>
 		</div>
-		<div style="width:300px;">
-			<div title="" border="false" iconCls="icon-search" closable="false" style="height:35px;padding:5px;">
-				<input class="easyui-searchbox" style="width:100%;">
-			</div>
-			<div title="" closable="false" style="height:200px;text-align:center;">
-				<div class="easyui-calendar" border="false" style="width:100%;height:100%;"></div>
-			</div>
-			<div title="Top 10" closable="true" style="height:100px;padding:5px;">
-			</div>
 	</div>
-	<style type="text/css">
-		.title{
-			font-size:16px;
-			font-weight:bold;
-			padding:20px 10px;
-			background:#eee;
-			overflow:hidden;
-			border-bottom:1px solid #ccc;
-		}
-		.t-list{
-			padding:5px;
-		}
-	</style>
-	<script>
-		$(function(){
-			$('#pp').portal({
-				border:false,
-				fit:true
+	<div style="width:300px;">
+		<div title="" border="false" iconCls="icon-search" closable="false" style="height:35px;padding:5px;">
+			<input class="easyui-searchbox" style="width:100%;">
+		</div>
+		<div title="" closable="false" style="height:200px;text-align:center;">
+			<div class="easyui-calendar" border="false" style="width:100%;height:100%;"></div>
+		</div>
+		<div title="Top 10" closable="true" style="height:100px;padding:5px;">
+		</div>
+</div>
+<style type="text/css">
+	.title{
+		font-size:16px;
+		font-weight:bold;
+		padding:20px 10px;
+		background:#eee;
+		overflow:hidden;
+		border-bottom:1px solid #ccc;
+	}
+	.t-list{
+		padding:5px;
+	}
+</style>
+<script>
+	$('#homeDiv').portal({
+		border:false,
+		fit:true
+	});
+	//add();
+	function add(){
+		for(var i=0; i<3; i++){
+			var p = $('<div/>').appendTo('body');
+			p.panel({
+				title:'Title'+i,
+				content:'<div style="padding:5px;">Content'+(i+1)+'</div>',
+				height:200,
+				closable:true,
+				collapsible:true
 			});
-			//add();
-		});
-		function add(){
-			for(var i=0; i<3; i++){
-				var p = $('<div/>').appendTo('body');
-				p.panel({
-					title:'Title'+i,
-					content:'<div style="padding:5px;">Content'+(i+1)+'</div>',
-					height:200,
-					closable:true,
-					collapsible:true
-				});
-				$('#pp').portal('add', {
-					panel:p,
-					columnIndex:i
-				});
-			}
-			$('#pp').portal('resize');
+			$('#homeDiv').portal('add', {
+				panel:p,
+				columnIndex:i
+			});
 		}
-		function remove(){
-			$('#pp').portal('remove',$('#pgrid'));
-			$('#pp').portal('resize');
-		}
-		window.onresize = function() { 
-			setTimeout(function(){
-				$('#pp').portal('resize');
-			},200);
-		}
-
-	</script>
-
-</body>
-</html>
+		$('#homeDiv').portal('resize');
+	}
+	function remove(){
+		$('#homeDiv').portal('remove',$('#pgrid'));
+		$('#homeDiv').portal('resize');
+	}
+	setTimeout(function(){
+		$('#homeDiv').portal('resize');
+	}, 200);
+	window.onresize = function() { 
+		setTimeout(function(){
+			$('#homeDiv').portal('resize');
+		},200);
+	}
+</script>

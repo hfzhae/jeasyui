@@ -1,0 +1,78 @@
+<div id="center"></div>
+<script type="text/javascript">
+	$('#center').css({
+		'width':'100%',
+		'height':'100%'
+	}).tabs({
+		fit:true,
+		border:false,
+		plain:false,
+		tools:[{
+			iconCls:'icon-DeclineInvitation',
+			handler:function(){
+				var arrTitle = new Array(),
+					tabs = $("#center").tabs("tabs"),
+					tCount = tabs.length;
+					
+				if(tCount>0){  
+					for(var i=0;i<tCount;i++){
+						if(tabs[i].panel('options').closable){
+							arrTitle.push(tabs[i].panel('options').title)
+						}  
+					}
+					
+					for(var i=0;i<arrTitle.length;i++){  
+						$("#center").tabs("close",arrTitle[i]);  
+					}  
+				}  
+			}
+		},{
+			iconCls:'icon-expand2',
+			id:'layoutOutBtn',
+			handler:function(){
+				//tb.layout('collapse','north');
+				//$('#bodylaout').layout('collapse','south');
+				//$('#bodylaout').layout('collapse','east');
+				$('#bodylaout').layout('collapse','west');
+
+				$('#layoutOutBtn').hide();
+				$('#layoutInBtn').show();
+
+				//$('#tabsCenter').tabs('resize');
+			}
+		},{
+			iconCls:'icon-contract2',
+			id:'layoutInBtn',
+			handler:function(){
+				//$('#bodylaout').layout('expand','south');
+				//tb.layout('expand','east');
+				$('#bodylaout').layout('expand','west');
+
+				$('#layoutOutBtn').show();
+				$('#layoutInBtn').hide();
+				//$('#tabsCenter').tabs('resize');
+			}
+		}]
+	}).tabs('add', {
+		id:'hometab',
+		title:'首页',
+		href:'hometab.html',
+		selected: true,
+		closable:false
+	}).tabs({
+		onSelect: function(title, index){
+			if(index == 0)$('#homeDiv').portal('resize');
+
+			var tb = $(this);
+			setTimeout(function(){
+				tb.tabs('resize');//重新计算页面尺寸布局
+			},0);
+			
+		}
+	});
+	setTimeout(function(){
+		$('#layoutInBtn').hide();
+		$('#tabsCenter').tabs('resize');
+	},0);
+	
+</script>

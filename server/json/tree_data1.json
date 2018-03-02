@@ -23,15 +23,15 @@
 		"children":[{
 			"id":104,
 			"text":"销售订单",
-			"href":"ribbon.html"
+			"href":"public.html"
 		},{
 			"id":105,
 			"text":"销售出库单",
-			"href":"ribbon.html"
+			"href":"public.html"
 		},{
 			"id":106,
 			"text":"销售退货单",
-			"href":"ribbon.html"
+			"href":"public.html"
 		}]
 	},{
 		"id":3,
@@ -45,12 +45,12 @@
 		},{
 			"id":108,
 			"text":"销售出库单查询",
-			"href":"ribbon.html",
+			"href":"public.html",
 			"iconCls":"icon-search"
 		},{
 			"id":109,
 			"text":"销售退货单查询",
-			"href":"ribbon.html",
+			"href":"public.html",
 			"iconCls":"icon-search"
 		},{
 			"id":110,

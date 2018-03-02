@@ -1,0 +1,25 @@
+<div id="west"></div>
+<script type="text/javascript">
+	$('#west').tree({
+		url: 'server/json/tree_data1.json?v=' + (new Date()).getTime(),
+		method: 'get',
+		animate:true,
+		dnd:false,
+		onClick: function(node){
+			if(node.id < 10) return;
+			if($('#tabs_'+node.id).length > 0){
+				$('#center').tabs('select', $('#tabs_'+node.id).panel('options').index);
+			}else{
+				$('#center').tabs('add',{
+					id:'tabs_'+node.id,
+					title:node.text,
+					href:node.href,
+					//href:'ribbon.html',
+					selected: true,
+					closable:true
+				});
+				$('#tabs_'+node.id).css({padding:3});
+			}
+		}
+	}).css({padding: 5});
+</script>

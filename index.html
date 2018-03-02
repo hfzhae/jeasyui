@@ -3,57 +3,45 @@
 <head>
 	<meta charset="UTF-8">
 	<title>e商x v0.1</title>
-	<link rel="stylesheet" type="text/css" href="client/css/easyui.css">
-	<link rel="stylesheet" type="text/css" href="client/css/icon.css">
-	<link rel="stylesheet" type="text/css" href="client/css/demo.css">
 	<link rel="stylesheet" type="text/css" href="client/css/public.css">
-	<link rel="stylesheet" type="text/css" href="client/css/portal.css">
-	<script type="text/javascript" src="client/lib/jquery.min.js"></script>
-	<script type="text/javascript" src="client/lib/jquery.easyui.min.js"></script>
-	<script type="text/javascript" src="client/lib/jquery.portal.js"></script>
-	<link rel="stylesheet" type="text/css" href="client/css/ribbon.css">
-	<link rel="stylesheet" type="text/css" href="client/css/ribbon-icon.css">
-	<script type="text/javascript" src="client/lib/jquery.ribbon.js"></script>
-	<script type="text/javascript" src="client/lib/datagrid-scrollview.js"></script>
-	<script type="text/javascript" src="client/lib/jquery.droplist.js"></script>
 </head>
-<body id="bodylauout" class="easyui-layout" data-options="border:false">
-	<div data-options="region:'north',border:false" id="hometitle" style="background-color:#345;height:30px;"></div>
-	<div data-options="region:'south',split:true,hideCollapsedContent:false" title="即时信息" style="height:100px;"></div>
-	<div id="east" data-options="region:'east',split:true,hideCollapsedContent:false,collapsed:true" title="属性" style="width:300px;"></div>
-	<div id="west" data-options="region:'west',split:true,hideCollapsedContent:false" title="功能菜单" style="width:200px;"></div>
-	<div id="center" data-options="region:'center',iconCls:'icon-ok'"></div>
+<body>
 </body>
-<script data-main="client/js/main" src="client/lib/require.js" type="text/javascript"></script>
+<script type="text/javascript" src="client/lib/easyui/easyloader.js"></script>
+<script type="text/javascript" src="client/lib/jquery.min.js"></script>
+<script type="text/javascript" src="client/js/main.js"></script>
 <script type="text/javascript">
-$.extend($.fn.tabs.methods, {
-    /**
-     * 绑定双击事件
-     * @param {Object} jq
-     * @param {Object} caller 绑定的事件处理程序
-     */
-    bindDblclick: function(jq, caller){
-        return jq.each(function(){
-            var that = this;
-            $(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs').delegate('li', 'dblclick.tabs', function(e){
-                if (caller && typeof(caller) == 'function') {
-                    var title = $(this).text();
-                    var index = $(that).tabs('getTabIndex', $(that).tabs('getTab', title));
-                    caller(index, title);
-                }
-            });
-        });
-    },
-    /**
-     * 解除绑定双击事件
-     * @param {Object} jq
-     */
-    unbindDblclick: function(jq){
-        return jq.each(function(){
-            $(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs');
-        });
-    }
-});
+		/*
+		$.extend($.fn.tabs.methods, {
+			
+			//绑定双击事件
+			//@param {Object} jq
+			//@param {Object} caller 绑定的事件处理程序
+			 
+			bindDblclick: function(jq, caller){
+				return jq.each(function(){
+					var that = this;
+					$(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs').delegate('li', 'dblclick.tabs', function(e){
+						if (caller && typeof(caller) == 'function') {
+							var title = $(this).text();
+							var index = $(that).tabs('getTabIndex', $(that).tabs('getTab', title));
+							caller(index, title);
+						}
+					});
+				});
+			},
+			
+			//解除绑定双击事件
+			//@param {Object} jq
+			 
+			unbindDblclick: function(jq){
+				return jq.each(function(){
+					$(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs');
+				});
+			}
+		});
+		*/
+	//});
 
 </script>
 </html>

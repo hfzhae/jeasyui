@@ -1,139 +1,110 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>AJAX Content</title>
-</head>
-<body>    
-    <!--<div id="loadfrom" style="padding:5px;">
-		日期: <input class="easyui-datebox" style="width:120px">
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="load('local');">本地数据</a>
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="load('remote');">服务器数据（分页）</a>
-		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-tip'" onclick="load('largdata');">服务器数据（一次性）</a>
-        <select onchange="load(this.value)">
-            <option value="remote">Load Remote Data</option>
-            <option value="local">Load Local Data</option>
-        </select>
-    </div>-->
-    
-    <table id="tt" title="" style="height:100%;display:none;" data-options="
-                view:scrollview,
-				rownumbers:true,
-				singleSelect:true,
-				toolbar:toolbar,
-				//url:'server/json/datagrid27_getdata.json',
-				method:'get',
-				striped:true,
-				fitColumns: false,
-                idField:'inv',autoRowHeight:false,pageSize:50">
-        <thead>
-            <tr>
-                <th field="inv" width="80" data-options="sortable:true,sorter:function(a,b){  
-					a = a.split('/');  
-					b = b.split('/');  
-					if (a[2] == b[2]){  
-						if (a[0] == b[0]){  
-							return (a[1]>b[1]?1:-1);  
-						} else {  
-							return (a[0]>b[0]?1:-1);  
-						}  
-					} else {  
-						return (a[2]>b[2]?1:-1);  
-					}  
-				}">Inv No</th>
-                <th field="date" width="100" data-options="sortable:true">Date</th>
-                <th field="name" width="80" data-options="sortable:true">Name</th>
-                <th field="amount" width="80" align="right">Amount</th>
-                <th field="price" width="80" align="right">Price</th>
-                <th field="cost" width="100" align="right">Cost</th>
-                <th field="note" width="110">Note</th>
-            </tr>
-        </thead>
-    </table>
-    <script type="text/javascript">
-		var toolbar = [{
-			text:'local',
-			iconCls:'icon-search',
-			handler:function(){load('local');}
-		},'-',{
-			text:'remote',
-			iconCls:'icon-reload',
-			handler:function(){load('remote');}
-		},{
-			text:'scrollview',
-			iconCls:'icon-ok',
-			handler:function(){loadlargdata()}
-		}], date1;
-		$(function(){
-			$('#tt').datagrid({
-				onLoadSuccess:function(data){
-					$('#tt').datagrid('loaded');
-					var date2=new Date();    //结束时间
-					var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
-					$.messager.show({
-						title:'Info',
-						msg:'Load '+data.total+' records successfully time consuming: ' + date3 + 's'
-					});
-					date1 = new Date();
-				}
-
+<div id="tt"></div>
+<script type="text/javascript">
+easyloader.load(['datagrid', 'datagridscrollview'], function(){
+	var toolbar = [{
+		text:'local',
+		iconCls:'icon-search',
+		handler:function(){load('local');}
+	},'-',{
+		text:'remote',
+		iconCls:'icon-reload',
+		handler:function(){load('remote');}
+	},{
+		text:'scrollview',
+		iconCls:'icon-ok',
+		handler:function(){loadlargdata()}
+	}], date1;
+	
+	
+	
+	$('#tt').datagrid({
+		view:scrollview,
+		height:'100%',
+		rownumbers:true,
+		singleSelect:true,
+		toolbar:toolbar,
+		//url:'server/json/datagrid27_getdata.json',
+		method:'get',
+		striped:true,
+		fitColumns: false,
+		idField:'inv',
+		autoRowHeight:false,
+		pageSize:50,
+		columns:[[
+			{field:'inv',title:'inv',width:80,},
+			{field:'date',title:'Code',width:100},
+			{field:'name',title:'Name',width:100},
+			{field:'amount',title:'amount',width:80,align:'right'},
+			{field:'price',title:'Price',width:80,align:'right'},
+			{field:'cost',title:'cost',width:100,align:'right'},
+			{field:'note',title:'note',width:100,align:'right'}
+		]],
+		onLoadSuccess:function(data){
+			$('#tt').datagrid('loaded');
+			var date2=new Date();    //结束时间
+			var date3=(date2.getTime()-date1.getTime())/1000  //时间差的毫秒数
+			$.messager.show({
+				title:'Info',
+				msg:'Load '+data.total+' records successfully time consuming: ' + date3 + 's'
 			});
-			$('#tt').show();
-			//$('#tt').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
-		});
-        function loadLocal(){
-			$('#tt').datagrid('loading');
-			date1 = new Date();    //开始时间
-            var rows = [];
-            for(var i=1; i<=100000; i++){
-                var amount = Math.floor(Math.random()*1000);
-                var price = Math.floor(Math.random()*1000);
-                rows.push({
-                    inv: 'Inv No '+i,
-                    date: $.fn.datebox.defaults.formatter(new Date()),
-                    name: 'Name '+i,
-                    amount: amount,
-                    price: price,
-                    cost: amount*price,
-                    note: 'Note '+i
-                });
-            }
-            $('#tt').datagrid('loadData', rows);
-        }
-		function loadlargdata(){
-			date1 = new Date();    //结束时间
-			$('#tt').datagrid('loading');
-			$.getJSON('server/json/datagrid25_getdata.json', function(data){
-				$('#tt').datagrid('loadData', data);
+			date1 = new Date();
+		}
+
+	});
+	//$('#tt').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
+	function loadLocal(){
+		$('#tt').datagrid('loading');
+		date1 = new Date();    //开始时间
+		var rows = [];
+		for(var i=1; i<=100000; i++){
+			var amount = Math.floor(Math.random()*1000);
+			var price = Math.floor(Math.random()*1000);
+			rows.push({
+				inv: 'Inv No '+i,
+				date: $.fn.datebox.defaults.formatter(new Date()),
+				name: 'Name '+i,
+				amount: amount,
+				price: price,
+				cost: amount*price,
+				note: 'Note '+i
 			});
 		}
-        function load(mode){
-			
-            if (mode == 'local'){
-                loadLocal();
-            } else if(mode == 'remote') {
-				$('#tt').datagrid('loading');
-				date1=new Date();    //结束时间
-                $('#tt').datagrid({
-                    url:'server/json/datagrid27_getdata.json'
-                });
-            }else if(mode == 'largdata'){
-				loadlargdata();
-			}
-        }
-    </script>
-    <style type="text/css">
-        .lines-both .datagrid-body td{
-        }
-        .lines-no .datagrid-body td{
-            border-right:1px dotted transparent;
-            border-bottom:1px dotted transparent;
-        }
-        .lines-right .datagrid-body td{
-            border-bottom:1px dotted transparent;
-        }
-        .lines-bottom .datagrid-body td{
-            border-right:1px dotted transparent;
-        }
-    </style></body>
-</html>
+		$('#tt').datagrid('loadData', rows);
+	}
+	function loadlargdata(){
+		date1 = new Date();    //结束时间
+		$('#tt').datagrid('loading');
+		$.getJSON('server/json/datagrid25_getdata.json', function(data){
+			$('#tt').datagrid('loadData', data);
+		});
+	}
+	function load(mode){
+		
+		if (mode == 'local'){
+			loadLocal();
+		} else if(mode == 'remote') {
+			$('#tt').datagrid('loading');
+			date1=new Date();    //结束时间
+			$('#tt').datagrid({
+				url:'server/json/datagrid27_getdata.json'
+			});
+		}else if(mode == 'largdata'){
+			loadlargdata();
+		}
+	}
+});
+</script>
+<style type="text/css">
+	.lines-both .datagrid-body td{
+	}
+	.lines-no .datagrid-body td{
+		border-right:1px dotted transparent;
+		border-bottom:1px dotted transparent;
+	}
+	.lines-right .datagrid-body td{
+		border-bottom:1px dotted transparent;
+	}
+	.lines-bottom .datagrid-body td{
+		border-right:1px dotted transparent;
+	}
+</style>

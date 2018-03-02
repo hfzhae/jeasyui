@@ -1,67 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>AJAX Content</title>
-</head>
-<body>
-	<div id="tb" style="padding:5px;height:auto">
-		<div>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
-			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">Cancel</a>
-			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Refresh</a>
-			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Search</a>
-			<a href="#" class="easyui-linkbutton" data-options="plain:true">Text Button</a>
-			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">打印</a>
-			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-help'"> </a>
-			<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'"></a>
-		</div>
-		<div>
-			单据日期: <input class="easyui-datebox" style="width:120px">
-			仓库: 
-			<select id="stocklist" class="easyui-combogrid" style="width:150px" data-options="
-					panelWidth: 300,
-					idField: 'inv',
-					textField: 'name',
-					striped:true,
-					pagination:false,
-					required:true,
-					pagePosition:'bottom',
-					asynurl:'server/json/datagrid25_getdata.json',
-					editable: true,
-					rownumbers:true,
-					columns: [[
-						{field:'inv',title:'仓库编号',width:80,search:true},
-						{field:'name',title:'仓库名称',width:120,search:true},
-						{field:'searchcode',hidden:true,search:true},
-					]],
-					fitColumns: false,
-					filter: function(q, row){
-						return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
-				    }
-				">
-			</select>
-			客户: 
-			<select class="easyui-combogrid" style="width:150px" data-options="
-					panelWidth: 300,
-					idField: 'productid',
-					textField: 'productname',
-					asynurl: 'server/json/datagrid_data1.json',
-					columns: [[
-						{field:'productid',title:'客户编号',width:80,search:true},
-						{field:'productname',title:'客户名称',width:120,search:true}
-					]],
-					fitColumns: true
-				">
-			</select>
-		</div>
+<div id="tb" style="padding:5px;height:auto">
+	<div>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">Cancel</a>
+		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Refresh</a>
+		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Search</a>
+		<a href="#" class="easyui-linkbutton" data-options="plain:true">Text Button</a>
+		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">打印</a>
+		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-help'"> </a>
+		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'"></a>
 	</div>
-	<table id="dg" title="" style="height:100%;"
-			data-options="remoteSort:false,
+	<div>
+		单据日期: <input class="easyui-datebox" style="width:120px">
+		仓库: <div id="stocklist"></div>
+		客户: <div id="customlist"></div>
+	</div>
+</div>
+<div id="t1"></div>
+<script type="text/javascript">
+	easyloader.load(['combogrid', 'datagridscrollview', 'droplist', 'combobox'], function(){
+		$('#t1').datagrid({
+			remoteSort:false,
 			rownumbers:false,
 			singleSelect:true,
 			pagination:false,
@@ -70,134 +32,52 @@
 			url:'server/json/datagrid_data1.json',
 			method:'get',
 			toolbar:'#tb',
-			onClickCell: onClickCell">
-		<thead>
-			<tr>
-				<th data-options="field:'itemid',width:80,sortable:true,sorter:function(a,b){  
-					a = a.split('/');  
-					b = b.split('/');  
-					if (a[2] == b[2]){  
-						if (a[0] == b[0]){  
-							return (a[1]>b[1]?1:-1);  
-						} else {  
-							return (a[0]>b[0]?1:-1);  
-						}  
-					} else {  
-						return (a[2]>b[2]?1:-1);  
-					}  
-				},editor:{type:'combobox', options:{
-					url:'server/json/combobox_data1.json',
-					method:'get',
-					valueField:'id',
-					textField:'text'
-				}}">Item ID</th>
-				<th data-options="field:'productname',width:100,sortable:true,editor:{type:'combogrid',options:{
-					panelWidth: 300,
-					idField: 'name',
-					textField: 'name',
-					asynurl: 'server/json/datagrid25_getdata.json',
-					columns: [[
-						{field:'inv',title:'产品编号',width:80,search:true},
-						{field:'name',title:'产品名称',width:120,search:true},
-						{field:'searchcode',hidden:true,search:true},
-					]],
-					fitColumns: false,
-					required:false,
-					editable:true
-				}}">Product</th>
-				<th data-options="field:'listprice',width:80,align:'right',sortable:true,editor:{type:'numberbox',options:{precision:1}}">List Price</th>
-				<th data-options="field:'unitcost',width:80,align:'right',sortable:true,editor:'numberbox'">Unit Cost</th>
-				<th data-options="field:'attr1',width:240,sortable:true,editor:'validatebox'">Attribute</th>
-				<th data-options="field:'status',width:60,align:'center',sortable:true,editor:{type:'checkbox',options:{on:'P',off:''}}">Status</th>
-				<th data-options="field:'date',width:120,sortable:true,editor:'datebox'">DateTime</th>
-			</tr>
-		</thead>
-	</table>
-
-	<script type="text/javascript">
-		
-		$(function(){
-			var pager = $('#dg').datagrid().datagrid('getPager');	// get the pager of datagrid
-			pager.pagination({
-				buttons:[{
-					iconCls:'icon-search',
-					handler:function(){
-						alert('search');
-					}
-				},{
-					iconCls:'icon-add',
-					handler:function(){
-						alert('add');
-					}
-				},{
-					iconCls:'icon-edit',
-					handler:function(){
-						alert('edit');
-					}
-				}]
-			});
+			columns:[[
+				{field:'itemid',title:'itemid',width:80,},
+				{field:'productname',title:'productname',width:100},
+				{field:'listprice',title:'listprice',width:80,align:'right'},
+				{field:'unitcost',title:'unitcost',width:80,align:'right'},
+				{field:'attr1',title:'attr1',width:80,align:'right'},
+				{field:'status',title:'status',width:100},
+				{field:'date',title:'date',width:100}
+			]],
+			height: '100%'
 		});
-		$.extend($.fn.datagrid.methods, {
-			editCell: function(jq,param){
-				return jq.each(function(){
-					var opts = $(this).datagrid('options');
-					var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
-					for(var i=0; i<fields.length; i++){
-						var col = $(this).datagrid('getColumnOption', fields[i]);
-						col.editor1 = col.editor;
-						if (fields[i] != param.field){
-							col.editor = null;
-						}
-					}
-					$(this).datagrid('beginEdit', param.index);
-					for(var i=0; i<fields.length; i++){
-						var col = $(this).datagrid('getColumnOption', fields[i]);
-						col.editor = col.editor1;
-					}
-				});
+		$('#stocklist').combogrid({
+			panelWidth: 300,
+			width:150,
+			idField: 'inv',
+			textField: 'name',
+			striped:true,
+			pagination:false,
+			required:true,
+			pagePosition:'bottom',
+			asynurl:'server/json/datagrid25_getdata.json',
+			editable: true,
+			rownumbers:true,
+			columns: [[
+				{field:'inv',title:'仓库编号',width:80,search:true},
+				{field:'name',title:'仓库名称',width:120,search:true},
+				{field:'searchcode',hidden:true,search:true},
+			]],
+			fitColumns: false,
+			filter: function(q, row){
+				return row['inv'].indexOf(q) >-1 || row['name'].indexOf(q) >-1;
 			}
+		});
+		$('#customlist').combogrid({
+			panelWidth: 300,
+			width:150,
+			idField: 'productid',
+			textField: 'productname',
+			asynurl: 'server/json/datagrid_data1.json',
+			columns: [[
+				{field:'productid',title:'客户编号',width:80,search:true},
+				{field:'productname',title:'客户名称',width:120,search:true}
+			]],
+			fitColumns: true
 		});
 		
-		var editIndex = undefined;
-		function endEditing(){
-			if (editIndex == undefined){return true}
-			if ($('#dg').datagrid('validateRow', editIndex)){
-				$('#dg').datagrid('endEdit', editIndex);
-				editIndex = undefined;
-				return true;
-			} else {
-				return false;
-			}
-		}
-		function onClickCell(index, field){
-			if (endEditing()){
-				$('#dg').datagrid('selectRow', index)
-						.datagrid('editCell', {index:index,field:field});
-				editIndex = index;
-			}
-		}
-		$.extend($.fn.datagrid.defaults.editors, {
-			combogrid: {
-				init: function(container, options){
-					var input = $('<input type="text" class="datagrid-editable-input">').appendTo(container); 
-					input.combogrid(options);
-					return input;
-				},
-				destroy: function(target){
-					$(target).combogrid('destroy');
-				},
-				getValue: function(target){
-					return $(target).combogrid('getValue');
-				},
-				setValue: function(target, value){
-					$(target).combogrid('setValue', value);
-				},
-				resize: function(target, width){
-					$(target).combogrid('resize',width);
-				}
-			}
-		});
-	</script>
+	});
 
-</body>
-</html>
+</script>
