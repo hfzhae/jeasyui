@@ -237,14 +237,14 @@
 
 
 .tabs-tool{
-	border-top:0px!important;
+	border-bottom:0px!important;
 	border-right:0px!important;
 }
 .tabs-scroller-right{
-	border-top:0px!important;
+	border-bottom:0px!important;
 	border-right:0px!important;
 }
 .tabs-scroller-left{
-	border-top:0px!important;
+	border-bottom:0px!important;
 	border-left:0px!important;
 }
