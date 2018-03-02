@@ -4,7 +4,7 @@ dev by zz on 2018/2/16
 *****************************************************************/
 
 easyloader.base = 'client/lib/easyui/';
-easyloader.theme = 'default';
+easyloader.theme = 'material';
 easyloader.locale = "zh_CN";
 
 easyloader.load([
@@ -24,9 +24,9 @@ easyloader.load([
 		}).layout('add',{
 			region: 'west',
 			width: 200,
-			title: '功能菜单',
+			//title: '功能菜单',
 			href: 'west.html',
-			split: true
+			split: false
 		}).layout('add',{
 			region: 'north',
 			height: 23,

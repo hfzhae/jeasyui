@@ -7,6 +7,7 @@
 		fit:true,
 		border:false,
 		plain:false,
+		tabPosition:'bottom',
 		tools:[{
 			iconCls:'icon-DeclineInvitation',
 			handler:function(){
@@ -37,8 +38,6 @@
 
 				$('#layoutOutBtn').hide();
 				$('#layoutInBtn').show();
-
-				//$('#tabsCenter').tabs('resize');
 			}
 		},{
 			iconCls:'icon-contract2',
@@ -47,10 +46,8 @@
 				//$('#bodylaout').layout('expand','south');
 				//tb.layout('expand','east');
 				$('#bodylaout').layout('expand','west');
-
 				$('#layoutOutBtn').show();
 				$('#layoutInBtn').hide();
-				//$('#tabsCenter').tabs('resize');
 			}
 		}]
 	}).tabs('add', {
@@ -72,7 +69,7 @@
 	});
 	setTimeout(function(){
 		$('#layoutInBtn').hide();
-		$('#tabsCenter').tabs('resize');
+		$('#center').tabs('resize');
 	},0);
 	
 </script>
