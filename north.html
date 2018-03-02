@@ -1,13 +1,96 @@
 <div id="north"></div>
 <script type="text/javascript">
-	$('#north').css({
-		'background-color':'#345',
-		'width':'100%',
-		'height':'100%'
-	})
-	.append('<img src="client/images/EBLOGO.png" class="homelogo">')
-	.append('<div class="hometitle">e商x</div>')
-	.append('<div class="homeversion">v0.1</div>')
-	.append('<div class="hometitlecopyright">Design by zydsoft™</div>');
-	
+	easyloader.load('menubutton', function(){
+		$('#north').css({
+			'background-color':'#333',
+			'width':'100%',
+			'height':'100%'
+		})
+		.append('<img src="client/images/EBLOGO.png" class="homelogo">')
+		.append('<div class="hometitle">e商x</div>')
+		.append('<div class="homeversion">v0.1</div>')
+		.append('<div class="hometitlecopyright">Design by zydsoft™</div>')
+		.append('<div id="themesDiv" class="hometitlethemesbtn">')
+		.append('<div id="themesmenuDiv">');
+		
+		var Storage = window.localStorage,
+			themes = Storage.getItem("themes");	
+
+		$('#themesmenuDiv').menu({})
+		.menu('appendItem', {
+			text: 'default',
+			iconCls:(themes=='default'?'icon-ok':''),
+			onclick: function(){setThemes('default')}
+		}).menu('appendItem', {
+			text: 'black',
+			iconCls:(themes=='black'?'icon-ok':''),
+			onclick: function(){setThemes('black')}
+		}).menu('appendItem', {
+			text: 'bootstrap',
+			iconCls:(themes=='bootstrap'?'icon-ok':''),
+			onclick: function(){setThemes('bootstrap')}
+		}).menu('appendItem', {
+			text: 'gray',
+			iconCls:(themes=='gray'?'icon-ok':''),
+			onclick: function(){setThemes('gray')}
+		}).menu('appendItem', {
+			text: 'material',
+			iconCls:(themes=='material'?'icon-ok':''),
+			onclick: function(){setThemes('material')}
+		}).menu('appendItem', {
+			text: 'metro',
+			iconCls:(themes=='metro'?'icon-ok':''),
+			onclick: function(){setThemes('metro')}
+		})
+		
+		.menu('appendItem', {
+			text: 'metro-blue',
+			iconCls:(themes=='metro-blue'?'icon-ok':''),
+			onclick: function(){setThemes('metro-blue')}
+		})
+		
+		.menu('appendItem', {
+			text: 'metro-gray',
+			iconCls:(themes=='metro-gray'?'icon-ok':''),
+			onclick: function(){setThemes('metro-gray')}
+		}).menu('appendItem', {
+			text: 'metro-green',
+			iconCls:(themes=='metro-green'?'icon-ok':''),
+			onclick: function(){setThemes('metro-green')}
+		}).menu('appendItem', {
+			text: 'metro-orange',
+			iconCls:(themes=='metro-orange'?'icon-ok':''),
+			onclick: function(){setThemes('metro-orange')}
+		}).menu('appendItem', {
+			text: 'metro-red',
+			iconCls:(themes=='metro-red'?'icon-ok':''),
+			onclick: function(){setThemes('metro-red')}
+		}).menu('appendItem', {
+			text: 'ui-cupertino',
+			iconCls:(themes=='ui-cupertino'?'icon-ok':''),
+			onclick: function(){setThemes('ui-cupertino')}
+		}).menu('appendItem', {
+			text: 'ui-dark-hive',
+			iconCls:(themes=='ui-dark-hive'?'icon-ok':''),
+			onclick: function(){setThemes('ui-dark-hive')}
+		}).menu('appendItem', {
+			text: 'ui-pepper-grinder',
+			iconCls:(themes=='ui-pepper-grinder'?'icon-ok':''),
+			onclick: function(){setThemes('ui-pepper-grinder')}
+		}).menu('appendItem', {
+			text: 'ui-sunny',
+			iconCls:(themes=='ui-sunny'?'icon-ok':''),
+			onclick: function(){setThemes('ui-sunny')}
+		});
+		
+		$('#themesDiv').menubutton({
+			text:'themes',
+			menu: '#themesmenuDiv'
+		}).find('.l-btn-text').css({'color':'#999999'});
+		
+		function setThemes(t){
+			Storage.setItem('themes', t);
+			location.reload();
+		}
+	});
 </script>
