@@ -9,30 +9,21 @@
 .hometitle{
     position:absolute;
 	left:10px;
-	bottom:0px;
+	bottom:1px;
 	color:#fff;
 	font-size:16px;
 }
 .homeversion{
     position:absolute;
 	left:50px;
-	bottom:1px;
-	color:#ccc;
+	bottom:2px;
+	color:#dddddd;
 	font-size:10px;
-}
-.hometitlecopyright{
-    position:absolute;
-	right:70px;
-	bottom:5px;
-	color:#ccc;
-	font-size:12px;
 }
 .hometitlethemesbtn{
     position:absolute;
-	right:0px;
+	right:10px;
 	bottom:0px;
-	color:#ccc;
-	font-size:12px;
 }
 .lines-both .datagrid-body td{
 }
@@ -257,6 +248,30 @@
 }
 .tree-ChartEditDataSource{
 	background:url('icons/32/ChartEditDataSource.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-ControlsGallery{
+	background:url('icons/32/ControlsGallery.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-AdpPrimaryKey{
+	background:url('icons/32/AdpPrimaryKey.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-GroupShapeStyles{
+	background:url('icons/32/GroupShapeStyles.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-NewContact{
+	background:url('icons/32/NewContact.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-AdvertisePublishAs{
+	background:url('icons/32/AdvertisePublishAs.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-user_custom{
+	background:url('icons/32/user_custom.png') no-repeat center center!important;
 	background-size:16px 16px!important;
 }
 

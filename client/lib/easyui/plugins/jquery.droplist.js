@@ -117,17 +117,18 @@ $.extend($.fn.combogrid.defaults, {
 			g = co.combogrid('grid'),
 			ops = co.combogrid('options'),
 			pageSize = 50;
-			
-		g.datagrid({
-			view:scrollview,
-			pageSize:pageSize
-		});
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
 			var t = $.trim(co.combogrid('getText')),
 				mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
 				url = ops.asynurl;
 			if(!url)return;
+			
+			g.datagrid({
+				view:scrollview,
+				pageSize:pageSize
+			});
+			
 			g.parent().append(mask);
 			ops.oRows = [];
 			ops.asyn = 1;

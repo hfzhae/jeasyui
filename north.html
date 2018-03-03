@@ -2,95 +2,173 @@
 <script type="text/javascript">
 	easyloader.load('menubutton', function(){
 		$('#north').css({
-			'background-color':'#333',
+			'background-color': getTitleColor(),
 			'width':'100%',
 			'height':'100%'
 		})
 		.append('<img src="client/images/EBLOGO.png" class="homelogo">')
 		.append('<div class="hometitle">e商x</div>')
-		.append('<div class="homeversion">v0.1</div>')
-		.append('<div class="hometitlecopyright">Design by zydsoft™</div>')
-		.append('<div id="themesDiv" class="hometitlethemesbtn">')
+		.append('<div class="homeversion">v0.1 Design by zydsoft™</div>')
+		.append('<div id="setupbtn" class="hometitlethemesbtn">')
+		.append('<div id="setupmenu">')
 		.append('<div id="themesmenuDiv">');
 		
 		var Storage = window.localStorage,
 			themes = Storage.getItem("themes");	
+			
+		$('#setupmenu').menu({
+			onClick: function(item){
+				if($('#tabs_'+item.id).length > 0){
+					$('#center').tabs('select', $('#tabs_'+item.id).panel('options').index);
+				}else{
 
-		$('#themesmenuDiv').menu({})
-		.menu('appendItem', {
-			text: 'default',
-			iconCls:(themes=='default'?'icon-ok':''),
-			onclick: function(){setThemes('default')}
-		}).menu('appendItem', {
-			text: 'black',
-			iconCls:(themes=='black'?'icon-ok':''),
-			onclick: function(){setThemes('black')}
-		}).menu('appendItem', {
-			text: 'bootstrap',
-			iconCls:(themes=='bootstrap'?'icon-ok':''),
-			onclick: function(){setThemes('bootstrap')}
-		}).menu('appendItem', {
-			text: 'gray',
-			iconCls:(themes=='gray'?'icon-ok':''),
-			onclick: function(){setThemes('gray')}
-		}).menu('appendItem', {
-			text: 'material',
-			iconCls:(themes=='material'?'icon-ok':''),
-			onclick: function(){setThemes('material')}
-		}).menu('appendItem', {
-			text: 'metro',
-			iconCls:(themes=='metro'?'icon-ok':''),
-			onclick: function(){setThemes('metro')}
+					$('#center').tabs('add',{
+						id:'tabs_'+item.id,
+						title:item.text,
+						href:'public.html',
+						iconCls:item.iconCls,
+						selected: true,
+						closable:true
+					});
+					$('#tabs_'+item.id).css({padding:10});
+				}
+			}
 		})
-		
 		.menu('appendItem', {
-			text: 'metro-blue',
-			iconCls:(themes=='metro-blue'?'icon-ok':''),
-			onclick: function(){setThemes('metro-blue')}
+			id:'setup_menu_01',
+			text: '个性设置',
+			iconCls:''
 		})
-		
 		.menu('appendItem', {
-			text: 'metro-gray',
-			iconCls:(themes=='metro-gray'?'icon-ok':''),
-			onclick: function(){setThemes('metro-gray')}
-		}).menu('appendItem', {
-			text: 'metro-green',
-			iconCls:(themes=='metro-green'?'icon-ok':''),
-			onclick: function(){setThemes('metro-green')}
-		}).menu('appendItem', {
-			text: 'metro-orange',
-			iconCls:(themes=='metro-orange'?'icon-ok':''),
-			onclick: function(){setThemes('metro-orange')}
-		}).menu('appendItem', {
-			text: 'metro-red',
-			iconCls:(themes=='metro-red'?'icon-ok':''),
-			onclick: function(){setThemes('metro-red')}
-		}).menu('appendItem', {
-			text: 'ui-cupertino',
-			iconCls:(themes=='ui-cupertino'?'icon-ok':''),
-			onclick: function(){setThemes('ui-cupertino')}
-		}).menu('appendItem', {
-			text: 'ui-dark-hive',
-			iconCls:(themes=='ui-dark-hive'?'icon-ok':''),
-			onclick: function(){setThemes('ui-dark-hive')}
-		}).menu('appendItem', {
-			text: 'ui-pepper-grinder',
-			iconCls:(themes=='ui-pepper-grinder'?'icon-ok':''),
-			onclick: function(){setThemes('ui-pepper-grinder')}
-		}).menu('appendItem', {
-			text: 'ui-sunny',
-			iconCls:(themes=='ui-sunny'?'icon-ok':''),
-			onclick: function(){setThemes('ui-sunny')}
+			separator: true
+		})
+		.menu('appendItem', {
+			id:'setup_menu_02',
+			text: '修改密码',
+			iconCls:'icon-AdpPrimaryKey'
+		})
+		.menu('appendItem', {
+			id:'setup_menu_03',
+			text: '修改个人信息',
+			iconCls:'icon-NewContact'
+		})
+		.menu('appendItem', {
+			id:'setup_menu_04',
+			text: '切换主题',
+			menu: '#themesmenuDiv'
+		})
+		.menu('appendItem', {
+			separator: true
+		})
+		.menu('appendItem', {
+			id:'setup_menu_05',
+			text: '关于e商',
+			iconCls:'icon-AdvertisePublishAs'
 		});
 		
-		$('#themesDiv').menubutton({
-			text:'themes',
-			menu: '#themesmenuDiv'
-		}).find('.l-btn-text').css({'color':'#999999'});
+		$('#setupbtn').menubutton({
+			iconCls: 'icon-ControlsGallery',
+			menu: '#setupmenu'
+		});
 		
-		function setThemes(t){
+		$('#setupbtn').find('.m-btn-downarrow').remove();
+		$('#setupbtn').find('.l-btn-empty').css({'marginRight':0});
+		
+		$('#setupmenu')
+		.menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'default',
+			iconCls:(themes=='default'?'icon-ok':''),
+			onclick: function(){setThemes('default', '#334455')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'black',
+			iconCls:(themes=='black'?'icon-ok':''),
+			onclick: function(){setThemes('black', '#333333')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'bootstrap',
+			iconCls:(themes=='bootstrap'?'icon-ok':''),
+			onclick: function(){setThemes('bootstrap', '#334455')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'gray',
+			iconCls:(themes=='gray'?'icon-ok':''),
+			onclick: function(){setThemes('gray', '#666666')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'material',
+			iconCls:(themes=='material'?'icon-ok':''),
+			onclick: function(){setThemes('material', '#666666')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'metro',
+			iconCls:(themes=='metro'?'icon-ok':''),
+			onclick: function(){setThemes('metro', '#666666')}
+		})
+		.menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'metro-blue',
+			iconCls:(themes=='metro-blue'?'icon-ok':''),
+			onclick: function(){setThemes('metro-blue', '#789')}
+		})
+		.menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'metro-gray',
+			iconCls:(themes=='metro-gray'?'icon-ok':''),
+			onclick: function(){setThemes('metro-gray', '#345')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'metro-green',
+			iconCls:(themes=='metro-green'?'icon-ok':''),
+			onclick: function(){setThemes('metro-green', '#96a36a')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'metro-orange',
+			iconCls:(themes=='metro-orange'?'icon-ok':''),
+			onclick: function(){setThemes('metro-orange', '#A39153')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'metro-red',
+			iconCls:(themes=='metro-red'?'icon-ok':''),
+			onclick: function(){setThemes('metro-red', '#F09090')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'ui-cupertino',
+			iconCls:(themes=='ui-cupertino'?'icon-ok':''),
+			onclick: function(){setThemes('ui-cupertino', '#3BAAE3')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'ui-dark-hive',
+			iconCls:(themes=='ui-dark-hive'?'icon-ok':''),
+			onclick: function(){setThemes('ui-dark-hive', '#000000')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'ui-pepper-grinder',
+			iconCls:(themes=='ui-pepper-grinder'?'icon-ok':''),
+			onclick: function(){setThemes('ui-pepper-grinder', '#681818')}
+		}).menu('appendItem', {
+			parent:setup_menu_04,
+			text: 'ui-sunny',
+			iconCls:(themes=='ui-sunny'?'icon-ok':''),
+			onclick: function(){setThemes('ui-sunny', '#655E4E')}
+		});
+		
+		
+		
+		function setThemes(t, c){
 			Storage.setItem('themes', t);
+			Storage.setItem('getTitleColor', c);
 			location.reload();
+
+		}
+		
+		function getTitleColor(){
+			var Storage = window.localStorage;
+			if(Storage.getItem("getTitleColor") === null){
+				Storage.setItem('getTitleColor', '#334455');
+			}
+			return Storage.getItem("getTitleColor")
 		}
 	});
 </script>

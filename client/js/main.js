@@ -39,7 +39,7 @@ easyloader.load([
 			}
 		}).layout('add',{
 			region: 'north',
-			height: 25,
+			height: 30,
 			href:'north.html',
 			border:false,
 			split: false
@@ -57,6 +57,35 @@ easyloader.load([
 		setTimeout(function(){
 			bl.layout('resize')//.layout('collapse', 'east');
 		}, 300);
+		
+	$.extend($.fn.tabs.methods, {
+		
+		//绑定双击事件
+		//@param {Object} jq
+		//@param {Object} caller 绑定的事件处理程序
+		 
+		bindDblclick: function(jq, caller){
+			return jq.each(function(){
+				var that = this;
+				$(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs').delegate('li', 'dblclick.tabs', function(e){
+					if (caller && typeof(caller) == 'function') {
+						var title = $(this).text();
+						var index = $(that).tabs('getTabIndex', $(that).tabs('getTab', title));
+						caller(index, title);
+					}
+				});
+			});
+		},
+		
+		//解除绑定双击事件
+		//@param {Object} jq
+		 
+		unbindDblclick: function(jq){
+			return jq.each(function(){
+				$(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs');
+			});
+		}
+	});
 });
 
 function getThemes(){
@@ -66,3 +95,6 @@ function getThemes(){
 	}
 	return Storage.getItem("themes")
 }
+
+
+
