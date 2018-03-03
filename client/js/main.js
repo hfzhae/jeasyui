@@ -5,6 +5,7 @@ dev by zz on 2018/2/16
 easyloader.base = 'client/lib/easyui/';
 easyloader.theme = getThemes();
 easyloader.locale = "zh_CN";
+easyloader.number = 100;
 
 easyloader.load([
 	'parser',

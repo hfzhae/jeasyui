@@ -26,7 +26,7 @@
 		"children":[{
 			"id":104,
 			"text":"销售订单",
-			"href":"public.html",
+			"href":"texteditor.html",
 			"iconCls":"tree-WindowsSwitch"
 		},{
 			"id":105,
