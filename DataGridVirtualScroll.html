@@ -1,10 +1,14 @@
 <div id="tt"></div>
 <script type="text/javascript">
-easyloader.load(['datagrid', 'datagridscrollview'], function(){
+easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview'], function(){
 	var toolbar = [{
-		text:'local',
-		iconCls:'icon-search',
-		handler:function(){load('local');}
+		id: 'localbtn',
+		handler:function(){
+			$.messager.show({
+				title:'local',
+				msg:'请选择插查询方式'
+			});
+		}
 	},'-',{
 		text:'remote',
 		iconCls:'icon-reload',
@@ -14,9 +18,7 @@ easyloader.load(['datagrid', 'datagridscrollview'], function(){
 		iconCls:'icon-ok',
 		handler:function(){loadlargdata()}
 	}], date1;
-	
-	
-	
+		
 	$('#tt').datagrid({
 		view:scrollview,
 		height:'100%',
@@ -52,6 +54,33 @@ easyloader.load(['datagrid', 'datagridscrollview'], function(){
 		}
 
 	});
+	$('body').append('<div id="loadmenu">');
+	$('#loadmenu').menu({});
+	$('#loadmenu').menu('appendItem', {
+		text: '本地生成数据',
+		iconCls:'icon-search',
+		onclick:function(){
+			load('local');
+		}
+	}).menu('appendItem', {
+		text: '分批远程读取数据',
+		iconCls:'icon-reload',
+		onclick:function(){
+			load('remote');
+		}
+	}).menu('appendItem', {
+		text: '一次读取远程数据',
+		iconCls:'icon-ok',
+		onclick:function(){
+			loadlargdata();
+		}
+	});
+	$('#localbtn').splitbutton({
+		text:'查询',
+		iconCls:'icon-search',
+		menu:'#loadmenu'
+	});
+	
 	//$('#tt').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
 	function loadLocal(){
 		$('#tt').datagrid('loading');
@@ -86,9 +115,7 @@ easyloader.load(['datagrid', 'datagridscrollview'], function(){
 		} else if(mode == 'remote') {
 			$('#tt').datagrid('loading');
 			date1=new Date();    //结束时间
-			$('#tt').datagrid({
-				url:'server/json/datagrid27_getdata.json'
-			});
+			$('#tt').datagrid('load');
 		}else if(mode == 'largdata'){
 			loadlargdata();
 		}

@@ -8,7 +8,8 @@
 		})
 		.append('<img src="client/images/EBLOGO.png" class="homelogo">')
 		.append('<div class="hometitle">e商x</div>')
-		.append('<div class="homeversion">v0.1 Design by zydsoft™</div>')
+		.append('<div class="homeversion">v0.1</div>')
+		//.append('<div class="homeversion">v0.1 Design by zydsoft™</div>')
 		.append('<div id="setupbtn" class="hometitlethemesbtn">')
 		.append('<div id="setupmenu">')
 		.append('<div id="themesmenuDiv">');
@@ -72,7 +73,7 @@
 		});
 		
 		$('#setupbtn').find('.m-btn-downarrow').remove();
-		$('#setupbtn').find('.l-btn-empty').css({'marginRight':0});
+		$('#setupbtn').find('.l-btn-empty').css({'marginRight':3,'marginLeft':5});
 		
 		$('#setupmenu')
 		.menu('appendItem', {
@@ -126,7 +127,7 @@
 			parent:setup_menu_04,
 			text: 'metro-orange',
 			iconCls:(themes=='metro-orange'?'icon-ok':''),
-			onclick: function(){setThemes('metro-orange', '#A39153')}
+			onclick: function(){setThemes('metro-orange', '#D4A375')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-red',
