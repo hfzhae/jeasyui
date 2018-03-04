@@ -4,20 +4,14 @@ easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview'
 	var toolbar = [{
 		id: 'localbtn',
 		handler:function(){
-			$.messager.show({
-				title:'local',
-				msg:'请选择插查询方式'
-			});
+			$.messager.alert('提示', '请选择插查询方式', 'warning');
 		}
 	},'-',{
-		text:'remote',
-		iconCls:'icon-reload',
-		handler:function(){load('remote');}
-	},{
-		text:'scrollview',
-		iconCls:'icon-ok',
-		handler:function(){loadlargdata()}
-	}], date1;
+		text:'清空',
+		iconCls:'icon-trash_full',
+		handler:function(){load('remove');}
+	}], 
+	date1 = new Date();
 		
 	$('#tt').datagrid({
 		view:scrollview,
@@ -26,7 +20,7 @@ easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview'
 		singleSelect:true,
 		border:false,
 		toolbar:toolbar,
-		//url:'server/json/datagrid27_getdata.json',
+		url:'server/json/datagrid27_getdata.json',
 		method:'get',
 		striped:true,
 		fitColumns: false,
@@ -84,7 +78,7 @@ easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview'
 	//$('#tt').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass('lines-right');
 	function loadLocal(){
 		$('#tt').datagrid('loading');
-		date1 = new Date();    //开始时间
+		date1 = new Date();
 		var rows = [];
 		for(var i=1; i<=100000; i++){
 			var amount = Math.floor(Math.random()*1000);
@@ -102,7 +96,7 @@ easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview'
 		$('#tt').datagrid('loadData', rows);
 	}
 	function loadlargdata(){
-		date1 = new Date();    //结束时间
+		date1 = new Date();
 		$('#tt').datagrid('loading');
 		$.getJSON('server/json/datagrid25_getdata.json', function(data){
 			$('#tt').datagrid('loadData', data);
@@ -114,10 +108,16 @@ easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview'
 			loadLocal();
 		} else if(mode == 'remote') {
 			$('#tt').datagrid('loading');
-			date1=new Date();    //结束时间
-			$('#tt').datagrid('load');
+			date1=new Date();
+			$('#tt').datagrid('reload');
 		}else if(mode == 'largdata'){
 			loadlargdata();
+		}else if(mode == 'remove'){
+			date1=new Date();
+			$('#tt').datagrid('loadData', {
+				total:0,
+				rows:[]
+			});
 		}
 	}
 });
