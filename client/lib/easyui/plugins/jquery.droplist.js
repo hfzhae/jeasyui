@@ -113,13 +113,28 @@ $.extend($.fn.combogrid.defaults, {
 				}
 			}  
 		},
-		query: function(q){
-			try{
-				var co = $(this),
-					t = $.trim(co.combogrid('getText'));
+		query: function(q, e){
+			console.log(e.keyCode);
+			var co = $(this),
+				t = $.trim(co.combogrid('getText'));
+			switch (e.keyCode) {
+				case 38://up
+					break;
+				case 40://down
+					break;
+				case 37://left
+					break;
+				case 39://right
+					break;
+				case 13://enter
+					break;
+				case 9://tab
+					break;
+				default:
 					co.combogrid('setValues',[]);
 					co.combogrid("setText",t);
-			} catch(err) {}
+					break;
+			}
 		},
 		esc: function(){
 			var co = $(this)
