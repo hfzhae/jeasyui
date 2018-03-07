@@ -131,8 +131,8 @@ $.extend($.fn.combogrid.defaults, {
 				case 9://tab
 					break;
 				default:
-					//co.combogrid('setValues',[]);
-					//co.combogrid("setText",t);
+					co.combogrid('setValues',[]);
+					co.combogrid("setText",t);
 					break;
 			}
 		},
