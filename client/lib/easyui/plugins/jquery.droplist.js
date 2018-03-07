@@ -117,8 +117,8 @@ $.extend($.fn.combogrid.defaults, {
 			try{
 				var co = $(this),
 					t = $.trim(co.combogrid('getText'));
-					//co.combogrid('setValues',[]);
-					//co.combogrid("setText",t);
+					co.combogrid('setValues',[]);
+					co.combogrid("setText",t);
 			} catch(err) {}
 		},
 		esc: function(){
