@@ -41,12 +41,12 @@ easyloader.load([
 		}).layout('add',{
 			region: 'north',
 			height: 30,
-			href:'north.html',
+			href:'client/SimpChinese/north/default.html',
 			border:false,
 			split: false
 		}).layout('add',{
 			region: 'center',
-			href:'center.html'
+			href:'client/SimpChinese/center/default.html'
 		}).layout({
 			onCollapse: function(){
 				$('#homeDiv').portal('resize');
@@ -66,7 +66,7 @@ easyloader.load([
 		//@param {Object} caller 绑定的事件处理程序
 		 
 		bindDblclick: function(jq, caller){
-			return jq.each(function(){
+			return 是jq.each(function(){
 				var that = this;
 				$(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs').delegate('li', 'dblclick.tabs', function(e){
 					if (caller && typeof(caller) == 'function') {

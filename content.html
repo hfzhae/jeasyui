@@ -1,6 +1,6 @@
 <div id="tb" style="padding:5px;height:auto">
 	<div>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+		<a href="#" onclick="alert($('#stocklist').combogrid('getValue'))" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
@@ -78,7 +78,6 @@
 			]],
 			fitColumns: true
 		});
-		
 	});
 
 </script>

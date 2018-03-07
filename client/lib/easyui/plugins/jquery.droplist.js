@@ -60,10 +60,19 @@ $.extend($.fn.combogrid.defaults, {
 					searchField.push(columns[0][j].field);//找出需要搜索的字段名
 				}
 			}
-			
 			if (selected) {  
 				co.combogrid('hidePanel');
-				window.event.keyCode = 9;
+				var inputs = $("input");//得到所有input对象
+				for (var i = 0; i < inputs.length; i++) {
+					if (co.combogrid('textbox')[0] == inputs[i]) {
+						for(j = (i + 1); j < inputs.length; j++){
+							if($(inputs[j]).css('display') != 'none' && inputs[j].id != ''){
+								inputs[j].focus();
+								break;
+							}
+						}
+					}
+				}
 			} else {  
 				var rowsq = [],
 					serachon;
@@ -90,19 +99,26 @@ $.extend($.fn.combogrid.defaults, {
 				if(rowsq.length == 1){
 					co.combogrid('grid').datagrid('selectRow', 0);
 					co.combogrid('hidePanel');
+					var inputs = $("input");//得到所有input对象
+					for (var i = 0; i < inputs.length; i++) {
+						if (co.combogrid('textbox')[0] == inputs[i]) {
+							for(j = (i + 1); j < inputs.length; j++){
+								if($(inputs[j]).css('display') != 'none' && inputs[j].id != ''){
+									inputs[j].focus();
+									break;
+								}
+							}
+						}
+					}
 				}
 			}  
 		},
 		query: function(q){
 			try{
 				var co = $(this),
-					g = co.combogrid('grid'),
 					t = $.trim(co.combogrid('getText'));
-				var selected = g.datagrid('getSelected');  
-				if (selected) {  
-					var index = g.datagrid('getRowIndex', selected); 
-					g.datagrid('unselectRow', index);//键盘响应，取消选中的行
-				}
+					//co.combogrid('setValues',[]);
+					//co.combogrid("setText",t);
 			} catch(err) {}
 		},
 		esc: function(){
@@ -141,8 +157,8 @@ $.extend($.fn.combogrid.defaults, {
 					total:data.rows.length,
 					rows:data.rows
 				});
-				mask.remove();
 				co.combogrid('setValue', t);
+				mask.remove();
 			});
 		}
 	},
