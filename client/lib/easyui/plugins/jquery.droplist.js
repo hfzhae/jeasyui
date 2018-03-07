@@ -131,8 +131,8 @@ $.extend($.fn.combogrid.defaults, {
 				case 9://tab
 					break;
 				default:
-					co.combogrid('setValues',[]);
-					co.combogrid("setText",t);
+					//co.combogrid('setValues',[]);
+					//co.combogrid("setText",t);
 					break;
 			}
 		},
@@ -150,6 +150,7 @@ $.extend($.fn.combogrid.defaults, {
 			pageSize = 50;
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
+			debugger;
 			var t = $.trim(co.combogrid('getText')),
 				mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
 				url = ops.asynurl;
@@ -202,6 +203,7 @@ $.extend($.fn.combogrid.defaults, {
 					opts.keyHandler.enter.call(_a2e, e);
 					return false;
 				case 9:
+					break;
 				case 27:
 					var _a39 = $.data(_a2e, "combo").panel;
 					_a39.panel("close");
