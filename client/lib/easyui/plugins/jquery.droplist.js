@@ -115,26 +115,28 @@ $.extend($.fn.combogrid.defaults, {
 		},
 		query: function(q, e){
 			console.log(e.keyCode);
-			var co = $(this),
-				t = $.trim(co.combogrid('getText'));
-			switch (e.keyCode) {
-				case 38://up
-					break;
-				case 40://down
-					break;
-				case 37://left
-					break;
-				case 39://right
-					break;
-				case 13://enter
-					break;
-				case 9://tab
-					break;
-				default:
-					co.combogrid('setValues',[]);
-					co.combogrid("setText",t);
-					break;
-			}
+			try{
+				var co = $(this),
+					t = $.trim(co.combogrid('getText'));
+				switch (e.keyCode) {
+					case 38://up
+						break;
+					case 40://down
+						break;
+					case 37://left
+						break;
+					case 39://right
+						break;
+					case 13://enter
+						break;
+					case 9://tab
+						break;
+					default:
+						co.combogrid('setValues',[]);
+						co.combogrid("setText",t);
+						break;
+				}
+			} catch(err) {}
 		},
 		esc: function(){
 			var co = $(this)
@@ -150,7 +152,6 @@ $.extend($.fn.combogrid.defaults, {
 			pageSize = 50;
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
-			debugger;
 			var t = $.trim(co.combogrid('getText')),
 				mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
 				url = ops.asynurl;
