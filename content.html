@@ -1,6 +1,6 @@
 <div id="tb" style="padding:5px;height:auto">
 	<div>
-		<a href="#" onclick="alert($('#stocklist').combogrid('getValue'))" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+		<a href="#" onclick="alert($('#customlist').combogrid('getValue'))" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
@@ -52,6 +52,7 @@
 			striped:true,
 			pagination:false,
 			required:true,
+			validType:'combogridValue[stocklist]',
 			pagePosition:'bottom',
 			asynurl:'server/json/datagrid25_getdata.json',
 			editable: true,
@@ -71,6 +72,8 @@
 			width:150,
 			idField: 'productid',
 			textField: 'productname',
+			required:true,
+			validType:'combogridValue[customlist]',
 			asynurl: 'server/json/datagrid_data1.json',
 			columns: [[
 				{field:'productid',title:'客户编号',width:80,search:true},

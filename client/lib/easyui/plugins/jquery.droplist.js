@@ -10,7 +10,7 @@ options.columns.search（bool）:true的字段支持搜索；
 options.oRows:存储原始数据
 options.asynurl:异步读取的url地址
 options.asyn:是否从服务器端读取数据，0为读取，默认0，读取后置1，按esc键置0
-
+options.validType增加：combogridValue类型，校验值不能为空，required:true是生效
 *****************************************************************/
 
 $.extend($.fn.combogrid.defaults, {
@@ -60,7 +60,7 @@ $.extend($.fn.combogrid.defaults, {
 					searchField.push(columns[0][j].field);//找出需要搜索的字段名
 				}
 			}
-			if (selected) {  
+			if (selected && co.combo('getValue') != '') {
 				co.combogrid('hidePanel');
 				var inputs = $("input");//得到所有input对象
 				for (var i = 0; i < inputs.length; i++) {
@@ -113,35 +113,15 @@ $.extend($.fn.combogrid.defaults, {
 				}
 			}  
 		},
-		query: function(q, e){
-			console.log(e.keyCode);
-			try{
-				var co = $(this),
-					t = $.trim(co.combogrid('getText'));
-				switch (e.keyCode) {
-					case 38://up
-						break;
-					case 40://down
-						break;
-					case 37://left
-						break;
-					case 39://right
-						break;
-					case 13://enter
-						break;
-					case 9://tab
-						break;
-					default:
-						co.combogrid('setValues',[]);
-						co.combogrid("setText",t);
-						break;
-				}
-			} catch(err) {}
+		query: function(q){
+			var co = $(this);
+			co.combo('setValue', '')
+			co.combo('setText', q);
 		},
 		esc: function(){
-			var co = $(this)
+			var co = $(this);
 			g = co.combogrid('grid'),
-			ops = co.combogrid('options')
+			ops = co.combogrid('options');
 			ops.asyn = 0;
 		}
 	},
@@ -152,8 +132,7 @@ $.extend($.fn.combogrid.defaults, {
 			pageSize = 50;
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
-			var t = $.trim(co.combogrid('getText')),
-				mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
+			var mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
 				url = ops.asynurl;
 			if(!url)return;
 			
@@ -170,11 +149,11 @@ $.extend($.fn.combogrid.defaults, {
 				for(var i in data['rows']){
 					ops.oRows.push(data['rows'][i]);
 				}
+				g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
 				g.datagrid('loadData', {
 					total:data.rows.length,
 					rows:data.rows
 				});
-				co.combogrid('setValue', t);
 				mask.remove();
 			});
 		}
@@ -229,5 +208,54 @@ $.extend($.fn.combogrid.defaults, {
 			}
 		}
 	}
+});
 
+$.extend($.fn.validatebox.defaults.rules, {
+	//针对combo类控件，校验值（value）不能为空，参数param为控件ID，zz 2018-3-8
+	combogridValue: {
+		validator: function(value, param){
+			var param = $(param);
+			return param.combo('getValue').length > 0;
+		},
+		message: '请从下拉框中选择<br><span style="color:#999;">按回车键搜索，上下键选择</span>'
+	}/*,
+	//验证汉字    
+	CHS: {    
+		validator: function (value) {    
+			return /^[\u0391-\uFFE5]+$/.test(value);    
+		},    
+		message: 'The input Chinese characters only.'    
+	},    
+	//移动手机号码验证    
+	Mobile: {//value值为文本框中的值    
+		validator: function (value) {    
+			var reg = /^1[3|4|5|8|9]\d{9}$/;    
+			return reg.test(value);    
+		},    
+		message: 'Please enter your mobile phone number correct.'    
+	},    
+	//国内邮编验证    
+	ZipCode: {    
+		validator: function (value) {    
+			var reg = /^[0-9]\d{5}$/;    
+			return reg.test(value);    
+		},    
+		message: 'The zip code must be 6 digits and 0 began.'    
+	},    
+	//数字    
+	Number: {    
+		validator: function (value) {    
+			var reg =/^[0-9]*$/;    
+			return reg.test(value);    
+		},    
+		message: 'Please input number.'    
+	},    
+	 //非负整数  
+	Integer: {  
+		validator: function (value) {  
+			var reg = /^[1-9]\d*|0$/;  
+			return reg.test(value);  
+		},  
+		message: '请输入非负整数'  
+	}*/
 });
