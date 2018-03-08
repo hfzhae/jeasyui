@@ -10,7 +10,7 @@ options.columns.search（bool）:true的字段支持搜索；
 options.oRows:存储原始数据
 options.asynurl:异步读取的url地址
 options.asyn:是否从服务器端读取数据，0为读取，默认0，读取后置1，按esc键置0
-options.validType增加：combogridValue类型，校验值不能为空，required:true是生效
+options.validType增加：combogridValue类型，校验值不能为空，required:true时生效
 *****************************************************************/
 
 $.extend($.fn.combogrid.defaults, {
@@ -132,16 +132,16 @@ $.extend($.fn.combogrid.defaults, {
 			pageSize = 50;
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
-			var mask = $('<div class="datagrid-mask" style="display:block"></div><div class="datagrid-mask-msg" style="display: block; left: 50%; height: 16px; margin-left: -98px; line-height: 16px;">Processing, please wait ...</div>'),
-				url = ops.asynurl;
+			var url = ops.asynurl;
 			if(!url)return;
 			
 			g.datagrid({
 				view:scrollview,
-				pageSize:pageSize
+				pageSize:pageSize,
+				loadMsg:$.fn.datagrid.defaults.loadMsg
 			});
 			
-			g.parent().append(mask);
+			g.datagrid('loading');
 			ops.oRows = [];
 			ops.asyn = 1;
 			//$.getJSON(url, { v: (new Date()).getTime() }, function(data){				
@@ -154,7 +154,7 @@ $.extend($.fn.combogrid.defaults, {
 					total:data.rows.length,
 					rows:data.rows
 				});
-				mask.remove();
+				g.datagrid('loaded');
 			});
 		}
 	},
