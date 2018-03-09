@@ -11,6 +11,7 @@ options.oRows:存储原始数据
 options.asynurl:异步读取的url地址
 options.asyn:是否从服务器端读取数据，0为读取，默认0，读取后置1，按esc键置0
 options.validType增加：combogridValue类型，校验值不能为空，required:true时生效
+重造onValidate事件，验证成功且搜索结果为1行是焦点移动到下一个控件
 *****************************************************************/
 
 $.extend($.fn.combogrid.defaults, {
@@ -62,6 +63,7 @@ $.extend($.fn.combogrid.defaults, {
 			}
 			if (selected && co.combo('getValue') != '') {
 				co.combogrid('hidePanel');
+				co.combogrid('validate');
 				var inputs = $("input");//得到所有input对象
 				for (var i = 0; i < inputs.length; i++) {
 					if (co.combogrid('textbox')[0] == inputs[i]) {
@@ -99,17 +101,6 @@ $.extend($.fn.combogrid.defaults, {
 				if(rowsq.length == 1){
 					co.combogrid('grid').datagrid('selectRow', 0);
 					co.combogrid('hidePanel');
-					var inputs = $("input");//得到所有input对象
-					for (var i = 0; i < inputs.length; i++) {
-						if (co.combogrid('textbox')[0] == inputs[i]) {
-							for(j = (i + 1); j < inputs.length; j++){
-								if($(inputs[j]).css('display') != 'none' && inputs[j].id != ''){
-									inputs[j].focus();
-									break;
-								}
-							}
-						}
-					}
 				}
 			}  
 		},
@@ -134,7 +125,7 @@ $.extend($.fn.combogrid.defaults, {
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
 			var url = ops.asynurl;
 			if(!url)return;
-			
+
 			g.datagrid({
 				view:scrollview,
 				pageSize:pageSize,
@@ -164,7 +155,7 @@ $.extend($.fn.combogrid.defaults, {
 			var t = $(_a2e);
 			var _a2f = t.data("combo");
 			var opts = t.combo("options");
-			_a2f.panel.panel("options").comboTarget = _a2e;
+			_a2f.panel.panel("options").comboTarget = _a2e;			
 			switch (e.keyCode) {
 				case 38:
 					opts.keyHandler.up.call(_a2e, e);
@@ -205,6 +196,25 @@ $.extend($.fn.combogrid.defaults, {
 						},
 						opts.delay);
 					}
+			}
+		}
+	},
+	onValidate:function(v){//验证成功后调用事件
+		if(v){
+			var co = $(this),
+				inputs = $("input"),
+				count = co.combogrid('grid').datagrid('getRows').length;//得到所有当前页记录数量
+			if(count == 1 && co.combo('getValue') != '') {//搜索结果唯一时
+				for (var i = 0; i < inputs.length; i++) {
+					if (co.combogrid('textbox')[0] == inputs[i]) {
+						for(j = (i + 1); j < inputs.length; j++){
+							if($(inputs[j]).css('display') != 'none' && inputs[j].id != ''){
+								inputs[j].focus();
+								break;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
