@@ -1,7 +1,8 @@
-<div id="west"></div>
-<script type="text/javascript">
-	$('#west').tree({
-		url: 'server/json/tree_data1.json?v=' + (new Date()).getTime(),
+ <script type="text/javascript">
+	var west = $('<div>');
+	$('.layout-panel-west').find('.panel-body').append(west);
+	$(west).tree({
+		url: 'server/west/load/?v=' + (new Date()).getTime(),
 		method: 'get',
 		animate:true,
 		dnd:false,

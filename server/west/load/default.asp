@@ -31,7 +31,7 @@
 		},{
 			"id":105,
 			"text":"销售出库单",
-			"href":"public.html",
+			"href":"content.html",
 			"iconCls":"tree-WindowsSwitch"
 		},{
 			"id":106,

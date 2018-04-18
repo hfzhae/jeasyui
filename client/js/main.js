@@ -26,7 +26,7 @@ easyloader.load([
 			region: 'west',
 			width: 200,
 			title: '',
-			href: 'west.html',
+			href: 'client/SimpChinese/west/',
 			hideExpandTool:false,
 			hideCollapsedContent:false,
 			split: false,
@@ -41,12 +41,12 @@ easyloader.load([
 		}).layout('add',{
 			region: 'north',
 			height: 30,
-			href:'client/SimpChinese/north/default.html',
+			href:'client/SimpChinese/north/',
 			border:false,
 			split: false
 		}).layout('add',{
 			region: 'center',
-			href:'client/SimpChinese/center/default.html'
+			href:'client/SimpChinese/center/'
 		}).layout({
 			onCollapse: function(){
 				$('#homeDiv').portal('resize');

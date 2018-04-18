@@ -30,19 +30,24 @@
 			border:false,
 			fit:false,
 			fitColumns:false,
-			url:'server/json/datagrid_data1.json',
+			url:'server/json/datagrid_data1.json?v=' + (new Date()).getTime(),
 			method:'get',
 			toolbar:'#tb',
+			remoteSort:false,
+			multiSort:true,
+			checkOnSelect:true,
 			columns:[[
-				{field:'itemid',title:'itemid',width:80,},
-				{field:'productname',title:'productname',width:100},
-				{field:'listprice',title:'listprice',width:80,align:'right'},
-				{field:'unitcost',title:'unitcost',width:80,align:'right'},
-				{field:'attr1',title:'attr1',width:80,align:'right'},
-				{field:'status',title:'status',width:100},
-				{field:'date',title:'date',width:100}
+				//{field:'',checkbox:true},
+				{field:'itemid',title:'编号',width:80,sortable:true},
+				{field:'productname',title:'产品名称',width:100,editor:'text',sortable:true},
+				{field:'listprice',title:'单价',width:80,align:'right',editor:{type:'numberbox',options:{precision:1}},sortable:true},
+				{field:'unitcost',title:'成本',width:80,align:'right',editor:{type:'numberbox',options:{precision:1}},sortable:true},
+				{field:'attr1',title:'属性',width:80,align:'left',editor:{type:'text',onChange:function(){console.log('123321eee')},option:{disabled:false,buttonText:'Search',iconCls:'icon-man',iconAlign:'right',iconWidth:50}},sortable:true},
+				{field:'status',title:'删除',formatter: function(value,row,index){if(value){return '√';}else{return '';}},width:60,align:'center',editor:{type:'checkbox',options:{on:'√',off:''}},sortable:true},
+				{field:'date',title:'日期',width:100,editor:{type:'datebox'},sortable:true}
 			]],
-			height: '100%'
+			height: '100%',
+			onClickCell: onClickCell
 		});
 		$('#stocklist').combogrid({
 			panelWidth: 300,
@@ -82,5 +87,138 @@
 			fitColumns: true
 		});
 	});
+	$.extend($.fn.datagrid.methods, {
+		editCell: function(jq,param){
+			return jq.each(function(){
+				var opts = $(this).datagrid('options');
+				var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+				
+				$(this).datagrid('unselectAll');
+				$(this).datagrid('selectRow', param.index);
+				
+				for(var i=0; i<fields.length; i++){
+					var col = $(this).datagrid('getColumnOption', fields[i]);
+					col.editor1 = col.editor;
+					if (fields[i] != param.field){
+						col.editor = null;
+					}
+				}
+				$(this).datagrid('beginEdit', param.index);
+				var obj = $(this).datagrid('getEditor', {index:param.index, field:param.field}),//获取激活的输入框对象
+					thisGrid = $(this);
 
+				if(obj != null){
+					$(obj.target).select();//输入框自动激活焦点并全选
+					$(obj.target).focus(function(){
+						$(this).select();
+					});
+					$(obj.target).blur(function(){//失去焦点时操作
+						//thisGrid.datagrid('endEdit', param.index);
+					});
+					
+					$(obj.target).keydown(function(event){//全键盘操作
+						switch(event.keyCode){
+							case 40:
+								thisGrid.datagrid('endEdit', param.index);
+								thisGrid.datagrid('editCell', {index:param.index + 1,field:param.field});
+								break;
+							case 38:
+								thisGrid.datagrid('endEdit', param.index);
+								thisGrid.datagrid('editCell', {index:param.index - 1,field:param.field});
+								break;
+							case 37:
+								thisGrid.datagrid('endEdit', param.index);
+								var nextfield, nextfieldname = param.field;
+								for(var i=fields.length; i>0; i--){
+									var col = thisGrid.datagrid('getColumnOption', fields[i - 1]);
+									if (fields[i] == nextfieldname){
+										if(col.editor == undefined){
+											nextfieldname = fields[i - 1];
+										}else{
+											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox'){
+												nextfield = fields[i - 1];
+											}
+										}
+									}
+								}
+								thisGrid.datagrid('editCell', {index:param.index,field:nextfield});
+								break;
+							case 39:
+								thisGrid.datagrid('endEdit', param.index);
+								var nextfield, nextfieldname = param.field;
+								for(var i=0; i<fields.length; i++){
+									var col = thisGrid.datagrid('getColumnOption', fields[i + 1]);
+									if (fields[i] == nextfieldname){
+										if(col.editor == undefined){
+											nextfieldname = fields[i + 1];
+										}else{
+											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox'){
+												nextfield = fields[i + 1];
+											}
+										}
+									}
+								}
+								thisGrid.datagrid('editCell', {index:param.index,field:nextfield});
+								break;
+							case 13:
+								thisGrid.datagrid('endEdit', param.index);
+								var nextfield = "", 
+									nextfieldname = param.field, 
+									firstfield = "",
+									firstindex = param.index;
+								for(var i=0; i<fields.length; i++){
+									var col = thisGrid.datagrid('getColumnOption', fields[i + 1]),
+										col1 = thisGrid.datagrid('getColumnOption', fields[i]);
+									if(col1 != null){
+										if(col1.editor != undefined && firstfield == ""){
+											firstfield = fields[i];
+										}
+									}
+									if (fields[i] == nextfieldname){
+										if(col.editor == undefined){
+											nextfieldname = fields[i + 1];
+										}else{
+											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox'){
+												nextfield = fields[i + 1];
+											}
+										}
+									}
+								}
+								if(nextfield == ""){
+									nextfield = firstfield;
+									firstindex++
+								}
+								thisGrid.datagrid('editCell', {index:firstindex,field:nextfield});
+								break;
+						}
+					});
+				}
+				
+				for(var i=0; i<fields.length; i++){
+					var col = $(this).datagrid('getColumnOption', fields[i]);
+					col.editor = col.editor1;
+				}
+			});
+		}
+	});
+	var editIndex = undefined;
+	function endEditing(){
+		if (editIndex == undefined){return true}
+		if ($('#t1').datagrid('validateRow', editIndex)){
+			$('#t1').datagrid('endEdit', editIndex);
+			editIndex = undefined;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	function onClickCell(index, field){
+		if (endEditing()){
+			$(this).datagrid('unselectAll');
+			$(this).datagrid('selectRow', index);
+			$('#t1').datagrid('selectRow', index)
+					.datagrid('editCell', {index:index,field:field});
+			editIndex = index;
+		}
+	}
 </script>
