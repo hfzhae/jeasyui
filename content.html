@@ -116,7 +116,7 @@
 						//thisGrid.datagrid('endEdit', param.index);
 					});
 					
-					$(obj.target).keydown(function(event){//全键盘操作
+					$(obj.target).keyup(function(event){//全键盘操作
 						switch(event.keyCode){
 							case 40:
 								thisGrid.datagrid('endEdit', param.index);
@@ -189,6 +189,9 @@
 									firstindex++
 								}
 								thisGrid.datagrid('editCell', {index:firstindex,field:nextfield});
+								break;
+							case 27:
+								thisGrid.datagrid('endEdit', param.index);
 								break;
 						}
 					});
