@@ -2,7 +2,7 @@
 	<div>
 		<a href="#" onclick="alert($('#stocklist').combogrid('getValue'))" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+		<a href="#" onclick="console.log($('#t1').datagrid('getData'))" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
 		<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">Cancel</a>
@@ -23,19 +23,22 @@
 <script type="text/javascript">
 	easyloader.load(['combogrid', 'datagridscrollview', 'droplist', 'combobox'], function(){
 		$('#t1').datagrid({
+			//view:scrollview,
+			//pageSize:50,
 			remoteSort:false,
-			rownumbers:false,
+			rownumbers:true,
 			singleSelect:true,
 			pagination:false,
 			border:false,
 			fit:false,
 			fitColumns:false,
+			striped:true,
 			url:'server/json/datagrid_data1.json?v=' + (new Date()).getTime(),
 			method:'get',
 			toolbar:'#tb',
 			remoteSort:false,
 			multiSort:true,
-			checkOnSelect:true,
+			checkOnSelect:false,
 			columns:[[
 				//{field:'',checkbox:true},
 				{field:'itemid',title:'编号',width:80,sortable:true},
@@ -87,15 +90,16 @@
 			fitColumns: true
 		});
 	});
+	
 	$.extend($.fn.datagrid.methods, {
 		editCell: function(jq,param){
 			return jq.each(function(){
 				var opts = $(this).datagrid('options');
 				var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
 				
-				$(this).datagrid('unselectAll');
-				$(this).datagrid('selectRow', param.index);
-				
+				$(this).datagrid('highlightRow', param.index);
+				$(this).datagrid('endEdit', param.index);
+
 				for(var i=0; i<fields.length; i++){
 					var col = $(this).datagrid('getColumnOption', fields[i]);
 					col.editor1 = col.editor;
@@ -108,34 +112,32 @@
 					thisGrid = $(this);
 
 				if(obj != null){
-					$(obj.target).select();//输入框自动激活焦点并全选
-					$(obj.target).focus(function(){
-						$(this).select();
-					});
-					$(obj.target).blur(function(){//失去焦点时操作
-						//thisGrid.datagrid('endEdit', param.index);
-					});
-					
-					$(obj.target).keyup(function(event){//全键盘操作
+					if(obj.type == 'datebox'){
+						var inputObj = $(obj.target).parent().find('input:eq(1)')
+					}else{
+						var inputObj = $(obj.target);//输入框自动激活焦点并全选
+					}
+					inputObj.select();
+					inputObj.keyup(function(event){//全键盘操作
 						switch(event.keyCode){
-							case 40:
+							case 40://down
 								thisGrid.datagrid('endEdit', param.index);
 								thisGrid.datagrid('editCell', {index:param.index + 1,field:param.field});
 								break;
-							case 38:
+							case 38://up
 								thisGrid.datagrid('endEdit', param.index);
 								thisGrid.datagrid('editCell', {index:param.index - 1,field:param.field});
 								break;
-							case 37:
+							case 37://left
 								thisGrid.datagrid('endEdit', param.index);
 								var nextfield, nextfieldname = param.field;
 								for(var i=fields.length; i>0; i--){
 									var col = thisGrid.datagrid('getColumnOption', fields[i - 1]);
-									if (fields[i] == nextfieldname){
+									if (fields[i] == nextfieldname && col != null){
 										if(col.editor == undefined){
 											nextfieldname = fields[i - 1];
 										}else{
-											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox'){
+											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox'){
 												nextfield = fields[i - 1];
 											}
 										}
@@ -143,16 +145,16 @@
 								}
 								thisGrid.datagrid('editCell', {index:param.index,field:nextfield});
 								break;
-							case 39:
+							case 39://right
 								thisGrid.datagrid('endEdit', param.index);
 								var nextfield, nextfieldname = param.field;
 								for(var i=0; i<fields.length; i++){
 									var col = thisGrid.datagrid('getColumnOption', fields[i + 1]);
-									if (fields[i] == nextfieldname){
+									if (fields[i] == nextfieldname && col != null){
 										if(col.editor == undefined){
 											nextfieldname = fields[i + 1];
 										}else{
-											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox'){
+											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox'){
 												nextfield = fields[i + 1];
 											}
 										}
@@ -160,7 +162,7 @@
 								}
 								thisGrid.datagrid('editCell', {index:param.index,field:nextfield});
 								break;
-							case 13:
+							case 13://enter
 								thisGrid.datagrid('endEdit', param.index);
 								var nextfield = "", 
 									nextfieldname = param.field, 
@@ -174,24 +176,27 @@
 											firstfield = fields[i];
 										}
 									}
-									if (fields[i] == nextfieldname){
+									if (fields[i] == nextfieldname && col != null){
 										if(col.editor == undefined){
 											nextfieldname = fields[i + 1];
 										}else{
-											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox'){
+											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox'){
 												nextfield = fields[i + 1];
 											}
 										}
 									}
 								}
+
 								if(nextfield == ""){
 									nextfield = firstfield;
 									firstindex++
 								}
 								thisGrid.datagrid('editCell', {index:firstindex,field:nextfield});
 								break;
-							case 27:
-								thisGrid.datagrid('endEdit', param.index);
+							case 27://esc
+								thisGrid.datagrid('cancelEdit', param.index);
+								break;
+							default:
 								break;
 						}
 					});
@@ -217,8 +222,6 @@
 	}
 	function onClickCell(index, field){
 		if (endEditing()){
-			$(this).datagrid('unselectAll');
-			$(this).datagrid('selectRow', index);
 			$('#t1').datagrid('selectRow', index)
 					.datagrid('editCell', {index:index,field:field});
 			editIndex = index;
