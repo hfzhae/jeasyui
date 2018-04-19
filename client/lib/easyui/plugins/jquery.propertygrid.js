@@ -48,6 +48,7 @@ _6.editIndex=_a;
 }
 }
 _6.onClickCell.call(_4,_a,_b,_c);
+$(this).datagrid('selectRow', _a).datagrid('editkeyboard', {index:_a,field:_b});//自定义全键盘操作扩展 2018-4-19 zz
 },loadFilter:function(_e){
 _2(this);
 return _6.loadFilter.call(this,_e);

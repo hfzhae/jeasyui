@@ -17,11 +17,12 @@
 		单据日期: <input class="easyui-datebox" style="width:120px">
 		仓库: <div id="stocklist"></div>
 		客户: <div id="customlist"></div>
+		类型：<div id="typelist"></div>
 	</div>
 </div>
 <div id="t1"></div>
 <script type="text/javascript">
-	easyloader.load(['combogrid', 'datagridscrollview', 'droplist', 'combobox'], function(){
+	easyloader.load(['combogrid', 'datagridscrollview', 'droplist', 'combobox','datagridkeyboard'], function(){
 		$('#t1').datagrid({
 			//view:scrollview,
 			//pageSize:50,
@@ -47,10 +48,19 @@
 				{field:'unitcost',title:'成本',width:80,align:'right',editor:{type:'numberbox',options:{precision:1}},sortable:true},
 				{field:'attr1',title:'属性',width:80,align:'left',editor:{type:'text',onChange:function(){console.log('123321eee')},option:{disabled:false,buttonText:'Search',iconCls:'icon-man',iconAlign:'right',iconWidth:50}},sortable:true},
 				{field:'status',title:'删除',formatter: function(value,row,index){if(value){return '√';}else{return '';}},width:60,align:'center',editor:{type:'checkbox',options:{on:'√',off:''}},sortable:true},
-				{field:'date',title:'日期',width:100,editor:{type:'datebox'},sortable:true}
+				{field:'date',title:'日期',width:100,editor:{type:'datebox'},sortable:true},
+				{field:'istype',title:'类型',width:120,editor:{type:'combobox', option:{
+					valueField: 'itemid',
+					textField: 'productname',
+					url:'server/json/datagrid_data1.json'
+				}},sortable:true}
 			]],
-			height: '100%',
-			onClickCell: onClickCell
+			height: '100%'
+		});
+		$('#typelist').combobox({
+			valueField: 'inv',
+			textField: 'name',
+			url:'server/json/datagrid27_getdata.json?v=' + (new Date()).getTime()
 		});
 		$('#stocklist').combogrid({
 			panelWidth: 300,
@@ -91,140 +101,4 @@
 		});
 	});
 	
-	$.extend($.fn.datagrid.methods, {
-		editCell: function(jq,param){
-			return jq.each(function(){
-				var opts = $(this).datagrid('options');
-				var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
-				
-				$(this).datagrid('highlightRow', param.index);
-				$(this).datagrid('endEdit', param.index);
-
-				for(var i=0; i<fields.length; i++){
-					var col = $(this).datagrid('getColumnOption', fields[i]);
-					col.editor1 = col.editor;
-					if (fields[i] != param.field){
-						col.editor = null;
-					}
-				}
-				$(this).datagrid('beginEdit', param.index);
-				var obj = $(this).datagrid('getEditor', {index:param.index, field:param.field}),//获取激活的输入框对象
-					thisGrid = $(this);
-
-				if(obj != null){
-					if(obj.type == 'datebox'){
-						var inputObj = $(obj.target).parent().find('input:eq(1)')
-					}else{
-						var inputObj = $(obj.target);//输入框自动激活焦点并全选
-					}
-					inputObj.select();
-					inputObj.keyup(function(event){//全键盘操作
-						switch(event.keyCode){
-							case 40://down
-								thisGrid.datagrid('endEdit', param.index);
-								thisGrid.datagrid('editCell', {index:param.index + 1,field:param.field});
-								break;
-							case 38://up
-								thisGrid.datagrid('endEdit', param.index);
-								thisGrid.datagrid('editCell', {index:param.index - 1,field:param.field});
-								break;
-							case 37://left
-								thisGrid.datagrid('endEdit', param.index);
-								var nextfield, nextfieldname = param.field;
-								for(var i=fields.length; i>0; i--){
-									var col = thisGrid.datagrid('getColumnOption', fields[i - 1]);
-									if (fields[i] == nextfieldname && col != null){
-										if(col.editor == undefined){
-											nextfieldname = fields[i - 1];
-										}else{
-											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox'){
-												nextfield = fields[i - 1];
-											}
-										}
-									}
-								}
-								thisGrid.datagrid('editCell', {index:param.index,field:nextfield});
-								break;
-							case 39://right
-								thisGrid.datagrid('endEdit', param.index);
-								var nextfield, nextfieldname = param.field;
-								for(var i=0; i<fields.length; i++){
-									var col = thisGrid.datagrid('getColumnOption', fields[i + 1]);
-									if (fields[i] == nextfieldname && col != null){
-										if(col.editor == undefined){
-											nextfieldname = fields[i + 1];
-										}else{
-											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox'){
-												nextfield = fields[i + 1];
-											}
-										}
-									}
-								}
-								thisGrid.datagrid('editCell', {index:param.index,field:nextfield});
-								break;
-							case 13://enter
-								thisGrid.datagrid('endEdit', param.index);
-								var nextfield = "", 
-									nextfieldname = param.field, 
-									firstfield = "",
-									firstindex = param.index;
-								for(var i=0; i<fields.length; i++){
-									var col = thisGrid.datagrid('getColumnOption', fields[i + 1]),
-										col1 = thisGrid.datagrid('getColumnOption', fields[i]);
-									if(col1 != null){
-										if(col1.editor != undefined && firstfield == ""){
-											firstfield = fields[i];
-										}
-									}
-									if (fields[i] == nextfieldname && col != null){
-										if(col.editor == undefined){
-											nextfieldname = fields[i + 1];
-										}else{
-											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox'){
-												nextfield = fields[i + 1];
-											}
-										}
-									}
-								}
-
-								if(nextfield == ""){
-									nextfield = firstfield;
-									firstindex++
-								}
-								thisGrid.datagrid('editCell', {index:firstindex,field:nextfield});
-								break;
-							case 27://esc
-								thisGrid.datagrid('cancelEdit', param.index);
-								break;
-							default:
-								break;
-						}
-					});
-				}
-				
-				for(var i=0; i<fields.length; i++){
-					var col = $(this).datagrid('getColumnOption', fields[i]);
-					col.editor = col.editor1;
-				}
-			});
-		}
-	});
-	var editIndex = undefined;
-	function endEditing(){
-		if (editIndex == undefined){return true}
-		if ($('#t1').datagrid('validateRow', editIndex)){
-			$('#t1').datagrid('endEdit', editIndex);
-			editIndex = undefined;
-			return true;
-		} else {
-			return false;
-		}
-	}
-	function onClickCell(index, field){
-		if (endEditing()){
-			$('#t1').datagrid('selectRow', index)
-					.datagrid('editCell', {index:index,field:field});
-			editIndex = index;
-		}
-	}
 </script>

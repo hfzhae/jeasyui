@@ -230,4 +230,59 @@
 			"iconCls":"icon-search"
 		}]
 	}]
+},{
+	"id":16,
+	"text":"基本资料",
+	"children":[{
+		"id":17,
+		"text":"新建",
+		"children":[{
+			"id":1701,
+			"text":"产品类型",
+			"href":"public.html"
+		},{
+			"id":1702,
+			"text":"产品目录",
+			"href":"client/SimpChinese/product/"
+		},{
+			"id":1703,
+			"text":"仓库",
+			"href":"client/SimpChinese/stock/"
+		}]
+	},{
+		"id":18,
+		"text":"打开",
+		"children":[{
+			"id":1801,
+			"text":"产品类型",
+			"href":"public.html"
+		},{
+			"id":1802,
+			"text":"产品目录",
+			"href":"public.html"
+		},{
+			"id":1803,
+			"text":"仓库",
+			"href":"public.html"
+		}]
+	},{
+		"id":19,
+		"text":"查询",
+		"children":[{
+			"id":1901,
+			"text":"产品类型",
+			"href":"public.html",
+			"iconCls":"icon-search"
+		},{
+			"id":1902,
+			"text":"产品目录",
+			"href":"public.html",
+			"iconCls":"icon-search"
+		},{
+			"id":1903,
+			"text":"仓库",
+			"href":"public.html",
+			"iconCls":"icon-search"
+		}]
+	}]
 }]

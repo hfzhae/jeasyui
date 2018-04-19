@@ -1,6 +1,6 @@
 <div id="tt"></div>
 <script type="text/javascript">
-easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview'], function(){
+easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview','datagridkeyboard'], function(){
 	var toolbar = [{
 		id: 'localbtn',
 		handler:function(){
@@ -28,12 +28,12 @@ easyloader.load(['datagrid', 'splitbutton', 'splitbutton ', 'datagridscrollview'
 		autoRowHeight:false,
 		pageSize:50,
 		columns:[[
-			{field:'inv',title:'inv',width:80,},
+			{field:'inv',title:'inv',width:80},
 			{field:'date',title:'Code',width:100},
 			{field:'name',title:'Name',width:100},
-			{field:'amount',title:'amount',width:80,align:'right'},
-			{field:'price',title:'Price',width:80,align:'right'},
-			{field:'cost',title:'cost',width:100,align:'right'},
+			{field:'amount',title:'amount',width:80,align:'right',editor:'text'},
+			{field:'price',title:'Price',width:80,align:'right',editor:'text'},
+			{field:'cost',title:'cost',width:100,align:'right',editor:'text'},
 			{field:'note',title:'note',width:100,align:'right'}
 		]],
 		onLoadSuccess:function(data){
