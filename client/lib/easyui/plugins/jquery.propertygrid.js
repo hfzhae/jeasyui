@@ -27,7 +27,7 @@ return false;
 var dg=$(this);
 var _8=dg.datagrid("getRows")[_7];
 var _9=dg.datagrid("getColumnOption","value");
-_9.editor=_8.editor;
+if(_8!=undefined)_9.editor=_8.editor;
 },onClickCell:function(_a,_b,_c){
 if(_1!=this){
 _2(_1);
@@ -48,7 +48,7 @@ _6.editIndex=_a;
 }
 }
 _6.onClickCell.call(_4,_a,_b,_c);
-$(this).datagrid('selectRow', _a).datagrid('editkeyboard', {index:_a,field:_b});//自定义全键盘操作扩展 2018-4-19 zz
+$(this).datagrid('selectRow', _a).datagrid('editkeyboard', {index:_a,field:'value'});//自定义全键盘操作扩展 2018-4-19 zz
 },loadFilter:function(_e){
 _2(this);
 return _6.loadFilter.call(this,_e);

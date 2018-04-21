@@ -1,7 +1,7 @@
-{"total":7,"rows":[
+{"total":29,"rows":[
 	{"name":"编号","value":"","group":"必填信息","editor":"text","field":"code"},
 	{"name":"名称","value":"","group":"必填信息","editor":"text","field":"title"},
-	{"name":"产品类型","value":"","group":"必填信息","editor":{"type":"combobox","option":{"valueField":"id","textField":"text","data":[{"id":"1","text":"手机"}]}},"field":"productclass"},
+	{"name":"产品类型","value":"","group":"必填信息","editor":{"type":"combobox","options":{"url":"server/json/combobox_data1.json","panelHeight":"auto"}},"field":"productclass"},
 	{"name":"规格","value":"","group":"基本信息","editor":"text","field":"memo"},
 	{"name":"材质","value":"","group":"基本信息","editor":"text","field":"memo"},
 	{"name":"条码","value":"","group":"基本信息","editor":"text","field":"memo"},

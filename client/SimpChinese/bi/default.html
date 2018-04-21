@@ -1,0 +1,45 @@
+<script type="text/javascript">
+	easyloader.load([], function(){
+		var layoutview = $('<div>'),
+			tabs = $('#center').tabs('getSelected'),
+			Paramet = getMenuParameter(tabs),
+			edit;
+
+		if(Paramet.edit == 'undefined' || Paramet.edit == ''){
+			edit = "bi/edit"
+		}else{
+			edit = Paramet.edit;
+		}
+				
+		tabs.append(layoutview);
+
+		layoutview.layout({
+			fit: true
+		}).layout('add',{
+			region: 'east',
+			width: '450',
+			title: '编辑',
+			href:'client/SimpChinese/'+edit+'/',
+			hideExpandTool:false,
+			hideCollapsedContent:false,
+			border:false,
+			split: true
+		}).layout('add',{
+			region: 'center',
+			width: '50%',
+			title: '',
+			href:'client/SimpChinese/bi/list/',
+			hideExpandTool:false,
+			hideCollapsedContent:false,
+			border:false
+		});
+		
+		var layout = tabs.find('.layout'),
+			eastPanel = layout.layout('panel', 'east'),
+			centerPanel = layout.layout('panel', 'center');
+
+		eastPanel.css({overflow:'hidden'});//隐藏layout滚动条
+		centerPanel.css({overflow:'hidden'});//隐藏layout滚动条
+		
+	});
+</script>

@@ -1,0 +1,54 @@
+<div name="toolbar">
+	<select class="easyui-combobox" data-options="panelHeight:'auto',width:'auto'">
+		<option action>全部</option>
+		<option>已删除</option>
+		<option>未删除</option>
+	</select>
+	<input class="easyui-textbox" data-options="width:150">
+	<a href="#" class="easyui-linkbutton" data-options="plain:true">搜索</a>
+	<span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
+	<a href="#" class="easyui-linkbutton" data-options="plain:true">导入</a>
+	<a href="#" class="easyui-linkbutton" data-options="plain:true">导出</a>
+</div>
+<script type="text/javascript">
+	easyloader.load(['datagridscrollview'], function(){
+		var listdatagrid = $('<div>'),
+			tabs = $('#center').tabs('getSelected'),
+			Paramet = getMenuParameter(tabs),
+			layout = tabs.find('.layout'),
+			localbtn = $('<div>'),
+			loadmenu = $('<div>'),
+			columns = [[
+				//{field:'',checkbox:true},
+				{field:'itemid',title:'编号',width:80,sortable:true},
+				{field:'productname',title:'名称',width:100,sortable:true},
+				{field:'date',title:'日期',width:100,sortable:true},
+				{field:'status',title:'删除',formatter: function(value,row,index){if(value){return '√';}else{return '';}},width:60,align:'center',sortable:true}
+			]];
+		
+		layout.layout('panel', 'center').append(listdatagrid);
+		$.getJSON('server/bi/style/?template='+Paramet.style+'&v=' + (new Date()).getTime(), function(result){
+			if(result){
+				listdatagrid.datagrid({
+					view:scrollview,
+					pageSize:50,
+					remoteSort:false,
+					rownumbers:true,
+					singleSelect:true,
+					pagination:false,
+					border:false,
+					fit:false,
+					fitColumns:false,
+					striped:true,
+					url:'server/bi/list/?template='+Paramet.template+'&v=' + (new Date()).getTime(),
+					method:'get',
+					toolbar:layout.layout('panel', 'center').find('div[name=toolbar]'),
+					multiSort:false,
+					checkOnSelect:false,
+					columns:result,
+					height: '100%'
+				}).find('.datagrid-toolbar').append(toolbar);
+			}
+		});
+	});
+</script>

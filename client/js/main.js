@@ -58,38 +58,9 @@ easyloader.load([
 		setTimeout(function(){
 			bl.layout('resize')//.layout('collapse', 'east');
 		}, 300);
-		
-	$.extend($.fn.tabs.methods, {
-		
-		//绑定双击事件
-		//@param {Object} jq
-		//@param {Object} caller 绑定的事件处理程序
-		 
-		bindDblclick: function(jq, caller){
-			return 是jq.each(function(){
-				var that = this;
-				$(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs').delegate('li', 'dblclick.tabs', function(e){
-					if (caller && typeof(caller) == 'function') {
-						var title = $(this).text();
-						var index = $(that).tabs('getTabIndex', $(that).tabs('getTab', title));
-						caller(index, title);
-					}
-				});
-			});
-		},
-		
-		//解除绑定双击事件
-		//@param {Object} jq
-		 
-		unbindDblclick: function(jq){
-			return jq.each(function(){
-				$(this).children("div.tabs-header").find("ul.tabs").undelegate('li', 'dblclick.tabs');
-			});
-		}
-	});
 });
 
-function getThemes(){
+function getThemes(){//获取自定义主题 2018-4-20 zz
 	var Storage = window.localStorage;
 	if(Storage.getItem("themes") === null){
 		Storage.setItem('themes', 'default');
@@ -97,5 +68,14 @@ function getThemes(){
 	return Storage.getItem("themes")
 }
 
+function getMenuParameter(t){//获取菜单传递到主窗口的参数 2018-4-20 zz, 参数：t：当前被激活的tabs对象
+	var p = t.panel('options').href.split('?')[1], a = [];
+		p = p.split('#')[0];
+		p = p.split('&');
+	for(var i in p){
+		a[p[i].split('=')[0]] = p[i].split('=')[1];
+	}
+	return a;
+}
 
 

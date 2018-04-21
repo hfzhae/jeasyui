@@ -14,7 +14,7 @@
 				$('#center').tabs('add',{
 					id:'tabs_'+node.id,
 					title:node.text,
-					href:node.href + '?tabsid=tabs_'+node.id,
+					href:node.href + '?mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
 					iconCls:node.iconCls,
 					//href:'ribbon.html',
 					selected: true,

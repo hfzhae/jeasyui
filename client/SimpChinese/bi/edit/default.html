@@ -1,9 +1,10 @@
 <script type="text/javascript">
-	easyloader.load(['propertygrid', 'datetimebox', 'datagridkeyboard', 'combobox'], function(){
+	easyloader.load(['propertygrid', 'datetimebox', 'datagridkeyboard'], function(){
 		var mapitem = $('<div>'),
 			storage = $('<div>'),
 			tabs = $('#center').tabs('getSelected'),
 			tab = tabs.panel('options'),
+			Paramet = getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
 			eastPanel = layout.layout('panel', 'east'),
 			mycolumns = [[
@@ -15,7 +16,7 @@
 			saveasBtn = $('<a>'),
 			delBtn = $('<a>'),
 			reBtn = $('<a>');
-			
+				
 		eastPanel.append(newBtn)
 			.append(saveBtn)
 			.append(saveasBtn)
@@ -58,19 +59,10 @@
 			title: '基本资料',
 			content: storage,
 			selected: true
-		}).tabs('add', {
-			title: '辅助单位',
-			selected: false
-		}).tabs('add', {
-			title: '颜色尺码',
-			selected: false
-		}).tabs('add', {
-			title: '图片',
-			selected: false
 		});
-
+		
 		storage.propertygrid({
-			url: 'server/product/load/?v=' + (new Date()).getTime(),
+			url: 'server/'+Paramet.mode+'/load/?v=' + (new Date()).getTime(),
 			showGroup: true,
 			width:'100%',
 			height:'100%',
@@ -78,4 +70,5 @@
 			columns: mycolumns
 		});
 	});
+	
 </script>
