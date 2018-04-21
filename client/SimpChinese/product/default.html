@@ -1,5 +1,5 @@
 <script type="text/javascript">
-	easyloader.load(['propertygrid', 'datetimebox', 'datagridkeyboard', 'combobox'], function(){
+	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox'], function(){
 		var mapitem = $('<div>'),
 			storage = $('<div>'),
 			tabs = $('#center').tabs('getSelected'),
@@ -10,47 +10,138 @@
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
 			]],
-			newBtn = $('<a>'),
-			saveBtn = $('<a>'),
-			saveasBtn = $('<a>'),
-			delBtn = $('<a>'),
-			reBtn = $('<a>');
-			
-		eastPanel.append(newBtn)
-			.append(saveBtn)
-			.append(saveasBtn)
-			.append(delBtn)
-			.append(reBtn)
-			.append(mapitem);
+			biribbon = $('<div>'),
+			data = {
+				selected:0,
+				tabs:[{
+					title:'一般信息',
+					groups:[{
+						title:'基本操作',
+						tools:[{
+							type:'splitbutton',
+							name:'paste',
+							text:'保存',
+							iconCls:'icon-paste-large',
+							iconAlign:'top',
+							size:'large',
+							menuItems:[{
+								name:'paste',
+								text:'Paste',
+								iconCls:'icon-paste'
+							},{
+								name:'paste-special',
+								text:'Paste Special...',
+								iconCls:'icon-paste'
+							}]
+						},{
+							type:'toolbar',
+							dir:'v',
+							tools:[{
+								name:'cut',
+								text:'Cut',
+								iconCls:'icon-cut'
+							},{
+								name:'copy',
+								text:'Copy',
+								iconCls:'icon-copy'
+							},{
+								name:'format',
+								text:'Format',
+								iconCls:'icon-format'
+							}]
+						}]
+					},{
+						title:'Font',
+						tools:[{
+							type:'toolbar',
+							tools:[{
+								type:'combobox',
+								valueField:'text',
+								textField:'text',
+								data:[{text:'Arial',selected:true},{text:'Century'},{text:'Tahoma'}],
+								width:116,
+								panelHeight:'auto',
+								editable:false
+							},{
+								type:'combobox',
+								valueField:'text',
+								textField:'text',
+								data:[{text:'8'},{text:'12',selected:true},{text:'14'}],
+								width:45,
+								panelHeight:'auto',
+								editable:false
+							}]
+						},{
+							type:'toolbar',
+							style:{marginLeft:'5px'},
+							tools:[{
+								name:'increase-font',
+								iconCls:'icon-increase-font'
+							},{
+								name:'decrease-font',
+								iconCls:'icon-decrease-font'
+							}]
+						},{
+							type:'toolbar',
+							style:{clear:'both',marginTop:'2px'},
+							tools:[{
+								name:'bold',
+								iconCls:'icon-bold',
+								toggle:true
+							},{
+								name:'italic',
+								iconCls:'icon-italic',
+								toggle:true
+							},{
+								name:'underline',
+								iconCls:'icon-underline',
+								toggle:true
+							},{
+								name:'strikethrough',
+								iconCls:'icon-strikethrough',
+								toggle:true
+							},{
+								name:'superscript',
+								iconCls:'icon-superscript',
+								toggle:true
+							},{
+								name:'subscript',
+								iconCls:'icon-subscript',
+								toggle:true
+							}]
+						},{
+							type:'toolbar',
+							style:{clear:'both'},
+							tools:[{
+								name:'case-font',
+								iconCls:'icon-case-font'
+							},{
+								name:'grow-font',
+								iconCls:'icon-grow-font'
+							},{
+								name:'shrink-font',
+								iconCls:'icon-shrink-font'
+							}]
+						}]
+					}]
+				}]
+		};
 		
-		newBtn.linkbutton({
-			text:'新建'
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'});
+		eastPanel.append(biribbon);
+		eastPanel.append(mapitem);
 		
-		saveBtn.linkbutton({
-			text:'保存'
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'}).bind('click', function(){
-			console.log(storage.datagrid('getData'));
-		});
+		biribbon.ribbon({
+			data:data,
+			border: false,
+			plain:true
+		}).css({'padding':0});
 		
-		saveasBtn.linkbutton({
-			text:'另存为'
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'});
-		
-		delBtn.linkbutton({
-			text:'删除',
-			disabled:true
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'});
-		
-		reBtn.linkbutton({
-			text:'恢复',
-			disabled:true
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'});
-		
+				
 		mapitem.tabs({
 			border:false,
 			width:'100%',
-			height:eastPanel.height()-30,
+			tabPosition:'bottom',
+			height:eastPanel.height()-140,
 			plain:true
 		});
 		
