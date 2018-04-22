@@ -15,7 +15,7 @@
 			data = {
 				selected:0,
 				tabs:[{
-					title:'编辑',
+					title:'开始',
 					groups:[{
 						title:'基本操作',
 						tools:[{
@@ -38,11 +38,11 @@
 								text:'新建',
 								iconCls:'tree-file',
 							},{
-								name:'new',
+								name:'delete',
 								text:'删除',
 								iconCls:'icon-cancel'
 							},{
-								name:'new',
+								name:'recovery',
 								text:'恢复',
 								iconCls:'icon-reload'
 							}]
@@ -57,7 +57,7 @@
 							size:'large'
 						},{
 							type:'splitbutton',
-							name:'export',
+							name:'import',
 							text:'导入',
 							iconCls:'icon-ImportExcel-large',
 							iconAlign:'top',
@@ -89,7 +89,16 @@
 		
 		biribbon.ribbon({
 			data:data,
+			width:'100%',
 			border: false,
+			tools:[
+				{
+					iconCls:'icon-DeclineInvitation',
+					handler:function(){
+						layout.layout('remove', 'east');
+					}
+				}
+			],
 			plain:true
 		}).css({'padding':0});
 		

@@ -4,18 +4,21 @@
 		<option>已删除</option>
 		<option>未删除</option>
 	</select>
-	<input class="easyui-textbox" data-options="width:150">
-	<a href="#" class="easyui-linkbutton" data-options="plain:true">搜索</a>
+	<input class="easyui-textbox" data-options="width:120">
+	<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ZoomClassic_custom'">搜索</a>
 	<span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
-	<a href="#" class="easyui-linkbutton" data-options="plain:true">导入</a>
-	<a href="#" class="easyui-linkbutton" data-options="plain:true">导出</a>
+	<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ImportExcel'">导出</a>
+	<div name="ExportExcel"></div>
+	<span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
+	<div name="new"></div>
 </div>
 <script type="text/javascript">
-	easyloader.load(['datagridscrollview'], function(){
+	easyloader.load(['datagridscrollview', 'splitbutton', 'menubutton'], function(){
 		var listdatagrid = $('<div>'),
 			tabs = $('#center').tabs('getSelected'),
 			Paramet = getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
+			listpanel = layout.layout('panel', 'center'),
 			localbtn = $('<div>'),
 			loadmenu = $('<div>'),
 			columns = [[
@@ -24,9 +27,53 @@
 				{field:'productname',title:'名称',width:100,sortable:true},
 				{field:'date',title:'日期',width:100,sortable:true},
 				{field:'status',title:'删除',formatter: function(value,row,index){if(value){return '√';}else{return '';}},width:60,align:'center',sortable:true}
-			]];
+			]],
+			ExportExcelbox = $('<div>'),
+			edit = function(rowIndex, rowData){//打开编辑layout面板函数，参数点击行带入 2018-4-22 zz
+				console.log(rowIndex)
+				console.log(rowData)
+				var e;
+				if(Paramet.edit == 'undefined' || Paramet.edit == ''){
+					e = "bi/edit"
+				}else{
+					e = Paramet.edit;
+				}
+				layout.layout('remove', 'east');
+				layout.layout('add',{
+					region: 'east',
+					width: 400,
+					maxWidth: '50%',
+					title: '',
+					href:'client/SimpChinese/'+e+'/',
+					hideExpandTool:false,
+					hideCollapsedContent:false,
+					border:false,
+					split: true
+				});
+			};
+			
 		
-		layout.layout('panel', 'center').append(listdatagrid);
+		listpanel.append(listdatagrid);
+
+		ExportExcelbox.menu({
+			width:100
+		}).menu('appendItem', {
+			text: '下载模板',
+			iconCls:'icon-FileSaveAsExcelXlsx'
+		});
+		
+		listpanel.find('div[name=ExportExcel]').splitbutton({
+			iconCls: 'icon-ExportExcel',
+			text:'导入',
+			menu: ExportExcelbox
+		});
+		
+		listpanel.find('div[name=new]').linkbutton({
+			text:'新建',
+			iconCls:'icon-file',
+			onClick:edit
+		}).addClass('l-btn-plain');
+		
 		$.getJSON('server/bi/style/?template='+Paramet.style+'&v=' + (new Date()).getTime(), function(result){
 			if(result){
 				listdatagrid.datagrid({
@@ -42,11 +89,12 @@
 					striped:true,
 					url:'server/bi/list/?template='+Paramet.template+'&v=' + (new Date()).getTime(),
 					method:'get',
-					toolbar:layout.layout('panel', 'center').find('div[name=toolbar]'),
+					toolbar:listpanel.find('div[name=toolbar]'),
 					multiSort:false,
 					checkOnSelect:false,
 					columns:result,
-					height: '100%'
+					height: '100%',
+					onClickRow: edit
 				}).find('.datagrid-toolbar').append(toolbar);
 			}
 		});

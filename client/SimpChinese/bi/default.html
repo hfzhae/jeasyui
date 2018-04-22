@@ -2,31 +2,14 @@
 	easyloader.load([], function(){
 		var layoutview = $('<div>'),
 			tabs = $('#center').tabs('getSelected'),
-			Paramet = getMenuParameter(tabs),
-			edit;
-
-		if(Paramet.edit == 'undefined' || Paramet.edit == ''){
-			edit = "bi/edit"
-		}else{
-			edit = Paramet.edit;
-		}
-				
+			Paramet = getMenuParameter(tabs);
+			
 		tabs.append(layoutview);
 
 		layoutview.layout({
 			fit: true
 		}).layout('add',{
-			region: 'east',
-			width: '450',
-			title: '',
-			href:'client/SimpChinese/'+edit+'/',
-			hideExpandTool:false,
-			hideCollapsedContent:false,
-			border:false,
-			split: true
-		}).layout('add',{
 			region: 'center',
-			width: '50%',
 			title: '',
 			href:'client/SimpChinese/bi/list/',
 			hideExpandTool:false,

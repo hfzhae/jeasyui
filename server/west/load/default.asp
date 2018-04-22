@@ -8,17 +8,17 @@
 			"id":101,
 			"text":"销售订单",
 			"href":"content.html",
-			"iconCls":"tree-GetExternalDataFromText"
+			"iconCls":"icon-GetExternalDataFromText"
 		},{
 			"id":102,
 			"text":"销售出库单",
 			"href":"ribbon.html",
-			"iconCls":"tree-GetExternalDataFromText"
+			"iconCls":"icon-GetExternalDataFromText"
 		},{
 			"id":103,
 			"text":"销售退货单",
 			"href":"datagrid23_demo.html",
-			"iconCls":"tree-GetExternalDataFromText"
+			"iconCls":"icon-GetExternalDataFromText"
 		}]
 	},{
 		"id":2,
@@ -27,17 +27,17 @@
 			"id":104,
 			"text":"销售订单",
 			"href":"texteditor.html",
-			"iconCls":"tree-WindowsSwitch"
+			"iconCls":"icon-WindowsSwitch"
 		},{
 			"id":105,
 			"text":"销售出库单",
 			"href":"content.html",
-			"iconCls":"tree-WindowsSwitch"
+			"iconCls":"icon-WindowsSwitch"
 		},{
 			"id":106,
 			"text":"销售退货单",
 			"href":"public.html",
-			"iconCls":"tree-WindowsSwitch"
+			"iconCls":"icon-WindowsSwitch"
 		}]
 	},{
 		"id":3,
@@ -46,22 +46,22 @@
 			"id":107,
 			"text":"销售订单查询",
 			"href":"DataGridVirtualScroll.html",
-			"iconCls":"tree-ChartEditDataSource"
+			"iconCls":"icon-ChartEditDataSource"
 		},{
 			"id":108,
 			"text":"销售出库单查询",
 			"href":"public.html",
-			"iconCls":"tree-ChartEditDataSource"
+			"iconCls":"icon-ChartEditDataSource"
 		},{
 			"id":109,
 			"text":"销售退货单查询",
 			"href":"public.html",
-			"iconCls":"tree-ChartEditDataSource"
+			"iconCls":"icon-ChartEditDataSource"
 		},{
 			"id":110,
 			"text":"销售汇总查询",
 			"href":"LargeData.html",
-			"iconCls":"tree-ChartEditDataSource"
+			"iconCls":"icon-ChartEditDataSource"
 		}]
 	}]
 },{
@@ -91,6 +91,34 @@
 		"href":"client/SimpChinese/bi/"
 	}]
 },{
+	"text":"用户和权限",
+	"state":"closed",
+	"children":[{
+		"id":1804,
+		"text":"用户设置",
+		"href":"public.html"
+	},{
+		"id":1805,
+		"text":"操作授权",
+		"href":"public.html"
+	},{
+		"id":1806,
+		"text":"仓库授权",
+		"href":"public.html"
+	},{
+		"id":1807,
+		"text":"区域授权",
+		"href":"public.html"
+	},{
+		"id":1809,
+		"text":"部门授权",
+		"href":"public.html"
+	},{
+		"id":1810,
+		"text":"角色授权",
+		"href":"public.html"
+	}]
+},{
 	"id":18,
 	"text":"系统设置",
 	"state":"closed",
@@ -115,33 +143,6 @@
 		},{
 			"id":1803,
 			"text":"查询模板",
-			"href":"public.html"
-		}]
-	},{
-		"text":"用户和权限",
-		"children":[{
-			"id":1804,
-			"text":"用户设置",
-			"href":"public.html"
-		},{
-			"id":1805,
-			"text":"操作授权",
-			"href":"public.html"
-		},{
-			"id":1806,
-			"text":"仓库授权",
-			"href":"public.html"
-		},{
-			"id":1807,
-			"text":"区域授权",
-			"href":"public.html"
-		},{
-			"id":1809,
-			"text":"部门授权",
-			"href":"public.html"
-		},{
-			"id":1810,
-			"text":"角色授权",
 			"href":"public.html"
 		}]
 	}]

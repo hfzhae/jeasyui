@@ -36,15 +36,15 @@
 							tools:[{
 								name:'new',
 								text:'新建',
-								iconCls:'tree-file',
+								iconCls:'icon-file',
 							},{
-								name:'new',
+								name:'delete',
 								text:'删除',
-								iconCls:'icon-cancel'
+								iconCls:'icon-Delete'
 							},{
-								name:'new',
+								name:'recovery',
 								text:'恢复',
-								iconCls:'icon-reload'
+								iconCls:'icon-Recurrence'
 							}]
 						}]
 					},{
@@ -57,7 +57,7 @@
 							size:'large'
 						},{
 							type:'splitbutton',
-							name:'export',
+							name:'import',
 							text:'导入',
 							iconCls:'icon-ImportExcel-large',
 							iconAlign:'top',
@@ -95,7 +95,7 @@
 							type:'toolbar',
 							dir:'v',
 							tools:[{
-								name:'searchsale',
+								name:'searcpurchase',
 								text:'采购入库查询',
 								iconCls:'icon-ChartTrendline'
 							},{
@@ -103,7 +103,7 @@
 								text:'销售出库查询',
 								iconCls:'icon-ChartTitle'
 							},{
-								name:'searchsale',
+								name:'searchmovestock',
 								text:'调拨查询',
 								iconCls:'icon-ChartTypeLineInsertGallery'
 							}]
@@ -117,7 +117,16 @@
 		
 		biribbon.ribbon({
 			data:data,
+			width:'100%',
 			border: false,
+			tools:[
+				{
+					iconCls:'panel-tool-close',
+					handler:function(){
+						layout.layout('remove', 'east');
+					}
+				}
+			],
 			plain:true
 		}).css({'padding':0});
 		
