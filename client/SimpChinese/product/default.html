@@ -4,6 +4,7 @@
 			storage = $('<div>'),
 			tabs = $('#center').tabs('getSelected'),
 			tab = tabs.panel('options'),
+			Paramet = getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
 			eastPanel = layout.layout('panel', 'east'),
 			mycolumns = [[
@@ -14,113 +15,97 @@
 			data = {
 				selected:0,
 				tabs:[{
-					title:'一般信息',
+					title:'开始',
 					groups:[{
 						title:'基本操作',
 						tools:[{
 							type:'splitbutton',
-							name:'paste',
+							name:'save',
 							text:'保存',
-							iconCls:'icon-paste-large',
+							iconCls:'icon-FileSave-large',
 							iconAlign:'top',
 							size:'large',
 							menuItems:[{
-								name:'paste',
-								text:'Paste',
-								iconCls:'icon-paste'
-							},{
-								name:'paste-special',
-								text:'Paste Special...',
-								iconCls:'icon-paste'
+								name:'saveas',
+								text:'另存为',
+								iconCls:'icon-FileSaveAs'
 							}]
 						},{
 							type:'toolbar',
 							dir:'v',
 							tools:[{
-								name:'cut',
-								text:'Cut',
-								iconCls:'icon-cut'
+								name:'new',
+								text:'新建',
+								iconCls:'tree-file',
 							},{
-								name:'copy',
-								text:'Copy',
-								iconCls:'icon-copy'
+								name:'new',
+								text:'删除',
+								iconCls:'icon-cancel'
 							},{
-								name:'format',
-								text:'Format',
-								iconCls:'icon-format'
+								name:'new',
+								text:'恢复',
+								iconCls:'icon-reload'
 							}]
 						}]
 					},{
-						title:'Font',
+						title:'数据',
+						tools:[{
+							name:'export',
+							text:'导出',
+							iconCls:'icon-ExportExcel-large',
+							iconAlign:'top',
+							size:'large'
+						},{
+							type:'splitbutton',
+							name:'export',
+							text:'导入',
+							iconCls:'icon-ImportExcel-large',
+							iconAlign:'top',
+							size:'large',
+							menuItems:[{
+								name:'import',
+								text:'下载模板',
+								iconCls:'icon-FileSaveAsExcelXlsx'
+							}]
+						}]
+					},{
+						title:'安全',
 						tools:[{
 							type:'toolbar',
 							tools:[{
-								type:'combobox',
-								valueField:'text',
-								textField:'text',
-								data:[{text:'Arial',selected:true},{text:'Century'},{text:'Tahoma'}],
-								width:116,
-								panelHeight:'auto',
-								editable:false
-							},{
-								type:'combobox',
-								valueField:'text',
-								textField:'text',
-								data:[{text:'8'},{text:'12',selected:true},{text:'14'}],
-								width:45,
-								panelHeight:'auto',
-								editable:false
+								name:'lock',
+								text:'编辑锁',
+								iconCls:'icon-Lock-large',
+								iconAlign:'top',
+								size:'large'
 							}]
+						}]
+					}]
+				},{
+					title:'相关查询',
+					groups:[{
+						title:'业务',
+						tools:[{
+							name:'searchstock',
+							text:'查看库存',
+							iconCls:'icon-ChartTypePieInsertGallery-large',
+							iconAlign:'top',
+							size:'large',
 						},{
 							type:'toolbar',
-							style:{marginLeft:'5px'},
+							dir:'v',
 							tools:[{
-								name:'increase-font',
-								iconCls:'icon-increase-font'
+								name:'searchsale',
+								text:'采购入库查询',
+								iconCls:'icon-ChartTrendline'
 							},{
-								name:'decrease-font',
-								iconCls:'icon-decrease-font'
-							}]
-						},{
-							type:'toolbar',
-							style:{clear:'both',marginTop:'2px'},
-							tools:[{
-								name:'bold',
-								iconCls:'icon-bold',
-								toggle:true
+								name:'searchsale',
+								text:'销售出库查询',
+								iconCls:'icon-ChartTitle'
 							},{
-								name:'italic',
-								iconCls:'icon-italic',
-								toggle:true
-							},{
-								name:'underline',
-								iconCls:'icon-underline',
-								toggle:true
-							},{
-								name:'strikethrough',
-								iconCls:'icon-strikethrough',
-								toggle:true
-							},{
-								name:'superscript',
-								iconCls:'icon-superscript',
-								toggle:true
-							},{
-								name:'subscript',
-								iconCls:'icon-subscript',
-								toggle:true
-							}]
-						},{
-							type:'toolbar',
-							style:{clear:'both'},
-							tools:[{
-								name:'case-font',
-								iconCls:'icon-case-font'
-							},{
-								name:'grow-font',
-								iconCls:'icon-grow-font'
-							},{
-								name:'shrink-font',
-								iconCls:'icon-shrink-font'
+								name:'searchsale',
+								text:'调拨查询',
+								iconCls:'icon-ChartTypeLineInsertGallery'
 							}]
 						}]
 					}]
@@ -159,13 +144,23 @@
 			title: '图片',
 			selected: false
 		});
+		
+		window.onresize = function() {//窗口高度发生变化时，自动调整tabs的高度 2018-4-22 zz
+			setTimeout(function(){
+				mapitem.tabs('resize', {
+					height:eastPanel.height()-140
+				});
+				storage.propertygrid('resize');
+			},200);
+		}
 
 		storage.propertygrid({
-			url: 'server/product/load/?v=' + (new Date()).getTime(),
+			url: 'server/'+Paramet.mode+'/load/?v=' + (new Date()).getTime(),
 			showGroup: true,
 			width:'100%',
 			height:'100%',
 			border:false,
+			showHeader: false,
 			columns: mycolumns
 		});
 	});

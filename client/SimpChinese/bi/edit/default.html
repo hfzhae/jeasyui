@@ -1,5 +1,5 @@
 <script type="text/javascript">
-	easyloader.load(['propertygrid', 'datetimebox', 'datagridkeyboard'], function(){
+	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox'], function(){
 		var mapitem = $('<div>'),
 			storage = $('<div>'),
 			tabs = $('#center').tabs('getSelected'),
@@ -11,47 +11,94 @@
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
 			]],
-			newBtn = $('<a>'),
-			saveBtn = $('<a>'),
-			saveasBtn = $('<a>'),
-			delBtn = $('<a>'),
-			reBtn = $('<a>');
+			biribbon = $('<div>'),
+			data = {
+				selected:0,
+				tabs:[{
+					title:'编辑',
+					groups:[{
+						title:'基本操作',
+						tools:[{
+							type:'splitbutton',
+							name:'save',
+							text:'保存',
+							iconCls:'icon-FileSave-large',
+							iconAlign:'top',
+							size:'large',
+							menuItems:[{
+								name:'saveas',
+								text:'另存为',
+								iconCls:'icon-FileSaveAs'
+							}]
+						},{
+							type:'toolbar',
+							dir:'v',
+							tools:[{
+								name:'new',
+								text:'新建',
+								iconCls:'tree-file',
+							},{
+								name:'new',
+								text:'删除',
+								iconCls:'icon-cancel'
+							},{
+								name:'new',
+								text:'恢复',
+								iconCls:'icon-reload'
+							}]
+						}]
+					},{
+						title:'数据',
+						tools:[{
+							name:'export',
+							text:'导出',
+							iconCls:'icon-ExportExcel-large',
+							iconAlign:'top',
+							size:'large'
+						},{
+							type:'splitbutton',
+							name:'export',
+							text:'导入',
+							iconCls:'icon-ImportExcel-large',
+							iconAlign:'top',
+							size:'large',
+							menuItems:[{
+								name:'import',
+								text:'下载模板',
+								iconCls:'icon-FileSaveAsExcelXlsx'
+							}]
+						}]
+					},{
+						title:'安全',
+						tools:[{
+							type:'toolbar',
+							tools:[{
+								name:'lock',
+								text:'编辑锁',
+								iconCls:'icon-Lock-large',
+								iconAlign:'top',
+								size:'large'
+							}]
+						}]
+					}]
+				}]
+		};
+		
+		eastPanel.append(biribbon);
+		eastPanel.append(mapitem);
+		
+		biribbon.ribbon({
+			data:data,
+			border: false,
+			plain:true
+		}).css({'padding':0});
+		
 				
-		eastPanel.append(newBtn)
-			.append(saveBtn)
-			.append(saveasBtn)
-			.append(delBtn)
-			.append(reBtn)
-			.append(mapitem);
-		
-		newBtn.linkbutton({
-			text:'新建'
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'});
-		
-		saveBtn.linkbutton({
-			text:'保存'
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'}).bind('click', function(){
-			console.log(storage.datagrid('getData'));
-		});
-		
-		saveasBtn.linkbutton({
-			text:'另存为'
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'});
-		
-		delBtn.linkbutton({
-			text:'删除',
-			disabled:true
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'});
-		
-		reBtn.linkbutton({
-			text:'恢复',
-			disabled:true
-		}).addClass('l-btn-plain').css({margin:'2px',marginRight:'0px'});
-		
 		mapitem.tabs({
 			border:false,
 			width:'100%',
-			height:eastPanel.height()-30,
+			tabPosition:'bottom',
+			height:eastPanel.height()-140,
 			plain:true
 		});
 		
@@ -61,14 +108,23 @@
 			selected: true
 		});
 		
+		window.onresize = function() {//窗口高度发生变化时，自动调整tabs的高度 2018-4-22 zz
+			setTimeout(function(){
+				mapitem.tabs('resize', {
+					height:eastPanel.height()-140
+				});
+				storage.propertygrid('resize');
+			},200);
+		}
+
 		storage.propertygrid({
 			url: 'server/'+Paramet.mode+'/load/?v=' + (new Date()).getTime(),
 			showGroup: true,
 			width:'100%',
 			height:'100%',
 			border:false,
+			showHeader: false,
 			columns: mycolumns
 		});
 	});
-	
 </script>
