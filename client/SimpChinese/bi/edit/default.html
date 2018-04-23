@@ -40,7 +40,7 @@
 							},{
 								name:'delete',
 								text:'删除',
-								iconCls:'icon-cancel'
+								iconCls:'icon-Delete'
 							},{
 								name:'recovery',
 								text:'恢复',
@@ -48,25 +48,19 @@
 							}]
 						}]
 					},{
-						title:'数据',
+						title:'内容',
 						tools:[{
-							name:'export',
-							text:'导出',
-							iconCls:'icon-ExportExcel-large',
+							name:'paste',
+							text:'粘贴',
+							iconCls:'icon-Paste-large',
 							iconAlign:'top',
 							size:'large'
 						},{
-							type:'splitbutton',
-							name:'import',
-							text:'导入',
-							iconCls:'icon-ImportExcel-large',
+							name:'copy',
+							text:'复制',
+							iconCls:'icon-Copy-large',
 							iconAlign:'top',
-							size:'large',
-							menuItems:[{
-								name:'import',
-								text:'下载模板',
-								iconCls:'icon-FileSaveAsExcelXlsx'
-							}]
+							size:'large'
 						}]
 					},{
 						title:'安全',
@@ -93,7 +87,7 @@
 			border: false,
 			tools:[
 				{
-					iconCls:'icon-DeclineInvitation',
+					iconCls:'panel-tool-close',
 					handler:function(){
 						layout.layout('remove', 'east');
 					}

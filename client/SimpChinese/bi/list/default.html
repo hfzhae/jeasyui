@@ -21,13 +21,6 @@
 			listpanel = layout.layout('panel', 'center'),
 			localbtn = $('<div>'),
 			loadmenu = $('<div>'),
-			columns = [[
-				//{field:'',checkbox:true},
-				{field:'itemid',title:'编号',width:80,sortable:true},
-				{field:'productname',title:'名称',width:100,sortable:true},
-				{field:'date',title:'日期',width:100,sortable:true},
-				{field:'status',title:'删除',formatter: function(value,row,index){if(value){return '√';}else{return '';}},width:60,align:'center',sortable:true}
-			]],
 			ExportExcelbox = $('<div>'),
 			edit = function(rowIndex, rowData){//打开编辑layout面板函数，参数点击行带入 2018-4-22 zz
 				console.log(rowIndex)
@@ -43,6 +36,7 @@
 					region: 'east',
 					width: 400,
 					maxWidth: '50%',
+					minWidth: 300,
 					title: '',
 					href:'client/SimpChinese/'+e+'/',
 					hideExpandTool:false,

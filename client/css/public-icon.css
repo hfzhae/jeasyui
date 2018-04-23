@@ -270,6 +270,20 @@
 .icon-ZoomClassic_custom-large{
 	background:url('icon32/ZoomClassic_custom.png') no-repeat center center;
 }
+.icon-Paste{
+	background:url('icon32/Paste.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-Paste-large{
+	background:url('icon32/Paste.png') no-repeat center center;
+}
+.icon-Copy{
+	background:url('icon32/Copy.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-Copy-large{
+	background:url('icon32/Copy.png') no-repeat center center;
+}
 
 /*新增图标end*/
 

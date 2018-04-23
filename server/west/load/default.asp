@@ -121,7 +121,6 @@
 },{
 	"id":18,
 	"text":"系统设置",
-	"state":"closed",
 	"children":[{
 		"text":"配置工具",
 		"children":[{
@@ -141,8 +140,31 @@
 			"text":"查询设计",
 			"href":"public.html"
 		},{
-			"id":1803,
-			"text":"查询模板",
+			"id":1811,
+			"text":"权限设置",
+			"href":"public.html"
+		},{
+			"id":1812,
+			"text":"权限组设置",
+			"href":"public.html"
+		},{
+			"id":1813,
+			"text":"权限组分配权限",
+			"href":"public.html"
+		}]
+	},{
+		"text":"系统属性",
+		"children":[{
+			"id":1811,
+			"text":"日志分析",
+			"href":"public.html"
+		},{
+			"id":1812,
+			"text":"账套信息",
+			"href":"public.html"
+		},{
+			"id":1801,
+			"text":"系统信息",
 			"href":"public.html"
 		}]
 	}]
