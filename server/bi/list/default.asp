@@ -20,7 +20,7 @@ Case 2
 <%
 Case 3
 %>
-{"total":120,"rows":[
+{"total":10,"rows":[
 	{"productid":"FI-SW-01","productname":"Koi","unitcost":10.00,"status":true,"listprice":36.50,"attr1":"Large","itemid":"EST-1"},
 	{"productid":"K9-DL-01","productname":"Dalmation","unitcost":12.00,"status":false,"listprice":18.50,"attr1":"Spotted Adult Female","itemid":"EST-10"},
 	{"productid":"RP-SN-01","productname":"Rattlesnake","unitcost":12.00,"status":"","listprice":38.50,"attr1":"Venomless","itemid":"EST-11"},
