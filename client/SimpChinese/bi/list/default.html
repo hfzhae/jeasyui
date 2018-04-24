@@ -13,7 +13,7 @@
 	<div name="new"></div>
 </div>
 <script type="text/javascript">
-	easyloader.load(['datagridscrollview', 'splitbutton', 'menubutton'], function(){
+	easyloader.load(['datagridscrollview', 'splitbutton', 'menubutton', 'datagridrenderstyler'], function(){
 		var listdatagrid = $('<div>'),
 			tabs = $('#center').tabs('getSelected'),
 			Paramet = getMenuParameter(tabs),
@@ -26,13 +26,14 @@
 				//console.log(rowIndex)
 				//console.log(rowData)
 				var e;
-				if(Paramet.edit == 'undefined' || Paramet.edit == ''){
-					e = "bi/edit"
+				if(Paramet.edit == 'undefined' || Paramet.edit == ''){//判断菜单参数
+					e = "bi/edit"//如果没有edit参数，赋值默认编辑地址
 				}else{
-					e = Paramet.edit;
+					e = Paramet.edit;//如果有edit参数，赋值参数编辑地址
 				}
-				layout.layout('remove', 'east');
-				layout.layout('add',{
+				layout.layout('remove', 'east');//删除编辑layout
+
+				layout.layout('add',{//添加新的layout
 					region: 'east',
 					width: 400,
 					maxWidth: '50%',
@@ -68,8 +69,9 @@
 			onClick:edit
 		}).addClass('l-btn-plain');
 		
+
 		$.getJSON('server/bi/style/?template='+Paramet.style+'&v=' + (new Date()).getTime(), function(result){
-			if(result){
+			if(result){				
 				listdatagrid.datagrid({
 					view:scrollview,
 					pageSize:50,
@@ -89,7 +91,8 @@
 					columns:result,
 					height: '100%',
 					onClickRow: edit
-				});
+				}).datagrid('renderformatterstyler');
+
 			}
 		});
 	});

@@ -18,7 +18,7 @@
 	{"name":"考核价","value":"0","group":"价格","editor":"text","field":"memo"},
 	{"name":"税率","value":"0.17","group":"价格","editor":"text","field":"memo"},
 	{"name":"串号长度","value":"0","group":"串号","editor":"text","field":"memo"},
-	{"name":"网上发布","value":"on","group":"其他","editor":{"type":"checkbox","options":{"on":"√","off":""}},"field":"memo","render":"boolRender"},
+	{"name":"网上发布","value":"on","group":"其他","editor":{"type":"checkbox","options":{"on":"√","off":""}},"field":"memo","render":"boolRender","fieldstyle":"background-color:#ffee00;color:red;"},
 	{"name":"无形商品","value":"","group":"其他","editor":{"type":"checkbox","options":{"on":"√","off":""}},"field":"memo","render":"boolRender"},
 	{"name":"套装产品","value":"3","group":"其他","editor":{"type":"checkbox","options":{"on":"√","off":""}},"field":"memo","render":"boolRender"},
 	{"name":"设置批次","value":"1","group":"其他","editor":{"type":"checkbox","options":{"on":"√","off":""}},"field":"memo","render":"boolRender"},

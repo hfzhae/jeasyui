@@ -1,5 +1,5 @@
 <script type="text/javascript">
-	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox'], function(){		
+	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler'], function(){		
 		var mapitem = $('<div>'),
 			storage = $('<div>'),
 			tabs = $('#center').tabs('getSelected'),
@@ -118,7 +118,7 @@
 			border: false,
 			tools:[
 				{
-					iconCls:'panel-tool-close',
+					iconCls:'icon-DeclineInvitation',
 					handler:function(){
 						layout.layout('remove', 'east');
 					}
@@ -159,24 +159,7 @@
 				storage.propertygrid('resize');
 			},200);
 		}
-		
-		$.extend($.fn.propertygrid.defaults.columns[0][1], { //propertygrid控件支持render的回调函数
-			formatter : function(value, rowData, rowIndex) {
-				switch(rowData.render){
-					case "boolRender":
-						if(value == ''){
-							return '';
-						}else{
-							rowData.value = '√';
-							return '√';
-						}
-						break;
-					default:
-						return value;
-						break;
-				}
-			}
-		});
+
 
 		storage.propertygrid({
 			url: 'server/'+Paramet.mode+'/load/?v=' + (new Date()).getTime(),
@@ -184,9 +167,10 @@
 			width:'100%',
 			height:'100%',
 			border:false,
+			striped:false,//关闭行色差
 			showHeader: false,
 			//columns: mycolumns
-		});
+		}).datagrid('renderformatterstyler', 'propertygrid');
 		
 	});
 	

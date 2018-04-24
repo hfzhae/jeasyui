@@ -59,6 +59,7 @@ var t=$(_f);
 if(!t.length){
 return;
 }
+try{//自定义重复加载后单击报错的问题 2018-4-24 zz
 var _10=$.data(_f,"propertygrid").options;
 _10.finder.getTr(_f,null,"editing").each(function(){
 var _11=parseInt($(this).attr("datagrid-row-index"));
@@ -69,6 +70,7 @@ t.datagrid("cancelEdit",_11);
 }
 });
 _10.editIndex=undefined;
+}catch(e){}//自定义重复加载后单击报错的问题 2018-4-24 zz
 };
 $.fn.propertygrid=function(_12,_13){
 if(typeof _12=="string"){

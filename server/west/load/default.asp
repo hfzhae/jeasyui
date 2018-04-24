@@ -70,6 +70,13 @@
 	"id":16,
 	"text":"基本资料",
 	"children":[{
+		"id":1700,
+		"text":"区域",
+		"mode":"area",
+		"style":"area",
+		"template":3,
+		"href":"client/SimpChinese/bi/"
+	},{
 		"id":1701,
 		"text":"产品类型",
 		"mode":"productclass",
@@ -89,6 +96,20 @@
 		"text":"仓库",
 		"mode":"stock",
 		"style":"stock",
+		"template":3,
+		"href":"client/SimpChinese/bi/"
+	},{
+		"id":1704,
+		"text":"客户",
+		"mode":"custom",
+		"style":"custom",
+		"template":3,
+		"href":"client/SimpChinese/bi/"
+	},{
+		"id":1705,
+		"text":"供应商",
+		"mode":"vender",
+		"style":"vender",
 		"template":3,
 		"href":"client/SimpChinese/bi/"
 	}]
