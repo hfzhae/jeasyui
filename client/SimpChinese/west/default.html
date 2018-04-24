@@ -8,19 +8,20 @@
 		dnd:false,
 		onClick: function(node){
 			if(node.children) return;
-			if($('#tabs_'+node.id).length > 0){
-				$('#center').tabs('select', $('#tabs_'+node.id).panel('options').index);
+			var tabsid= 'tabs_'+RndNum(20)
+			if($('#'+tabsid).length > 0){
+				$('#center').tabs('select', $('#'+tabsid).panel('options').index);
 			}else{
 				$('#center').tabs('add',{
-					id:'tabs_'+node.id,
+					id:node.id,
 					title:node.text,
-					href:node.href + '?mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
+					href:node.href + '?tabsid='+tabsid+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
 					iconCls:node.iconCls,
 					//href:'ribbon.html',
 					selected: true,
 					closable:true
 				});
-				$('#tabs_'+node.id).css({padding:0});
+				$('#'+tabsid).css({padding:0});
 			}
 		}
 	}).css({padding: 5});

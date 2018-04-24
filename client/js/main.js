@@ -78,4 +78,10 @@ function getMenuParameter(t){//获取菜单传递到主窗口的参数 2018-4-20
 	return a;
 }
 
+function RndNum(n){//随机数生成函数
+    var rnd="";
+    for(var i=0;i<n;i++)
+        rnd+=Math.floor(Math.random()*10);
+    return rnd;
+}
 
