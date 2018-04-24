@@ -13,8 +13,7 @@ $.extend($.fn.datagrid.methods,{
 		var columns = d.datagrid('options').columns;
 		if(t == 'propertygrid'){//针对propertygrid控件的处理
 			columns[0][1].formatter = function(value, rowData, rowIndex) {//设置返回值
-				var v = _setRS(rowData.render,rowData.value);
-				rowData.value = v;//同时修改单元格的值
+				var v = _setRender(rowData.render,rowData.value);
 				return v;
 			}
 			columns[0][1].styler = function(value, rowData, rowIndex){//设置单元格样式
@@ -27,7 +26,7 @@ $.extend($.fn.datagrid.methods,{
 				var _c = columns[0][i];
 				if(_c.render){
 					_c.formatter = function(value, rowData, rowIndex){//设置返回值
-						return _setRS(_c.render, _c.value);
+						return _setRender(_c.render, _c.value);
 					}
 					_c.styler = function(value, rowData, rowIndex){//设置单元格样式
 						if(_c.fieldstyle){
@@ -40,7 +39,7 @@ $.extend($.fn.datagrid.methods,{
 	}
 });
 
-function _setRS(r, v){//renter返回值处理
+function _setRender(r, v){//renter返回值处理
 	if(!r)return v;
 	switch(r.toLowerCase()){
 		case "boolrender"://布尔回调函数

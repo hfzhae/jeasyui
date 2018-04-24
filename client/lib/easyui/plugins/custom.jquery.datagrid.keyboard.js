@@ -25,13 +25,16 @@ $.extend($.fn.datagrid.methods, {
 			var obj = $(this).datagrid('getEditor', {index:param.index, field:param.field}),//获取激活的输入框对象
 				thisGrid = $(this);
 			if(obj != null){
-				if(obj.type == 'datebox' || obj.type == 'combobox' || obj.type == 'datetimebox'){
+				if(obj.type == 'datebox' || obj.type == 'combobox' || obj.type == 'datetimebox' || obj.type == 'combogrid'){
 					var inputObj = $(obj.target).parent().find('input:eq(1)')
 				}else{
 					var inputObj = $(obj.target);//输入框自动激活焦点并全选
 				}
 				inputObj.select();
 				switch(obj.type){
+					case 'combogrid':
+						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
+						break;
 					case 'datetimebox':
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
@@ -72,7 +75,7 @@ $.extend($.fn.datagrid.methods, {
 									if(col.editor == undefined){
 										nextfieldname = fields[i - 1];
 									}else{
-										if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox'){
+										if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || obj.type == 'combogrid'){
 											nextfield = fields[i - 1];
 										}
 									}
@@ -91,7 +94,7 @@ $.extend($.fn.datagrid.methods, {
 									if(col.editor == undefined){
 										nextfieldname = fields[i + 1];
 									}else{
-									if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox'){
+									if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || obj.type == 'combogrid'){
 											nextfield = fields[i + 1];
 										}
 									}
@@ -119,7 +122,7 @@ $.extend($.fn.datagrid.methods, {
 									if(col.editor == undefined){
 										nextfieldname = fields[i + 1];
 									}else{
-										if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox'){
+										if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || obj.type == 'combogrid'){
 											nextfield = fields[i + 1];
 										}
 									}

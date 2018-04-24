@@ -1,7 +1,7 @@
 {"total":29,"rows":[
 	{"name":"编号","value":"","group":"必填信息","editor":"text","field":"code"},
 	{"name":"名称","value":"","group":"必填信息","editor":"text","field":"title"},
-	{"name":"产品类型","value":"","group":"必填信息","editor":{"type":"combobox","options":{"data":[{"value":1,"text":"Python"}],"panelHeight":"auto"}},"field":"productclass"},
+	{"name":"产品类型","value":"","group":"必填信息","editor":{"type":"combogrid","options":{"asynurl":"server/json/datagrid25_getdata.json","required":true,"idField":"inv","idField":"name","rownumbers":true,"columns":[[{"field":"inv","title":"编号","width":80,"search":true},{"field":"name","title":"名称","width":120,"search":true}]]}},"field":"productclass"},
 	{"name":"规格","value":"","group":"基本信息","editor":"text","field":"memo"},
 	{"name":"单位","value":"","group":"基本信息","editor":"text","field":"memo"},
 	{"name":"材质","value":"","group":"基本信息","editor":"text","field":"memo"},
@@ -22,7 +22,7 @@
 	{"name":"无形商品","value":"","group":"其他","editor":{"type":"checkbox","options":{"on":"√","off":""}},"field":"memo","render":"boolRender"},
 	{"name":"套装产品","value":"3","group":"其他","editor":{"type":"checkbox","options":{"on":"√","off":""}},"field":"memo","render":"boolRender"},
 	{"name":"设置批次","value":"1","group":"其他","editor":{"type":"checkbox","options":{"on":"√","off":""}},"field":"memo","render":"boolRender"},
-	{"name":"备注","value":"","group":"价格","editor":"text","field":"memo"},
+	{"name":"备注","value":"备注","group":"价格","editor":"text","field":"memo","render":"boolRender"},
 	{"name":"备注","value":"","group":"其他","editor":"text","field":"memo"},
 	{"name":"积分起始时间","value":"2018-04-19 16:49:26","group":"会员积分规则","editor":"datetimebox","field":"datefrom"},
 	{"name":"积分结束时间","value":"2018-04-19 16:49:26","group":"会员积分规则","editor":"datetimebox","field":"dateto"},

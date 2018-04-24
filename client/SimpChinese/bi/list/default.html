@@ -18,7 +18,7 @@
 			tabs = $('#center').tabs('getSelected'),
 			Paramet = getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
-			listpanel = layout.layout('panel', 'center'),
+			centerpanel = layout.layout('panel', 'center'),
 			localbtn = $('<div>'),
 			loadmenu = $('<div>'),
 			ExportExcelbox = $('<div>'),
@@ -31,6 +31,7 @@
 				}else{
 					e = Paramet.edit;//如果有edit参数，赋值参数编辑地址
 				}
+
 				layout.layout('remove', 'east');//删除编辑layout
 
 				layout.layout('add',{//添加新的layout
@@ -48,7 +49,7 @@
 			};
 			
 		
-		listpanel.append(listdatagrid);
+		centerpanel.append(listdatagrid);
 
 		ExportExcelbox.menu({
 			width:100
@@ -57,13 +58,13 @@
 			iconCls:'icon-FileSaveAsExcelXlsx'
 		});
 		
-		listpanel.find('div[name=ExportExcel]').splitbutton({
+		centerpanel.find('div[name=ExportExcel]').splitbutton({
 			iconCls: 'icon-ExportExcel',
 			text:'导入',
 			menu: ExportExcelbox
 		});
 		
-		listpanel.find('div[name=new]').linkbutton({
+		centerpanel.find('div[name=new]').linkbutton({
 			text:'新建',
 			iconCls:'icon-file',
 			onClick:edit
@@ -85,7 +86,7 @@
 					striped:true,
 					url:'server/bi/list/?template='+Paramet.template+'&v=' + (new Date()).getTime(),
 					method:'get',
-					toolbar:listpanel.find('div[name=toolbar]'),
+					toolbar:centerpanel.find('div[name=toolbar]'),
 					multiSort:false,
 					checkOnSelect:false,
 					columns:result,
