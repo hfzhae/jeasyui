@@ -96,3 +96,15 @@ function EditStatusMessager(s, t, backcall){//编辑状态判断提醒函数，�
 		backcall();
 	}
 }
+
+window.onbeforeunload=function(e){//处理编辑未保存时窗口关闭或刷新时的提醒 2018-4-25 zz
+	var tabspanel = $('#center').tabs('tabs'),
+		editstatus = false;
+	for(var i in tabspanel){
+		if(tabspanel[i].panel('options').editstatus)editstatus = true;
+	}
+	if(editstatus){
+	　　var e = window.event||e;  
+	　　e.returnValue=("有数据没有保存，确定离开当前页面吗？");
+	}
+} 

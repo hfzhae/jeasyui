@@ -1,7 +1,7 @@
 <div id="center"></div>
 <script type="text/javascript">
-	$.extend($.fn.tabs.defaults, {
-		onBeforeClose: function(title,index){//关闭tab时判断是否存在编辑未保存的对象
+	$.extend($.fn.tabs.defaults, {//关闭tab时判断是否存在编辑未保存的页面对象的tabs扩展 2018-4-25 zz
+		onBeforeClose: function(title,index){
 			var target = this,
 				editstatus = $(target).tabs('getTab', index).panel('options').editstatus;
 			if(editstatus){
