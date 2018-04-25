@@ -1,11 +1,10 @@
-<div id="center"></div>
 <script type="text/javascript">
 	$.extend($.fn.tabs.defaults, {//关闭tab时判断是否存在编辑未保存的页面对象的tabs扩展 2018-4-25 zz
 		onBeforeClose: function(title,index){
 			var target = this,
 				editstatus = $(target).tabs('getTab', index).panel('options').editstatus;
 			if(editstatus){
-				EditStatusMessager(editstatus,title,function(){
+				ebx.EditStatusMessager(editstatus,title,function(){
 					var opts = $(target).tabs('options');
 					var bc = opts.onBeforeClose;
 					opts.onBeforeClose = function(){};  // allowed to close now
@@ -17,10 +16,9 @@
 		}
 	});
 
-	$('#center').css({
-		'width':'100%',
-		'height':'100%'
-	}).tabs({
+	ebx.center = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'center'));
+	
+	ebx.center.tabs({
 		fit:true,
 		border:false,
 		plain:false,
@@ -29,46 +27,38 @@
 			iconCls:'icon-DeclineInvitation',
 			handler:function(){
 				var arrTitle = new Array(),
-					tabs = $("#center").tabs("tabs"),
-					tCount = tabs.length;
+					centertabs = ebx.center.tabs("tabs"),
+					tCount = centertabs.length;
 					
 				if(tCount>0){  
 					for(var i=0;i<tCount;i++){
-						if(tabs[i].panel('options').closable){
-							arrTitle.push(tabs[i].panel('options').title)
-						}  
+						if(centertabs[i].panel('options').closable){
+							arrTitle.push(centertabs[i].panel('options').index);
+						}
 					}
 					
-					for(var i=0;i<arrTitle.length;i++){  
-						$("#center").tabs("close",arrTitle[i]);  
+					for(var i in arrTitle){  
+						console.log(arrTitle[i]);
+						ebx.center.tabs("close",arrTitle[i]);  
 					}  
 				}  
 			}
 		},{
 			iconCls:'icon-expand2',
-			id:'layoutOutBtn',
 			handler:function(){
-				//tb.layout('collapse','north');
-				//$('#bodylaout').layout('collapse','south');
-				//$('#bodylaout').layout('collapse','east');
-				$('#bodylaout').layout('collapse','west');
-
-				$('#layoutOutBtn').hide();
-				$('#layoutInBtn').show();
+				ebx.bodylayout.layout('collapse','west');
+				$(ebx.center).find('.icon-contract2').parent().parent().parent().show();
+				$(ebx.center).find('.icon-expand2').parent().parent().parent().hide();
 			}
 		},{
 			iconCls:'icon-contract2',
-			id:'layoutInBtn',
 			handler:function(){
-				//$('#bodylaout').layout('expand','south');
-				//tb.layout('expand','east');
-				$('#bodylaout').layout('expand','west');
-				$('#layoutOutBtn').show();
-				$('#layoutInBtn').hide();
+				ebx.bodylayout.layout('expand','west');
+				$(ebx.center).find('.icon-expand2').parent().parent().parent().show();
+				$(ebx.center).find('.icon-contract2').parent().parent().parent().hide();
 			}
 		}]
 	}).tabs('add', {
-		id:'hometab',
 		title:'首页',
 		iconCls:'tabs-home32_1',
 		href:'client/SimpChinese/home/',
@@ -76,7 +66,7 @@
 		closable:false
 	}).tabs({
 		onSelect: function(title, index){
-			if(index == 0)$('#homeDiv').portal('resize');
+			//if(index == 0)$('#homeDiv').portal('resize');
 
 			var tb = $(this);
 			setTimeout(function(){
@@ -85,9 +75,8 @@
 			
 		}
 	});
-	setTimeout(function(){
-		$('#layoutInBtn').hide();
-		$('#center').tabs('resize');
-	},0);
+	
+	$(ebx.center).find('.icon-contract2').parent().parent().parent().hide();
+	ebx.center.tabs('resize');
 	
 </script>

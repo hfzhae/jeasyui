@@ -1,11 +1,11 @@
 <script type="text/javascript">
 	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox'], function(){
-		var tabs = $('#center').tabs('getSelected'),
+		var tabs = ebx.center.tabs('getSelected'),
 			tab = tabs.panel('options'),
-			Paramet = getMenuParameter(tabs),
+			Paramet = ebx.getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
 			eastPanel = layout.layout('panel', 'east'),
-			eastParamet = getMenuParameter(eastPanel),mapitem = $('<div>'),
+			eastParamet = ebx.getMenuParameter(eastPanel),mapitem = $('<div>'),
 			storage = $('<div id="propertygrid_' + eastParamet.eastid + '">');
 			
 			mycolumns = [[
@@ -90,7 +90,7 @@
 				{
 					iconCls:'icon-DeclineInvitation',
 					handler:function(){
-						EditStatusMessager(storage.propertygrid('options').editstatus,Paramet.text,function(){
+						ebx.EditStatusMessager(storage.propertygrid('options').editstatus,Paramet.text,function(){
 							layout.layout('remove', 'east');//删除编辑layout
 						});
 					}
@@ -130,7 +130,7 @@
 			height:'100%',
 			border:false,
 			showHeader: false,
-			columns: mycolumns,
+			//columns: mycolumns,
 			editstatus: false,//编辑状态，true时将提醒是否要保存
 			onAfterEdit: function(){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
 				tab.editstatus = true;

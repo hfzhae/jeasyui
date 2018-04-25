@@ -15,8 +15,8 @@
 <script type="text/javascript">
 	easyloader.load(['datagridscrollview', 'splitbutton', 'menubutton', 'datagridrenderstyler'], function(){
 		var listdatagrid = $('<div>'),
-			tabs = $('#center').tabs('getSelected'),
-			Paramet = getMenuParameter(tabs),
+			tabs = ebx.center.tabs('getSelected'),
+			Paramet = ebx.getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
 			centerpanel = layout.layout('panel', 'center'),
 			localbtn = $('<div>'),
@@ -49,18 +49,18 @@
 					e = Paramet.edit;//如果有edit参数，赋值参数编辑地址
 				}
 				if(eastid == ''){
-					eastid = RndNum(12);
+					eastid = ebx.RndNum(12);
 				}else{
 					if($('#propertygrid_'+eastid).length > 0){
-						EditStatusMessager($('#propertygrid_'+eastid).propertygrid('options').editstatus,Paramet.text,function(){
+						ebx.EditStatusMessager($('#propertygrid_'+eastid).propertygrid('options').editstatus,Paramet.text,function(){
 							layout.layout('remove', 'east');//删除编辑layout
 							tabs.panel('options').editstatus = false;
-							eastid = RndNum(12);
+							eastid = ebx.RndNum(12);
 							setEast();
 						});
 					}else{
 						layout.layout('remove', 'east');//删除编辑layout
-						eastid = RndNum(12);
+						eastid = ebx.RndNum(12);
 					}
 				}
 				

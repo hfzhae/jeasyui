@@ -1,12 +1,12 @@
 <script type="text/javascript">
 	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler', 'combogrid', 'droplist'], function(){		
-		var tabs = $('#center').tabs('getSelected'),
+		var tabs = ebx.center.tabs('getSelected'),
 			tab = tabs.panel('options'),
-			Paramet = getMenuParameter(tabs),
+			Paramet = ebx.getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
 			eastPanel = layout.layout('panel', 'east'),
 			mapitem = $('<div>'),
-			eastParamet = getMenuParameter(eastPanel),
+			eastParamet = ebx.getMenuParameter(eastPanel),
 			storage = $('<div id="propertygrid_' + eastParamet.eastid + '">'),
 			mycolumns = [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
@@ -121,7 +121,7 @@
 				{
 					iconCls:'icon-DeclineInvitation',
 					handler:function(){
-						EditStatusMessager(storage.propertygrid('options').editstatus,Paramet.text,function(){
+						ebx.EditStatusMessager(storage.propertygrid('options').editstatus,Paramet.text,function(){
 							layout.layout('remove', 'east');//删除编辑layout
 						});
 					}

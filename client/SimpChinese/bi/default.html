@@ -1,8 +1,8 @@
 <script type="text/javascript">
 	easyloader.load([], function(){
 		var layoutview = $('<div>'),
-			tabs = $('#center').tabs('getSelected'),
-			Paramet = getMenuParameter(tabs);
+			tabs = ebx.center.tabs('getSelected'),
+			Paramet = ebx.getMenuParameter(tabs);
 			
 		tabs.append(layoutview);
 
