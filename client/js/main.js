@@ -85,3 +85,14 @@ function RndNum(n){//随机数生成函数
     return rnd;
 }
 
+function EditStatusMessager(s, t, backcall){//编辑状态判断提醒函数，参数：s：状态true为被编辑，t：显示文本，backcall：回调函数
+	if(s){//判断数据是否被编辑过。
+		$.messager.confirm('提醒', t+'的数据已经被修改，点击确定将不保存修改的数据，是否继续?', function(r){
+			if (r){
+				backcall();
+			}
+		});
+	}else {
+		backcall();
+	}
+}

@@ -21,32 +21,50 @@
 			centerpanel = layout.layout('panel', 'center'),
 			localbtn = $('<div>'),
 			loadmenu = $('<div>'),
+			eastid = '',
 			ExportExcelbox = $('<div>'),
 			edit = function(rowIndex, rowData){//打开编辑layout面板函数，参数点击行带入 2018-4-22 zz
-				//console.log(rowIndex)
-				//console.log(rowData)
-				console.log(Paramet.tabsid)
-				var e;
+				var e,
+					id = rowData?rowData.id:'',
+					index = rowIndex,
+					setEast = function(){
+						layout.layout('add',{//添加新的layout
+							id: 'east_' + eastid,
+							region: 'east',
+							width: 400,
+							maxWidth: '50%',
+							minWidth: 300,
+							title: '',
+							href: 'client/SimpChinese/' + e + '/?text='+Paramet.text+'&eastid=' + eastid + '&id=' + id + '&index=' + index,
+							hideExpandTool: false,
+							hideCollapsedContent: false,
+							border: false,
+							split: true
+						});
+					};
+					
 				if(Paramet.edit == 'undefined' || Paramet.edit == ''){//判断菜单参数
 					e = "bi/edit"//如果没有edit参数，赋值默认编辑地址
 				}else{
 					e = Paramet.edit;//如果有edit参数，赋值参数编辑地址
 				}
-
-				layout.layout('remove', 'east');//删除编辑layout
-
-				layout.layout('add',{//添加新的layout
-					region: 'east',
-					width: 400,
-					maxWidth: '50%',
-					minWidth: 300,
-					title: '',
-					href:'client/SimpChinese/'+e+'/',
-					hideExpandTool:false,
-					hideCollapsedContent:false,
-					border:false,
-					split: true
-				});
+				if(eastid == ''){
+					eastid = RndNum(12);
+				}else{
+					if($('#propertygrid_'+eastid).length > 0){
+						EditStatusMessager($('#propertygrid_'+eastid).propertygrid('options').editstatus,Paramet.text,function(){
+							layout.layout('remove', 'east');//删除编辑layout
+							tabs.panel('options').editstatus = false;
+							eastid = RndNum(12);
+							setEast();
+						});
+					}else{
+						layout.layout('remove', 'east');//删除编辑layout
+						eastid = RndNum(12);
+					}
+				}
+				
+				setEast();
 			};
 			
 		

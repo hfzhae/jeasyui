@@ -8,14 +8,17 @@
 		dnd:false,
 		onClick: function(node){
 			if(node.children) return;
-			var tabsid= 'tabs_'+RndNum(20)
+			//var tabsid= 'tabs_'+RndNum(20)
+			var tabsid= 'tabs_' + node.id;
+			
+			
 			if($('#'+tabsid).length > 0){
 				$('#center').tabs('select', $('#'+tabsid).panel('options').index);
 			}else{
 				$('#center').tabs('add',{
-					id:node.id,
+					id:tabsid,
 					title:node.text,
-					href:node.href + '?tabsid='+tabsid+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
+					href:node.href + '?text='+node.text+'&tabsid='+tabsid+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
 					iconCls:node.iconCls,
 					//href:'ribbon.html',
 					selected: true,

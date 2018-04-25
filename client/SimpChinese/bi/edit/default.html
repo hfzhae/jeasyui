@@ -1,12 +1,13 @@
 <script type="text/javascript">
 	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox'], function(){
-		var mapitem = $('<div>'),
-			storage = $('<div>'),
-			tabs = $('#center').tabs('getSelected'),
+		var tabs = $('#center').tabs('getSelected'),
 			tab = tabs.panel('options'),
 			Paramet = getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
 			eastPanel = layout.layout('panel', 'east'),
+			eastParamet = getMenuParameter(eastPanel),mapitem = $('<div>'),
+			storage = $('<div id="propertygrid_' + eastParamet.eastid + '">');
+			
 			mycolumns = [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
@@ -89,7 +90,9 @@
 				{
 					iconCls:'icon-DeclineInvitation',
 					handler:function(){
-						layout.layout('remove', 'east');
+						EditStatusMessager(storage.propertygrid('options').editstatus,Paramet.text,function(){
+							layout.layout('remove', 'east');//删除编辑layout
+						});
 					}
 				}
 			],
@@ -127,7 +130,16 @@
 			height:'100%',
 			border:false,
 			showHeader: false,
-			columns: mycolumns
+			columns: mycolumns,
+			editstatus: false,//编辑状态，true时将提醒是否要保存
+			onAfterEdit: function(){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
+				tab.editstatus = true;
+				storage.propertygrid('options').editstatus = true;
+			},
+			onCancelEdit: function(){//取消编辑时修改编辑状态，用于判断是否需要保存提醒
+				//tab.editstatus = false;
+				//storage.propertygrid('options').editstatus = false;
+			}
 		});
 	});
 </script>
