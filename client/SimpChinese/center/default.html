@@ -16,51 +16,52 @@
 		}
 	});
 
-	ebx.center = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'center'));
-	
-	ebx.center.tabs({
-		fit:true,
-		border:false,
-		plain:false,
-		tabPosition:'bottom',
-		tools:[{
-			iconCls:'icon-DeclineInvitation',
-			handler:function(){
-				var arrTitle = new Array(),
-					centertabs = ebx.center.tabs("tabs"),
-					tCount = centertabs.length;
-					
-				if(tCount>0){  
-					for(var i=0;i<tCount;i++){
-						if(centertabs[i].panel('options').closable){//获取可删除tab的index
-							arrTitle.push(centertabs[i].panel('options').index);
+	easyloader.load([], function(){
+		ebx.center = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'center'));
+		
+		ebx.center.tabs({
+			fit:true,
+			border:false,
+			plain:false,
+			tabPosition:'bottom',
+			tools:[{
+				iconCls:'icon-DeclineInvitation',
+				handler:function(){
+					var arrTitle = new Array(),
+						centertabs = ebx.center.tabs("tabs"),
+						tCount = centertabs.length;
+						
+					if(tCount>0){  
+						for(var i=0;i<tCount;i++){
+							if(centertabs[i].panel('options').closable){//获取可删除tab的index
+								arrTitle.push(centertabs[i].panel('options').index);
+							}
 						}
-					}
 
-					for(var i = arrTitle.length - 1; i >= 0; i--){//循环删除tab
-						ebx.center.tabs("close", arrTitle[i]); 
+						for(var i = arrTitle.length - 1; i >= 0; i--){//循环删除tab
+							ebx.center.tabs("close", arrTitle[i]); 
+						}  
 					}  
-				}  
-			}
-		}]
-	}).tabs('add', {
-		title:'首页',
-		iconCls:'tabs-home32_1',
-		href:'client/SimpChinese/home/',
-		selected: true,
-		closable:false
-	}).tabs({
-		onSelect: function(title, index){
-			if(index == 0)$('#homeDiv').portal('resize');
+				}
+			}]
+		}).tabs('add', {
+			title:'首页',
+			iconCls:'tabs-home32_1',
+			href:'client/SimpChinese/home/',
+			selected: true,
+			closable:false
+		}).tabs({
+			onSelect: function(title, index){
+				if(index == 0)$('#homeDiv').portal('resize');
 
-			var tb = $(this);
-			setTimeout(function(){
-				tb.tabs('resize');//重新计算页面尺寸布局
-			},0);
-			
-		}
+				var tb = $(this);
+				setTimeout(function(){
+					tb.tabs('resize');//重新计算页面尺寸布局
+				},0);
+				
+			}
+		});
+		
+		ebx.center.tabs('resize');
 	});
-	
-	ebx.center.tabs('resize');
-	
 </script>

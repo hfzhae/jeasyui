@@ -5,14 +5,14 @@
 			Paramet = ebx.getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
 			eastPanel = layout.layout('panel', 'east'),
-			eastParamet = ebx.getMenuParameter(eastPanel),mapitem = $('<div>'),
-			storage = $('<div id="propertygrid_' + eastParamet.eastid + '">');
-			
+			eastParamet = ebx.getMenuParameter(eastPanel),
+			biribbon = $('<div>').appendTo(eastPanel),
+			mapitem = $('<div>').appendTo(eastPanel),
+			storage = $('<div>'),
 			mycolumns = [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
 			]],
-			biribbon = $('<div>'),
 			data = {
 				selected:0,
 				tabs:[{
@@ -79,9 +79,6 @@
 				}]
 		};
 		
-		eastPanel.append(biribbon);
-		eastPanel.append(mapitem);
-		
 		biribbon.ribbon({
 			data:data,
 			width:'100%',
@@ -133,13 +130,28 @@
 			//columns: mycolumns,
 			editstatus: false,//编辑状态，true时将提醒是否要保存
 			onAfterEdit: function(){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
-				tab.editstatus = true;
-				storage.propertygrid('options').editstatus = true;
+				var check = 0,
+					checkData = storage.propertygrid('getData').rows;
+				for(var i in storage.checkData){
+					if(storage.checkData[i] != checkData[i].value){
+						check = 1;
+					}
+				}
+				if(check){
+					tab.editstatus = true;
+				}else{
+					tab.editstatus = false;
+				}
 			},
-			onCancelEdit: function(){//取消编辑时修改编辑状态，用于判断是否需要保存提醒
-				//tab.editstatus = false;
-				//storage.propertygrid('options').editstatus = false;
+			onLoadSuccess: function(){
+				var data = storage.propertygrid('getData').rows,
+					checkData = [];
+				for(var i in data){
+					checkData.push(data[i].value);
+				}
+				storage.checkData = checkData;
 			}
-		});
+		}).datagrid('renderformatterstyler', 'propertygrid');//启用显示式样回调函数
+		
 	});
 </script>

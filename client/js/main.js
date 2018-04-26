@@ -3,11 +3,12 @@ Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/2/16
 *****************************************************************/
 var ebx = {
+	multitabs:0,//同一菜单链接多tabs打开支持，1为支持
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
 		easyloader.locale = "zh_CN";
-		easyloader.number = 100;
+		//easyloader.number = 100;
 		easyloader.load([
 			'parser',
 			'draggable', 
@@ -19,8 +20,7 @@ var ebx = {
 			'datebox',
 			'menubutton'
 		], function(){
-			ebx.bodylayout = $('<div>').appendTo($('body'));
-			
+			ebx.bodylayout = $('<div>').appendTo($('body'));//定义全局layout
 			var bl = ebx.bodylayout
 				bl.layout({
 					fit: true
@@ -74,7 +74,7 @@ var ebx = {
 			}
 		}
  	},
-	getThemes: function(){
+	getThemes: function(){//获取主题函数
 		var Storage = window.localStorage;
 		if(Storage.getItem("themes") === null){
 			Storage.setItem('themes', 'default');

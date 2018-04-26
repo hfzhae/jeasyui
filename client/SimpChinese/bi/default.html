@@ -1,10 +1,8 @@
 <script type="text/javascript">
 	easyloader.load([], function(){
-		var layoutview = $('<div>'),
-			tabs = ebx.center.tabs('getSelected'),
+		var tabs = ebx.center.tabs('getSelected'),
+			layoutview = $('<div>').appendTo(tabs),
 			Paramet = ebx.getMenuParameter(tabs);
-			
-		tabs.append(layoutview);
 
 		layoutview.layout({
 			fit: true
@@ -17,12 +15,10 @@
 			border:false
 		});
 		
-		var layout = tabs.find('.layout'),
-			eastPanel = layout.layout('panel', 'east'),
-			centerPanel = layout.layout('panel', 'center');
+		var eastPanel = layoutview.layout('panel', 'east'),
+			centerPanel = layoutview.layout('panel', 'center');
 
 		eastPanel.css({overflow:'hidden'});//隐藏layout滚动条
 		centerPanel.css({overflow:'hidden'});//隐藏layout滚动条
-		
 	});
 </script>

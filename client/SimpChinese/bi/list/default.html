@@ -14,14 +14,11 @@
 </div>
 <script type="text/javascript">
 	easyloader.load(['datagridscrollview', 'splitbutton', 'menubutton', 'datagridrenderstyler'], function(){
-		var listdatagrid = $('<div>'),
-			tabs = ebx.center.tabs('getSelected'),
+		var tabs = ebx.center.tabs('getSelected'),
 			Paramet = ebx.getMenuParameter(tabs),
 			layout = tabs.find('.layout'),
 			centerpanel = layout.layout('panel', 'center'),
-			localbtn = $('<div>'),
-			loadmenu = $('<div>'),
-			eastid = '',
+			listdatagrid = $('<div>').appendTo(centerpanel),
 			ExportExcelbox = $('<div>'),
 			edit = function(rowIndex, rowData){//打开编辑layout面板函数，参数点击行带入 2018-4-22 zz
 				var e,
@@ -29,13 +26,12 @@
 					index = rowIndex,
 					setEast = function(){
 						layout.layout('add',{//添加新的layout
-							id: 'east_' + eastid,
 							region: 'east',
 							width: 400,
 							maxWidth: '50%',
 							minWidth: 300,
 							title: '',
-							href: 'client/SimpChinese/' + e + '/?text='+Paramet.text+'&eastid=' + eastid + '&id=' + id + '&index=' + index,
+							href: 'client/SimpChinese/' + e + '/?text='+Paramet.text+'&id=' + id + '&index=' + index,
 							hideExpandTool: false,
 							hideCollapsedContent: false,
 							border: false,
@@ -48,28 +44,16 @@
 				}else{
 					e = Paramet.edit;//如果有edit参数，赋值参数编辑地址
 				}
-				if(eastid == ''){
-					eastid = ebx.RndNum(12);
-				}else{
-					if($('#propertygrid_'+eastid).length > 0){
-						ebx.EditStatusMessager($('#propertygrid_'+eastid).propertygrid('options').editstatus,Paramet.text,function(){
-							layout.layout('remove', 'east');//删除编辑layout
-							tabs.panel('options').editstatus = false;
-							eastid = ebx.RndNum(12);
-							setEast();
-						});
-					}else{
-						layout.layout('remove', 'east');//删除编辑layout
-						eastid = ebx.RndNum(12);
-					}
-				}
+				
+				ebx.EditStatusMessager(tabs.panel('options').editstatus,Paramet.text,function(){
+					layout.layout('remove', 'east');//删除编辑layout
+					tabs.panel('options').editstatus = false;
+					setEast();
+				});
 				
 				setEast();
 			};
 			
-		
-		centerpanel.append(listdatagrid);
-
 		ExportExcelbox.menu({
 			width:100
 		}).menu('appendItem', {
@@ -88,7 +72,6 @@
 			iconCls:'icon-file',
 			onClick:edit
 		}).addClass('l-btn-plain');
-		
 
 		$.getJSON('server/bi/style/?template='+Paramet.style+'&v=' + (new Date()).getTime(), function(result){
 			if(result){				
