@@ -1,8 +1,8 @@
 <%
-dim template
-template = request("template")
+dim style
+style = request("style")
 
-select case template
+select case style
 Case "product"
 %>
 [[

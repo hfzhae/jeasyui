@@ -1,6 +1,6 @@
 /****************************************************************
 Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
-dev by zz on 2018/4/19
+dev by zz on 2018/4/26
 改造jeasyui的datagrid插件的onClickCell属性，增加editkeyboard方法，支持编辑状态下全键盘操作
 
 存在的问题：
@@ -34,6 +34,7 @@ $.extend($.fn.datagrid.methods, {
 				switch(obj.type){
 					case 'combogrid':
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
+						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'datetimebox':
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
@@ -55,16 +56,24 @@ $.extend($.fn.datagrid.methods, {
 				inputObj.keyup(function(event){//全键盘操作
 					switch(event.keyCode){
 						case 40://down
-							thisGrid.datagrid('endEdit', param.index);
-							setTimeout(function(){
-								thisGrid.datagrid('editkeyboard', {index:param.index + 1,field:param.field});
-							},0);
+							if(obj.type == 'combogrid'){//combogrid控件不支持下键自动跳转下一个编辑框
+								
+							}else{
+								thisGrid.datagrid('endEdit', param.index);
+								setTimeout(function(){
+									thisGrid.datagrid('editkeyboard', {index:param.index + 1,field:param.field});
+								},0);
+							}
 							break;
 						case 38://up
-							thisGrid.datagrid('endEdit', param.index);
-							setTimeout(function(){
-								thisGrid.datagrid('editkeyboard', {index:param.index - 1,field:param.field});
-							},0);
+							if(obj.type == 'combogrid'){//combogrid控件不支持上键自动跳转上一个编辑框
+								
+							}else{
+								thisGrid.datagrid('endEdit', param.index);
+								setTimeout(function(){
+									thisGrid.datagrid('editkeyboard', {index:param.index - 1,field:param.field});
+								},0);
+							}
 							break;
 						case 37://left
 							thisGrid.datagrid('endEdit', param.index);
@@ -105,6 +114,12 @@ $.extend($.fn.datagrid.methods, {
 							},0);
 							break;
 						case 13://enter
+							if(obj.type == 'combogrid'){//combogrid控件支持搜索快捷键，当panel显示时，不跳转下一个编辑对象
+								if(!$(obj.target).combogrid('panel').is(":hidden")){
+									return;
+								}
+							}
+							
 							thisGrid.datagrid('endEdit', param.index);
 							var nextfield = "", 
 								nextfieldname = param.field, 

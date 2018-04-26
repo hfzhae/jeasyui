@@ -24,10 +24,11 @@
 				var e,
 					id = rowData?rowData.id:'',
 					index = rowIndex,
+					eastwidth = Paramet.eastwidth!='undefined'?Paramet.eastwidth:400,//获取菜单中编辑面板的宽度参数，默认400
 					setEast = function(){
 						layout.layout('add',{//添加新的layout
 							region: 'east',
-							width: 400,
+							width: eastwidth,
 							maxWidth: '50%',
 							minWidth: 300,
 							title: '',
@@ -73,7 +74,7 @@
 			onClick:edit
 		}).addClass('l-btn-plain');
 
-		$.getJSON('server/bi/style/?template='+Paramet.style+'&v=' + (new Date()).getTime(), function(result){
+		$.getJSON('server/bi/style/?style='+Paramet.style+'&v=' + (new Date()).getTime(), function(result){
 			if(result){				
 				listdatagrid.datagrid({
 					view:scrollview,

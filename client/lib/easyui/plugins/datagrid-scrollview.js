@@ -314,57 +314,59 @@ var scrollview = $.extend({}, $.fn.datagrid.defaults.view, {
 	},
 
 	scrolling: function(target){
-		var state = $.data(target, 'datagrid');
-		var opts = state.options;
-		var dc = state.dc;
-		if (!opts.finder.getRows(target).length){
-			this.reload.call(this, target);
-		} else {
-			if (!dc.body2.is(':visible')){return}
-			var headerHeight = dc.view2.children('div.datagrid-header').outerHeight();
-			
-			var topDiv = dc.body2.children('div.datagrid-btable-top');
-			var bottomDiv = dc.body2.children('div.datagrid-btable-bottom');
-			if (!topDiv.length || !bottomDiv.length){return;}
-			var top = topDiv.position().top + topDiv._outerHeight() - headerHeight;
-			var bottom = bottomDiv.position().top - headerHeight;
-			top = Math.floor(top);
-			bottom = Math.floor(bottom);
-
-			if (top > dc.body2.height() || bottom < 0){
+		try{
+			var state = $.data(target, 'datagrid');
+			var opts = state.options;
+			var dc = state.dc;
+			if (!opts.finder.getRows(target).length){
 				this.reload.call(this, target);
-			} else if (top > 0){
-				var page = Math.floor(this.index/opts.pageSize);
-				this.getRows.call(this, target, page, function(rows){
-					this.page = page;
-					this.r2 = this.r1;
-					this.r1 = rows;
-					this.index = (page-1)*opts.pageSize;
-					this.rows = this.r1.concat(this.r2);
-					this.populate.call(this, target);
-				});
-			} else if (bottom < dc.body2.height()){
-				if (state.data.rows.length+this.index >= state.data.total){
-					return;
-				}
-				var page = Math.floor(this.index/opts.pageSize)+2;
-				if (this.r2.length){
-					page++;
-				}
-				this.getRows.call(this, target, page, function(rows){
-					this.page = page;
-					if (!this.r2.length){
-						this.r2 = rows;
-					} else {
-						this.r1 = this.r2;
-						this.r2 = rows;
-						this.index += opts.pageSize;
+			} else {
+				if (!dc.body2.is(':visible')){return}
+				var headerHeight = dc.view2.children('div.datagrid-header').outerHeight();
+				
+				var topDiv = dc.body2.children('div.datagrid-btable-top');
+				var bottomDiv = dc.body2.children('div.datagrid-btable-bottom');
+				if (!topDiv.length || !bottomDiv.length){return;}
+				var top = topDiv.position().top + topDiv._outerHeight() - headerHeight;
+				var bottom = bottomDiv.position().top - headerHeight;
+				top = Math.floor(top);
+				bottom = Math.floor(bottom);
+
+				if (top > dc.body2.height() || bottom < 0){
+					this.reload.call(this, target);
+				} else if (top > 0){
+					var page = Math.floor(this.index/opts.pageSize);
+					this.getRows.call(this, target, page, function(rows){
+						this.page = page;
+						this.r2 = this.r1;
+						this.r1 = rows;
+						this.index = (page-1)*opts.pageSize;
+						this.rows = this.r1.concat(this.r2);
+						this.populate.call(this, target);
+					});
+				} else if (bottom < dc.body2.height()){
+					if (state.data.rows.length+this.index >= state.data.total){
+						return;
 					}
-					this.rows = this.r1.concat(this.r2);
-					this.populate.call(this, target);
-				});
+					var page = Math.floor(this.index/opts.pageSize)+2;
+					if (this.r2.length){
+						page++;
+					}
+					this.getRows.call(this, target, page, function(rows){
+						this.page = page;
+						if (!this.r2.length){
+							this.r2 = rows;
+						} else {
+							this.r1 = this.r2;
+							this.r2 = rows;
+							this.index += opts.pageSize;
+						}
+						this.rows = this.r1.concat(this.r2);
+						this.populate.call(this, target);
+					});
+				}
 			}
-		}
+		}catch(e){}
 	},
 	reload: function(target){
 		var state = $.data(target, 'datagrid');
