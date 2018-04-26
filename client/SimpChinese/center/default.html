@@ -32,30 +32,15 @@
 					
 				if(tCount>0){  
 					for(var i=0;i<tCount;i++){
-						if(centertabs[i].panel('options').closable){
+						if(centertabs[i].panel('options').closable){//获取可删除tab的index
 							arrTitle.push(centertabs[i].panel('options').index);
 						}
 					}
-					
-					for(var i in arrTitle){  
-						console.log(arrTitle[i]);
-						ebx.center.tabs("close",arrTitle[i]);  
+
+					for(var i = arrTitle.length - 1; i >= 0; i--){//循环删除tab
+						ebx.center.tabs("close", arrTitle[i]); 
 					}  
 				}  
-			}
-		},{
-			iconCls:'icon-expand2',
-			handler:function(){
-				ebx.bodylayout.layout('collapse','west');
-				$(ebx.center).find('.icon-contract2').parent().parent().parent().show();
-				$(ebx.center).find('.icon-expand2').parent().parent().parent().hide();
-			}
-		},{
-			iconCls:'icon-contract2',
-			handler:function(){
-				ebx.bodylayout.layout('expand','west');
-				$(ebx.center).find('.icon-expand2').parent().parent().parent().show();
-				$(ebx.center).find('.icon-contract2').parent().parent().parent().hide();
 			}
 		}]
 	}).tabs('add', {
@@ -66,7 +51,7 @@
 		closable:false
 	}).tabs({
 		onSelect: function(title, index){
-			//if(index == 0)$('#homeDiv').portal('resize');
+			if(index == 0)$('#homeDiv').portal('resize');
 
 			var tb = $(this);
 			setTimeout(function(){
@@ -76,7 +61,6 @@
 		}
 	});
 	
-	$(ebx.center).find('.icon-contract2').parent().parent().parent().hide();
 	ebx.center.tabs('resize');
 	
 </script>

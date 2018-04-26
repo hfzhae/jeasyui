@@ -1,29 +1,41 @@
  <script type="text/javascript">
-	var west = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west'));
+	easyloader.load([], function(){
+		var west = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west')),
+			closbtn = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west'));
 
-	$(west).tree({
-		url: 'server/west/load/?v=' + (new Date()).getTime(),
-		method: 'get',
-		animate:true,
-		dnd:false,
-		onClick: function(node){
-			if(node.children) return;
-			//var tabsid= 'tabs_'+ebx.RndNum(20)
-			//var tabsid= 'tabs_' + node.id;
+		$(west).tree({
+			url: 'server/west/load/?v=' + (new Date()).getTime(),
+			method: 'get',
+			animate:true,
+			dnd:false,
+			onClick: function(node){
+				if(node.children) return;
+				//var tabsid= 'tabs_'+ebx.RndNum(20)
+				//var tabsid= 'tabs_' + node.id;
 
-			//if($('#'+tabsid).length > 0){
-			//	ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
-			//}else{
-				ebx.center.tabs('add',{
-					//id:tabsid,
-					title:node.text,
-					href:node.href + '?text='+node.text+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
-					iconCls:node.iconCls,
-					selected: true,
-					closable:true
-				});
-				//$('#'+tabsid).css({padding:0});
-			//}
-		}
-	}).css({paddingTop:5});
+				//if($('#'+tabsid).length > 0){
+				//	ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
+				//}else{
+					ebx.center.tabs('add',{
+						//id:tabsid,
+						title:node.text,
+						href:node.href + '?text='+node.text+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
+						iconCls:node.iconCls,
+						selected: true,
+						closable:true
+					});
+					//$('#'+tabsid).css({padding:0});
+				//}
+			}
+		}).css({paddingTop:5});
+		
+		closbtn.linkbutton({
+			iconCls: 'layout-button-left'
+		})
+		.css({position:'absolute',right:0,top:'50%',marginTop:-8,width:5,borderRadius:0,borderTopLeftRadius:3,borderBottomLeftRadius:3})
+		.bind('click', function(){
+			ebx.bodylayout.layout('collapse','west');
+		})
+		.find('.l-btn-icon').css({marginLeft:-6});
+	});
 </script>

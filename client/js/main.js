@@ -19,7 +19,7 @@ var ebx = {
 			'datebox',
 			'menubutton'
 		], function(){
-			ebx.bodylayout = $('<div>').appendTo($('body'));//.append('<div id="bodylaout">');
+			ebx.bodylayout = $('<div>').appendTo($('body'));
 			
 			var bl = ebx.bodylayout
 				bl.layout({
@@ -57,9 +57,9 @@ var ebx = {
 						$('#homeDiv').portal('resize');
 					}
 				});
-				setTimeout(function(){
-					bl.layout('resize')//.layout('collapse', 'east');
-				}, 300);
+				//setTimeout(function(){
+				//	bl.layout('resize')
+				//}, 300);
 		});
 		
 		window.onbeforeunload=function(e){//处理编辑未保存时窗口关闭或刷新时的提醒 2018-4-25 zz
@@ -98,7 +98,7 @@ var ebx = {
 	},
 	EditStatusMessager: function(s, t, backcall){//编辑状态判断提醒函数，参数：s：状态true为被编辑，t：显示文本，backcall：回调函数
 		if(s){//判断数据是否被编辑过。
-			$.messager.confirm('提醒', t+'的数据已经被修改，点击确定将不保存修改的数据，是否继续?', function(r){
+			$.messager.confirm('提醒', t+'的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
 				if (r){
 					backcall();
 				}
