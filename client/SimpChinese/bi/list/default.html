@@ -19,8 +19,8 @@
 			layout = tabs.find('.layout'),
 			centerpanel = layout.layout('panel', 'center'),
 			listdatagrid = $('<div>').appendTo(centerpanel),
-			ExportExcelbox = $('<div>'),
-			edit = function(rowIndex, rowData){//打开编辑layout面板函数，参数点击行带入 2018-4-22 zz
+			ExportExcelbox = $('<div>');
+			ebx.biedit = function(rowIndex, rowData){//打开编辑layout面板函数，参数点击行带入 2018-4-22 zz
 				var e,
 					id = rowData?rowData.id:'',
 					index = rowIndex,
@@ -51,8 +51,6 @@
 					tabs.panel('options').editstatus = false;
 					setEast();
 				});
-				
-				setEast();
 			};
 			
 		ExportExcelbox.menu({
@@ -71,7 +69,7 @@
 		centerpanel.find('div[name=new]').linkbutton({
 			text:'新建',
 			iconCls:'icon-file',
-			onClick:edit
+			onClick:ebx.biedit
 		}).addClass('l-btn-plain');
 
 		$.getJSON('server/bi/style/?style='+Paramet.style+'&v=' + (new Date()).getTime(), function(result){
@@ -94,7 +92,7 @@
 					checkOnSelect:false,
 					columns:result,
 					height: '100%',
-					onClickRow: edit
+					onClickRow: ebx.biedit
 				}).datagrid('renderformatterstyler');
 
 			}
