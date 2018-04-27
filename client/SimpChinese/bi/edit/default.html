@@ -87,8 +87,9 @@
 				{
 					iconCls:'icon-DeclineInvitation',
 					handler:function(){
-						ebx.EditStatusMessager(storage.propertygrid('options').editstatus,Paramet.text,function(){
+						ebx.EditStatusMessager(tab.editstatus,Paramet.text,function(){
 							layout.layout('remove', 'east');//删除编辑layout
+							tab.editstatus = false;
 						});
 					}
 				}

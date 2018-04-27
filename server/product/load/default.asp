@@ -1,7 +1,7 @@
 {"total":29,"rows":[
 	{"name":"编号","value":"","group":"必填信息","editor":"text","field":"code"},
 	{"name":"名称","value":"","group":"必填信息","editor":"text","field":"title"},
-	{"name":"产品类型","value":"","group":"必填信息","editor":{"type":"combogrid","options":{"asynurl":"server/json/datagrid25_getdata.json","required":true,"idField":"inv","idField":"name","rownumbers":true,"panelWidth":250,"columns":[[{"field":"inv","title":"编号","width":80,"search":true},{"field":"name","title":"名称","width":120,"search":true}]]}},"field":"productclass"},
+	{"name":"产品类型","value":"","group":"必填信息","editor":{"type":"combogrid","options":{"style":"droplist","validType":"combogridValue","required":true,"idField":"inv","idField":"name","rownumbers":true,"panelWidth":250,"template":4}},"field":"productclass"},
 	{"name":"规格","value":"","group":"基本信息","editor":"text","field":"memo"},
 	{"name":"单位","value":"","group":"基本信息","editor":"text","field":"memo"},
 	{"name":"材质","value":"","group":"基本信息","editor":"text","field":"memo"},

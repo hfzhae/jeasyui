@@ -76,42 +76,50 @@ $.extend($.fn.datagrid.methods, {
 							}
 							break;
 						case 37://left
-							thisGrid.datagrid('endEdit', param.index);
-							var nextfield, nextfieldname = param.field;
-							for(var i=fields.length; i>0; i--){
-								var col = thisGrid.datagrid('getColumnOption', fields[i - 1]);
-								if (fields[i] == nextfieldname && col != null){
-									if(col.editor == undefined){
-										nextfieldname = fields[i - 1];
-									}else{
-										if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || obj.type == 'combogrid'){
-											nextfield = fields[i - 1];
+							if(obj.type == 'combogrid'){//combogrid控件不支持上键自动跳转上一个编辑框
+								
+							}else{
+								thisGrid.datagrid('endEdit', param.index);
+								var nextfield, nextfieldname = param.field;
+								for(var i=fields.length; i>0; i--){
+									var col = thisGrid.datagrid('getColumnOption', fields[i - 1]);
+									if (fields[i] == nextfieldname && col != null){
+										if(col.editor == undefined){
+											nextfieldname = fields[i - 1];
+										}else{
+											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || obj.type == 'combogrid'){
+												nextfield = fields[i - 1];
+											}
 										}
 									}
 								}
+								setTimeout(function(){
+									thisGrid.datagrid('editkeyboard', {index:param.index,field:nextfield});
+								},0);
 							}
-							setTimeout(function(){
-								thisGrid.datagrid('editkeyboard', {index:param.index,field:nextfield});
-							},0);
 							break;
 						case 39://right
-							thisGrid.datagrid('endEdit', param.index);
-							var nextfield, nextfieldname = param.field;
-							for(var i=0; i<fields.length; i++){
-								var col = thisGrid.datagrid('getColumnOption', fields[i + 1]);
-								if (fields[i] == nextfieldname && col != null){
-									if(col.editor == undefined){
-										nextfieldname = fields[i + 1];
-									}else{
-									if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || obj.type == 'combogrid'){
-											nextfield = fields[i + 1];
+							if(obj.type == 'combogrid'){//combogrid控件不支持上键自动跳转上一个编辑框
+								
+							}else{
+								thisGrid.datagrid('endEdit', param.index);
+								var nextfield, nextfieldname = param.field;
+								for(var i=0; i<fields.length; i++){
+									var col = thisGrid.datagrid('getColumnOption', fields[i + 1]);
+									if (fields[i] == nextfieldname && col != null){
+										if(col.editor == undefined){
+											nextfieldname = fields[i + 1];
+										}else{
+										if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || obj.type == 'combogrid'){
+												nextfield = fields[i + 1];
+											}
 										}
 									}
 								}
+								setTimeout(function(){
+									thisGrid.datagrid('editkeyboard', {index:param.index,field:nextfield});
+								},0);
 							}
-							setTimeout(function(){
-								thisGrid.datagrid('editkeyboard', {index:param.index,field:nextfield});
-							},0);
 							break;
 						case 13://enter
 							if(obj.type == 'combogrid'){//combogrid控件支持搜索快捷键，当panel显示时，不跳转下一个编辑对象
@@ -153,6 +161,29 @@ $.extend($.fn.datagrid.methods, {
 							break;
 						case 27://esc
 							thisGrid.datagrid('cancelEdit', param.index);
+							break;
+						case 46://del
+							if(obj.type == 'combogrid'){//combogrid控件按下删除键时清空value字段内容
+								//thisGrid.datagrid('endEdit', param.index);
+								thisGrid.datagrid('updateRow',{
+									index: param.index,
+									row: {
+										value: ''
+									}
+								});
+								//thisGrid.datagrid('selectRow', param.index).datagrid('editkeyboard', {index:param.index,field:param.field});
+							}
+							break;
+						case 8://backspace
+							if(obj.type == 'combogrid'){//combogrid控件按下退格键时清空value字段内容
+								thisGrid.datagrid('updateRow',{
+									index: param.index,
+									row: {
+										value: ''
+									}
+								});
+								//thisGrid.datagrid('selectRow', param.index).datagrid('editkeyboard', {index:param.index,field:param.field});
+							}
 							break;
 						default:
 							break;

@@ -8,7 +8,8 @@ dev by zz on 2018/2/16
 新增属性：
 options.columns.search（bool）:true的字段支持搜索；
 options.oRows:存储原始数据
-options.asynurl:异步读取的url地址
+options.template:查询模板的ID，获取地址server/bi/list/?
+options.style:显示式样（结构：columns）的式样名称，获取地址server/bi/style/?
 options.asyn:是否从服务器端读取数据，0为读取，默认0，读取后置1，按esc键置0
 options.validType增加：combogridValue类型，校验值不能为空，required:true时生效
 重造onValidate事件，验证成功且搜索结果为1行是焦点移动到下一个控件
@@ -54,7 +55,7 @@ $.extend($.fn.combogrid.defaults, {
 				ops = co.combogrid('options'),
 				rows = ops.oRows,
 				selected = co.combogrid('grid').datagrid('getSelected'),
-				columns = ops.columns,
+				columns = co.combogrid('grid').datagrid('options').columns,
 				searchField = [];  
 			for (var j in columns[0]){
 				if(columns[0][j].search){
@@ -123,29 +124,38 @@ $.extend($.fn.combogrid.defaults, {
 			pageSize = 50;
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
-			var url = ops.asynurl;
-			if(!url)return;
+			var style = ops.style,//显示式样名称，获取地址server/bi/style/?
+				template = ops.template;//查询模板ID，获取地址server/bi/list/?
+			if(!style)return;
+			if(!template)return;
 
-			g.datagrid({
-				view:scrollview,
-				pageSize:pageSize,
-				loadMsg:$.fn.datagrid.defaults.loadMsg
-			});
-			
-			g.datagrid('loading');
-			ops.oRows = [];
-			ops.asyn = 1;
 			//$.getJSON(url, { v: (new Date()).getTime() }, function(data){				
-			$.getJSON(url, function(data){				
-				for(var i in data['rows']){
-					ops.oRows.push(data['rows'][i]);
+			//debugger;
+			$.getJSON('server/bi/style/?style='+style+'&v=' + (new Date()).getTime(), function(result){
+				if(result){				
+					g.datagrid({
+						view:scrollview,
+						pageSize:pageSize,
+						loadMsg:$.fn.datagrid.defaults.loadMsg,
+						columns:result
+					});
+					
+					g.datagrid('loading');
+					ops.oRows = [];
+					ops.asyn = 1;
+					
+					$.getJSON('server/bi/list/?template='+template+'&v=' + (new Date()).getTime(), function(data){				
+						for(var i in data['rows']){
+							ops.oRows.push(data['rows'][i]);
+						}
+						g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
+						g.datagrid('loadData', {
+							total:data.rows.length,
+							rows:data.rows
+						});
+						g.datagrid('loaded');
+					});
 				}
-				g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
-				g.datagrid('loadData', {
-					total:data.rows.length,
-					rows:data.rows
-				});
-				g.datagrid('loaded');
 			});
 		}
 	},
@@ -175,6 +185,16 @@ $.extend($.fn.combogrid.defaults, {
 					return false;
 				case 9:
 					break;
+				//case 8://退格键
+				//	break;
+				//case 46://删除键
+				//	setTimeout(function() {
+				//		t.combo('setText', '');
+				//		t.combo('setValue', '');
+				//		t.combo('reset');
+				//	},
+				//	opts.delay);
+				//	break;
 				case 27:
 					var _a39 = $.data(_a2e, "combo").panel;
 					_a39.panel("close");
@@ -186,13 +206,15 @@ $.extend($.fn.combogrid.defaults, {
 							clearTimeout(_a2f.timer);
 						}
 						_a2f.timer = setTimeout(function() {
-							var q = t.combo("getText");
-							if (_a2f.previousText != q) {
-								_a2f.previousText = q;
-								t.combo("showPanel");
-								opts.keyHandler.query.call(_a2e, q, e);
-								t.combo("validate");
-							}
+							try{
+								var q = t.combo("getText");
+								if (_a2f.previousText != q) {
+									_a2f.previousText = q;
+									t.combo("showPanel");
+									opts.keyHandler.query.call(_a2e, q, e);
+									t.combo("validate");
+								}
+							}catch(e){}
 						},
 						opts.delay);
 					}
@@ -201,16 +223,19 @@ $.extend($.fn.combogrid.defaults, {
 	},
 	onValidate:function(v){//验证成功后调用事件
 		if(v){
-			var co = $(this),
-				inputs = $("input"),
-				count = co.combogrid('grid').datagrid('getRows').length;//得到所有当前页记录数量
-			if(count == 1 && co.combo('getValue') != '') {//搜索结果唯一时
-				for (var i = 0; i < inputs.length; i++) {
-					if (co.combogrid('textbox')[0] == inputs[i]) {
-						for(j = (i + 1); j < inputs.length; j++){
-							if($(inputs[j]).css('display') != 'none' && inputs[j].id != ''){
-								inputs[j].focus();
-								break;
+			var co = $(this);
+			
+			if(co.combogrid('grid')){
+				var inputs = $("input"),
+					count = co.combogrid('grid').datagrid('getRows').length;//得到所有当前页记录数量
+				if(count == 1 && co.combo('getValue') != '') {//搜索结果唯一时
+					for (var i = 0; i < inputs.length; i++) {
+						if (co.combogrid('textbox')[0] == inputs[i]) {
+							for(j = (i + 1); j < inputs.length; j++){
+								if($(inputs[j]).css('display') != 'none' && inputs[j].id != ''){
+									inputs[j].focus();
+									break;
+								}
 							}
 						}
 					}
@@ -221,11 +246,11 @@ $.extend($.fn.combogrid.defaults, {
 });
 
 $.extend($.fn.validatebox.defaults.rules, {
-	//针对combo类控件，校验值（value）不能为空，参数param为控件ID，zz 2018-3-8
+	//针对combo类控件，校验值（value）不能为空，参数param为控件ID，zz 2018-4-27
 	combogridValue: {
-		validator: function(value, param){
-			var param = $(param);
-			return param.combo('getValue').length > 0;
+		validator: function(value){
+			var checkValue = $(this);
+			return checkValue.parent().prev('.combogrid-f').combo('getValue').length > 0;
 		},
 		message: '请从下拉框中选择<br><span style="color:#999;">按回车键搜索，上下键选择</span>'
 	}/*,

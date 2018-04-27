@@ -23,6 +23,13 @@ Case "stock"
 	{"field":"status","title":"删除","width":60,"align":"center","sortable":true,"render":"boolRender","fieldstyle":"background-color:#789;color:#ffffff;"}
 ]]
 <%
+Case "droplist"
+%>
+[[
+	{"field":"inv","title":"编号","width":80,"search":true},
+	{"field":"name","title":"名称","width":120,"search":true}
+]]
+<%
 Case Else
 %>
 [[
