@@ -22,15 +22,16 @@ $.extend($.fn.datagrid.methods,{
 				}
 			}
 		}else{
+			debugger;
 			for(var i in columns[0]){
 				var _c = columns[0][i];
 				if(_c.render){
-					_c.formatter = function(value, rowData, rowIndex){//设置返回值
-						return _setRender(_c.render, _c.value);
+					columns[0][i].formatter = function(value, rowData, rowIndex){//设置返回值
+						return _setRender(_c.render.toString(), value, rowIndex);
 					}
-					_c.styler = function(value, rowData, rowIndex){//设置单元格样式
+					columns[0][i].styler = function(value, rowData, rowIndex){//设置单元格样式
 						if(_c.fieldstyle){
-							return _c.fieldstyle;
+							return _c.fieldstyle.toString();
 						}
 					}
 				}
@@ -39,16 +40,19 @@ $.extend($.fn.datagrid.methods,{
 	}
 });
 
-function _setRender(r, v){//renter返回值处理
+function _setRender(r, v, n){//renter返回值处理
 	if(!r)return v;
 	switch(r.toLowerCase()){
-		case "boolrender"://布尔回调函数
-			if(v == ''){
+		case 'boolrender'://布尔回调函数
+			if(v == '' || v == undefined || v == 'undefined' || v == null || v == 'null' || v == 0 || v == '0'){
 				return '';
 			}else{
 				v = '√';
 				return '√';
 			}
+			break;
+		case 'linenumberrender'://显示行号
+			return n + 1;
 			break;
 		default:
 			return v;

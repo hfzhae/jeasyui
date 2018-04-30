@@ -82,9 +82,10 @@ var ebx = {
 		return Storage.getItem("themes")
 	},
 	getMenuParameter: function(t){//获取菜单传递到主窗口的参数 2018-4-20 zz, 参数：t：当前被激活的tabs对象
-		var p = t.panel('options').href.split('?')[1], a = [];
-			p = p.split('#')[0];
-			p = p.split('&');
+		var p = t.panel('options').href.split('?')[1], 
+			a = {};
+		p = p.split('#')[0];
+		p = p.split('&');
 		for(var i in p){
 			a[p[i].split('=')[0]] = p[i].split('=')[1];
 		}
@@ -106,6 +107,38 @@ var ebx = {
 		}else {
 			backcall();
 		}
+	},
+	UnescapeJson: function(s){//转码所有嵌套json中文的escape
+		if(typeof(s) == 'object'){
+			for(var i in s){
+				if(typeof(s[i]) == 'object'){
+					s[i] = this.UnescapeJson(s[i]);
+				}else{
+					s[i] = unescape(s[i]);
+				}
+			}
+		}else{
+			s = unescape(s)
+		}
+		return s
+	},
+	EscapeJson: function(s){
+		if(typeof(s) == 'object'){
+			for(var i in s){
+				if(typeof(s[i]) == 'object'){
+					s[i] = this.UnescapeJson(s[i]);
+				}else{
+					if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
+						s[i] = escape(s[i]);
+					}
+				}
+			}
+		}else{
+			if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
+				s[i] = escape(s[i]);
+			}
+		}
+		return s
 	}
 };
 

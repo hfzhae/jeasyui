@@ -71,30 +71,38 @@
 			iconCls:'icon-file',
 			onClick:ebx.biedit
 		}).addClass('l-btn-plain');
-
-		$.getJSON('server/bi/style/?style='+Paramet.style+'&v=' + (new Date()).getTime(), function(result){
-			if(result){				
-				listdatagrid.datagrid({
-					view:scrollview,
-					pageSize:50,
-					remoteSort:false,
-					rownumbers:true,
-					singleSelect:true,
-					pagination:false,
-					border:false,
-					fit:false,
-					fitColumns:false,
-					striped:true,
-					url:'server/bi/list/?template='+Paramet.template+'&v=' + (new Date()).getTime(),
-					method:'get',
-					toolbar:centerpanel.find('div[name=toolbar]'),
-					multiSort:false,
-					checkOnSelect:false,
-					columns:result,
-					height: '100%',
-					onClickRow: ebx.biedit
-				}).datagrid('renderformatterstyler');
-
+		
+		$.ajax({
+			type: 'post', 
+			url: 'server/bi/style/',
+			data: JSON.stringify(ebx.EscapeJson(Paramet)), //可选参数
+			//data:'{"style":"style","obj":{"c":"c","d":{"e":"e"}}}',
+			dataType: "json",
+			success: function(result){
+				ebx.UnescapeJson(result);//转码所有嵌套json中文的escape
+				if(result){				
+					ebx.UnescapeJson(result);//转码所有嵌套json中文的escape
+					listdatagrid.datagrid({
+						view:scrollview,
+						pageSize:50,
+						remoteSort:false,
+						rownumbers:true,
+						singleSelect:true,
+						pagination:false,
+						border:false,
+						fit:false,
+						fitColumns:false,
+						striped:true,
+						url:'server/bi/list/?template='+Paramet.template+'&v=' + (new Date()).getTime(),
+						method:'get',
+						toolbar:centerpanel.find('div[name=toolbar]'),
+						multiSort:false,
+						checkOnSelect:false,
+						columns:result,
+						height: '100%',
+						onClickRow: ebx.biedit
+					}).datagrid('renderformatterstyler');
+				}
 			}
 		});
 	});

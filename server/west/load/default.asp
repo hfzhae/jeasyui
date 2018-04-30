@@ -157,7 +157,10 @@
 		},{
 			"id":1801,
 			"text":"显示式样",
-			"href":"public.html"
+			"mode":"style",
+			"style":"style",
+			"template":10,
+			"href":"client/SimpChinese/bi/"
 		},{
 			"id":1802,
 			"text":"查询设计",
