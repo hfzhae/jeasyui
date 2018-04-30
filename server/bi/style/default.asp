@@ -72,7 +72,7 @@ Case "droplist"
 ]]
 <%
 Case Else
-	dim rs, sql, result
+	dim rs, sql, result, render
 	set rs = Server.CreateObject("Adodb.Recordset")
 	sql = "select l.SetHeaderText,l.Field,l.width,l.FieldStyle,l.Render from bdStyle bd, bdStyleList l where bd.title='" & style & "' and bd.id=l.id and bd.isdeleted=0 order by Serial"
 	rs.open sql, conn, 1, 1
@@ -80,7 +80,10 @@ Case Else
 
 	if not rs.eof then
 		do while not rs.eof
-			result = result & "{""field"":""" & replace(rs("Field").value, "#", "") & """,""title"":""" & escape(rs("SetHeaderText").value) & """,""width"":" & rs("width").value & ",""render"":""" & rs("Render").value & """,""fieldstyle"":""" & rs("FieldStyle").value & """,""sortable"":true},"
+			if rs("Field").value = "#Count" then rs.movenext
+			render = rs("Render").value
+			if rs("Field").value = "Title" then render = "color:#ff0000;"
+			result = result & "{""field"":""" & rs("Field").value & """,""title"":""" & escape(rs("SetHeaderText").value) & """,""width"":" & rs("width").value & ",""render"":""" & render & """,""fieldstyle"":""" & rs("FieldStyle").value & """,""sortable"":true},"
 			rs.movenext
 		loop
 	end if
