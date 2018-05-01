@@ -22,27 +22,16 @@ $.extend($.fn.datagrid.methods,{
 				}
 			}
 		}else{
-			debugger;
 			for(var i in columns[0]){
 				var _c = columns[0][i];
 				if(_c.render){
-					var render = '';
-					switch(_c.render.toLowerCase()){
-						case 'boolrender':
-							_c.formatter = function(value, rowData, rowIndex){//设置返回值
-								return _setRender('boolrender', value, rowIndex);
-							}
-							break;
-						case 'linenumberrender':
-							_c.formatter = function(value, rowData, rowIndex){//设置返回值
-								return _setRender('linenumberrender', value, rowIndex);
-							}
-							break;
+					_c.formatter = function(value, rowData, rowIndex){//设置返回值
+						return _setRender(this.render, value, rowIndex);
 					}
-					_c.styler = function(value, rowData, rowIndex){//设置单元格样式
-						if(_c.fieldstyle){
-							return _c.fieldstyle;
-						}
+				}
+				if(_c.fieldstyle){
+					_c.styler = function(value, rowData, rowIndex){
+						return this.fieldstyle;
 					}
 				}
 			}
