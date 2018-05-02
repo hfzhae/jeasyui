@@ -83,7 +83,7 @@ Case Else
 			if rs("Field").value = "#Count" then rs.movenext
 			render = rs("Render").value
 			FieldStyle = rs("FieldStyle").value
-			if rs("Field").value = "Title" then FieldStyle = "color:#ff0000;"
+			'if rs("Field").value = "Title" then render = "hiddenrender"
 			result = result & "{""field"":""" & rs("Field").value & """,""title"":""" & escape(rs("SetHeaderText").value) & """,""width"":" & rs("width").value & ",""render"":""" & render & """,""fieldstyle"":""" & FieldStyle & """,""sortable"":true},"
 			rs.movenext
 		loop
