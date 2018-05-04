@@ -5,13 +5,8 @@ response.write getStyle()
 function getStyle()
 	getStyle = "["
 	
-	dim style, ParametStr, Paramet, FormSize, FormData
+	dim style
 
-	FormSize = Request.TotalBytes
-	FormData = Request.BinaryRead(FormSize)
-	ParametStr = stream_binarytostring(FormData, "")
-
-	set Paramet = parseJSON(ParametStr)
 
 	style = Paramet.style
 	

@@ -1,10 +1,29 @@
 <%
-Dim conn
-Set conn = Server.CreateObject("ADODB.Connection")
-conn.open Application("DateBase.ConnectString")
+Dim conn, Paramet
+
+Initialize
+
+sub Initialize()
+	dim ParametStr, FormSize, FormData
+	if Request.ServerVariables("Request_Method")="POST" then 'post的form
+		FormSize = Request.TotalBytes
+		FormData = Request.BinaryRead(FormSize)
+		ParametStr = stream_binarytostring(FormData, "")
+
+		if len(ParametStr) > 0 then
+			set Paramet = parseJSON(ParametStr)
+		end if
+	else
+		
+	end if
+	
+	Set conn = Server.CreateObject("ADODB.Connection")
+	conn.open Application("DateBase.ConnectString")
+end sub
 
 function parseJSON(str)'将json文本转换成对象 2018-5-4 zz
-	Dim scriptCtrl    
+	if len(str) = 0 then exit function
+	Dim scriptCtrl  
 	If Not IsObject(scriptCtrl) Then
 		Set scriptCtrl = Server.CreateObject("MSScriptControl.ScriptControl")
 		scriptCtrl.Language = "JScript"
