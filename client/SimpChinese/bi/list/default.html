@@ -74,7 +74,7 @@
 		
 		$.ajax({
 			type: 'post', 
-			url: 'server/bi/style/',
+			url: 'server/bi/style/?v=' + (new Date()).getTime(),
 			data: JSON.stringify(ebx.EscapeJson(Paramet)), //可选参数
 			//data:'{"style":"style","obj":{"c":"c","d":{"e":"e"}}}',
 			dataType: "json",

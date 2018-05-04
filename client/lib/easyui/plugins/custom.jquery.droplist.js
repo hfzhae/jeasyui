@@ -131,30 +131,37 @@ $.extend($.fn.combogrid.defaults, {
 
 			//$.getJSON(url, { v: (new Date()).getTime() }, function(data){				
 			//debugger;
-			$.getJSON('server/bi/style/?style='+style+'&v=' + (new Date()).getTime(), function(result){
-				if(result){				
-					g.datagrid({
-						view:scrollview,
-						pageSize:pageSize,
-						loadMsg:$.fn.datagrid.defaults.loadMsg,
-						columns:result
-					});
-					
-					g.datagrid('loading');
-					ops.oRows = [];
-					ops.asyn = 1;
-					
-					$.getJSON('server/bi/list/?template='+template+'&v=' + (new Date()).getTime(), function(data){				
-						for(var i in data['rows']){
-							ops.oRows.push(data['rows'][i]);
-						}
-						g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
-						g.datagrid('loadData', {
-							total:data.rows.length,
-							rows:data.rows
+			$.ajax({
+				type: 'post', 
+				url: 'server/bi/style/?v=' + (new Date()).getTime(),
+				data: JSON.stringify(ebx.EscapeJson({style:style})),
+				dataType: "json",
+				success: function(result){
+					if(result){
+						result = ebx.UnescapeJson(result);						
+						g.datagrid({
+							view:scrollview,
+							pageSize:pageSize,
+							loadMsg:$.fn.datagrid.defaults.loadMsg,
+							columns:result
 						});
-						g.datagrid('loaded');
-					});
+						
+						g.datagrid('loading');
+						ops.oRows = [];
+						ops.asyn = 1;
+						
+						$.getJSON('server/bi/list/?template='+template+'&v=' + (new Date()).getTime(), function(data){				
+							for(var i in data['rows']){
+								ops.oRows.push(data['rows'][i]);
+							}
+							g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
+							g.datagrid('loadData', {
+								total:data.rows.length,
+								rows:data.rows
+							});
+							g.datagrid('loaded');
+						});
+					}
 				}
 			});
 		}
