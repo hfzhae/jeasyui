@@ -1,10 +1,20 @@
 <!--# include virtual="server/public.asp" -->
+{"total":10,"rows":[
+	{"Count":"","Code":"FI-SW-01","Title":"Koi","IsDeleted":1,"unitcost":10.00,"status":true,"listprice":36.50,"attr1":"Large","itemid":"EST-1"},
+	{"Count":"","Code":"K9-DL-01","Title":"Dalmation","IsDeleted":1,"unitcost":12.00,"status":false,"listprice":18.50,"attr1":"Spotted Adult Female","itemid":"EST-10"},
+	{"Count":"","Code":"RP-SN-01","Title":"Rattlesnake","IsDeleted":1,"unitcost":12.00,"status":"","listprice":38.50,"attr1":"Venomless","itemid":"EST-11"},
+	{"Count":"","Code":"RP-SN-02","Title":"Rattlesnake","IsDeleted":0,"unitcost":12.00,"status":true,"listprice":26.50,"attr1":"Rattleless","itemid":"EST-12"},
+	{"Count":"","Code":"RP-LI-02","Title":"Iguana","IsDeleted":1,"unitcost":12.00,"status":"","listprice":35.50,"attr1":"Green Adult","itemid":"EST-13"},
+	{"Count":"","Code":"FL-DSH-01","Title":"Manx","IsDeleted":0,"unitcost":12.00,"status":"","listprice":158.50,"attr1":"Tailless","itemid":"EST-14"},
+	{"Count":"","Code":"FL-DSH-03","Title":"Manx","IsDeleted":1,"unitcost":12.00,"status":"","listprice":83.50,"attr1":"With tail","itemid":"EST-15"},
+	{"Count":"","Code":"FL-DLH-02","Title":"Persian","IsDeleted":1,"unitcost":12.00,"status":"","listprice":23.50,"attr1":"Adult Female","itemid":"EST-16"},
+	{"Count":"","Code":"FL-DLH-04","Title":"Persian","IsDeleted":1,"unitcost":12.00,"status":"on","listprice":89.50,"attr1":"Adult Male","itemid":"EST-17"},
+	{"Count":"","Code":"AV-CB-01","Title":"Amazon Parrot","IsDeleted":1,"unitcost":92.00,"status":"","listprice":63.50,"attr1":"Adult Male","itemid":"EST-18"}
+]}
 <%
-dim template
-template = request("template")
-
-select case template
-Case 2
+var template = ebx.stdin("template")
+switch(template){
+case 2:
 %>
 {"total":10,"rows":[
 	{"productid":"FI-SW-01","productname":"Koi","unitcost":10.00,"status":true,"listprice":36.50,"attr1":"Large","itemid":"EST-1"},
@@ -19,7 +29,8 @@ Case 2
 	{"productid":"AV-CB-01","productname":"Amazon Parrot","unitcost":92.00,"status":"","listprice":63.50,"attr1":"Adult Male","itemid":"EST-18"}
 ]}
 <%
-Case 3
+break;
+case 3:
 %>
 {"total":10,"rows":[
 	{"Count":"","Code":"FI-SW-01","Title":"Koi","IsDeleted":1,"unitcost":10.00,"status":true,"listprice":36.50,"attr1":"Large","itemid":"EST-1"},
@@ -34,7 +45,8 @@ Case 3
 	{"Count":"","Code":"AV-CB-01","Title":"Amazon Parrot","IsDeleted":1,"unitcost":92.00,"status":"","listprice":63.50,"attr1":"Adult Male","itemid":"EST-18"}
 ]}
 <%
-Case 4
+break;
+case 4:
 %>
 {"total":10,"rows":[
 	{"inv":"INV0001","date":"2018-02-25","name":"名称1","note":"Note1","amount":61,"price":"104.38","cost":"6367.18","searchcode":"mc1"},
@@ -91,7 +103,9 @@ Case 4
 	{"inv":"INV0052","date":"2018-04-14","name":"Name49","note":"Note49","amount":99,"price":"199.62","cost":"19762.38"}
 ]}
 <%
-Case Else	
+break;
+default:
+break;	
 	
-end select
+}
 %>

@@ -74,9 +74,9 @@
 
 		$.ajax({
 			type: 'post', 
-			url: 'server/bi/style/?v=' + (new Date()).getTime(),
+			url: 'server/bi/style/?_=' + (new Date()).getTime(),
 			data: JSON.stringify(ebx.EscapeJson(Paramet)), //可选参数
-			//data:'{"style":"style","obj":{"c":"c","d":{"e":"e"}}}',
+			//data:'{"style":"stock","obj":[{"c":"c","d":{"e":"e"}},{"f":"f"}]}',
 			dataType: "json",
 			success: function(result){
 				ebx.UnescapeJson(result);//转码所有嵌套json中文的escape
@@ -93,8 +93,9 @@
 						fit:false,
 						fitColumns:false,
 						striped:true,
-						url:'server/bi/list/?template='+Paramet.template+'&v=' + (new Date()).getTime(),
+						url:'server/bi/list/',
 						method:'get',
+						queryParams:{template:Paramet.template,_:(new Date()).getTime()},
 						toolbar:centerpanel.find('div[name=toolbar]'),
 						multiSort:false,
 						checkOnSelect:false,
