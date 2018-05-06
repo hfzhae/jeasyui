@@ -4,6 +4,7 @@ dev by zz on 2018/2/16
 *****************************************************************/
 var ebx = {
 	multitabs:0,//同一菜单链接多tabs打开支持，1为支持
+	decimal:2,//小数位数，默认2
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -139,6 +140,14 @@ var ebx = {
 			}
 		}
 		return s
+	},
+	validFloat: function(f, def){
+		var n = parseFloat(f);
+		if (isNaN(n)){
+			return ((def==undefined)?0:def);
+		}else{
+			return n;
+		}
 	}
 };
 

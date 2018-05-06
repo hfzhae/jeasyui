@@ -13,7 +13,7 @@ $.extend($.fn.datagrid.methods,{
 		var columns = d.datagrid('options').columns;
 		if(t == 'propertygrid'){//针对propertygrid控件的处理
 			columns[0][1].formatter = function(value, rowData, rowIndex) {//设置返回值
-				var v = _setRender(rowData, value, rowIndex);
+				var v = _setRender(rowData.render, value, rowIndex);
 				return v;
 			}
 			columns[0][1].styler = function(value, rowData, rowIndex){//设置单元格样式
@@ -28,7 +28,7 @@ $.extend($.fn.datagrid.methods,{
 					d.datagrid('hideColumn', columns[0][i].field);
 				}
 				_c.formatter = function(value, rowData, rowIndex){//设置返回值
-					return _setRender(this, value, rowIndex);
+					return _setRender(this.render, value, rowIndex);
 				}
 				if(_c.fieldstyle){
 					_c.styler = function(value, rowData, rowIndex){//设置单元格样式
@@ -41,8 +41,9 @@ $.extend($.fn.datagrid.methods,{
 });
 
 function _setRender(r, v, n){//renter返回值处理
-	if(r.render){
-		switch(r.render.toLowerCase()){
+	if(v == null)return ''; 
+	if(r){
+		switch(r.toLowerCase()){
 			case 'boolrender'://布尔回调函数
 				if(v == '' || v == undefined || v == 'undefined' || v == null || v == 'null' || v == 0 || v == '0'){
 					return '';
@@ -57,11 +58,38 @@ function _setRender(r, v, n){//renter返回值处理
 			case 'hiddenrender'://隐藏列
 				return '';
 				break;
+			case 'currencyrender'://金额
+				v = ebx.validFloat(v, 0);
+				if(v == 0){
+					v = '';
+				}else{
+					v = v.toFixed(ebx.decimal);
+				}
+				return v;
+				break;
+			case 'costcurrencyrender'://成本金额
+				return _setRender('currencyrender', v, n);
+			case 'percentrender':
+				v = ebx.validFloat(v, 0);
+				if(v == 0){
+					v = '';
+				}else{
+					v = v * 100;
+					v = (v.toFixed(ebx.decimal)) + '%';
+				}
+				return v;
+				break;
 			default:
-				return ebx.UnescapeJson(v);
+				if(typeof(v) == 'string'){
+					v = ebx.UnescapeJson(v);
+				}
+				return v;
 				break;
 		}
 	}else{
-		return ebx.UnescapeJson(v);
+		if(typeof(v) == 'string'){
+			v = ebx.UnescapeJson(v);
+		}
+		return v;
 	}
 }
