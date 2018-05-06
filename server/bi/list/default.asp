@@ -5,7 +5,7 @@ getData();
 
 function getData(){
 	var rs = Server.CreateObject("Adodb.Recordset"), 
-		sql = 'select code as Code,title as Title,isdeleted as IsDeleted from bistock where accountid=1 order by id desc';			
+		sql = 'select code as Code,title as Title,isdeleted as IsDeleted from biproduct where accountid=1 order by id desc';			
 	rs.open(sql, ebx.conn, 1, 1);
 	var data = new Array();
 	data["total"] = rs.RecordCount;
