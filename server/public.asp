@@ -2,7 +2,7 @@
 <% @debug=on
 var ebx = {
 	conn: [], 
-	stdin: new Array(), //Server.CreateObject("Scripting.Dictionary"),
+	stdin: new Array(),
 	stdout: new Array(),
 	parseToJson: function (json_data){//Json格式转对象
 		eval("var o=" + json_data);
@@ -81,7 +81,7 @@ var ebx = {
 			while(!rs.eof){
 				s += '{';
 				for(var i = 0; i < fields.Count; i++){
-					s += '"' + fields(i).name.toLowerCase() + '":' + ebx.getType(fields(i)) + ',';
+					s += '"' + fields(i).name + '":' + ebx.getType(fields(i)) + ',';
 				}
 				s = s.substr(0, s.length - 1);
 				s += '},';
@@ -95,10 +95,10 @@ var ebx = {
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
 			case 202:
-				return '"' + v.toLowerCase() + '"'; //"文本"
+				return '"' + v + '"'; //"文本"
 				break;
 			case 203:
-				return  '"' + v.toLowerCase() + '"'; //"备注"
+				return  '"' + v + '"'; //"备注"
 				break;
 			case 3:
 				return v; //"长整型"
@@ -137,7 +137,7 @@ var ebx = {
 				return '"' + v + '"'; //"是/否"
 				break;
 			case 205:
-				return '[' + ebx.convertRsToJson(ebx.convertBinToRs(v)) + ']'; //"OLE对象" 处理数据库里的rs对象二级制存储数据
+				return '[' + ebx.convertRsToJson(ebx.convertBinToRs(v)) + ']'; //"OLE对象" 处理数据库里嵌套的rs对象二级制存储数据
 				break;
 		}
 	},
@@ -189,9 +189,9 @@ var ebx = {
 					break;
 				case 'object':
 					if(d[i].RecordCount == undefined){
-						s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';
+						s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
 					}else{
-						s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';
+						s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
 					}
 					break;
 				case 'number':
@@ -215,5 +215,5 @@ var ebx = {
 }
 
 ebx.Initialize();
-function OnScriptEnd(){ebx.OnPageEnd(Response);}
+function OnScriptEnd(){ebx.OnPageEnd(Response);}//页面结束时调用函数
 %>
