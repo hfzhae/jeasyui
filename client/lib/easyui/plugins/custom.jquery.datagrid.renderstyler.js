@@ -69,7 +69,7 @@ function _setRender(r, v, n){//renter返回值处理
 				break;
 			case 'costcurrencyrender'://成本金额
 				return _setRender('currencyrender', v, n);
-			case 'percentrender':
+			case 'percentrender'://百分数
 				v = ebx.validFloat(v, 0);
 				if(v == 0){
 					v = '';

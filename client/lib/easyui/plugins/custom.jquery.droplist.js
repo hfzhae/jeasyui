@@ -138,12 +138,12 @@ $.extend($.fn.combogrid.defaults, {
 				dataType: "json",
 				success: function(result){
 					if(result){
-						result = ebx.UnescapeJson(result);						
+						var data = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
 						g.datagrid({
 							view:scrollview,
 							pageSize:pageSize,
 							loadMsg:$.fn.datagrid.defaults.loadMsg,
-							columns:result
+							columns:data
 						});
 						
 						g.datagrid('loading');
@@ -159,7 +159,7 @@ $.extend($.fn.combogrid.defaults, {
 								total:data.rows.length,
 								rows:data.rows
 							});
-							g.datagrid('loaded');
+							g.datagrid('loaded').datagrid('renderformatterstyler');;
 						});
 					}
 				}
