@@ -13,7 +13,7 @@ $.extend($.fn.datagrid.methods,{
 		var columns = d.datagrid('options').columns;
 		if(t == 'propertygrid'){//针对propertygrid控件的处理
 			columns[0][1].formatter = function(value, rowData, rowIndex) {//设置返回值
-				var v = _setRender(rowData.render, value, rowIndex);
+				var v = _setRender(rowData, value, rowIndex);
 				return v;
 			}
 			columns[0][1].styler = function(value, rowData, rowIndex){//设置单元格样式
@@ -41,24 +41,27 @@ $.extend($.fn.datagrid.methods,{
 });
 
 function _setRender(r, v, n){//renter返回值处理
-	if(!r)return v;
-	switch(r.render.toLowerCase()){
-		case 'boolrender'://布尔回调函数
-			if(v == '' || v == undefined || v == 'undefined' || v == null || v == 'null' || v == 0 || v == '0'){
+	if(r.render){
+		switch(r.render.toLowerCase()){
+			case 'boolrender'://布尔回调函数
+				if(v == '' || v == undefined || v == 'undefined' || v == null || v == 'null' || v == 0 || v == '0'){
+					return '';
+				}else{
+					v = '√';
+					return '√';
+				}
+				break;
+			case 'linenumberrender'://显示行号
+				return n + 1;
+				break;
+			case 'hiddenrender'://隐藏列
 				return '';
-			}else{
-				v = '√';
-				return '√';
-			}
-			break;
-		case 'linenumberrender'://显示行号
-			return n + 1;
-			break;
-		case 'hiddenrender'://隐藏列
-			return '';
-			break;
-		default:
-			return ebx.UnescapeJson(v);
-			break;
+				break;
+			default:
+				return ebx.UnescapeJson(v);
+				break;
+		}
+	}else{
+		return ebx.UnescapeJson(v);
 	}
 }
