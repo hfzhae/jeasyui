@@ -2,18 +2,18 @@
 <% @debug=on
 var ebx = {
 	conn: [], 
-	stdin: Server.CreateObject("Scripting.Dictionary"),
-	stdout: Server.CreateObject("Scripting.Dictionary"),
+	stdin: new Array(), //Server.CreateObject("Scripting.Dictionary"),
+	stdout: new Array(),
 	parseToJson: function (json_data){//Json格式转对象
 		eval("var o=" + json_data);
 		return o;
 	},
 	getRequestParamet: function(s){//get参数格式转对象
 		var arr = s.split('&'),
-			d = Server.CreateObject("Scripting.Dictionary");
+			d = new Array();
 		if(arr.length <= 0) return d;
 		for(var i in arr){
-			d.Add(arr[i].split('=')[0], arr[i].split('=')[1]);
+			d[arr[i].split('=')[0]] = arr[i].split('=')[1];
 		}
 		return d;
 	},
@@ -63,11 +63,11 @@ var ebx = {
 		if(typeof(obj) == 'object'){
 			for(var i in obj){
 				if(typeof(obj[i]) == 'object'){
-					var d = Server.CreateObject("Scripting.Dictionary");
+					var d = new Array();
 					ebx.convertObjToDic(d, obj[i]);
-					dic.Add(i, d);
+					dic[i] = d;
 				}else{
-					dic.Add(i, obj[i]);
+					dic[i] = obj[i];
 				}
 			}
 		}
@@ -80,7 +80,7 @@ var ebx = {
 			rs.MoveFirst();
 			while(!rs.eof){
 				s += '{';
-				for(var i = 0; i <= fields.Count - 1; i++){
+				for(var i = 0; i < fields.Count; i++){
 					s += '"' + fields(i).name.toLowerCase() + '":' + ebx.getType(fields(i)) + ',';
 				}
 				s = s.substr(0, s.length - 1);
@@ -95,10 +95,10 @@ var ebx = {
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
 			case 202:
-				return '"' + v + '"'; //"文本"
+				return '"' + v.toLowerCase() + '"'; //"文本"
 				break;
 			case 203:
-				return  '"' + v + '"'; //"备注"
+				return  '"' + v.toLowerCase() + '"'; //"备注"
 				break;
 			case 3:
 				return v; //"长整型"
@@ -141,10 +141,11 @@ var ebx = {
 				break;
 		}
 	},
-	escapeEx: function(str){ //判断是否汉字字符，如果是用escapt编码加密 2018-5-4 zz
+	escapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
 		if(str == null) return('');
 		
-		if(/^[\u3220-\uFA29]+$/.test(str)){
+		//if(/^[\u3220-\uFA29]+$/.test(str)){
+		if(typeof(str) == 'string'){
 			return escape(str);
 		}else{
 			return str;
@@ -174,9 +175,45 @@ var ebx = {
 		rs.save(stm);
 		stm.position = 0
 		return stm.read();
+	},
+	OnPageEnd: function(Response){//页面结束处理函数
+		Response.Write(ebx.convertDicToJson(ebx.stdout));
+	},
+	convertDicToJson: function(d){//将Dic对象转化成json文本对象转化成json文本 2018-5-6 zz
+		if(typeof(d) != 'object') return('{}');
+		var s = '{';
+		for(var i in d){
+			switch(typeof(d[i])){
+				case 'string':
+					s += '"'+ i +'":"' + d[i] +'",';
+					break;
+				case 'object':
+					if(d[i].RecordCount == undefined){
+						s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';
+					}else{
+						s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';
+					}
+					break;
+				case 'number':
+					s += '"'+ i +'":' + d[i] +',';
+					break;
+				case 'boolean':
+					s += '"'+ i +'":' + d[i] +',';
+					break;
+				case 'function':
+					s += '"'+ i +'":"' + d[i] +'",';
+					break;
+				case undefined:
+					s += ',';
+					break;
+			}
+		}
+		s = s.substr(0, s.length - 1);
+		s += '}';
+		return(s);
 	}
 }
 
 ebx.Initialize();
-
+function OnScriptEnd(){ebx.OnPageEnd(Response);}
 %>

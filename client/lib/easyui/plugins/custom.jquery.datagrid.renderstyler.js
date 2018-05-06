@@ -24,13 +24,11 @@ $.extend($.fn.datagrid.methods,{
 		}else{//针对其他datagrid控件
 			for(var i in columns[0]){
 				var _c = columns[0][i];
-				if(_c.render){
-					if(_c.render.toLowerCase() == 'hiddenrender'){//隐藏列回调函数特殊处理
-						d.datagrid('hideColumn', columns[0][i].field);
-					}
-					_c.formatter = function(value, rowData, rowIndex){//设置返回值
-						return _setRender(this.render, value, rowIndex);
-					}
+				if(_c.render.toLowerCase() == 'hiddenrender'){//隐藏列回调函数特殊处理
+					d.datagrid('hideColumn', columns[0][i].field);
+				}
+				_c.formatter = function(value, rowData, rowIndex){//设置返回值
+					return _setRender(this, value, rowIndex);
 				}
 				if(_c.fieldstyle){
 					_c.styler = function(value, rowData, rowIndex){//设置单元格样式
@@ -44,7 +42,7 @@ $.extend($.fn.datagrid.methods,{
 
 function _setRender(r, v, n){//renter返回值处理
 	if(!r)return v;
-	switch(r.toLowerCase()){
+	switch(r.render.toLowerCase()){
 		case 'boolrender'://布尔回调函数
 			if(v == '' || v == undefined || v == 'undefined' || v == null || v == 'null' || v == 0 || v == '0'){
 				return '';
@@ -60,7 +58,7 @@ function _setRender(r, v, n){//renter返回值处理
 			return '';
 			break;
 		default:
-			return v;
+			return ebx.UnescapeJson(v);
 			break;
 	}
 }

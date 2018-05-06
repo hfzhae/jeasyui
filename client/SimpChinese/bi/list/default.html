@@ -79,9 +79,8 @@
 			//data:'{"style":"stock","obj":[{"c":"c","d":{"e":"e"}},{"f":"f"}]}',
 			dataType: "json",
 			success: function(result){
-				ebx.UnescapeJson(result);//转码所有嵌套json中文的escape
-				if(result){				
-					ebx.UnescapeJson(result);//转码所有嵌套json中文的escape
+				if(result){
+					var data = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
 					listdatagrid.datagrid({
 						view:scrollview,
 						pageSize:50,
@@ -99,10 +98,11 @@
 						toolbar:centerpanel.find('div[name=toolbar]'),
 						multiSort:false,
 						checkOnSelect:false,
-						columns:result,
+						columns:data,
 						height: '100%',
 						onClickRow: ebx.biedit
 					}).datagrid('renderformatterstyler');
+					console.log(listdatagrid.datagrid('getData'));
 				}
 			}
 		});
