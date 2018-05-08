@@ -83,7 +83,7 @@
 					var data = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
 					listdatagrid.datagrid({
 						view:scrollview,
-						pageSize:50,
+						pageSize:ebx.pagesize,
 						remoteSort:false,
 						rownumbers:true,
 						singleSelect:true,
@@ -93,7 +93,7 @@
 						fitColumns:false,
 						striped:true,
 						url:'server/bi/list/',
-						method:'get',
+						method:'post',
 						queryParams:{template:Paramet.template,_:(new Date()).getTime()},
 						toolbar:centerpanel.find('div[name=toolbar]'),
 						multiSort:false,

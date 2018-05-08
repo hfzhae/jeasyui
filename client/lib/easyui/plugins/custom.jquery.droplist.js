@@ -121,7 +121,7 @@ $.extend($.fn.combogrid.defaults, {
 		var co = $(this)
 			g = co.combogrid('grid'),
 			ops = co.combogrid('options'),
-			pageSize = 50;
+			pageSize = ebx.pagesize;
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
 			var style = ops.style,//显示式样名称，获取地址server/bi/style/?
@@ -157,7 +157,7 @@ $.extend($.fn.combogrid.defaults, {
 							g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
 							g.datagrid('loadData', {
 								total:data.rows.length,
-								rows:data.rows
+								rows:ebx.UnescapeJson(data.rows)
 							});
 							g.datagrid('loaded').datagrid('renderformatterstyler');;
 						});

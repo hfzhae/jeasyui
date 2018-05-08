@@ -16,6 +16,7 @@
 			break;
 	}
 	rs.open(sql, ebx.conn, 1, 1);
+	
 	var data = new Array();
 	data["total"] = rs.RecordCount;
 	data["rows"] = rs;

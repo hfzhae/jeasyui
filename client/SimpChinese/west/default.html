@@ -2,46 +2,56 @@
 	easyloader.load([], function(){
 		var west = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west')),
 			closbtn = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west'));
+		
+		$.ajax({
+			type: 'post', 
+			url: 'server/west/load/',
+			data: {v:(new Date()).getTime()},
+			dataType: "json",
+			success: function(result){
+				if(result){
+					var data = ebx.UnescapeJson(result);//转码所有嵌套json中文的escape
+					$(west).tree({
+						data: data,
+						animate: true,
+						dnd: false,
+						onClick: function(node){
+							if(node.children) return;
+							var tabsid = '';
+							if(ebx.multitabs){
+								tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
+							}else{
+								tabsid= 'tabs_' + node.id;
+							}
 
-		$(west).tree({
-			url: 'server/west/load/?v=' + (new Date()).getTime(),
-			method: 'get',
-			animate:true,
-			dnd:false,
-			onClick: function(node){
-				if(node.children) return;
-				var tabsid = '';
-				if(ebx.multitabs){
-					tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
-				}else{
-					tabsid= 'tabs_' + node.id;
-				}
-
-				if($('#'+tabsid).length > 0){
-					ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
-				}else{
-					ebx.center.tabs('add',{
-						id:tabsid,
-						title:node.text,
-						href:node.href + '?eastwidth='+node.eastwidth+'&text='+node.text+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
-						iconCls:node.iconCls,
-						selected: true,
-						closable:true
-					});
-					$('#'+tabsid).css({padding:0});
+							if($('#'+tabsid).length > 0){
+								ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
+							}else{
+								ebx.center.tabs('add',{
+									id:tabsid,
+									title:node.text,
+									href:node.href + '?eastwidth='+node.eastwidth+'&text='+node.text+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
+									iconCls:node.iconCls,
+									selected: true,
+									closable:true
+								});
+								$('#'+tabsid).css({padding:0});
+							}
+						}
+					}).css({paddingTop:5});
+					
+					closbtn.linkbutton({
+						iconCls: 'layout-button-left',
+						disabled:true
+					})
+					//.addClass('l-btn-plain')
+					.css({position:'absolute',right:0,top:'50%',marginTop:-8,width:4,borderRadius:0,borderTopLeftRadius:3,borderBottomLeftRadius:3,cursor:'pointer'})
+					.bind('click', function(){
+						ebx.bodylayout.layout('collapse','west');
+					})
+					.find('.l-btn-icon').css({marginLeft:-6});
 				}
 			}
-		}).css({paddingTop:5});
-		
-		closbtn.linkbutton({
-			iconCls: 'layout-button-left',
-			disabled:true
-		})
-		//.addClass('l-btn-plain')
-		.css({position:'absolute',right:0,top:'50%',marginTop:-8,width:4,borderRadius:0,borderTopLeftRadius:3,borderBottomLeftRadius:3,cursor:'pointer'})
-		.bind('click', function(){
-			ebx.bodylayout.layout('collapse','west');
-		})
-		.find('.l-btn-icon').css({marginLeft:-6});
+		});
 	});
 </script>

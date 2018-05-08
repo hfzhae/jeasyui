@@ -1,4 +1,3 @@
-<%@language="javascript"%>
 <% @debug=on
 /****************************************************************
 Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
@@ -95,7 +94,7 @@ var ebx = {
 		}
 		return '[' + s + ']';
 	},
-	getType: function(Fields){ //数据类型判断函数，Fields：字段rs.Fields对象，sup：补充字段，返回针对类型处理后的值
+	getType: function(Fields){ //数据类型判断函数，Fields：字段rs.Fields对象，返回针对类型处理后的值
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
 			case 202:
@@ -156,7 +155,6 @@ var ebx = {
 		}
 	},
 	convertBinToRs: function(sBin){ //二进制流转换成rs对象
-		
 		var stm = Server.CreateObject("adodb.stream"),
 			rs = Server.CreateObject("adodb.recordset");
 		if(sBin != null){
@@ -185,36 +183,50 @@ var ebx = {
 	},
 	convertDicToJson: function(d){//将Dic对象转化成json文本对象转化成json文本 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
-		var s = '{';
+		var s = '', arrtype;
 		for(var i in d){
-			switch(typeof(d[i])){
-				case 'string':
-					s += '"'+ i +'":"' + d[i] +'",';
-					break;
-				case 'object':
-					if(d[i].RecordCount == undefined){
-						s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
-					}else{
-						s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
-					}
-					break;
-				case 'number':
-					s += '"'+ i +'":' + d[i] +',';
-					break;
-				case 'boolean':
-					s += '"'+ i +'":' + d[i] +',';
-					break;
-				case 'function':
-					s += '"'+ i +'":"' + d[i] +'",';
-					break;
-				case undefined:
-					s += ',';
-					break;
+			var n = Number(i);//通过是否数字格式判断是否是数组，如果是数字，代表是数组，文本用[]包含，否则代表是字典，文本用{}包含
+			if (!isNaN(n)){
+				arrtype = 1;//设置json数组类型，1=[],0={}
+				if(d[i].RecordCount == undefined){
+					s += ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
+				}else{
+					s += ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
+				}
+			}else{
+				arrtype = 0;//设置json数组类型，1=[],0={}
+				switch(typeof(d[i])){
+					case 'string':
+						s += '"'+ i +'":"' + d[i] +'",';
+						break;
+					case 'object':
+						if(d[i].RecordCount == undefined){
+							s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
+						}else{
+							s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
+						}
+						break;
+					case 'number':
+						s += '"'+ i +'":' + d[i] +',';
+						break;
+					case 'boolean':
+						s += '"'+ i +'":' + d[i] +',';
+						break;
+					case 'function':
+						s += '"'+ i +'":"' + d[i] +'",';
+						break;
+					case undefined:
+						s += ',';
+						break;
+				}
 			}
 		}
 		s = s.substr(0, s.length - 1);
-		s += '}';
-		return(s);
+		if(arrtype){
+			return('[' + s + ']');
+		}else{
+			return('{' + s + '}');
+		}
 	}
 }
 %>

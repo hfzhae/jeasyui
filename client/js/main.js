@@ -5,6 +5,7 @@ dev by zz on 2018/2/16
 var ebx = {
 	multitabs:0,//同一菜单链接多tabs打开支持，1为支持
 	decimal:2,//小数位数，默认2
+	pagesize: 128,//datagrid分页行数
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -100,7 +101,7 @@ var ebx = {
 	},
 	EditStatusMessager: function(s, t, backcall){//编辑状态判断提醒函数，参数：s：状态true为被编辑，t：显示文本，backcall：回调函数
 		if(s){//判断数据是否被编辑过。
-			$.messager.confirm('提醒', t+'的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
+			$.messager.confirm('提醒', ebx.UnescapeJson(t)+'的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
 				if (r){
 					backcall();
 				}
