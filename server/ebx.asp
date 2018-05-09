@@ -20,6 +20,53 @@ var ebx = {
 		}
 		return d;
 	},
+	validFloat: function(f, def){//浮点格式化
+		var n = parseFloat(f);
+		if (isNaN(n)){
+			return ((def==undefined)?0:def);
+		}else{
+			return n;
+		}
+	},
+	validInt: function (i, def){//整形格式化
+		var n = parseInt(i);
+		if (isNaN(n)){
+			return ((def==undefined)?0:def);
+		}else{
+			return n;
+		}
+	},
+	sqlstrTtodate: function (num) {//sql的日期文本格式化
+        //Fri Oct 31 18:00:00 UTC+0800 2008  
+        num=num+"";
+        var date="";
+        var month=new Array();
+        month["Jan"]=1;
+		month["Feb"]=2;
+		month["Mar"]=3;
+		month["Apr"]=4;
+		month["May"]=5;
+		month["Jun"]=6;
+        month["Jul"]=7;
+		month["Aug"]=8;
+		month["Sep"]=9;
+		month["Oct"]=10;
+		month["Nov"]=11;
+		month["Dec"]=12;
+        var week = new Array();
+        week["Mon"]="1";
+		week["Tue"]="2";
+		week["Wed"]="3";
+		week["Thu"]="4";
+		week["Fri"]="5";
+		week["Sat"]="6";
+		week["Sun"]="7";
+        str=num.split(" ");
+        date=str[5]+"-";
+        date=date+month[str[1]]+"-"+str[2]+" "+str[3];
+        //date=date+" 周"+week[str[0]];
+        return date;
+	},
 	Initialize: function (){
 		var ParametStr, FormSize, FormData, Paramet
 		if(Request.ServerVariables('Request_Method') == 'POST' ){ //post
@@ -45,6 +92,9 @@ var ebx = {
 		
 		ebx.conn = Server.CreateObject('ADODB.Connection');
 		ebx.conn.open(Application('DateBase.ConnectString'));
+		String.prototype.replaceAll = function(s1,s2){ 
+			return this.replace(new RegExp(s1,"gm"),s2); 
+		}
 	},
 	stream_binarytostring: function (binary, charset){//用adodb.stream获取requet内容 2018-5-4 zz
 		var binarystream = Server.CreateObject('adodb.stream');
@@ -76,6 +126,8 @@ var ebx = {
 		}
 	},
 	convertRsToJson: function(rs){//将rs对象转化成json文本 2018-5-4 zz
+		if(typeof(rs) != 'object')return('[]');
+		if(rs.RecordCount == undefined)return('[]');
 		var s = '';
 		if(!rs.eof){ 
 			var fields = rs.Fields;
@@ -104,43 +156,44 @@ var ebx = {
 				return  '"' + v + '"'; //"备注"
 				break;
 			case 3:
-				return v; //"长整型"
+				return ebx.validInt(v); //"长整型"
 				break;
 			case 2:
-				return v; //"整型"
+				return ebx.validInt(v); //"整型"
 				break;
 			case 17:
-				return v; //"字节"
+				return ebx.validInt(v); //"字节"
 				break;
 			case 3:
-				return v; //"长整型"
+				return ebx.validInt(v); //"长整型"
 				break;
 			case 4:
-				return v; //"单精浮点"
+				return ebx.validFloat(v); //"单精浮点"
 				break;
 			case 5:
-				return v; //"双精浮点"
+				return ebx.validFloat(v); //"双精浮点"
 				break;
 			case 3:
-				return v; //"长整型"
+				return ebx.validInt(v); //"长整型"
 				break;
 			case 72:
-				return v; //"同步复制ID"
+				return ebx.validInt(v); //"同步复制ID"
 				break;
 			case 131:
-				return v; //"小数"
+				return ebx.validFloat(v); //"小数"
 				break;
 			case 135:
-				return '"' + v + '"'; //"日期/时间"
+				return '"' + ebx.sqlstrTtodate(v) + '"'; //"日期/时间"
+				//return '"' + v + '"'; //"日期/时间"
 				break;
 			case 6:
-				return v; //"货币"
+				return ebx.validFloat(v); //"货币"
 				break;
 			case 11:
 				return '"' + v + '"'; //"是/否"
 				break;
 			case 205:
-				return '[' + ebx.convertRsToJson(ebx.convertBinToRs(v)) + ']'; //"OLE对象" 处理数据库里嵌套的rs对象二级制存储数据
+				return ebx.convertRsToJson(ebx.convertBinToRs(v)); //"OLE对象" 处理数据库里嵌套的rs对象二级制存储数据
 				break;
 		}
 	},
@@ -181,7 +234,7 @@ var ebx = {
 	OnPageEnd: function(Response){//页面结束处理函数
 		Response.Write(ebx.convertDicToJson(ebx.stdout));
 	},
-	convertDicToJson: function(d){//将Dic对象转化成json文本对象转化成json文本 2018-5-6 zz
+	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
 		var s = '', arrtype;
 		for(var i in d){
@@ -227,6 +280,125 @@ var ebx = {
 		}else{
 			return('{' + s + '}');
 		}
+	},
+	getTemplateSQL: function(id){//从查询模板获取SQL，参数id：模板ID，返回sql语句
+		var sql = 'select title,WizardID,Columns from biQueryTemplate where isdeleted=0 and id =' + id,
+			rs = Server.CreateObject('ADODB.RecordSet'),
+			Wizard = [],//查询设计对象
+			Title = '',
+			Columns = [],//查询模板列rs
+			s = '',
+			Sort = Server.CreateObject('ADODB.RecordSet'),//排序对象
+			SortCount = 0,//排序序
+			GroupBy = 0,//聚合函数表示，0没有聚合函数，1有聚合函数
+			GroupByStr = '';//group by 生成文本
+			
+		rs.open(sql, ebx.conn, 1, 1);
+		
+		if(!rs.eof){
+			Title = rs('title').value;
+			Wizard = ebx.getWizard(rs('WizardID').value);
+			Columns = ebx.convertBinToRs(rs('Columns').value);
+		}
+		
+		Sort.Fields.Append("SortOrder", 203, 1024);//定义排序序
+		Sort.Fields.Append("Sort", 203, 1024);//定义排序文本
+		Sort.Open();
+		
+		Columns.MoveFirst();
+		while(!Columns.eof){//字段排序处理，支持排序序
+			if(ebx.validInt(Columns('Sort').value) == 2){
+				Sort.Addnew();
+				Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
+				Sort('Sort') = '[' + Columns('Source').value + '] DESC';
+			}
+			if(ebx.validInt(Columns('Sort').value) == 1){
+				Sort.Addnew();
+				Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
+				Sort('Sort') = '[' + Columns('Source').value + ']';
+			}
+			Columns.MoveNext();
+		}
+
+		s += 'SELECT ';
+
+		while(!Wizard['Columns'].eof){//字段加载，支持聚合函数处理
+			Columns.MoveFirst();
+			while(!Columns.eof){
+				if(Columns('Source').value == Wizard['Columns']('Alias').value){
+					if(Columns('GroupBy').value == '' || Columns('GroupBy').value == null){
+						GroupByStr += '[' + Columns('Alias').value + '] ,';
+						s +=  Wizard['Columns']('Column').value + ' AS [' + Columns('Alias').value + '] ,';
+					}else{
+						GroupBy = 1;
+						s +=  Columns('GroupBy').value + '(' +Wizard['Columns']('Column').value + ') AS [' + Columns('Alias').value + '] ,';
+					}
+				}
+				Columns.MoveNext();
+			}
+			Wizard['Columns'].MoveNext;
+		}
+		s = s.substr(0, s.length - 1);
+		
+		s += 'FROM ';
+		
+		while(!Wizard['Tables'].eof){//表
+			s +=  Wizard['Tables']('id') + ' [' + Wizard['Tables']('Alias') + '] ,';
+			Wizard['Tables'].MoveNext;
+		}
+		s = s.substr(0, s.length - 1);
+
+		s += 'WHERE 1=1 AND ';
+		if(Wizard['Relates'].State){//条件关系
+			while(!Wizard['Relates'].eof){
+				s +=  Wizard['Relates']('Table') + '.' + Wizard['Relates']('Column') + Wizard['Relates']('Relate') + Wizard['Relates']('RelateTable') + '.' + Wizard['Relates']('RelateColumn') + ' AND ';
+				Wizard['Relates'].MoveNext;
+			}
+		}
+		
+		if(Wizard['Filter']){//筛选文本
+			s += Wizard['Filter'];
+		}
+		
+		s = s.replaceAll('@@AccountID', 1);//账套
+		s = s.replaceAll('@@Owner', 1);//用户
+		s = s.replaceAll('@@FINDBEGIN', '');//搜索开始
+		s = s.replaceAll('@@FINDEND', '');//搜搜结束
+		
+		s = s.replaceAll('@@FIND', '\'%%\'');//搜索文字替换
+		
+		if(GroupBy){//聚合group by合成
+			GroupByStr = GroupByStr.substr(0, GroupByStr.length - 1);
+			s += 'GROUP BY ' + GroupByStr;
+		}
+
+		if(Sort.recordcount > 0){//排序合成
+			s += 'ORDER BY ';
+			Sort.Sort = 'SortOrder desc';
+			while(!Sort.eof){
+				s += Sort('Sort') + ','
+				Sort.MoveNext();
+			}
+			s = s.substr(0, s.length - 1);
+		}
+
+		return s;
+	},
+	getWizard: function(id){//获取查询设计对象，参数id：查询设计ID，返回查询设计字典
+		var sql = 'select Title,Filter,Tables,Relates,Columns from biQueryWizard where isdeleted=0 and id=' + id,
+			rs = Server.CreateObject('ADODB.RecordSet'),
+			Wizard = new Array();
+			
+		rs.open(sql, ebx.conn, 1, 1);
+		
+		if(!rs.eof){
+			Wizard['title'] = rs('Title').value;
+			Wizard['Filter'] = rs('Filter').value;
+			Wizard['Tables'] = ebx.convertBinToRs(rs('Tables').value);
+			Wizard['Relates'] = ebx.convertBinToRs(rs('Relates').value);
+			Wizard['Columns'] = ebx.convertBinToRs(rs('Columns').value);
+		}
+		return Wizard;
 	}
 }
 %>

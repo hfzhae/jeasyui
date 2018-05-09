@@ -149,6 +149,14 @@ var ebx = {
 		}else{
 			return n;
 		}
+	},
+	validInt: function (i, def){//整形格式化
+		var n = parseInt(i);
+		if (isNaN(n)){
+			return ((def==undefined)?0:def);
+		}else{
+			return n;
+		}
 	}
 };
 

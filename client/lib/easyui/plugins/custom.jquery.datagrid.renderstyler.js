@@ -44,7 +44,7 @@ function _setRender(r, v, n){//renter返回值处理
 	if(v == null)return ''; 
 	if(r){
 		switch(r.toLowerCase()){
-			case 'boolrender'://布尔回调函数
+			case 'boolrender'://布尔
 				if(v == '' || v == undefined || v == 'undefined' || v == null || v == 'null' || v == 0 || v == '0'){
 					return '';
 				}else{
@@ -52,7 +52,7 @@ function _setRender(r, v, n){//renter返回值处理
 					return '√';
 				}
 				break;
-			case 'linenumberrender'://显示行号
+			case 'linenumberrender'://行序号
 				return n + 1;
 				break;
 			case 'hiddenrender'://隐藏列
@@ -79,6 +79,9 @@ function _setRender(r, v, n){//renter返回值处理
 				}
 				return v;
 				break;
+			case 'daterender'://日期
+				return new Date(v).Format("yyyy-MM-dd");
+				break;
 			default:
 				if(typeof(v) == 'string'){
 					v = ebx.UnescapeJson(v);
@@ -92,4 +95,22 @@ function _setRender(r, v, n){//renter返回值处理
 		}
 		return v;
 	}
+}
+Date.prototype.Format = function (fmt) { //author: meizz 
+	var o = {
+		"M+": this.getMonth() + 1, //月份 
+		"d+": this.getDate(), //日 
+		"h+": this.getHours(), //小时 
+		"m+": this.getMinutes(), //分 
+		"s+": this.getSeconds(), //秒 
+		"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+		"S": this.getMilliseconds() //毫秒 
+	};
+	if (/(y+)/.test(fmt)) {
+		fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	}
+	for (var k in o)
+		if (new RegExp("(" + k + ")").test(fmt)) 
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	return fmt;
 }
