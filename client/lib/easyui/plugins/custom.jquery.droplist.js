@@ -42,7 +42,7 @@ $.extend($.fn.combogrid.defaults, {
 					var index = co.datagrid('getRowIndex', selected);  
 					co.datagrid('selectRow', index + 1);  
 				} else {  
-					co.datagrid('selectRow', 0);  
+					co.datagrid('selectRow', 0);
 				} 
 			} catch(err) {}
 		},
@@ -51,18 +51,22 @@ $.extend($.fn.combogrid.defaults, {
 		enter: function(){
 			$(this).combogrid('showPanel');
 			var co = $(this),
-				t = $.trim(co.combogrid('getText')),
+				t = escape($.trim(co.combogrid('getText'))),
 				ops = co.combogrid('options'),
 				rows = ops.oRows,
 				selected = co.combogrid('grid').datagrid('getSelected'),
 				columns = co.combogrid('grid').datagrid('options').columns,
-				searchField = [];  
+				searchField = [],
+				template = ops.template;;
+				
+			/*	
 			for (var j in columns[0]){
 				if(columns[0][j].search){
 					searchField.push(columns[0][j].field);//找出需要搜索的字段名
 				}
 			}
-			if (selected && co.combo('getValue') != '') {
+			*/
+			if (selected && co.combo('getValue') != '') {//已经选中有值的，关闭下拉框，跳转到下一个可编辑控件
 				co.combogrid('hidePanel');
 				co.combogrid('validate');
 				var inputs = $("input");//得到所有input对象
@@ -76,7 +80,13 @@ $.extend($.fn.combogrid.defaults, {
 						}
 					}
 				}
-			} else {  
+			} else { 
+				co.combogrid('grid').datagrid('load', {//服务器端搜索
+					template:template,
+					_:(new Date()).getTime(),
+					find: t
+				});
+				/*
 				var rowsq = [],
 					serachon;
 				for (var i in rows) {
@@ -103,6 +113,7 @@ $.extend($.fn.combogrid.defaults, {
 					co.combogrid('grid').datagrid('selectRow', 0);
 					co.combogrid('hidePanel');
 				}
+				*/
 			}  
 		},
 		query: function(q){
