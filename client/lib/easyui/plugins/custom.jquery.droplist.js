@@ -128,6 +128,15 @@ $.extend($.fn.combogrid.defaults, {
 			ops.asyn = 0;
 		}
 	},
+	onChange: function(newValue, oldValue){
+		var co = $(this);
+		co.combo('setText', unescape(newValue));
+	},
+	onHidePanel: function(){
+		var co = $(this);
+			t = unescape(co.combo('getText'));
+		co.combo('setText', t);
+	},
 	onShowPanel: function(){
 		var co = $(this)
 			g = co.combogrid('grid'),
@@ -164,6 +173,7 @@ $.extend($.fn.combogrid.defaults, {
 								ops.asyn = 1;
 							}
 						}).datagrid('renderformatterstyler');
+						
 						/*
 						g.datagrid('loading');
 						
