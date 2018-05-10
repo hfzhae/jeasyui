@@ -4,10 +4,10 @@
 		<option>已删除</option>
 		<option>未删除</option>
 	</select>
-	<input class="easyui-textbox" data-options="width:120">
-	<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ZoomClassic_custom'">搜索</a>
+	<input name="list_searchinput" class="easyui-textbox" data-options="width:120">
+	<button name="list_searchbutton" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ZoomClassic_custom'">搜索</button>
 	<span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
-	<a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ImportExcel'">导出</a>
+	<button class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ImportExcel'">导出</button>
 	<div name="ExportExcel"></div>
 	<span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
 	<div name="new"></div>
@@ -19,7 +19,9 @@
 			layout = tabs.find('.layout'),
 			centerpanel = layout.layout('panel', 'center'),
 			listdatagrid = $('<div>').appendTo(centerpanel),
-			ExportExcelbox = $('<div>');
+			ExportExcelbox = $('<div>'),
+			columnsData = [];
+			
 			ebx.biedit = function(rowIndex, rowData){//打开编辑layout面板函数，参数点击行带入 2018-4-22 zz
 				var e,
 					id = rowData?rowData.id:'',
@@ -80,7 +82,7 @@
 			dataType: "json",
 			success: function(result){
 				if(result){
-					var data = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
+					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
 					listdatagrid.datagrid({
 						view:scrollview,
 						pageSize:ebx.pagesize,
@@ -98,12 +100,36 @@
 						toolbar:centerpanel.find('div[name=toolbar]'),
 						multiSort:false,
 						checkOnSelect:false,
-						columns:data,
+						columns:columnsData,
 						height: '100%',
 						onClickRow: ebx.biedit
 					}).datagrid('renderformatterstyler');
 				}
 			}
 		});
+		
+		centerpanel.find('button[name=list_searchbutton]').on('click', function(){//点击搜索按钮
+			var find = escape(centerpanel.find('input[name=list_searchinput]').val());
+			searchsend(find);
+		});
+		
+		centerpanel.find('input[name=list_searchinput]').parent().on('keydown', function(e){//搜索框回车事件
+			if(e.keyCode == 13) {
+				var find = escape(centerpanel.find('input[name=list_searchinput]').val());
+				searchsend(find);
+			}
+		});
+		
+		centerpanel.find('input[name=list_searchinput]').prev().focus(function(){//搜索框激活焦点后自动全选文本
+			this.select();
+		});
+		
+		function searchsend(s){//搜索函数
+			listdatagrid.datagrid('load', {
+				template:Paramet.template,
+				_:(new Date()).getTime(),
+				find: s
+			});
+		}
 	});
 </script>

@@ -9,35 +9,36 @@ var ebx = {
 	stdout: new Array(),
 	parseToJson: function (json_data){//Json格式转对象
 		eval("var o=" + json_data);
-		return o;
+		return(o);
 	},
 	getRequestParamet: function(s){//get参数格式转对象
 		var arr = s.split('&'),
 			d = new Array();
-		if(arr.length <= 0) return d;
+		if(arr.length <= 0) return(d);
 		for(var i in arr){
 			d[arr[i].split('=')[0]] = arr[i].split('=')[1];
 		}
-		return d;
+		return(d);
 	},
 	validFloat: function(f, def){//浮点格式化
 		var n = parseFloat(f);
 		if (isNaN(n)){
-			return ((def==undefined)?0:def);
+			return((def==undefined)?0:def);
 		}else{
-			return n;
+			return(n);
 		}
 	},
 	validInt: function (i, def){//整形格式化
 		var n = parseInt(i);
 		if (isNaN(n)){
-			return ((def==undefined)?0:def);
+			return((def==undefined)?0:def);
 		}else{
-			return n;
+			return(n);
 		}
 	},
 	sqlStringEncode: function (s){
-		return s.replaceAll("'", "''")
+		if(s == undefined) return('');
+		return(s.replaceAll("'", "''"));
 	},
 	sqlstrTtodate: function (num) {//sql的日期文本格式化
         //Fri Oct 31 18:00:00 UTC+0800 2008  
@@ -68,7 +69,7 @@ var ebx = {
         date=str[5]+"-";
         date=date+month[str[1]]+"-"+str[2]+" "+str[3];
         //date=date+" 周"+week[str[0]];
-        return date;
+        return(date);
 	},
 	Initialize: function (){
 		var ParametStr, FormSize, FormData, Paramet
@@ -77,26 +78,28 @@ var ebx = {
 			FormData = Request.BinaryRead(FormSize);
 			ParametStr = ebx.stream_binarytostring(FormData, '');
 			if(typeof(ParametStr) == 'string'){
-				try{
-					var Paramet = ebx.parseToJson(ParametStr);
-					ebx.convertObjToDic(ebx.stdin, Paramet);
-				}catch(e){
-					if(e.name == 'SyntaxError'){
-						ebx.stdin = ebx.getRequestParamet(ParametStr);
+				if(ParametStr.length > 0){
+					try{
+						var Paramet = ebx.parseToJson(ParametStr);
+						ebx.convertObjToDic(ebx.stdin, ebx.UnescapeJson(Paramet));
+					}catch(e){
+						if(e.name == 'SyntaxError'){
+							ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
+						}
 					}
 				}
 			}
 		}else{ //get
 			ParametStr = Request.ServerVariables("QUERY_STRING")(1);
 			if(typeof(ParametStr) == 'string'){
-				ebx.stdin = ebx.getRequestParamet(ParametStr);
+				ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
 			}
 		}
 		
 		ebx.conn = Server.CreateObject('ADODB.Connection');
 		ebx.conn.open(Application('DateBase.ConnectString'));
 		String.prototype.replaceAll = function(s1,s2){ 
-			return this.replace(new RegExp(s1,"gm"),s2); 
+			return(this.replace(new RegExp(s1,"gm"),s2)); 
 		}
 	},
 	stream_binarytostring: function (binary, charset){//用adodb.stream获取requet内容 2018-5-4 zz
@@ -113,7 +116,7 @@ var ebx = {
 		}else{
 			binarystream.charset = 'us-ascii'
 		}
-		return binarystream.readtext
+		return(binarystream.readtext);
 	},
 	convertObjToDic: function(dic, obj){//将Json转换成object的对象转换成可嵌套的字典对象 2018-5-5 zz
 		if(typeof(obj) == 'object'){
@@ -147,56 +150,56 @@ var ebx = {
 			}
 			s = s.substr(0, s.length - 1);
 		}
-		return '[' + s + ']';
+		return('[' + s + ']');
 	},
 	getType: function(Fields){ //数据类型判断函数，Fields：字段rs.Fields对象，返回针对类型处理后的值
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
 			case 202:
-				return '"' + v + '"'; //"文本"
+				return('"' + v + '"'); //"文本"
 				break;
 			case 203:
-				return  '"' + v + '"'; //"备注"
+				return('"' + v + '"'); //"备注"
 				break;
 			case 3:
-				return ebx.validInt(v); //"长整型"
+				return(ebx.validInt(v)); //"长整型"
 				break;
 			case 2:
-				return ebx.validInt(v); //"整型"
+				return(ebx.validInt(v)); //"整型"
 				break;
 			case 17:
-				return ebx.validInt(v); //"字节"
+				return(ebx.validInt(v)); //"字节"
 				break;
 			case 3:
-				return ebx.validInt(v); //"长整型"
+				return(ebx.validInt(v)); //"长整型"
 				break;
 			case 4:
-				return ebx.validFloat(v); //"单精浮点"
+				return(ebx.validFloat(v)); //"单精浮点"
 				break;
 			case 5:
-				return ebx.validFloat(v); //"双精浮点"
+				return(ebx.validFloat(v)); //"双精浮点"
 				break;
 			case 3:
-				return ebx.validInt(v); //"长整型"
+				return(ebx.validInt(v)); //"长整型"
 				break;
 			case 72:
-				return ebx.validInt(v); //"同步复制ID"
+				return(ebx.validInt(v)); //"同步复制ID"
 				break;
 			case 131:
-				return ebx.validFloat(v); //"小数"
+				return(ebx.validFloat(v)); //"小数"
 				break;
 			case 135:
-				return '"' + ebx.sqlstrTtodate(v) + '"'; //"日期/时间"
+				return('"' + ebx.sqlstrTtodate(v) + '"'); //"日期/时间"
 				//return '"' + v + '"'; //"日期/时间"
 				break;
 			case 6:
-				return ebx.validFloat(v); //"货币"
+				return(ebx.validFloat(v)); //"货币"
 				break;
 			case 11:
-				return '"' + v + '"'; //"是/否"
+				return('"' + v + '"'); //"是/否"
 				break;
 			case 205:
-				return ebx.convertRsToJson(ebx.convertBinToRs(v)); //"OLE对象" 处理数据库里嵌套的rs对象二级制存储数据
+				return(ebx.convertRsToJson(ebx.convertBinToRs(v))); //"OLE对象" 处理数据库里嵌套的rs对象二级制存储数据
 				break;
 		}
 	},
@@ -207,12 +210,54 @@ var ebx = {
 		if(typeof(str) == 'string'){
 			return escape(str);
 		}else{
-			return str;
+			return(str);
 		}
+	},
+	unescapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
+		if(str == null) return('');
+		
+		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
+		if(typeof(str) == 'string'){
+			return unescape(str);
+		}else{
+			return(str);
+		}
+	},
+	UnescapeJson: function(s){//转码所有嵌套json中文的escape
+		if(typeof(s) == 'object'){
+			for(var i in s){
+				if(typeof(s[i]) == 'object'){
+					s[i] = this.UnescapeJson(s[i]);
+				}else{
+					s[i] = ebx.unescapeEx(s[i].replace(/%25/g, "%"));
+				}
+			}
+		}else{
+			s = ebx.unescapeEx(s.replace(/%25/g, "%"))
+		}
+		return(s);
+	},
+	EscapeJson: function(s){
+		if(typeof(s) == 'object'){
+			for(var i in s){
+				if(typeof(s[i]) == 'object'){
+					s[i] = this.UnescapeJson(s[i]);
+				}else{
+					if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
+						s[i] = ebx.escapeEx(s[i]);
+					}
+				}
+			}
+		}else{
+			if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
+				s[i] = ebx.escapeEx(s[i]);
+			}
+		}
+		return(s);
 	},
 	convertBinToRs: function(sBin){ //二进制流转换成rs对象
 		var stm = Server.CreateObject("adodb.stream"),
-			rs = Server.CreateObject("adodb.recordset");
+			rs = ebx.dbx.getRs();
 		if(sBin != null){
 			stm.type = 1;
 			stm.Open();
@@ -232,7 +277,7 @@ var ebx = {
 		stm.Open();
 		rs.save(stm);
 		stm.position = 0
-		return stm.read();
+		return(stm.read());
 	},
 	OnPageEnd: function(Response){//页面结束处理函数
 		Response.Write(ebx.convertDicToJson(ebx.stdout));
@@ -291,7 +336,7 @@ var ebx = {
 			Title,
 			Columns,//查询模板列rs
 			s = '',
-			Sort = Server.CreateObject('ADODB.RecordSet'),//排序对象
+			Sort = ebx.dbx.getRs(),//排序对象
 			SortCount = 0,//排序序
 			GroupBy = 0,//聚合函数表示，0没有聚合函数，1有聚合函数
 			GroupByStr = '';//group by 生成文本
@@ -364,9 +409,24 @@ var ebx = {
 		
 		s = s.replaceAll('@@AccountID', 1);//账套
 		s = s.replaceAll('@@Owner', 1);//用户
-		s = s.replaceAll('@@FINDBEGIN', '');//搜索开始
-		s = s.replaceAll('@@FINDEND', '');//搜搜结束
-		s = s.replaceAll('@@FIND', '\'%%\'');//搜索文字替换
+		
+		var find = ebx.sqlStringEncode(ebx.stdin['find']);//获取搜索字段
+
+		if(typeof(find) == 'string'){
+			if(find.length > 0){
+				s = s.replaceAll('@@FINDBEGIN', '');//搜索开始
+				s = s.replaceAll('@@FINDEND', '');//搜搜结束
+				s = s.replaceAll('@@FIND', '\'%' + find + '%\'');//搜索文字替换
+			}else{
+				var FINDBEGIN = s.indexOf('@@FINDBEGIN'),
+					FINDEND = s.indexOf('@@FINDEND');
+				s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
+			}
+		}else{
+			var FINDBEGIN = s.indexOf('@@FINDBEGIN'),
+				FINDEND = s.indexOf('@@FINDEND');
+			s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
+		}
 		
 		if(GroupBy){//聚合group by合成
 			GroupByStr = GroupByStr.substr(0, GroupByStr.length - 1);
@@ -383,7 +443,7 @@ var ebx = {
 			s = s.substr(0, s.length - 1);
 		}
 
-		return s;
+		return(s);
 	},
 	getWizard: function(id){//获取查询设计对象，参数id：查询设计ID，返回查询设计字典
 		var sql = 'select Title,Filter,Tables,Relates,Columns from biQueryWizard where isdeleted=0 and id=' + id,
@@ -398,19 +458,23 @@ var ebx = {
 				Wizard['Columns'] = ebx.convertBinToRs(rs('Columns').value);
 			}
 		}
-		return Wizard;
+		return(Wizard);
 	},
 	dbx: {//数据库处理对象
 		CursorLocation:3,
 		CacheSize:16,
-		open: function(strSQL, iCur, iLock){//复刻rs.open方法
+		getRs:function(){
 			var rs = Server.CreateObject('ADODB.RecordSet');
+			rs.CursorLocation = ebx.dbx.CursorLocation;
+			rs.CacheSize = ebx.dbx.CacheSize;
+			return(rs);
+		},
+		open: function(strSQL, iCur, iLock){//复刻rs.open方法
+			var rs = ebx.dbx.getRs();
 			if(typeof(strSQL) == 'string'){
 				if(strSQL.length > 0){
 					if(typeof(iCur) != 'number')iCur = 3;
 					if(typeof(iLock) != 'number')iLock = 16;
-					rs.CursorLocation = ebx.dbx.CursorLocation;
-					rs.CacheSize = ebx.dbx.CacheSize;
 					rs.open(strSQL, ebx.conn, iCur, iLock);
 				}
 			}
@@ -419,13 +483,13 @@ var ebx = {
 		openpage: function(strSQL, page){//分页rs函数，参数：strSQL：sql语句，page.iStart：起始行数，page.iLength：每页行数，page.iTotalLength：总行数（回调用）
 			var rs,
 				sLength = ebx.validInt(page.iLength,0)<1?2147483647:ebx.validInt(page.iLength,0);
-				
-			ebx.conn.CursorLocation = 3;
+			
+			ebx.conn.CursorLocation = ebx.dbx.CursorLocation;
 			rs = ebx.conn.Execute("declare @C int, @L int;exec sp_cursoropen @C output, N'" + ebx.sqlStringEncode(strSQL) + "', 1, 1, @L output;select @L;exec sp_cursorfetch @C, 16, " + page.iStart + ', ' + sLength + ";exec sp_cursorclose @C");
 			rs = rs.NextRecordset();
 			page.iTotalLength = rs(0).value;
-			if(page.iTotalLength-page.iStart-page.iLength<0)page.iLength = page.iTotalLength-page.iStart+1;
-			return rs.NextRecordset();
+			//if(page.iTotalLength-page.iStart-page.iLength<0)page.iLength = page.iTotalLength-page.iStart+1;
+			return(rs.NextRecordset());
 		}
 	}
 }
