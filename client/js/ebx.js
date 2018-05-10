@@ -5,7 +5,7 @@ dev by zz on 2018/2/16
 var ebx = {
 	multitabs:0,//同一菜单链接多tabs打开支持，1为支持
 	decimal:2,//小数位数，默认2
-	pagesize: 128,//datagrid分页行数
+	pagesize: 50,//datagrid分页行数
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
