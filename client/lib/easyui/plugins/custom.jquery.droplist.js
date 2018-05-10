@@ -133,8 +133,9 @@ $.extend($.fn.combogrid.defaults, {
 			//debugger;
 			$.ajax({
 				type: 'post', 
-				url: 'server/bi/style/?v=' + (new Date()).getTime(),
-				data: JSON.stringify(ebx.EscapeJson({style:style})),
+				url: 'server/bi/style/',
+				//data: JSON.stringify(ebx.EscapeJson({style:style,_:(new Date()).getTime()})),
+				data:{style:style,_:(new Date()).getTime()},
 				dataType: "json",
 				success: function(result){
 					if(result){
@@ -142,25 +143,37 @@ $.extend($.fn.combogrid.defaults, {
 						g.datagrid({
 							view:scrollview,
 							pageSize:pageSize,
+							url:'server/bi/list/',
+							queryParams:{template:template,_:(new Date()).getTime()},
+							method:'post',
 							loadMsg:$.fn.datagrid.defaults.loadMsg,
-							columns:data
-						});
-						
-						g.datagrid('loading');
-						ops.oRows = [];
-						ops.asyn = 1;
-						
-						$.getJSON('server/bi/list/?template='+template+'&v=' + (new Date()).getTime(), function(data){				
-							for(var i in data['rows']){
-								ops.oRows.push(data['rows'][i]);
+							columns:data,
+							onLoadSuccess: function(){
+								ops.oRows = [];
+								ops.asyn = 1;
 							}
-							g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
-							g.datagrid('loadData', {
-								total:data.rows.length,
-								rows:ebx.UnescapeJson(data.rows)
-							});
-							g.datagrid('loaded').datagrid('renderformatterstyler');;
+						}).datagrid('renderformatterstyler');
+						/*
+						g.datagrid('loading');
+						
+						$.ajax({
+							type: 'post', 
+							url: 'server/bi/list/',
+							data:{template:template,_:(new Date()).getTime()},
+							dataType: "json",
+							success: function(data){
+								for(var i in data['rows']){
+									ops.oRows.push(data['rows'][i]);
+								}
+								g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
+								g.datagrid('loadData', {
+									total:data.rows.length,
+									rows:ebx.UnescapeJson(data.rows)
+								});
+								g.datagrid('loaded').datagrid('renderformatterstyler');
+							}
 						});
+						*/
 					}
 				}
 			});

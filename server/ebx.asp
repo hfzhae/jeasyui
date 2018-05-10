@@ -36,6 +36,9 @@ var ebx = {
 			return n;
 		}
 	},
+	sqlStringEncode: function (s){
+		return s.replaceAll("'", "''")
+	},
 	sqlstrTtodate: function (num) {//sql的日期文本格式化
         //Fri Oct 31 18:00:00 UTC+0800 2008  
         num=num+"";
@@ -283,18 +286,16 @@ var ebx = {
 	},
 	getTemplateSQL: function(id){//从查询模板获取SQL，参数id：模板ID，返回sql语句
 		var sql = 'select title,WizardID,Columns from biQueryTemplate where isdeleted=0 and id =' + id,
-			rs = Server.CreateObject('ADODB.RecordSet'),
-			Wizard = [],//查询设计对象
-			Title = '',
-			Columns = [],//查询模板列rs
+			rs = ebx.dbx.open(sql, 1, 1),
+			Wizard,//查询设计对象
+			Title,
+			Columns,//查询模板列rs
 			s = '',
 			Sort = Server.CreateObject('ADODB.RecordSet'),//排序对象
 			SortCount = 0,//排序序
 			GroupBy = 0,//聚合函数表示，0没有聚合函数，1有聚合函数
 			GroupByStr = '';//group by 生成文本
-			
-		rs.open(sql, ebx.conn, 1, 1);
-		
+					
 		if(!rs.eof){
 			Title = rs('title').value;
 			Wizard = ebx.getWizard(rs('WizardID').value);
@@ -349,6 +350,7 @@ var ebx = {
 		s = s.substr(0, s.length - 1);
 
 		s += 'WHERE 1=1 AND ';
+		
 		if(Wizard['Relates'].State){//条件关系
 			while(!Wizard['Relates'].eof){
 				s +=  Wizard['Relates']('Table') + '.' + Wizard['Relates']('Column') + Wizard['Relates']('Relate') + Wizard['Relates']('RelateTable') + '.' + Wizard['Relates']('RelateColumn') + ' AND ';
@@ -364,7 +366,6 @@ var ebx = {
 		s = s.replaceAll('@@Owner', 1);//用户
 		s = s.replaceAll('@@FINDBEGIN', '');//搜索开始
 		s = s.replaceAll('@@FINDEND', '');//搜搜结束
-		
 		s = s.replaceAll('@@FIND', '\'%%\'');//搜索文字替换
 		
 		if(GroupBy){//聚合group by合成
@@ -386,19 +387,46 @@ var ebx = {
 	},
 	getWizard: function(id){//获取查询设计对象，参数id：查询设计ID，返回查询设计字典
 		var sql = 'select Title,Filter,Tables,Relates,Columns from biQueryWizard where isdeleted=0 and id=' + id,
-			rs = Server.CreateObject('ADODB.RecordSet'),
+			rs = ebx.dbx.open(sql, 1, 1),
 			Wizard = new Array();
-			
-		rs.open(sql, ebx.conn, 1, 1);
-		
-		if(!rs.eof){
-			Wizard['title'] = rs('Title').value;
-			Wizard['Filter'] = rs('Filter').value;
-			Wizard['Tables'] = ebx.convertBinToRs(rs('Tables').value);
-			Wizard['Relates'] = ebx.convertBinToRs(rs('Relates').value);
-			Wizard['Columns'] = ebx.convertBinToRs(rs('Columns').value);
+		if(rs.State > 0){
+			if(!rs.eof){
+				Wizard['title'] = rs('Title').value;
+				Wizard['Filter'] = rs('Filter').value;
+				Wizard['Tables'] = ebx.convertBinToRs(rs('Tables').value);
+				Wizard['Relates'] = ebx.convertBinToRs(rs('Relates').value);
+				Wizard['Columns'] = ebx.convertBinToRs(rs('Columns').value);
+			}
 		}
 		return Wizard;
+	},
+	dbx: {//数据库处理对象
+		CursorLocation:3,
+		CacheSize:16,
+		open: function(strSQL, iCur, iLock){//复刻rs.open方法
+			var rs = Server.CreateObject('ADODB.RecordSet');
+			if(typeof(strSQL) == 'string'){
+				if(strSQL.length > 0){
+					if(typeof(iCur) != 'number')iCur = 3;
+					if(typeof(iLock) != 'number')iLock = 16;
+					rs.CursorLocation = ebx.dbx.CursorLocation;
+					rs.CacheSize = ebx.dbx.CacheSize;
+					rs.open(strSQL, ebx.conn, iCur, iLock);
+				}
+			}
+			return(rs);
+		},
+		openpage: function(strSQL, page){//分页rs函数，参数：strSQL：sql语句，page.iStart：起始行数，page.iLength：每页行数，page.iTotalLength：总行数（回调用）
+			var rs,
+				sLength = ebx.validInt(page.iLength,0)<1?2147483647:ebx.validInt(page.iLength,0);
+				
+			ebx.conn.CursorLocation = 3;
+			rs = ebx.conn.Execute("declare @C int, @L int;exec sp_cursoropen @C output, N'" + ebx.sqlStringEncode(strSQL) + "', 1, 1, @L output;select @L;exec sp_cursorfetch @C, 16, " + page.iStart + ', ' + sLength + ";exec sp_cursorclose @C");
+			rs = rs.NextRecordset();
+			page.iTotalLength = rs(0).value;
+			if(page.iTotalLength-page.iStart-page.iLength<0)page.iLength = page.iTotalLength-page.iStart+1;
+			return rs.NextRecordset();
+		}
 	}
 }
 %>
