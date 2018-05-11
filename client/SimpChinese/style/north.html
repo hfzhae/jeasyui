@@ -1,0 +1,104 @@
+<script type="text/javascript">
+	easyloader.load([], function(){
+		var tabs = ebx.center.tabs('getSelected'),
+			tab = tabs.panel('options'),
+			layout = tabs.find('.layout'),
+			northPanel = layout.layout('panel', 'north'),
+			Paramet = ebx.getMenuParameter(tabs),
+			biribbon = $('<div>').appendTo(northPanel),
+			data = {
+				selected:0,
+				tabs:[{
+					title:'开始',
+					groups:[{
+						title:'基本操作',
+						tools:[{
+							type:'splitbutton',
+							name:'save',
+							text:'保存',
+							iconCls:'icon-FileSave-large',
+							iconAlign:'top',
+							size:'large',
+							menuItems:[{
+								name:'saveas',
+								text:'另存为',
+								iconCls:'icon-FileSaveAs'
+							}]
+						},{
+							type:'toolbar',
+							dir:'v',
+							tools:[{
+								name:'new',
+								text:'新建',
+								iconCls:'tree-file',
+								onClick: function(){
+									setTimeout(function(){
+										ebx.biedit();
+									},0);
+								}
+							},{
+								name:'delete',
+								text:'删除',
+								iconCls:'icon-Delete'
+							},{
+								name:'recovery',
+								text:'恢复',
+								iconCls:'icon-reload'
+							}]
+						}]
+					},{
+						title:'行操作',
+						tools:[{
+							name:'copy',
+							text:'新增行',
+							iconCls:'icon-file-large',
+							iconAlign:'top',
+							size:'large'
+						},{
+							name:'paste',
+							text:'删除行',
+							iconCls:'icon-DeclineInvitation-large',
+							iconAlign:'top',
+							size:'large'
+						}]
+					},{
+						title:'内容',
+						tools:[{
+							name:'paste',
+							text:'粘贴',
+							iconCls:'icon-Paste-large',
+							iconAlign:'top',
+							size:'large'
+						},{
+							name:'copy',
+							text:'复制',
+							iconCls:'icon-Copy-large',
+							iconAlign:'top',
+							size:'large'
+						}]
+					},{
+						title:'安全',
+						tools:[{
+							type:'toolbar',
+							tools:[{
+								name:'lock',
+								text:'编辑锁',
+								iconCls:'icon-Lock-large',
+								iconAlign:'top',
+								size:'large'
+							}]
+						}]
+					}]
+				}]
+			};
+			
+		biribbon.ribbon({
+			data:data,
+			width:'100%',
+			height:'100%',
+			border: false,
+			plain:true
+		});
+
+	});
+</script>

@@ -1,0 +1,41 @@
+<script type="text/javascript">
+	easyloader.load(['propertygrid', 'datagridkeyboard', 'datagridrenderstyler', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'ribbon'], function(){
+		var tabs = ebx.center.tabs('getSelected'),
+			tab = tabs.panel('options'),
+			Paramet = ebx.getMenuParameter(tabs),
+			layout = $('<div>').appendTo(tabs);
+
+		layout.layout({
+			width:'100%',
+			height:'100%'
+		});
+		
+		layout.layout('add',{//添加新的layout
+			region: 'center',
+			title: '',
+			href: 'client/SimpChinese/' + Paramet.mode + '/center.html',
+			//hideExpandTool: false,
+			//hideCollapsedContent: false,
+			border: false,
+			split: true
+		}).layout('add',{//添加新的layout
+			region: 'east',
+			width: 400,
+			maxWidth: '50%',
+			minWidth: 300,
+			title: '',
+			href: 'client/SimpChinese/' + Paramet.mode + '/east.html',
+			hideExpandTool: false,
+			hideCollapsedContent: false,
+			border: false,
+			split: true
+		}).layout('add', {
+			region: 'north',
+			height: 140,
+			href: 'client/SimpChinese/' + Paramet.mode + '/north.html',
+			border: false,
+			split: false
+			
+		});
+	});
+</script>

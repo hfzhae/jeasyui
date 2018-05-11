@@ -31,8 +31,13 @@ $.extend($.fn.datagrid.methods,{
 					return _setRender(this.render, value, rowIndex);
 				}
 				if(_c.fieldstyle){
-					_c.styler = function(value, rowData, rowIndex){//设置单元格样式
-						return this.fieldstyle;
+					_c.styler = function(value, rowData, rowIndex, d){//设置单元格样式
+						if(d != undefined){
+							return d.fieldstyle;
+						}
+						if(this.fieldstyle != undefined){
+							return this.fieldstyle;
+						}
 					}
 				}
 			}

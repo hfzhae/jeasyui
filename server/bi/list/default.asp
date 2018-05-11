@@ -12,6 +12,7 @@
 	var data = new Array();
 	data["total"] = page.iTotalLength;
 	data["rows"] = rs;
+	data["footer"] = [{}];
 	ebx.stdout = data;
 })();
 %>

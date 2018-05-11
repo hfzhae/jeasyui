@@ -2273,7 +2273,7 @@ var _224=_21f[i];
 var col=$(_21e).datagrid("getColumnOption",_224);
 if(col){
 var _225=_222[_224];
-var css=col.styler?(col.styler.call(_21e,_225,_222,_221)||""):"";
+var css=col.styler?(col.styler.call(_21e,_225,_222,_221,col)||""):"";//增加了col参数，返回当前列信息 2018-5-11 zz
 var cs=this.getStyleValue(css);
 var cls=cs.c?"class=\""+cs.c+"\"":"";
 var _226=col.hidden?"style=\"display:none;"+cs.s+"\"":(cs.s?"style=\""+cs.s+"\"":"");

@@ -155,6 +155,8 @@ var ebx = {
 	getType: function(Fields){ //数据类型判断函数，Fields：字段rs.Fields对象，返回针对类型处理后的值
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
+			case 200:
+				return('"' + v + '"'); //"文本"
 			case 202:
 				return('"' + v + '"'); //"文本"
 				break;
@@ -200,6 +202,9 @@ var ebx = {
 				break;
 			case 205:
 				return(ebx.convertRsToJson(ebx.convertBinToRs(v))); //"OLE对象" 处理数据库里嵌套的rs对象二级制存储数据
+				break;
+			default:
+				return('"' + v + '"'); //"其他"
 				break;
 		}
 	},
@@ -339,7 +344,10 @@ var ebx = {
 			Sort = ebx.dbx.getRs(),//排序对象
 			SortCount = 0,//排序序
 			GroupBy = 0,//聚合函数表示，0没有聚合函数，1有聚合函数
-			GroupByStr = '';//group by 生成文本
+			GroupByStr = '',//group by 生成文本
+			remoteorder = '',//客户端点击排序参数
+			remotesort = '';//客户端点击排序列
+			
 					
 		if(!rs.eof){
 			Title = rs('title').value;
@@ -350,22 +358,34 @@ var ebx = {
 		Sort.Fields.Append("SortOrder", 203, 1024);//定义排序序
 		Sort.Fields.Append("Sort", 203, 1024);//定义排序文本
 		Sort.Open();
-		
-		Columns.MoveFirst();
-		while(!Columns.eof){//字段排序处理，支持排序序
-			if(ebx.validInt(Columns('Sort').value) == 2){
-				Sort.Addnew();
-				Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
-				Sort('Sort') = '[' + Columns('Source').value + '] DESC';
+				
+		for(var i in ebx.stdin){//遍历获取客户端排序信息
+			if(i == 'order'){
+				remoteorder = ebx.stdin['order'];
+				remotesort = ebx.stdin['sort'];
 			}
-			if(ebx.validInt(Columns('Sort').value) == 1){
-				Sort.Addnew();
-				Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
-				Sort('Sort') = '[' + Columns('Source').value + ']';
-			}
-			Columns.MoveNext();
 		}
-
+		
+		if(remotesort){//客户端点击排序参数
+			Sort.Addnew();
+			Sort('SortOrder') = 1;
+			Sort('Sort') = '[' + remotesort + '] ' + remoteorder;
+		}else{
+			Columns.MoveFirst();
+			while(!Columns.eof){//字段排序处理，支持排序序
+				if(ebx.validInt(Columns('Sort').value) == 2){
+					Sort.Addnew();
+					Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
+					Sort('Sort') = '[' + Columns('Source').value + '] DESC';
+				}
+				if(ebx.validInt(Columns('Sort').value) == 1){
+					Sort.Addnew();
+					Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
+					Sort('Sort') = '[' + Columns('Source').value + ']';
+				}
+				Columns.MoveNext();
+			}
+		}
 		s += 'SELECT ';
 
 		while(!Wizard['Columns'].eof){//字段加载，支持聚合函数处理

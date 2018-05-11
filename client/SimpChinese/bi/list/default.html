@@ -24,9 +24,9 @@
 			
 			ebx.biedit = function(rowIndex, rowData){//打开编辑layout面板函数，参数点击行带入 2018-4-22 zz
 				var e,
-					id = rowData?rowData.id:'',
+					id = rowData?rowData.ID:'',
 					index = rowIndex,
-					eastwidth = Paramet.eastwidth!='undefined'?Paramet.eastwidth:400,//获取菜单中编辑面板的宽度参数，默认400
+					eastwidth = Paramet.eastwidth!='undefined'?Paramet.eastwidth:400,//获取菜单中编辑面板的宽度参数，默认400，-1打开新tabs
 					setEast = function(){
 						layout.layout('add',{//添加新的layout
 							region: 'east',
@@ -47,12 +47,24 @@
 				}else{
 					e = Paramet.edit;//如果有edit参数，赋值参数编辑地址
 				}
-				
-				ebx.EditStatusMessager(tabs.panel('options').editstatus,Paramet.text,function(){
-					layout.layout('remove', 'east');//删除编辑layout
-					tabs.panel('options').editstatus = false;
-					setEast();
-				});
+				if(ebx.validInt(eastwidth) == -1){
+					var tabsid = 'tabs_'+ebx.RndNum(20)
+					ebx.center.tabs('add', {
+						id: tabsid,
+						title: ebx.unescapeEx(Paramet.text),
+						href: 'client/SimpChinese/' + e + '/?text='+Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + Paramet.mode +'&style=' + Paramet.style + '&template=' + Paramet.template,
+						//iconCls:node.iconCls,
+						selected: true,
+						closable:true
+					});
+					//$('#'+tabsid).css({padding:0});
+				}else{
+					ebx.EditStatusMessager(tabs.panel('options').editstatus,Paramet.text,function(){
+						layout.layout('remove', 'east');//删除编辑layout
+						tabs.panel('options').editstatus = false;
+						setEast();
+					});
+				}
 			};
 			
 		ExportExcelbox.menu({
@@ -76,8 +88,10 @@
 
 		$.ajax({
 			type: 'post', 
-			url: 'server/bi/style/?_=' + (new Date()).getTime(),
-			data: JSON.stringify(ebx.EscapeJson(Paramet)), //可选参数
+			//url: 'server/bi/style/?_=' + (new Date()).getTime(),
+			url: 'server/bi/style/',
+			data: {style:Paramet.style,_:(new Date()).getTime()},
+			//data: JSON.stringify(ebx.EscapeJson(Paramet)), //可选参数
 			//data:'{"style":"stock","obj":[{"c":"c","d":{"e":"e"}},{"f":"f"}]}',
 			dataType: "json",
 			success: function(result){
@@ -86,11 +100,10 @@
 					listdatagrid.datagrid({
 						view:scrollview,
 						pageSize:ebx.pagesize,
-						remoteSort:false,
+						remoteSort:true,
 						rownumbers:true,
 						singleSelect:true,
 						pagination:false,
-						border:false,
 						fit:false,
 						fitColumns:false,
 						striped:true,
@@ -102,7 +115,13 @@
 						checkOnSelect:false,
 						columns:columnsData,
 						height: '100%',
-						onClickRow: ebx.biedit
+						onClickRow: ebx.biedit,
+						border:result.bd[0].Border,
+						showFooter:result.bd[0].Footer,
+						showHeader:result.bd[0].Header,
+						onLoadSuccess:function(data){
+							//ebx.UnescapeJson(data);//数据加载完成后unscape中文字符
+						}
 					}).datagrid('renderformatterstyler');
 				}
 			}

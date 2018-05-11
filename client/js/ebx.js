@@ -110,17 +110,37 @@ var ebx = {
 			backcall();
 		}
 	},
+	escapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
+		if(str == null) return('');
+		
+		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
+		if(typeof(str) == 'string'){
+			return escape(str);
+		}else{
+			return(str);
+		}
+	},
+	unescapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
+		if(str == null) return('');
+		
+		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
+		if(typeof(str) == 'string'){
+			return unescape(str);
+		}else{
+			return(str);
+		}
+	},
 	UnescapeJson: function(s){//转码所有嵌套json中文的escape
 		if(typeof(s) == 'object'){
 			for(var i in s){
 				if(typeof(s[i]) == 'object'){
 					s[i] = this.UnescapeJson(s[i]);
 				}else{
-					s[i] = unescape(s[i]);
+					s[i] = ebx.unescapeEx(s[i]);
 				}
 			}
 		}else{
-			s = unescape(s)
+			s = ebx.unescapeEx(s)
 		}
 		return s
 	},
@@ -131,13 +151,13 @@ var ebx = {
 					s[i] = this.UnescapeJson(s[i]);
 				}else{
 					if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
-						s[i] = escape(s[i]);
+						s[i] = ebx.escapeEx(s[i]);
 					}
 				}
 			}
 		}else{
 			if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
-				s[i] = escape(s[i]);
+				s[i] = ebx.escapeEx(s[i]);
 			}
 		}
 		return s

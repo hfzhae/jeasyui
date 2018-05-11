@@ -1,0 +1,43 @@
+<script type="text/javascript">
+	easyloader.load([], function(){
+		var tabs = ebx.center.tabs('getSelected'),
+			tab = tabs.panel('options'),
+			layout = tabs.find('.layout'),
+			eastPanel = layout.layout('panel', 'east'),
+			storage = $('<div>').appendTo(eastPanel),
+			Paramet = ebx.getMenuParameter(tabs);
+			
+		storage.propertygrid({
+			url: 'server/'+Paramet.mode+'/load/?v=' + (new Date()).getTime(),
+			showGroup: true,
+			width:'100%',
+			height:'100%',
+			border:false,
+			showHeader: false,
+			//columns: mycolumns,
+			//editstatus: false,//编辑状态，true时将提醒是否要保存
+			onAfterEdit: function(){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
+				var check = 0,
+					checkData = storage.propertygrid('getData').rows;
+				for(var i in storage.checkData){
+					if(storage.checkData[i] != checkData[i].value){
+						check = 1;
+					}
+				}
+				if(check){
+					tab.editstatus = true;
+				}else{
+					tab.editstatus = false;
+				}
+			},
+			onLoadSuccess: function(){
+				var data = storage.propertygrid('getData').rows,
+					checkData = [];
+				for(var i in data){
+					checkData.push(data[i].value);
+				}
+				storage.checkData = checkData;
+			}
+		}).datagrid('renderformatterstyler', 'propertygrid');//启用显示式样回调函数
+	});
+</script>

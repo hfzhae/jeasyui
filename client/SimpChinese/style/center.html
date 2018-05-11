@@ -1,0 +1,72 @@
+<script type="text/javascript">
+	easyloader.load([], function(){
+		var tabs = ebx.center.tabs('getSelected'),
+			tab = tabs.panel('options'),
+			layout = tabs.find('.layout'),
+			centerPanel = layout.layout('panel', 'center'),
+			storage = $('<div>').appendTo(centerPanel),
+			Paramet = ebx.getMenuParameter(tabs);
+		
+		$.ajax({
+			type: 'post', 
+			url: 'server/bi/style/',
+			data: {style:'stylelist',_:(new Date()).getTime()},
+			dataType: "json",
+			success: function(result){
+				if(result){
+					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
+					storage.datagrid({
+						view:scrollview,
+						pageSize:ebx.pagesize,
+						remoteSort:false,
+						rownumbers:true,
+						singleSelect:true,
+						pagination:false,
+						border:false,
+						fit:false,
+						fitColumns:false,
+						striped:true,
+						url:'server/style/load/center/',
+						method:'post',
+						queryParams:{_:(new Date()).getTime(),id:Paramet.id},
+						multiSort:false,
+						checkOnSelect:false,
+						columns:columnsData,
+						height: '100%',
+						border:result.bd[0].Border,
+						showFooter:result.bd[0].Footer,
+						showHeader:result.bd[0].Header,
+						onLoadSuccess:function(data){
+							ebx.UnescapeJson(data);//数据加载完成后unscape中文字符
+							/*
+							var data = storage.datagrid('getData').rows,
+								checkData = [];
+							for(var i in data){
+								checkData.push(data[i].value);
+							}
+							storage.checkData = checkData;
+							*/
+						},
+						onAfterEdit: function(){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
+							/*
+							var check = 0,
+								checkData = storage.datagrid('getData').rows;
+							for(var i in storage.checkData){
+								if(storage.checkData[i] != checkData[i].value){
+									check = 1;
+								}
+							}
+							if(check){
+								tab.editstatus = true;
+							}else{
+								tab.editstatus = false;
+							}
+							*/
+							tab.editstatus = true;
+						}
+					}).datagrid('renderformatterstyler');//启用显示式样回调函数
+				}
+			}
+		});
+	});
+</script>

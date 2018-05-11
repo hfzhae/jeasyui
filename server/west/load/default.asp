@@ -22,7 +22,7 @@
 			{"text":"配置工具","children":[
 				{"id":1811,"text":"菜单","href":"public.html"},
 				{"id":1812,"text":"菜单组_","href":"public.html"},
-				{"id":1801,"text":"显示式样","mode":"style","style":"style","template":181,"href":"client/SimpChinese/bi/"},
+				{"id":1801,"text":"显示式样","mode":"style","style":"style","edit":"style","template":181,"href":"client/SimpChinese/bi/","eastwidth":-1},
 				{"id":1802,"text":"查询设计","href":"public.html"},
 				{"id":1811,"text":"权限设置","href":"public.html"},
 				{"id":1812,"text":"权限组设置_","href":"public.html"},

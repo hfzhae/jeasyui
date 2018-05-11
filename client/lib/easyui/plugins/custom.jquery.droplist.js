@@ -149,8 +149,6 @@ $.extend($.fn.combogrid.defaults, {
 			if(!style)return;
 			if(!template)return;
 
-			//$.getJSON(url, { v: (new Date()).getTime() }, function(data){				
-			//debugger;
 			$.ajax({
 				type: 'post', 
 				url: 'server/bi/style/',
@@ -174,27 +172,6 @@ $.extend($.fn.combogrid.defaults, {
 							}
 						}).datagrid('renderformatterstyler');
 						
-						/*
-						g.datagrid('loading');
-						
-						$.ajax({
-							type: 'post', 
-							url: 'server/bi/list/',
-							data:{template:template,_:(new Date()).getTime()},
-							dataType: "json",
-							success: function(data){
-								for(var i in data['rows']){
-									ops.oRows.push(data['rows'][i]);
-								}
-								g.datagrid('options').onLoadSuccess = function(){}//重置datagrid加载回调函数，以免文本框被清空
-								g.datagrid('loadData', {
-									total:data.rows.length,
-									rows:ebx.UnescapeJson(data.rows)
-								});
-								g.datagrid('loaded').datagrid('renderformatterstyler');
-							}
-						});
-						*/
 					}
 				}
 			});
