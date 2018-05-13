@@ -284,6 +284,13 @@
 .icon-Copy-large{
 	background:url('icon32/Copy.png') no-repeat center center;
 }
+.icon-trash_full{
+	background:url('icon32/trash_full.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-trash_full-large{
+	background:url('icon32/trash_full.png') no-repeat center center;
+}
 
 /*新增图标end*/
 

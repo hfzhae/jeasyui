@@ -45,6 +45,13 @@ $.extend($.fn.datagrid.methods,{
 	}
 });
 
+$.extend($.fn.datagrid.defaults, {
+	onLoadSuccess: function(data){
+		ebx.UnescapeJson(data);
+		var columns = $(this).datagrid('options').columns;
+	}
+});
+
 function _setRender(r, v, n){//renter返回值处理
 	if(v == null)return ''; 
 	if(r){

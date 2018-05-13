@@ -50,16 +50,23 @@
 						title:'行操作',
 						tools:[{
 							name:'copy',
-							text:'新增行',
+							text:'新行',
 							iconCls:'icon-file-large',
 							iconAlign:'top',
 							size:'large'
 						},{
-							name:'paste',
-							text:'删除行',
-							iconCls:'icon-DeclineInvitation-large',
-							iconAlign:'top',
-							size:'large'
+							type:'toolbar',
+							dir:'v',
+							tools:[{
+								name:'paste',
+								text:'删行',
+								disabled: true,
+								iconCls:'icon-DeclineInvitation'
+							},{
+								name:'empty',
+								text:'清空',
+								iconCls:'icon-trash_full'
+							}]
 						}]
 					},{
 						title:'内容',
@@ -68,13 +75,30 @@
 							text:'粘贴',
 							iconCls:'icon-Paste-large',
 							iconAlign:'top',
+							disabled: true,
 							size:'large'
 						},{
-							name:'copy',
-							text:'复制',
-							iconCls:'icon-Copy-large',
-							iconAlign:'top',
-							size:'large'
+							type:'toolbar',
+							dir:'v',
+							tools:[{
+								name:'copy',
+								text:'复制',
+								iconCls:'icon-Copy'
+							},{
+								name:'ImportExcel',
+								text:'导出',
+								iconCls:'icon-ImportExcel'
+							},{
+								type:'splitbutton',
+								name:'ExportExcel',
+								text:'导入',
+								iconCls:'icon-ExportExcel',
+								menuItems:[{
+									name:'FileSaveAsExcelXlsx',
+									text: '下载模板',
+									iconCls:'icon-FileSaveAsExcelXlsx'
+								}]
+							}]
 						}]
 					},{
 						title:'安全',

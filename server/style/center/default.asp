@@ -1,7 +1,6 @@
 <!--# include virtual="server/public.asp" -->
 <%
 (function(){
-	
 	if(!ebx.stdin['id']){ 
 		ebx.stdout = [{}];
 		return;

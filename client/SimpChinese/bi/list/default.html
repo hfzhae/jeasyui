@@ -47,7 +47,7 @@
 				}else{
 					e = Paramet.edit;//如果有edit参数，赋值参数编辑地址
 				}
-				if(ebx.validInt(eastwidth) == -1){
+				if(ebx.validInt(eastwidth) == -1){//在新tabs中打开页面
 					var tabsid = 'tabs_'+ebx.RndNum(20)
 					ebx.center.tabs('add', {
 						id: tabsid,
@@ -118,10 +118,7 @@
 						onClickRow: ebx.biedit,
 						border:result.bd[0].Border,
 						showFooter:result.bd[0].Footer,
-						showHeader:result.bd[0].Header,
-						onLoadSuccess:function(data){
-							//ebx.UnescapeJson(data);//数据加载完成后unscape中文字符
-						}
+						showHeader:result.bd[0].Header
 					}).datagrid('renderformatterstyler');
 				}
 			}

@@ -8,7 +8,9 @@
 			Paramet = ebx.getMenuParameter(tabs);
 			
 		storage.propertygrid({
-			url: 'server/'+Paramet.mode+'/load/?v=' + (new Date()).getTime(),
+			url: 'server/'+Paramet.mode+'/load/',
+			method:'post',
+			queryParams:{_:(new Date()).getTime(),id:Paramet.id},
 			showGroup: true,
 			width:'100%',
 			height:'100%',
