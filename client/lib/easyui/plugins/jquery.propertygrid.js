@@ -176,9 +176,9 @@ _35();
 var _36=[];
 for(var i=0;i<_32.length;i++){
 var row=_32[i];
-var _37=_38(row[_34.groupField]);
+var _37=_38(unescape(row[_34.groupField]));//添加分组的unescape解码 2018-5-14 zz
 if(!_37){
-_37={value:row[_34.groupField],rows:[row]};
+_37={value:unescape(row[_34.groupField]),rows:[row]};//添加分组的unescape解码 2018-5-14 zz
 _36.push(_37);
 }else{
 _37.rows.push(row);

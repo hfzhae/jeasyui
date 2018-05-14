@@ -71,8 +71,8 @@ var ebx = {
 				if(tabspanel[i].panel('options').editstatus)editstatus = true;
 			}
 			if(editstatus){
-			　　var e = window.event||e;  
-			　　e.returnValue=("有数据没有保存，确定离开当前页面吗？");
+				var e = window.event||e;  
+				e.returnValue=("有数据没有保存，确定离开当前页面吗？");
 			}
 		}
  	},
@@ -116,6 +116,7 @@ var ebx = {
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
 			return escape(str);
+			//return str;
 		}else{
 			return(str);
 		}
@@ -126,6 +127,7 @@ var ebx = {
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
 			return unescape(str);
+			//return str;
 		}else{
 			return(str);
 		}
@@ -150,15 +152,15 @@ var ebx = {
 				if(typeof(s[i]) == 'object'){
 					s[i] = this.UnescapeJson(s[i]);
 				}else{
-					if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
+					//if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
 						s[i] = ebx.escapeEx(s[i]);
-					}
+					//}
 				}
 			}
 		}else{
-			if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
+			//if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
 				s[i] = ebx.escapeEx(s[i]);
-			}
+			//}
 		}
 		return s
 	},

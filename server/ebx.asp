@@ -214,6 +214,8 @@ var ebx = {
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
 			return escape(str);
+			//return ebx.GB2312ToUTF8(str);
+			//return str;
 		}else{
 			return(str);
 		}
@@ -224,9 +226,22 @@ var ebx = {
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
 			return unescape(str);
+			//return str;
 		}else{
 			return(str);
 		}
+	},
+	GB2312ToUTF8: function (OutStr){//用Adodb.Stream转码gb2312-utf8，存在问题，转码彻底
+		var Stream = Server.CreateObject("Adodb.Stream")
+		Stream.Charset = 'UTF-8'
+		Stream.Mode = 3
+		Stream.Open()
+		Stream.Type = 2
+		Stream.Position = 0
+		Stream.WriteText(OutStr)
+		Stream.Position = 0
+		Stream.Charset = 'GB2312'
+		return Stream.ReadText;
 	},
 	UnescapeJson: function(s){//转码所有嵌套json中文的escape
 		if(typeof(s) == 'object'){
@@ -275,7 +290,7 @@ var ebx = {
 	convertRsToBin: function(rs){ //rs对象转换成二进制流
 		if(rs == null) return(null);
 		if(typeof(rs) == 'object') return(null);
-		if(rs.recordcount = 0) return(null);
+		if(rs.RecordCount == 0) return(null);
 		
 		var stm = Server.CreateObject("adodb.stream");
 		stm.type = 1;
@@ -303,7 +318,7 @@ var ebx = {
 				arrtype = 0;//设置json数组类型，1=[],0={}
 				switch(typeof(d[i])){
 					case 'string':
-						s += '"'+ i +'":"' + d[i] +'",';
+						s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
 						break;
 					case 'object':
 						if(d[i].RecordCount == undefined){

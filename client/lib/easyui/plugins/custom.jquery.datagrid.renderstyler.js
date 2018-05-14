@@ -9,9 +9,13 @@ dev by zz on 2018/4/24
 *****************************************************************/
 
 $.extend($.fn.datagrid.methods,{
-	renderformatterstyler: function(d, t){
+	renderformatterstyler: function(d){
 		var columns = d.datagrid('options').columns;
-		if(t == 'propertygrid'){//针对propertygrid控件的处理
+		if(d.parent().parent().parent().hasClass('propertygrid')){//针对propertygrid控件的处理
+			columns[0][0].formatter = function(value, rowData, rowIndex) {//设置返回值
+				var v = _setRender(rowData.render, value, rowIndex);
+				return v;
+			}
 			columns[0][1].formatter = function(value, rowData, rowIndex) {//设置返回值
 				var v = _setRender(rowData.render, value, rowIndex);
 				return v;
@@ -42,13 +46,6 @@ $.extend($.fn.datagrid.methods,{
 				}
 			}
 		}
-	}
-});
-
-$.extend($.fn.datagrid.defaults, {
-	onLoadSuccess: function(data){
-		ebx.UnescapeJson(data);
-		var columns = $(this).datagrid('options').columns;
 	}
 });
 

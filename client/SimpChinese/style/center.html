@@ -35,35 +35,7 @@
 						height: '100%',
 						border:result.bd[0].Border,
 						showFooter:result.bd[0].Footer,
-						showHeader:result.bd[0].Header,
-						/*
-						onLoadSuccess:function(data){
-							ebx.UnescapeJson(data);//数据加载完成后unscape中文字符
-							var data = storage.datagrid('getData').rows,
-								checkData = [];
-							for(var i in data){
-								checkData.push(data[i].value);
-							}
-							storage.checkData = checkData;
-						},
-						*/
-						onAfterEdit: function(){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
-							/*
-							var check = 0,
-								checkData = storage.datagrid('getData').rows;
-							for(var i in storage.checkData){
-								if(storage.checkData[i] != checkData[i].value){
-									check = 1;
-								}
-							}
-							if(check){
-								tab.editstatus = true;
-							}else{
-								tab.editstatus = false;
-							}
-							*/
-							tab.editstatus = true;
-						}
+						showHeader:result.bd[0].Header
 					}).datagrid('renderformatterstyler');//启用显示式样回调函数
 				}
 			}
