@@ -126,13 +126,22 @@
 		
 		
 		centerpanel.find('button[name=ImportExcelbtn]').on('click', function(){//点击导出按钮
+			var btn = $(this);
+			btn.linkbutton('options').disabled = true;
+			var find = escape(centerpanel.find('input[name=list_searchinput]').val()),
+				Parametdata = {template:Paramet.template,_:(new Date()).getTime(),exportdata:1};
+			if(find.length > 0){
+				Parametdata.find = find;
+			}
+
 			$.ajax({
 				type: 'post', 
 				url: 'server/bi/list/',
-				data: {template:Paramet.template,_:(new Date()).getTime(),exportdata:1},
+				data: Parametdata,
 				dataType: "json",
 				success: function(result){
 					if(result){
+						btn.linkbutton('options').disabled = false;
 						ebx.clipboardData(columnsData, result)
 					}
 				}

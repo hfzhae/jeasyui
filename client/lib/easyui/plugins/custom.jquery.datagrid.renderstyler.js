@@ -12,11 +12,11 @@ $.extend($.fn.datagrid.methods,{
 	renderformatterstyler: function(d){
 		var columns = d.datagrid('options').columns;
 		if(d.parent().parent().parent().hasClass('propertygrid')){//针对propertygrid控件的处理
-			columns[0][0].formatter = function(value, rowData, rowIndex) {//设置返回值
-				var v = _setRender(rowData.render, value, rowIndex);
+			columns[0][0].formatter = function(value, rowData, rowIndex) {//标题字段
+				var v = ebx.UnescapeJson(value);
 				return v;
 			}
-			columns[0][1].formatter = function(value, rowData, rowIndex) {//设置返回值
+			columns[0][1].formatter = function(value, rowData, rowIndex) {//设置值字段返回值
 				var v = _setRender(rowData.render, value, rowIndex);
 				return v;
 			}

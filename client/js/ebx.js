@@ -192,20 +192,27 @@ var ebx = {
 		
 		var s = "",
 			centererpanelwindow = $('<div style="text-align:center;padding:5px;"><p>成功读取：'+ data.total +' 条数据。</p></div>').appendTo($('body')),
-			copybtn = $('<div name="copybtn">').appendTo(centererpanelwindow);
+			copybtn = $('<div name="copybtn">').appendTo(centererpanelwindow),
+			nullfield = 0;//内容字段丢失判断，0则补齐tab
 		
 		for(var i in columns[0]){//表头文字
 			s += ebx.unescapeEx(columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '	';
 		}
 		s = s.substr(0, s.length - 1);
 		s += '\n';
+
 		for(var i in data.rows){//内容文字
 			for(var j in columns[0]){//按表头顺序加载
 				for(var k in data.rows[i]){
 					if(columns[0][j].field == k){
 						s += ebx.unescapeEx(data.rows[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '	';
+						nullfield = 1
 					}
 				}
+				if(!nullfield){
+					s += '	';
+				}
+				nullfield = 0;
 			}
 			s = s.substr(0, s.length - 1);
 			s += '\n';
@@ -216,7 +223,7 @@ var ebx = {
 			iconCls: 'icon-Copy-large'
 		})
 		.addClass('l-btn-large')
-		//.addClass('l-btn-plain')
+		.addClass('l-btn-plain')
 		.find('.l-btn-left')
 		.removeClass('l-btn-icon-left')
 		.addClass('l-btn-icon-top');
