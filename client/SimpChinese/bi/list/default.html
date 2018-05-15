@@ -7,7 +7,7 @@
 	<input name="list_searchinput" class="easyui-textbox" data-options="width:120">
 	<button name="list_searchbutton" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ZoomClassic_custom'">搜索</button>
 	<span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
-	<button class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ImportExcel'">导出</button>
+	<button name="ImportExcelbtn" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ImportExcel'">导出</button>
 	<div name="ExportExcel"></div>
 	<span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
 	<div name="new"></div>
@@ -71,19 +71,19 @@
 			width:100
 		}).menu('appendItem', {
 			text: '下载模板',
-			iconCls:'icon-FileSaveAsExcelXlsx'
+			iconCls: 'icon-FileSaveAsExcelXlsx'
 		});
 		
 		centerpanel.find('div[name=ExportExcel]').splitbutton({
 			iconCls: 'icon-ExportExcel',
-			text:'导入',
+			text: '导入',
 			menu: ExportExcelbox
 		});
 		
 		centerpanel.find('div[name=new]').linkbutton({
-			text:'新建',
-			iconCls:'icon-file',
-			onClick:ebx.biedit
+			text: '新建',
+			iconCls: 'icon-file',
+			onClick: ebx.biedit
 		}).addClass('l-btn-plain');
 
 		$.ajax({
@@ -122,6 +122,21 @@
 					}).datagrid('renderformatterstyler');
 				}
 			}
+		});
+		
+		
+		centerpanel.find('button[name=ImportExcelbtn]').on('click', function(){//点击导出按钮
+			$.ajax({
+				type: 'post', 
+				url: 'server/bi/list/',
+				data: {template:Paramet.template,_:(new Date()).getTime(),exportdata:1},
+				dataType: "json",
+				success: function(result){
+					if(result){
+						ebx.clipboardData(columnsData, result)
+					}
+				}
+			});
 		});
 		
 		centerpanel.find('button[name=list_searchbutton]').on('click', function(){//点击搜索按钮

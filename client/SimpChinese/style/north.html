@@ -87,7 +87,11 @@
 							},{
 								name:'ImportExcel',
 								text:'导出',
-								iconCls:'icon-ImportExcel'
+								iconCls:'icon-ImportExcel',
+								onClick:function(){
+									var centerPanel = layout.layout('panel', 'center');
+									ebx.clipboardData(centerPanel.find('.datagrid-f').datagrid('options').columns, centerPanel.find('.datagrid-f').datagrid('getData'))
+								}
 							},{
 								type:'splitbutton',
 								name:'ExportExcel',
