@@ -156,6 +156,12 @@ $.extend($.fn.datagrid.methods, {
 								firstindex++
 							}
 							setTimeout(function(){
+								var datacount = thisGrid.datagrid('getData').total;
+								if(firstindex >= datacount){//如果最后一行最后一个字段，回车后自动新增一行
+									thisGrid.datagrid('insertRow',{
+										row: {}
+									});
+								}
 								thisGrid.datagrid('editkeyboard', {index:firstindex,field:nextfield});
 							},0);
 							break;
