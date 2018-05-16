@@ -2,12 +2,13 @@
 <%
 (function(){
 	var id = ebx.validInt(ebx.stdin['id']),
-		sql = "select title,[type],FieldStyle,HeaderStyle,FooterStyle,Border,Header,Footer,Height,Width from bdStyle where id=" + id,
+		sql = "select id,title,[type],FieldStyle,HeaderStyle,FooterStyle,Border,Header,Footer,Height,Width from bdStyle where id=" + id,
 		rs = ebx.dbx.open(sql, 1, 1),
 		data = [],
-		title = '', type = '', FieldStyle = '', HeaderStyle = '', FooterStyle = '', Border = 0, Header = 0, Footer = 0, Height = '', Width = '';
+		id = 0, title = '', type = '', FieldStyle = '', HeaderStyle = '', FooterStyle = '', Border = 0, Header = 0, Footer = 0, Height = '', Width = '';
 	
 	if(!rs.eof){
+		id = rs('id').value
 		title = rs('title').value;
 		type = rs('type').value;
 		FieldStyle = rs('FieldStyle').value;
@@ -20,10 +21,11 @@
 		Width = rs('Width').value;
 	}
 	
-	data = {"total":10,"rows":[
+	data = {"total":11,"rows":[
+		{"name":"ID","value":id,"group":"必填信息","field":"id"},
 		{"name":"名称","value":title,"group":"必填信息","editor":"text","field":"title"},
 		{"name":"类型","value":type,"group":"其他","editor":"text","field":"type"},
-		{"name":"单元格样式_","value":FieldStyle,"group":"其他","editor":"text","field":"FieldStyle"},
+		{"name":"单元格样式","value":FieldStyle,"group":"其他","editor":"text","field":"FieldStyle"},
 		{"name":"表头样式","value":HeaderStyle,"group":"其他","editor":"text","field":"HeaderStyle"},
 		{"name":"表尾样式","value":FooterStyle,"group":"其他","editor":"text","field":"FooterStyle"},
 		{"name":"边框","value":Border,"group":"其他","editor":"text","field":"Border","render":"boolRender"},

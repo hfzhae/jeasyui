@@ -16,9 +16,9 @@
 				if(result){
 					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
 					storage.datagrid({
-						view:scrollview,
-						pageSize:ebx.pagesize,
-						remoteSort:false,
+						//view:scrollview,//行操作存在bug，不能使用
+						//pageSize:ebx.pagesize,
+						//remoteSort:false,
 						rownumbers:true,
 						singleSelect:true,
 						pagination:false,

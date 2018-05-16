@@ -29,6 +29,9 @@
 					mopts.timer = setTimeout(function(){
 						opts.onClick.call(target, item.name, m[0]);
 					},0);
+					if(item.onClick){
+						item.onClick(this, item); //调用自定义onClick事件 2018-5-16 zz
+					}
 				}
 			}
 		});

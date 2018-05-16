@@ -23,7 +23,30 @@
 								name:'saveas',
 								text:'另存为',
 								iconCls:'icon-FileSaveAs'
-							}]
+							}],
+							onClick: function(){
+								var bdlist = ebx.convertDicToJson(layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData')),
+									bd = ebx.convertDicToJson(layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData')),
+									parameter = {bd: bd, bdlist: bdlist, _: (new Date()).getTime()};
+									
+									$.ajax({
+										type: 'post', 
+										url: 'server/' + Paramet.mode + '/save/',
+										data: parameter,
+										dataType: "json",
+										success: function(result){
+											console.log(result);
+											$.messager.show({
+												title: '提示',
+												msg: '保存成功！',
+												timeout: 3000,
+												showType: 'slide'
+											});	
+											layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', result.bdlist);
+											layout.layout('panel', 'east').find('.propertygrid-f').propertygrid('loadData', result.bd);
+										}
+									});
+							}
 						},{
 							type:'toolbar',
 							dir:'v',
@@ -53,37 +76,112 @@
 							text:'新行',
 							iconCls:'icon-file-large',
 							iconAlign:'top',
-							size:'large'
+							size:'large',
+							onClick:function(){
+								var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f');
+								listdatagrid.datagrid('insertRow',{row: {}});
+							}
 						},{
 							type:'toolbar',
 							dir:'v',
 							tools:[{
-								name:'paste',
+								name:'deleterow',
 								text:'删行',
-								disabled: true,
-								iconCls:'icon-DeclineInvitation'
+								//disabled: true,
+								iconCls:'icon-DeclineInvitation',
+								onClick:function(){
+									var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
+										index = listdatagrid.datagrid('getRowIndex', listdatagrid.datagrid('getSelected'));
+									if(index < 0){
+										$.messager.show({
+											title: '提示',
+											msg: '请先选中一行。',
+											timeout: 3000,
+											showType: 'slide'
+										});									
+										return;
+									}
+									listdatagrid.datagrid('deleteRow', index);
+									if(index >= listdatagrid.datagrid('getData').total && index > 0) index--;
+									listdatagrid.datagrid('selectRow', index);
+									tab.editstatus = true;
+								}
 							},{
 								name:'empty',
 								text:'清空',
-								iconCls:'icon-trash_full'
+								iconCls:'icon-trash_full',
+								onClick:function(){
+									var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
+										total = listdatagrid.datagrid('getData').total;
+									listdatagrid.datagrid('loadData', { total: 0, rows: [] });  
+									tab.editstatus = true;
+								}
 							}]
 						}]
 					},{
 						title:'内容',
 						tools:[{
+							type:'splitbutton',
 							name:'paste',
 							text:'粘贴',
 							iconCls:'icon-Paste-large',
 							iconAlign:'top',
-							disabled: true,
-							size:'large'
+							disabled: ebx.copyData?false:true,
+							size:'large',
+							onClick:function(){
+								$(this).linkbutton('disable');
+								var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
+									data = listdatagrid.datagrid('getData');
+								
+								if(ebx.copyData){
+									for(var i in ebx.copyData){
+										data.rows.push(ebx.copyData[i]);
+									}
+								}
+								data.total += ebx.copyData.length;
+								listdatagrid.datagrid('loadData', data); 
+								
+								tab.editstatus = true;
+								$(this).linkbutton('enable');
+							},
+							menuItems:[{
+								name:'delcopyData',
+								text:'清除内容',
+								iconCls:'icon-Delete',
+								onClick: function(){
+									ebx.copyData = null;
+									northPanel.find('.icon-Paste-large').parent().parent().linkbutton('disable');
+									$.messager.show({
+										title: '提示',
+										msg: '复制的内容已经被清空。',
+										timeout: 3000,
+										showType: 'slide'
+									});	
+								}
+							}]
 						},{
 							type:'toolbar',
 							dir:'v',
 							tools:[{
 								name:'copy',
 								text:'复制',
-								iconCls:'icon-Copy'
+								iconCls:'icon-Copy',
+								onClick:function(){
+									var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
+										data = listdatagrid.datagrid('getData');
+										
+									ebx.copyData = [];
+									for(var i in data.rows){
+										ebx.copyData.push(data.rows[i]);
+									}
+									$.messager.show({
+										title: '提示',
+										msg: '成功复制了：' + data.total + ' 行记录。',
+										timeout: 3000,
+										showType: 'slide'
+									});	
+									northPanel.find('.icon-Paste-large').parent().parent().linkbutton('enable');
+								}
 							},{
 								name:'ImportExcel',
 								text:'导出',

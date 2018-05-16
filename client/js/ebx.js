@@ -154,7 +154,7 @@ var ebx = {
 		if(typeof(s) == 'object'){
 			for(var i in s){
 				if(typeof(s[i]) == 'object'){
-					s[i] = this.UnescapeJson(s[i]);
+					s[i] = this.EscapeJson(s[i]);
 				}else{
 					//if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
 						s[i] = ebx.escapeEx(s[i]);
@@ -182,6 +182,53 @@ var ebx = {
 			return ((def==undefined)?0:def);
 		}else{
 			return n;
+		}
+	},
+	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
+		if(typeof(d) != 'object') return('{}');
+		var s = '', arrtype;
+		for(var i in d){
+			var n = Number(i);//通过是否数字格式判断是否是数组，如果是数字，代表是数组，文本用[]包含，否则代表是字典，文本用{}包含
+			if (!isNaN(n)){
+				arrtype = 1;//设置json数组类型，1=[],0={}
+				if(d[i].RecordCount == undefined){
+					s += ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
+				}else{
+					s += ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
+				}
+			}else{
+				arrtype = 0;//设置json数组类型，1=[],0={}
+				switch(typeof(d[i])){
+					case 'string':
+						s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
+						break;
+					case 'object':
+						if(d[i].RecordCount == undefined){
+							s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
+						}else{
+							s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
+						}
+						break;
+					case 'number':
+						s += '"'+ i +'":' + d[i] +',';
+						break;
+					case 'boolean':
+						s += '"'+ i +'":' + d[i] +',';
+						break;
+					case 'function':
+						s += '"'+ i +'":"' + d[i] +'",';
+						break;
+					case undefined:
+						s += ',';
+						break;
+				}
+			}
+		}
+		s = s.substr(0, s.length - 1);
+		if(arrtype){
+			return('[' + s + ']');
+		}else{
+			return('{' + s + '}');
 		}
 	},
 	clipboardData: function (columns, data){//复制到剪贴板方法，参数：columns：表头对象，data：数据内容，包含total和rows 2018-5-15 zz

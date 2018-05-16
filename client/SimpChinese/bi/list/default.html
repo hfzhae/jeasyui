@@ -127,7 +127,8 @@
 		
 		centerpanel.find('button[name=ImportExcelbtn]').on('click', function(){//点击导出按钮
 			var btn = $(this);
-			btn.linkbutton('options').disabled = true;
+			if(btn.linkbutton('options').disabled == true) return;
+			btn.linkbutton('disable');
 			var find = escape(centerpanel.find('input[name=list_searchinput]').val()),
 				Parametdata = {template:Paramet.template,_:(new Date()).getTime(),exportdata:1};
 			if(find.length > 0){
@@ -141,7 +142,7 @@
 				dataType: "json",
 				success: function(result){
 					if(result){
-						btn.linkbutton('options').disabled = false;
+						btn.linkbutton('enable');
 						ebx.clipboardData(columnsData, result)
 					}
 				}

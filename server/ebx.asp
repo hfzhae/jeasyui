@@ -152,6 +152,44 @@ var ebx = {
 		}
 		return('[' + s + ']');
 	},
+	convertJsonToRs: function (d){//json对象转换成rs，number类型由于不确定内容，所以用文本类型创建 2018-5-16 zz
+		var rs = ebx.dbx.getRs();
+		if(typeof(d) != 'object')return(rs);
+		if(!d.total)return(rs);
+		for(var i in d.rows[0]){
+			switch(typeof(d.rows[0][i])){
+				case 'string':
+					rs.Fields.Append(i, 203, -1);
+					break;
+				case 'object':
+					rs.Fields.Append(i, 205);
+					break;
+				case 'number':
+					rs.Fields.Append(i, 203, -1);//数字类型无法确定其他行的内容，所以按文本类型创建
+					//rs.Fields.Append(i, 6);
+					break;
+				case 'boolean':
+					rs.Fields.Append(i, 11);
+					break;
+				case 'function':
+					rs.Fields.Append(i, 205);
+					break;
+				case undefined:
+					rs.Fields.Append(i, 203);
+					break;
+			}
+		}
+		rs.open();
+		for(var i in d.rows){
+			rs.AddNew()
+			var fields = rs.Fields;
+			for(var j = 0; j < fields.Count; j++){
+				rs(fields(j).name) = d.rows[i][fields(j).name];
+			}
+		}
+		rs.Update();
+		return rs;
+	},
 	getType: function(Fields){ //数据类型判断函数，Fields：字段rs.Fields对象，返回针对类型处理后的值
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
@@ -509,7 +547,7 @@ var ebx = {
 			if(typeof(strSQL) == 'string'){
 				if(strSQL.length > 0){
 					if(typeof(iCur) != 'number')iCur = 3;
-					if(typeof(iLock) != 'number')iLock = 16;
+					if(typeof(iLock) != 'number')iLock = 3;
 					rs.open(strSQL, ebx.conn, iCur, iLock);
 				}
 			}
