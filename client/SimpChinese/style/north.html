@@ -25,27 +25,34 @@
 								iconCls:'icon-FileSaveAs'
 							}],
 							onClick: function(){
-								var bdlist = ebx.convertDicToJson(layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData')),
-									bd = ebx.convertDicToJson(layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData')),
-									parameter = {bd: bd, bdlist: bdlist, _: (new Date()).getTime()};
+								var saveBtn = $(this);
+								
+								saveBtn.linkbutton('disable');
+								
+								var bdlist = layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData'),
+									bd = layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
+									bdliststr =  ebx.convertDicToJson(bdlist),
+									bdstr = ebx.convertDicToJson(bd),
+									parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime()};
 									
-									$.ajax({
-										type: 'post', 
-										url: 'server/' + Paramet.mode + '/save/',
-										data: parameter,
-										dataType: "json",
-										success: function(result){
-											console.log(result);
-											$.messager.show({
-												title: '提示',
-												msg: '保存成功！',
-												timeout: 3000,
-												showType: 'slide'
-											});	
-											layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', result.bdlist);
-											layout.layout('panel', 'east').find('.propertygrid-f').propertygrid('loadData', result.bd);
-										}
-									});
+								$.ajax({
+									type: 'post', 
+									url: 'server/' + Paramet.mode + '/save/',
+									data: parameter,
+									dataType: "json",
+									success: function(result){
+										//console.log(result);
+										$.messager.show({
+											title: '提示',
+											msg: '保存成功！',
+											timeout: 3000,
+											showType: 'slide'
+										});	
+										//layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', result.bdlist);
+										//layout.layout('panel', 'east').find('.propertygrid-f').propertygrid('loadData', result.bd);
+										saveBtn.linkbutton('enable');
+									}
+								});
 							}
 						},{
 							type:'toolbar',
@@ -79,7 +86,11 @@
 							size:'large',
 							onClick:function(){
 								var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f');
-								listdatagrid.datagrid('insertRow',{row: {}});
+								listdatagrid.datagrid('appendRow',{});
+								listdatagrid.datagrid('scrollTo', listdatagrid.datagrid('getData').total - 1);//滚动到新增的行
+								listdatagrid.datagrid('editkeyboard', {index: listdatagrid.datagrid('getData').total - 1, field: listdatagrid.datagrid('options').columns[0][0].field}); //自动触发编辑第一个字段
+								tab.editstatus = true;
+								//listdatagrid.datagrid('reload');
 							}
 						},{
 							type:'toolbar',
@@ -91,7 +102,8 @@
 								iconCls:'icon-DeclineInvitation',
 								onClick:function(){
 									var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
-										index = listdatagrid.datagrid('getRowIndex', listdatagrid.datagrid('getSelected'));
+										index = listdatagrid.datagrid('getRowIndex', listdatagrid.datagrid('getSelected')),
+										total = listdatagrid.datagrid('getData').total;
 									if(index < 0){
 										$.messager.show({
 											title: '提示',
@@ -102,8 +114,12 @@
 										return;
 									}
 									listdatagrid.datagrid('deleteRow', index);
-									if(index >= listdatagrid.datagrid('getData').total && index > 0) index--;
-									listdatagrid.datagrid('selectRow', index);
+									if(index >= total && index > 0) index--;
+									if(total == 1 && index == 0){
+										listdatagrid.datagrid('load', { total: 0, rows: [] }); 
+									}else{
+										listdatagrid.datagrid('selectRow', index);
+									}
 									tab.editstatus = true;
 								}
 							},{
@@ -113,7 +129,7 @@
 								onClick:function(){
 									var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
 										total = listdatagrid.datagrid('getData').total;
-									listdatagrid.datagrid('loadData', { total: 0, rows: [] });  
+									listdatagrid.datagrid('load', { total: 0, rows: [] }); 
 									tab.editstatus = true;
 								}
 							}]
@@ -129,66 +145,43 @@
 							disabled: ebx.copyData?false:true,
 							size:'large',
 							onClick:function(){
-								$(this).linkbutton('disable');
-								var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
-									data = listdatagrid.datagrid('getData');
-								
-								if(ebx.copyData){
-									for(var i in ebx.copyData){
-										data.rows.push(ebx.copyData[i]);
-									}
-								}
-								data.total += ebx.copyData.length;
-								listdatagrid.datagrid('loadData', data); 
-								
-								tab.editstatus = true;
-								$(this).linkbutton('enable');
+								ebx.paste(layout.layout('panel', 'center').find('.datagrid-f'), tab)
 							},
 							menuItems:[{
-								name:'delcopyData',
+								name:'reomvecopyData',
 								text:'清除内容',
 								iconCls:'icon-Delete',
 								onClick: function(){
-									ebx.copyData = null;
-									northPanel.find('.icon-Paste-large').parent().parent().linkbutton('disable');
-									$.messager.show({
-										title: '提示',
-										msg: '复制的内容已经被清空。',
-										timeout: 3000,
-										showType: 'slide'
-									});	
+									ebx.reomvecopyData();
 								}
 							}]
+						},{
+							name:'copy',
+							text:'复制',
+							iconCls:'icon-Copy-large',
+							size:'large',
+							iconAlign:'top',
+							onClick:function(){
+								ebx.copy(layout.layout('panel', 'center').find('.datagrid-f'));
+							}
 						},{
 							type:'toolbar',
 							dir:'v',
 							tools:[{
-								name:'copy',
-								text:'复制',
-								iconCls:'icon-Copy',
+								name:'cut',
+								text:'剪切',
+								iconCls:'icon-edit-cut',
 								onClick:function(){
-									var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
-										data = listdatagrid.datagrid('getData');
-										
-									ebx.copyData = [];
-									for(var i in data.rows){
-										ebx.copyData.push(data.rows[i]);
-									}
-									$.messager.show({
-										title: '提示',
-										msg: '成功复制了：' + data.total + ' 行记录。',
-										timeout: 3000,
-										showType: 'slide'
-									});	
-									northPanel.find('.icon-Paste-large').parent().parent().linkbutton('enable');
+									ebx.cut(layout.layout('panel', 'center').find('.datagrid-f'));
 								}
 							},{
 								name:'ImportExcel',
 								text:'导出',
 								iconCls:'icon-ImportExcel',
 								onClick:function(){
-									var centerPanel = layout.layout('panel', 'center');
-									ebx.clipboardData(centerPanel.find('.datagrid-f').datagrid('options').columns, centerPanel.find('.datagrid-f').datagrid('getData'))
+									var columns = layout.layout('panel', 'center').find('.datagrid-f').datagrid('options').columns,
+										data =  layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData');
+									ebx.clipboardData(columns, data);
 								}
 							},{
 								type:'splitbutton',
@@ -197,9 +190,22 @@
 								iconCls:'icon-ExportExcel',
 								menuItems:[{
 									name:'FileSaveAsExcelXlsx',
-									text: '下载模板',
-									iconCls:'icon-FileSaveAsExcelXlsx'
-								}]
+									text: '导入模板',
+									iconCls:'icon-FileSaveAsExcelXlsx',
+									onclick:function(){
+										var columns = layout.layout('panel', 'center').find('.datagrid-f').datagrid('options').columns;
+										ebx.importTemplate(columns, Paramet.text);
+									}
+								}],
+								onClick: function(){
+									ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
+									ebx.importExcel.fileinput.change(function(){
+										ebx.importExcel.datagridObj = layout.layout('panel', 'center').find('.datagrid-f');
+										ebx.importExcel.tabObj = tab;
+										ebx.importExcel.getFile(this);
+									});
+									ebx.importExcel.fileinput.trigger("click");
+								}
 							}]
 						}]
 					},{

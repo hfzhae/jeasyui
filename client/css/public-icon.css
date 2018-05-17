@@ -291,6 +291,15 @@
 .icon-trash_full-large{
 	background:url('icon32/trash_full.png') no-repeat center center;
 }
+.icon-edit-cut{
+	background:url('icon32/edit-cut.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-edit-cut-large{
+	background:url('icon32/edit-cut.png') no-repeat center center;
+	background-size:32px 32px;
+}
+
 
 /*新增图标end*/
 

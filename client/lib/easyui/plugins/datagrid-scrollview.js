@@ -569,19 +569,33 @@ var scrollview = $.extend({}, $.fn.datagrid.defaults.view, {
 	// 		data.firstRows.splice(index, 0, row);
 	// 	}
 	// },
+	validInt: function (i, def){//整形格式化 2018-5-17 zz
+		var n = parseInt(i);
+		if (isNaN(n)){
+			return ((def==undefined)?0:def);
+		}else{
+			return n;
+		}
+	},
 	insertRow: function(target, index, row){
 		var state = $.data(target, 'datagrid');
 		var opts = state.options;
 		var data = state.data;
 
 		var total = $(target).datagrid('getData').total;
+
 		if (index == null){index = total;}
 		if (index > total){index = total;}
-		if (data.firstRows && index <= data.firstRows.length){
+
+		if (data.firstRows && index <= this.validInt(data.firstRows.length)){//对data.firstRows.length进行整形格式处理 2018-5-17 zz
+			if(data.firstRows.length == undefined){//判断firstRows是否是undefined，如果是重新将rows的属性赋值给firstRows 2018-5-17 zz
+				data.firstRows = this.r1.concat(this.r2);
+			}
 			data.firstRows.splice(index, 0, row);
+			
 		}
 		data.total++;
-
+		
 		var rows = this.r1.concat(this.r2);
 		if (index < this.index){
 			this.reload.call(this, target);

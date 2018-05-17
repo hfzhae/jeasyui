@@ -3,11 +3,9 @@
 (function(){
 	var bd = ebx.convertJsonToRs(eval('(' + ebx.stdin['bd'] + ')')),
 		bdlist = ebx.convertJsonToRs(eval('(' + ebx.stdin['bdlist'] + ')'));
-	
-	ebx.stdout['bd'] = {total: bd.RecordCount, rows: bd};
-	ebx.stdout['bdlist'] = {total: bdlist.RecordCount, rows: bdlist};
-	
-	
+		
+	//ebx.stdout['bd'] = {total: bd.RecordCount, rows: bd};
+	//ebx.stdout['bdlist'] = {total: bdlist.RecordCount, rows: bdlist};
 	
 	function fnSave(){
 		

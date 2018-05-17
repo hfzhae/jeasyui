@@ -2,7 +2,7 @@
 <%
 (function(){
 	if(!ebx.stdin['id']){ 
-		ebx.stdout = [{}];
+		ebx.stdout = {total:0, rows:[]};
 		return;
 	}
 	

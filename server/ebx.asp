@@ -180,11 +180,18 @@ var ebx = {
 			}
 		}
 		rs.open();
-		for(var i in d.rows){
+
+		if(d.firstRows){//判断是否有分页，如果有分页，获取全部数据对象；
+			var rows = d.firstRows;
+		}else{
+			var rows = d.rows;
+		}
+
+		for(var i in rows){
 			rs.AddNew()
 			var fields = rs.Fields;
 			for(var j = 0; j < fields.Count; j++){
-				rs(fields(j).name) = d.rows[i][fields(j).name];
+				rs(fields(j).name) = rows[i][fields(j).name];
 			}
 		}
 		rs.Update();
