@@ -416,6 +416,7 @@ var ebx = {
 		datagridObj: null,//回调用datagrid表格对象
 		tabObj: null,//回调用修改标记的tabs对象
 		fileinput: null,//上传用的file类型input控件
+		btnObj: null,//导出按钮控件，用于解除禁用
 		getFile: function (obj) {//读取excel文件函数，使用了xlsx.full.min.js（异步加载），参数：obj：file的input对象，fnback回掉函数，回掉函数参数data，返回excel内容，空内容无字段 2018-5-17 zz
 			easyloader.load(['xlsx'], function(){//异步加载xlsx.full.min.js
 				if(!obj.files) {
@@ -516,9 +517,12 @@ var ebx = {
 				timeout: 3000,
 				showType: 'slide'
 			});	
+			ebx.importExcel.btnObj.linkbutton('enable');
+			
 			ebx.importExcel.fileinput.remove();
 			ebx.importExcel.datagridObj = null;
 			ebx.importExcel.tabObj = null;
+			ebx.importExcel.btnObj = null;
 		}
 	}
 };

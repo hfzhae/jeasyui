@@ -198,10 +198,14 @@
 									}
 								}],
 								onClick: function(){
+									var ExportBtn = $(this);
+									
 									ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
 									ebx.importExcel.fileinput.change(function(){
+										ExportBtn.linkbutton('disable');
 										ebx.importExcel.datagridObj = layout.layout('panel', 'center').find('.datagrid-f');
 										ebx.importExcel.tabObj = tab;
+										ebx.importExcel.btnObj = ExportBtn;
 										ebx.importExcel.getFile(this);
 									});
 									ebx.importExcel.fileinput.trigger("click");
