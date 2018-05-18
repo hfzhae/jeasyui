@@ -6,7 +6,7 @@ var ebx = {
 	multitabs:0,//同一菜单链接多tabs打开支持，1为支持
 	decimal:2,//小数位数，默认2
 	pagesize: 128,//datagrid分页行数
-	importFileMaxSize: 1*1024,//导入文件大小控制
+	importFileMaxSize: 1024,//导入文件大小控制，单位K
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -242,34 +242,13 @@ var ebx = {
 			if(ebx.validInt(data.total) <= 0)return;
 			
 			var s = "",
-				centererpanelwindow = $('<div style="text-align:center;padding:5px;"><p>成功读取：'+ data.total +' 条数据。</p></div>').appendTo($('body')),
-				copybtn = $('<div name="copybtn">').appendTo(centererpanelwindow),
+				centererpanelwindow = $('<div style="text-align:center;padding:5px;"><p>正在读取...</p></div>').appendTo($('body')),
+				copybtn = $('<div id="copybtndiv" data-clipboard-target="#bar">').appendTo(centererpanelwindow),
+				copyInput = $('<textarea id="bar" style="position:absolute;top:-500px;">').appendTo(centererpanelwindow),
 				nullfield = 0;//内容字段丢失判断，0则补齐tab
 			
-			for(var i in columns[0]){//表头文字
-				s += ebx.unescapeEx(columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '	';
-			}
-			s = s.substr(0, s.length - 1);
-			s += '\n';
 			
 			var allData = data.firstRows?data.firstRows:data.rows;
-			
-			for(var i in allData){//内容文字
-				for(var j in columns[0]){//按表头顺序加载
-					for(var k in allData[i]){
-						if(columns[0][j].field == k){
-							s += ebx.unescapeEx(allData[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '	';
-							nullfield = 1
-						}
-					}
-					if(!nullfield){
-						s += '	';
-					}
-					nullfield = 0;
-				}
-				s = s.substr(0, s.length - 1);
-				s += '\n';
-			}
 			
 			copybtn.linkbutton({
 				text:'复制到剪贴板',
@@ -280,7 +259,7 @@ var ebx = {
 			.find('.l-btn-left')
 			.removeClass('l-btn-icon-left')
 			.addClass('l-btn-icon-top');
-			
+						
 			centererpanelwindow.window({
 				width:250,
 				height:160,
@@ -295,12 +274,8 @@ var ebx = {
 				resizable:false,
 				shadow:false
 			});
-									
-			var clipboard = new Clipboard('div[name=copybtn]', {  
-				text: function() {
-					return s;
-				}
-			});
+			
+			var clipboard = new Clipboard('#copybtndiv');
 			
 			clipboard.on('success', function(e) {  
 				centererpanelwindow.window('close');
@@ -316,12 +291,40 @@ var ebx = {
 				});
 			});  
 		  
-			clipboard.on('error', function(e) {  
+			clipboard.on('error', function(e) {
+				console.log(clipboard);
 				centererpanelwindow.window('close');
 				centererpanelwindow.remove();
 				clipboard.destroy();
 				allData = null;
 			}); 
+			
+			for(var i in columns[0]){//表头文字
+				s += ebx.unescapeEx(columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
+			}
+			s = s.substr(0, s.length - 1);
+			s += '\n';
+
+			for(var i in allData){//内容文字
+				for(var j in columns[0]){//按表头顺序加载
+					for(var k in allData[i]){
+						if(columns[0][j].field == k){
+							s += ebx.unescapeEx(allData[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
+							nullfield = 1
+						}
+					}
+					if(!nullfield){
+						s += '\t';
+					}
+					nullfield = 0;
+				}
+				//s = s.substr(0, s.length - 1);//效率太低，禁用了
+				s += '\r';
+			}
+			setTimeout(function(){
+				copyInput.val(s);
+				centererpanelwindow.find('p').text('成功读取：'+ data.total +' 条数据。');
+			},0);
 		});
 	},
 	copy: function(datagrid){//页面拷贝数据，参数：datagrid：被拷贝的datagrid对象 2018-5-17 zz
@@ -425,12 +428,14 @@ var ebx = {
 
 				var suffix = obj.files[0].name.split(".")[1]
 				if(suffix != 'xls' && suffix !='xlsx'){
-					alert('导入的文件格式不正确!')
+					$.messager.alert('导入失败','导入的文件格式不正确！<br>只支持后缀为：.xls或.xlsx 的Excel文件。', 'error');
+					ebx.importExcel.btnObj.linkbutton('enable');
 					return
 				}
 				
 				if(obj.files[0].size/1024 > ebx.importFileMaxSize){
-					alert('导入的表格文件不能大于1M')
+					$.messager.alert('导入失败','导入的文件不能大于：' + ebx.bytesToSize(ebx.importFileMaxSize*1024) + ' 。<br>当前选择的文件大小为：' + ebx.bytesToSize(obj.files[0].size) + '。', 'error');
+					ebx.importExcel.btnObj.linkbutton('enable');
 					return
 				}
 				
@@ -524,7 +529,16 @@ var ebx = {
 			ebx.importExcel.tabObj = null;
 			ebx.importExcel.btnObj = null;
 		}
-	}
+	},
+	bytesToSize: function (bytes) {  //字节转换文本函数
+	　　if (bytes === 0) return '0 B';
+	　　var k = 1024;
+	　　sizes = ['B','KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+	　　i = Math.floor(Math.log(bytes) / Math.log(k))　　
+	　　//return (bytes / Math.pow(k, i)) + ' ' + sizes[i];
+	　　return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+	　　//toPrecision(3) 后面保留两位小数，如1.00GB  
+	} 
 };
 
 ebx.init();

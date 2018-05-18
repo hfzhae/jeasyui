@@ -142,9 +142,11 @@ var ebx = {
 			while(!rs.eof){
 				s += '{';
 				for(var i = 0; i < fields.Count; i++){
-					s += '"' + fields(i).name + '":' + ebx.getType(fields(i)) + ',';
+					var comma = ',';
+					if(i >= (fields.Count - 1)) comma = '';
+					s += '"' + fields(i).name + '":' + ebx.getType(fields(i)) + comma;
 				}
-				s = s.substr(0, s.length - 1);
+				//s = s.substr(0, s.length - 1);//效率太低，禁用了
 				s += '},';
 				rs.MoveNext();
 			}
@@ -152,10 +154,12 @@ var ebx = {
 		}
 		return('[' + s + ']');
 	},
-	convertJsonToRs: function (d){//json对象转换成rs，number类型由于不确定内容，所以用文本类型创建 2018-5-16 zz
+	convertJsonToRs: function (d){//json对象转换成rs，number类型由于其他行不确定内容，所以用文本类型创建，参数：d：json对象 2018-5-16 zz
 		var rs = ebx.dbx.getRs();
 		if(typeof(d) != 'object')return(rs);
+		
 		if(!d.total)return(rs);
+		
 		for(var i in d.rows[0]){
 			switch(typeof(d.rows[0][i])){
 				case 'string':
@@ -191,7 +195,26 @@ var ebx = {
 			rs.AddNew()
 			var fields = rs.Fields;
 			for(var j = 0; j < fields.Count; j++){
-				rs(fields(j).name) = rows[i][fields(j).name];
+				switch(typeof(rows[i][fields(j).name])){
+					case 'string':
+						rs(fields(j).name) = rows[i][fields(j).name];
+						break;
+					case 'object':
+						rs(fields(j).name) = ebx.convertRsToBin(convertJsonToRs(rows[i][fields(j).name]));//处理嵌套rs
+						break;
+					case 'number':
+						rs(fields(j).name) = ebx.validFloat(rows[i][fields(j).name]);
+						break;
+					case 'boolean':
+						rs(fields(j).name) = rows[i][fields(j).name];
+						break;
+					case 'function':
+						rs(fields(j).name) = rows[i][fields(j).name];
+						break;
+					case undefined:
+						rs(fields(j).name) = '';
+						break;
+				}
 			}
 		}
 		rs.Update();

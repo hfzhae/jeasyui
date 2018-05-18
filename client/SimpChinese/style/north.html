@@ -81,13 +81,14 @@
 						tools:[{
 							name:'copy',
 							text:'新行',
-							iconCls:'icon-file-large',
+							iconCls:'icon-CellsInsertDialog-large',
 							iconAlign:'top',
 							size:'large',
 							onClick:function(){
 								var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f');
 								listdatagrid.datagrid('appendRow',{});
 								listdatagrid.datagrid('scrollTo', listdatagrid.datagrid('getData').total - 1);//滚动到新增的行
+								listdatagrid.datagrid('selectRow', listdatagrid.datagrid('getData').total - 1);
 								listdatagrid.datagrid('editkeyboard', {index: listdatagrid.datagrid('getData').total - 1, field: listdatagrid.datagrid('options').columns[0][0].field}); //自动触发编辑第一个字段
 								tab.editstatus = true;
 								//listdatagrid.datagrid('reload');
@@ -99,11 +100,10 @@
 								name:'deleterow',
 								text:'删行',
 								//disabled: true,
-								iconCls:'icon-DeclineInvitation',
+								iconCls:'icon-CellsDelete',
 								onClick:function(){
 									var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
-										index = listdatagrid.datagrid('getRowIndex', listdatagrid.datagrid('getSelected')),
-										total = listdatagrid.datagrid('getData').total;
+										index = listdatagrid.datagrid('getRowIndex', listdatagrid.datagrid('getSelected'));
 									if(index < 0){
 										$.messager.show({
 											title: '提示',
@@ -114,18 +114,21 @@
 										return;
 									}
 									listdatagrid.datagrid('deleteRow', index);
-									if(index >= total && index > 0) index--;
-									if(total == 1 && index == 0){
+
+									if(index >= listdatagrid.datagrid('getData').total && index > 0) index--;
+									
+									if(listdatagrid.datagrid('getData').total == 1 && index == 0){
 										listdatagrid.datagrid('load', { total: 0, rows: [] }); 
 									}else{
 										listdatagrid.datagrid('selectRow', index);
 									}
+									
 									tab.editstatus = true;
 								}
 							},{
 								name:'empty',
 								text:'清空',
-								iconCls:'icon-trash_full',
+								iconCls:'icon-TableDelete',
 								onClick:function(){
 									var listdatagrid = layout.layout('panel', 'center').find('.datagrid-f'),
 										total = listdatagrid.datagrid('getData').total;

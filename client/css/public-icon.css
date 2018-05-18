@@ -299,6 +299,27 @@
 	background:url('icon32/edit-cut.png') no-repeat center center;
 	background-size:32px 32px;
 }
+.icon-CellsDelete{
+	background:url('icon32/CellsDelete.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-CellsDelete-large{
+	background:url('icon32/CellsDelete.png') no-repeat center center;
+}
+.icon-CellsInsertDialog{
+	background:url('icon32/CellsInsertDialog.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-CellsInsertDialog-large{
+	background:url('icon32/CellsInsertDialog.png') no-repeat center center;
+}
+.icon-TableDelete{
+	background:url('icon32/TableDelete.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-TableDelete-large{
+	background:url('icon32/TableDelete.png') no-repeat center center;
+}
 
 
 /*新增图标end*/
