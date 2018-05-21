@@ -22,7 +22,7 @@
 	}
 	
 	data = {"total":11,"rows":[
-		{"name":"ID","value":id,"group":"必填信息","field":"id"},
+		{"name":"ID","value":id,"group":"系统生成","field":"id"},
 		{"name":"名称","value":title,"group":"必填信息","editor":{"type":"validatebox", "options":{"required":true}},"field":"title","required":true},//validatebox的支持方法
 		{"name":"类型","value":type,"group":"其他","editor":"text","field":"type"},
 		{"name":"单元格样式","value":FieldStyle,"group":"其他","editor":"text","field":"FieldStyle"},
