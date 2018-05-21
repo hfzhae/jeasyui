@@ -35,6 +35,11 @@
 									bdstr = ebx.convertDicToJson(bd),
 									parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime()};
 									
+								if(!ebx.checkedBDvalidatebox(layout.layout('panel', 'east').find('.datagrid-f'))){//校验必填项
+									saveBtn.linkbutton('enable');
+									return;
+								}
+								
 								$.ajax({
 									type: 'post', 
 									url: 'server/' + Paramet.mode + '/save/',
@@ -48,8 +53,8 @@
 											timeout: 3000,
 											showType: 'slide'
 										});	
-										//layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', result.bdlist);
-										//layout.layout('panel', 'east').find('.propertygrid-f').propertygrid('loadData', result.bd);
+										layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', result.bdlist);
+										layout.layout('panel', 'east').find('.propertygrid-f').propertygrid('loadData', result.bd);
 										saveBtn.linkbutton('enable');
 									}
 								});
@@ -117,7 +122,7 @@
 
 									if(index >= listdatagrid.datagrid('getData').total && index > 0) index--;
 									
-									if(listdatagrid.datagrid('getData').total == 1 && index == 0){
+									if(listdatagrid.datagrid('getData').total == 0 || index < 0){
 										listdatagrid.datagrid('load', { total: 0, rows: [] }); 
 									}else{
 										listdatagrid.datagrid('selectRow', index);

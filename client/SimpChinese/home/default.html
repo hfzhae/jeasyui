@@ -62,41 +62,45 @@
 	}
 </style>
 <script>
-	$('#homeDiv').portal({
-		border:false,
-		fit:true
-	});
-	$('#p').progressbar({
-		value: 60
-	});
-	//add();
-	function add(){
-		for(var i=0; i<3; i++){
-			var p = $('<div/>').appendTo('body');
-			p.panel({
-				title:'Title'+i,
-				content:'<div style="padding:5px;">Content'+(i+1)+'</div>',
-				height:200,
-				closable:true,
-				collapsible:true
-			});
-			$('#homeDiv').portal('add', {
-				panel:p,
-				columnIndex:i
-			});
+$(function(){
+	easyloader.load(['portal', 'progressbar'], function(){
+		$('#homeDiv').portal({
+			border:false,
+			fit:true
+		});
+		$('#p').progressbar({
+			value: 60
+		});
+		//add();
+		function add(){
+			for(var i=0; i<3; i++){
+				var p = $('<div/>').appendTo('body');
+				p.panel({
+					title:'Title'+i,
+					content:'<div style="padding:5px;">Content'+(i+1)+'</div>',
+					height:200,
+					closable:true,
+					collapsible:true
+				});
+				$('#homeDiv').portal('add', {
+					panel:p,
+					columnIndex:i
+				});
+			}
+			$('#homeDiv').portal('resize');
 		}
-		$('#homeDiv').portal('resize');
-	}
-	function remove(){
-		$('#homeDiv').portal('remove',$('#pgrid'));
-		$('#homeDiv').portal('resize');
-	}
-	setTimeout(function(){
-		$('#homeDiv').portal('resize');
-	}, 200);
-	window.onresize = function() { 
+		function remove(){
+			$('#homeDiv').portal('remove',$('#pgrid'));
+			$('#homeDiv').portal('resize');
+		}
 		setTimeout(function(){
 			$('#homeDiv').portal('resize');
-		},200);
-	}
+		}, 200);
+		window.onresize = function() { 
+			setTimeout(function(){
+				$('#homeDiv').portal('resize');
+			},200);
+		}
+	});
+});
 </script>

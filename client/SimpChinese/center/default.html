@@ -1,22 +1,22 @@
 <script type="text/javascript">
-	$.extend($.fn.tabs.defaults, {//关闭tab时判断是否存在编辑未保存的页面对象的tabs扩展 2018-4-25 zz
-		onBeforeClose: function(title,index){
-			var target = this,
-				editstatus = $(target).tabs('getTab', index).panel('options').editstatus;
-			if(editstatus){
-				ebx.EditStatusMessager(editstatus,title,function(){
-					var opts = $(target).tabs('options');
-					var bc = opts.onBeforeClose;
-					opts.onBeforeClose = function(){};  // allowed to close now
-					$(target).tabs('close',index);
-					opts.onBeforeClose = bc;  // restore the event function
-				});
-				return false;	// prevent from closing
+	easyloader.load(['tabs'], function(){
+		$.extend($.fn.tabs.defaults, {//关闭tab时判断是否存在编辑未保存的页面对象的tabs扩展 2018-4-25 zz
+			onBeforeClose: function(title,index){
+				var target = this,
+					editstatus = $(target).tabs('getTab', index).panel('options').editstatus;
+				if(editstatus){
+					ebx.EditStatusMessager(editstatus,title,function(){
+						var opts = $(target).tabs('options');
+						var bc = opts.onBeforeClose;
+						opts.onBeforeClose = function(){};  // allowed to close now
+						$(target).tabs('close',index);
+						opts.onBeforeClose = bc;  // restore the event function
+					});
+					return false;	// prevent from closing
+				}
 			}
-		}
-	});
+		});
 
-	easyloader.load([], function(){
 		ebx.center = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'center'));
 		
 		ebx.center.tabs({

@@ -320,6 +320,13 @@
 .icon-TableDelete-large{
 	background:url('icon32/TableDelete.png') no-repeat center center;
 }
+.icon-CopyToPersonalTaskList{
+	background:url('icon32/TableDelete.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-CopyToPersonalTaskList-large{
+	background:url('icon32/CopyToPersonalTaskList.png') no-repeat center center;
+}
 
 
 /*新增图标end*/

@@ -6,7 +6,7 @@ var ebx = {
 	multitabs:0,//同一菜单链接多tabs打开支持，1为支持
 	decimal:2,//小数位数，默认2
 	pagesize: 128,//datagrid分页行数
-	importFileMaxSize: 1024,//导入文件大小控制，单位K
+	importFileMaxSize: 1024*5,//导入文件大小控制，单位K
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -14,14 +14,8 @@ var ebx = {
 		//easyloader.number = 100;
 		easyloader.load([
 			'parser',
-			'draggable', 
-			'layout', 
-			'portal', 
-			'tabs', 
-			'tree', 
-			'messager', 
-			'datebox',
-			'menubutton'
+			'layout',
+			'messager'
 		], function(){
 			ebx.bodylayout = $('<div>').appendTo($('body'));//定义全局layout
 			var bl = ebx.bodylayout
@@ -252,7 +246,8 @@ var ebx = {
 			
 			copybtn.linkbutton({
 				text:'复制到剪贴板',
-				iconCls: 'icon-Copy-large'
+				iconCls: 'icon-CopyToPersonalTaskList-large',
+				disabled: true
 			})
 			.addClass('l-btn-large')
 			.addClass('l-btn-plain')
@@ -270,7 +265,7 @@ var ebx = {
 				maximizable:false,
 				closable:true,
 				title:'导出',
-				draggable:false,
+				draggable:true,
 				resizable:false,
 				shadow:false
 			});
@@ -324,6 +319,7 @@ var ebx = {
 			setTimeout(function(){
 				copyInput.val(s);
 				centererpanelwindow.find('p').text('成功读取：'+ data.total +' 条数据。');
+				copybtn.linkbutton('enable');
 			},0);
 		});
 	},
@@ -428,20 +424,21 @@ var ebx = {
 
 				var suffix = obj.files[0].name.split(".")[1]
 				if(suffix != 'xls' && suffix !='xlsx'){
-					$.messager.alert('导入失败','导入的文件格式不正确！<br>只支持后缀为：.xls或.xlsx 的Excel文件。', 'error');
+					$.messager.alert('导入失败','导入的文件格式不正确！<br>只支持后缀为：.xls或.xlsx 的Excel文件。', 'warning');
 					ebx.importExcel.btnObj.linkbutton('enable');
 					return
 				}
 				
 				if(obj.files[0].size/1024 > ebx.importFileMaxSize){
-					$.messager.alert('导入失败','导入的文件不能大于：' + ebx.bytesToSize(ebx.importFileMaxSize*1024) + ' 。<br>当前选择的文件大小为：' + ebx.bytesToSize(obj.files[0].size) + '。', 'error');
+					$.messager.alert('导入失败','导入的文件不能大于：' + ebx.bytesToSize(ebx.importFileMaxSize*1024) + ' 。<br>当前选择的文件大小为：' + ebx.bytesToSize(obj.files[0].size) + '。', 'warning');
 					ebx.importExcel.btnObj.linkbutton('enable');
 					return
 				}
-				
-				var f = obj.files[0];
-				var reader = new FileReader();
-				var wb,rABS = false;
+
+				var f = obj.files[0],
+					reader = new FileReader(),
+					wb,
+					rABS = true;
 				
 				reader.onload = function(e) {
 					var data = e.target.result;
@@ -530,15 +527,39 @@ var ebx = {
 			ebx.importExcel.btnObj = null;
 		}
 	},
-	bytesToSize: function (bytes) {  //字节转换文本函数
+	bytesToSize: function (bytes) {  //字节数转换文本函数
 	　　if (bytes === 0) return '0 B';
 	　　var k = 1024;
 	　　sizes = ['B','KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 	　　i = Math.floor(Math.log(bytes) / Math.log(k))　　
-	　　//return (bytes / Math.pow(k, i)) + ' ' + sizes[i];
 	　　return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
-	　　//toPrecision(3) 后面保留两位小数，如1.00GB  
-	} 
+	},
+	checkedBDvalidatebox: function (datagrid){ //校验单据表头的必填项，参数：datagrid：需要校验的datagrid控件对象 2018-5-21 zz
+		var checked = [],
+			data = datagrid.datagrid('getData').rows;
+		for(var i in data){
+			if(data[i].required && data[i].value == ''){ //通过服务器端"required":true来确定必填项
+				datagrid.datagrid('beginEdit', i);
+				checked.push(data[i]);
+			}
+		}
+		
+		if(checked.length){
+			var checkedtext = '';
+			for(var i in checked){
+				checkedtext += checked[i].name + '，'
+			}
+			$.messager.show({
+				title: '提示',
+				msg: checkedtext + '不能为空。',
+				timeout: 3000,
+				showType: 'slide'
+			});	
+			return(false);
+		}else{
+			return(true);
+		}
+	}
 };
 
 ebx.init();
