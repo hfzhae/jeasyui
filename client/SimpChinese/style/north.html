@@ -34,12 +34,11 @@
 									bdliststr =  ebx.convertDicToJson(bdlist),
 									bdstr = ebx.convertDicToJson(bd),
 									parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime()};
-									
-								if(!ebx.checkedBDvalidatebox(layout.layout('panel', 'east').find('.datagrid-f'))){//校验必填项
+								
+								if(!ebx.checkedBDvalidatebox(layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
 									saveBtn.linkbutton('enable');
 									return;
 								}
-								
 								$.ajax({
 									type: 'post', 
 									url: 'server/' + Paramet.mode + '/save/',

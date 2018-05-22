@@ -271,7 +271,16 @@ $.extend($.fn.validatebox.defaults.rules, {
 			return checkValue.parent().prev('.combogrid-f').combo('getValue').length > 0;
 		},
 		message: '请从下拉框中选择<br><span style="color:#999;">按回车键搜索，上下键选择</span>'
-	}/*,
+	},
+	Number: {    
+		validator: function (value) {    
+			var reg =/^[0-9]*$/;    
+			return reg.test(value);    
+		},    
+		message: 'Please input number.'    
+	}
+	
+	/*
 	//验证汉字    
 	CHS: {    
 		validator: function (value) {    
@@ -296,13 +305,6 @@ $.extend($.fn.validatebox.defaults.rules, {
 		message: 'The zip code must be 6 digits and 0 began.'    
 	},    
 	//数字    
-	Number: {    
-		validator: function (value) {    
-			var reg =/^[0-9]*$/;    
-			return reg.test(value);    
-		},    
-		message: 'Please input number.'    
-	},    
 	 //非负整数  
 	Integer: {  
 		validator: function (value) {  

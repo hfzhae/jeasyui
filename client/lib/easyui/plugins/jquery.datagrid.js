@@ -1087,7 +1087,7 @@ _10e.footer=data.footer;
 if(!opts.remoteSort&&opts.sortName){
 var _10f=opts.sortName.split(",");
 var _110=opts.sortOrder.split(",");
-data.rows.sort(function(r1,r2){
+if(data.total>0)data.rows.sort(function(r1,r2){//增加判断，空数据时不执行排序操作 2018-5-22 zz
 var r=0;
 for(var i=0;i<_10f.length;i++){
 var sn=_10f[i];

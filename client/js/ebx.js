@@ -534,13 +534,25 @@ var ebx = {
 	　　i = Math.floor(Math.log(bytes) / Math.log(k))　　
 	　　return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 	},
-	checkedBDvalidatebox: function (datagrid){ //校验单据表头的必填项，参数：datagrid：需要校验的datagrid控件对象 2018-5-21 zz
+	checkedBDvalidatebox: function (datagrid){ //校验表格的validatebox，参数：datagrid：需要校验的datagrid控件对象 2018-5-21 zz
 		var checked = [],
 			data = datagrid.datagrid('getData').rows;
-		for(var i in data){
-			if(data[i].required && data[i].value == ''){ //通过服务器端"required":true来确定必填项
-				datagrid.datagrid('beginEdit', i);
-				checked.push(data[i]);
+		
+			for(var i in data){
+			datagrid.datagrid('beginEdit', i);
+			var editors = datagrid.datagrid('getEditors', i);
+			if(editors.length > 0){
+				for(var j in editors){
+					if(editors[j].type == 'validatebox'){//判断如果编辑器是validatebox类型，那么调用validatebox的isValid方法判断录入值的合法性
+						if(!editors[j].target.validatebox('isValid')){
+							checked.push(data[i]);
+						}else{
+							datagrid.datagrid('endEdit', i);
+						}
+					}else{
+						datagrid.datagrid('endEdit', i);
+					}
+				}
 			}
 		}
 		
@@ -551,7 +563,7 @@ var ebx = {
 			}
 			$.messager.show({
 				title: '提示',
-				msg: checkedtext + '不能为空。',
+				msg: checkedtext + '输入有误。',
 				timeout: 3000,
 				showType: 'slide'
 			});	
@@ -559,7 +571,37 @@ var ebx = {
 		}else{
 			return(true);
 		}
+	},
+	setDatagridEditor: {//设置datagrid的editor的编辑属性 2018-5-22 zz
+		validatebox: function (c, f, e, t){//编辑框校验设置，参数：c：datagrid的列对象，f：字段名称，e：校验类型，详见renderstyler插件，t：是否必填，true为必填
+			if(typeof(c) != 'object') return;
+			if(typeof(f) != 'string') return;
+			if(typeof(e) != 'string') return;
+			if(typeof(t) != 'boolean') t = false;;
+			for(var i in c){
+				for(var j in c[i]){
+					if(j == 'field' && c[i][j].toLowerCase() == f.toLowerCase()){
+						c[i]['editor'] = {"type":"validatebox", "options":{"required":t,"validType":e}};
+					}
+				}
+			}
+		},
+		editorType: function(c, f, t, o){//设置编辑类型，参数：c：datagrid的列对象，f：字段名称，t：编辑类型，o：编辑类型的options对象
+			if(typeof(c) != 'object') return;
+			if(typeof(f) != 'string') return;
+			if(typeof(t) != 'string') t = 'text';
+			if(typeof(o) != 'object') o = {};
+			
+			for(var i in c){
+				for(var j in c[i]){
+					if(j == 'field' && c[i][j].toLowerCase() == f.toLowerCase()){
+						c[i]['editor'] = {"type":t, "options":o};
+					}
+				}
+			}
+		}
 	}
+
 };
 
 ebx.init();
