@@ -23,27 +23,12 @@
 					//重造字段的editor的类型
 					ebx.setDatagridEditor.editorType(columnsData[0], 'Editable', 'checkbox', {on:'1',off:''});
 					ebx.setDatagridEditor.editorType(columnsData[0], 'Render', 'combobox', {
-						valueField:'label',    
-						textField:'value',
-						data: [{
-							label: 'boolrender',
-							value: 'boolrender'
-						},{
-							label: 'linenumberrender',
-							value: 'linenumberrender'
-						},{
-							label: 'currencyrender',
-							value: 'currencyrender'
-						},{
-							label: 'costcurrencyrender',
-							value: 'costcurrencyrender'
-						},{
-							label: 'daterender',
-							value: 'daterender'
-						}]   
+						valueField:'value',    
+						textField:'label',
+						panelHeight:'auto',
+						reversed:false,
+						data: ebx.Render.render  
 					});
-					
-					
 										
 					storage.datagrid({
 						view:scrollview,//行操作存在bug，不能使用

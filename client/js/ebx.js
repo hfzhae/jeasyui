@@ -15,7 +15,8 @@ var ebx = {
 		easyloader.load([
 			'parser',
 			'layout',
-			'messager'
+			'messager',
+			'customValidatebox'
 		], function(){
 			ebx.bodylayout = $('<div>').appendTo($('body'));//定义全局layout
 			var bl = ebx.bodylayout
@@ -72,6 +73,24 @@ var ebx = {
 		}
 		String.prototype.replaceAll = function(s1,s2){ 
 			return(this.replace(new RegExp(s1,"gm"),s2)); 
+		}
+		Date.prototype.Format = function (fmt) { //author: meizz 
+			var o = {
+				"M+": this.getMonth() + 1, //月份 
+				"d+": this.getDate(), //日 
+				"h+": this.getHours(), //小时 
+				"m+": this.getMinutes(), //分 
+				"s+": this.getSeconds(), //秒 
+				"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+				"S": this.getMilliseconds() //毫秒 
+			};
+			if (/(y+)/.test(fmt)) {
+				fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+			}
+			for (var k in o)
+				if (new RegExp("(" + k + ")").test(fmt)) 
+					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+			return fmt;
 		}
  	},
 	getThemes: function(){//获取主题函数
@@ -600,8 +619,108 @@ var ebx = {
 				}
 			}
 		}
+	},
+	Render: {//显示函数全局定义对象 2018-5-23 zz
+		render: [//显示函数内容对象
+			{
+				label: '布尔',
+				value: 'boolRender',
+				render: function(v, rowIndex){
+					if(v == '' || v == undefined || v == 'undefined' || v == null || v == 'null' || v == 0 || v == '0'){
+						return '';
+					}else{
+						value = '√';
+						return '√';
+					}
+				}
+			},{
+				label: '行序号',
+				value: 'linenumberRender',
+				render: function(v, rowIndex){
+					return rowIndex + 1;
+				}
+			},{
+				label: '隐藏列',
+				value: 'hiddenRender',
+				render: function(v, rowIndex){
+					return '';
+					//datagrid.datagrid('hideColumn', field.field);
+				}
+			},{
+				label: '金额',
+				value: 'currencyRender',
+				render: function(v, rowIndex){
+					v = ebx.validFloat(v, 0);
+					if(v == 0){
+						v = '';
+					}else{
+						v = v.toFixed(ebx.decimal);
+					}
+					return v;
+				}
+			},{
+				label: '成本金额',
+				value: 'costCurrencyRender',
+				render: function(v, rowIndex){
+					v = ebx.validFloat(v, 0);
+					if(v == 0){
+						v = '';
+					}else{
+						v = v.toFixed(ebx.decimal);
+					}
+					return v;
+				}
+			},{
+				label: '百分数',
+				value: 'percentRender',
+				render: function(v, rowIndex){
+					v = ebx.validFloat(v, 0);
+					if(v == 0){
+						v = '';
+					}else{
+						v = v * 100;
+						v = (v.toFixed(ebx.decimal)) + '%';
+					}
+					return v;
+				}
+			},{
+				label: '日期',
+				value: 'dateRender',
+				render: function(v, rowIndex){
+					return new Date(v).Format("yyyy-MM-dd");
+				}
+			},{
+				label: '无',
+				value: '',
+				render: function(v, rowIndex){
+					if(typeof(v) == 'string'){
+						v = ebx.UnescapeJson(v);
+					}
+					return v;
+				}
+			}
+		],
+		setRender: function(render, value, rowIndex){//设置datagrid回掉函数，参数：render：回掉函数名，value：值，rowIndex：datagrid中的行号
+			if(typeof(value) == 'string'){
+				value = ebx.UnescapeJson(value);
+			}
+			if(typeof(render) != 'string'){
+				return value;
+			};
+			if(typeof(rowIndex) != 'number') return;
+			
+			var f = 0;
+			for(var i in ebx.Render.render){
+				if(render.toLowerCase() == ebx.Render.render[i].value.toLowerCase()){
+					return ebx.Render.render[i].render(value, rowIndex);
+					f = 1;
+				}
+			}
+			if(!f){
+				return value;
+			}
+		}
 	}
-
 };
 
 ebx.init();

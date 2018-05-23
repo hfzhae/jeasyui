@@ -402,7 +402,7 @@ var ebx = {
 						s += '"'+ i +'":' + d[i] +',';
 						break;
 					case 'function':
-						s += '"'+ i +'":"' + d[i] +'",';
+						s += '"'+ i +'":' + d[i] +',';
 						break;
 					case undefined:
 						s += ',';
