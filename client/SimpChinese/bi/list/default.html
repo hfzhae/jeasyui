@@ -107,6 +107,7 @@
 						fit:false,
 						fitColumns:false,
 						striped:true,
+						nowrap:true,//禁用自动换行
 						url:'server/bi/list/',
 						method:'post',
 						queryParams:{template:Paramet.template,_:(new Date()).getTime()},
@@ -118,7 +119,11 @@
 						onClickRow: ebx.biedit,
 						border:result.bd[0].Border,
 						showFooter:result.bd[0].Footer,
-						showHeader:result.bd[0].Header
+						showHeader:result.bd[0].Header,
+						onLoadSuccess: function(data){//unescape所有文本数据
+							var dg = $(this);
+							dg.datagrid('fixRowHeight');
+						}
 					}).datagrid('renderformatterstyler');
 				}
 			}

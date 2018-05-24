@@ -220,6 +220,8 @@ $.extend($.fn.datagrid.defaults, {
 		opts.editIndex = index
 	},
 	onLoadSuccess: function(data){//unescape所有文本数据
+		var dg = $(this);
+		dg.datagrid('fixRowHeight');
 		ebx.UnescapeJson(data);
 	},
 	onAfterEdit: function(rowIndex, rowData, changes){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
