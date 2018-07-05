@@ -35,10 +35,10 @@
 									bdstr = ebx.convertDicToJson(bd),
 									parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime()};
 								
-								if(!ebx.checkedBDvalidatebox(layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
-									saveBtn.linkbutton('enable');
-									return;
-								}
+								//if(!ebx.checkedBDvalidatebox(layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
+								//	saveBtn.linkbutton('enable');
+								//	return;
+								//}
 								$.ajax({
 									type: 'post', 
 									url: 'server/' + Paramet.mode + '/save/',
@@ -46,15 +46,26 @@
 									dataType: "json",
 									success: function(result){
 										//console.log(result);
-										$.messager.show({
-											title: '提示',
-											msg: '保存成功！',
-											timeout: 3000,
-											showType: 'slide'
-										});	
-										layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', result.bdlist);
-										layout.layout('panel', 'east').find('.propertygrid-f').propertygrid('loadData', result.bd);
+										if(result.result){
+											$.messager.show({
+												title: '提示',
+												msg: '保存成功！',
+												timeout: 3000,
+												showType: 'slide'
+											});	
+											tab.editstatus = false;											
+											//layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', result.bdlist);
+											layout.layout('panel', 'east').find('.propertygrid-f').datagrid('loadData', result.bd);
+										}else{
+											$.messager.show({
+												title: '错误',
+												msg: '保存失败！' + ebx.unescapeEx(result.msg.message),
+												timeout: 5000,
+												showType: 'slide'
+											});	
+										}
 										saveBtn.linkbutton('enable');
+										
 									}
 								});
 							}
@@ -232,7 +243,7 @@
 					}]
 				}]
 			};
-			
+
 		biribbon.ribbon({
 			data:data,
 			width:'100%',
@@ -240,6 +251,5 @@
 			border: false,
 			plain:true
 		});
-
 	});
 </script>

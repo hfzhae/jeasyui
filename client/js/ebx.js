@@ -635,7 +635,7 @@ var ebx = {
 				}
 			},{
 				label: '行序号',
-				value: 'linenumberRender',
+				value: 'lineNumberRender',
 				render: function(v, rowIndex){
 					return rowIndex + 1;
 				}
