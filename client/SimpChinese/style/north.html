@@ -33,12 +33,24 @@
 									bd = layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
 									bdliststr =  ebx.convertDicToJson(bdlist),
 									bdstr = ebx.convertDicToJson(bd),
-									parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime()};
+									parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime(), id: Paramet.id};
+
+								if(bdlist.total == 0){
+									$.messager.show({
+										title: '错误',
+										msg: '表格不能为空！',
+										timeout: 3000,
+										showType: 'slide'
+									});	
+									saveBtn.linkbutton('enable');
+									return;
+								}
 								
-								//if(!ebx.checkedBDvalidatebox(layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
-								//	saveBtn.linkbutton('enable');
-								//	return;
-								//}
+								if(!ebx.checkedBDvalidatebox(layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
+									saveBtn.linkbutton('enable');
+									return;
+								}
+								
 								$.ajax({
 									type: 'post', 
 									url: 'server/' + Paramet.mode + '/save/',

@@ -23,8 +23,11 @@ var ebx = {
 					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			return fmt;
 		}
+		this.IDGen.init(0);
+		this.Accountid = 1;//读取账套ID，待处理。。。
 	},
-	conn: [], 
+	conn: [],
+	Accountid: 0,
 	stdin: new Array(),
 	stdout: new Array(),
 	parseToJson: function (json_data){//Json格式转对象
@@ -390,6 +393,12 @@ var ebx = {
 	},
 	OnPageEnd: function(Response){//页面结束处理函数
 		Response.Write(ebx.convertDicToJson(ebx.stdout));
+		ebx.CleanData();
+	},
+	CleanData: function(){//清除对象函数
+		ebx.conn.Close;
+		stdin = null;
+		stdout = null;
 	},
 	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
@@ -614,6 +623,222 @@ var ebx = {
 			page.iTotalLength = rs(0).value;
 			//if(page.iTotalLength-page.iStart-page.iLength<0)page.iLength = page.iTotalLength-page.iStart+1;
 			return(rs.NextRecordset());
+		}
+	},
+	IDGen: {//ID发生器对象 2018-7-6 zz
+		conn: Server.CreateObject('ADODB.Connection'),
+		Connstring: Application('DateBase.ConnectString'),
+		ConnActive: function(){
+			if(this.conn.State != 1){
+				this.conn.Open(this.Connstring);
+			}
+		},
+		ConnDisActive: function(){
+			this.conn.Close();
+		},
+		init:function(bForce){//初始化函数，参数：bForce：是否清空，非0则清空所有NPIDGen表数据，0则退出函数
+			this.ConnActive();
+			var v, sSQL, bUser
+			if(ebx.validInt(bForce) == 0){
+				sSQL = 'Select Count(*) from NPIDGen';
+				v = this.conn.Execute(sSQL);
+				if(v(0).value > 0){ 
+					return;
+				}
+				//this.conn.BeginTrans;
+			}else{
+				this.conn.BeginTrans();
+				sSQL = 'Delete from NPIDGen';
+				this.conn.Execute(sSQL, v)
+			}
+			
+			try{
+				sSQL = 'Select Distinct IGID as [TableID], [TableName] from BaseInfoType where InfoType>0';
+				this.SetIDGen(sSQL);
+
+				sSQL = 'Select Distinct IGID as [TableID], [TableName] from BillDocumentType where BillType>0';
+				this.SetIDGen(sSQL);
+				
+				/*
+				bUser = NetBOX.SysInfo("PROG_Info").length;//判断是否开发版
+				if(bUser > 0){
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9465 and MaxID <10000'); //查询设计biQueryWizard
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9466 and MaxID <10000'); //查询模板biQueryTemplate
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9467 and MaxID <10000'); //查询方案biQueryRender
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1420 and MaxID <10000'); //权限NPPrivileges
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1421 and MaxID <10000'); //权限组NPGroups
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1405 and MaxID <10000'); //显示式样bdStyle
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1408 and MaxID <10000'); //菜单bdStyleMenu
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1409 and MaxID <10000'); //菜单组bdStyleMenuGroup
+				}
+				*/
+				sSQL = 'Select Distinct IGID as [TableID], [TableName] from ResourceType';
+				this.SetAuditIDGen(sSQL);
+				this.conn.CommitTrans();
+			}catch(e){
+				this.conn.RollbackTrans;
+				ebx.stdout['result'] = 0;
+				ebx.stdout['msg'] = e;
+			}
+			this.ConnDisActive();
+		},
+		SetIDGen: function(sSQL){//写NPIDGen表，参数：sSQL：BaseInfoType表或BillDocumentType表的sql语句
+			var str, v, MaxID, rs;
+			
+			rs = Server.CreateObject('adodb.recordset');
+			rs.CursorLocation =3;
+			rs.Open(sSQL, this.conn, 0, 1, 1);
+			
+			while(!rs.eof){
+				str = 'Select Max(ID) as n from [' + rs('TableName').value + ']';
+				v = this.conn.Execute(str);
+				MaxID = ebx.validInt(v(0).value);
+				str = 'Insert Into [NPIDGen] ([TableID], [MaxID]) values(' + rs('TableID').value + ',' + MaxID + ')';
+				this.conn.Execute(str);
+				rs.MoveNext();
+			}
+			v = null;
+		},
+		SetAuditIDGen: function(sSQL){//写资源表的NPIDGen表，参数：sSQL：ResourceType表的sql语句
+			var str, v, MaxID, rs, vID, affectedRecords;
+			rs = ebx.dbx.getRs();
+			rs.Open(sSQL, this.conn, 0, 1, 1);
+			MaxID = 0;
+			while (!rs.eof){
+				str = 'Select Max(ID) as n, Max(AuditID) as m from [' + rs("TableName").value + ']';
+				v = this.conn.Execute(str);
+				vID = ebx.validInt(v(0).value);
+				str = 'Insert Into [NPIDGen] ([TableID], [MaxID]) values(' + rs("TableID").value + ',' + vID + ')'; 
+				try{
+					this.conn.Execute(str, affectedRecords);
+				}catch(e){
+					str = 'Update [NPIDGen] set [MaxID]=' + vID + ' where TableID=' + rs("TableID").value + ' and  MaxID<' + vID;
+					this.conn.Execute(str, affectedRecords);
+				}
+				vID = ebx.validInt(v(1).value);
+				if(vID >MaxID) MaxID =vID;
+				rs.MoveNext();
+			}
+			str = 'Insert Into [NPIDGen] ([TableID], [MaxID]) values(3, ' + MaxID + ')'; 
+			this.conn.Execute(str);
+			v = null;
+		},
+		CTIDGen: function(Obj_ID, Obj_Number){//id发生器函数，参数：Obj_ID：发生器编号，Obj_Number：递增长度，默认1
+			this.ConnActive();
+			
+			Obj_Number = ebx.validInt(Obj_Number, 1);
+
+			this.conn.BeginTrans();
+
+			try{
+				var v, sSQL, options, IDGen = 0, rs
+				
+				sSQL = 'Select TableID, MaxID from NPIDGen where [TableID]=' + Obj_ID;
+				rs = ebx.dbx.getRs();
+				rs.Open(sSQL, this.conn, 3, 3, 1);
+				
+				if(rs.eof){
+					rs.AddNew();
+					rs('TableID') = Obj_ID;
+					rs('MaxID') = Obj_Number;
+				}else{
+					Obj_Number += rs('MaxID').value;
+					rs('MaxID') = Obj_Number;
+				}
+				rs.Update();
+				rs = null;
+				IDGen = Obj_Number;
+				this.conn.CommitTrans();
+			}catch(e){
+				this.conn.RollbackTrans;
+				ebx.stdout['result'] = 0;
+				ebx.stdout['msg'] = e;
+			}
+			this.ConnDisActive();
+			
+			return IDGen;
+		}
+	},
+	saveBD: {//单据保存对象 2018-7-6 zz
+		ID:0,
+		ParentID:0,
+		bd:[],
+		bdlist:[],
+		TableName:'',
+		ModType:'',
+		init: function(TableName, ModType){//初始化对象，获取客户端发送得bd、bdlist、ID、ParentID、TableName、ModType参数
+			this.bd = ebx.convertJsonToRs(eval('(' + ebx.stdin['bd'] + ')')),
+			this.bdlist = ebx.convertJsonToRs(eval('(' + ebx.stdin['bdlist'] + ')')),
+			this.ID = ebx.validInt(ebx.stdin['id']),
+			this.ParentID = ebx.validInt(ebx.stdin['ParentID']);
+			this.TableName = ebx.sqlStringEncode(TableName);
+			this.ModType = ebx.validInt(ModType);
+		},
+		save: function(){
+			ebx.conn.begintrans
+			try{
+				this._saveBD();
+				ebx.conn.commitTrans;
+				ebx.stdout['result'] = 1;
+				ebx.stdout['bd'] = {total: this.bd.RecordCount, rows: this.bd};
+				ebx.stdout['bdlist'] = {total: this.bdlist.RecordCount, rows: this.bdlist};
+			}catch(e){
+				ebx.conn.RollbackTrans;
+				ebx.stdout['result'] = 0;
+				ebx.stdout['msg'] = e;
+			}
+			this.CleanData();
+		},
+		_saveBD: function(){
+			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
+				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2'),
+					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2');
+					
+				this.ID = ebx.IDGen.CTIDGen(this.ModType);
+				rsBD.AddNew();
+				rsBD('RootID') = this.ID;
+				rsBD('ParentID') = this.ParentID;
+				rsBD('CreateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
+				rsBD("BillType") = this.ModType;
+				rsBD("AccountID") = ebx.AccountID;
+				rsBD("IsDeleted") = 0
+			}else{
+				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where id=' + this.ID),
+					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2');
+			}
+			
+			this.bd.MoveFirst();
+			while(!this.bd.eof){
+				rsBD(this.bd("field").value) = this.bd("value").value
+				this.bd.MoveNext();
+			}
+			rsBD('ID') = this.ID;
+			rsBD('UpdateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
+			rsBD('UpdateCount') = ebx.validInt(rsBD('UpdateCount').value) + 1;
+			rsBD.Update();
+
+			ebx.dbx.open('delete bdstylelist where id=' + this.ID);
+			this.bdlist.MoveFirst();
+			while(!this.bdlist.eof){
+				rsBDList.AddNew();
+				var fields = this.bdlist.Fields,
+					fieldsName = '';
+				for(var i = 0; i < fields.Count; i++){
+					fieldsName = fields(i).name;
+					rsBDList(fieldsName) = this.bdlist(fieldsName).value
+				}
+				rsBDList('ID') = this.ID;
+				this.bdlist.MoveNext();
+			}
+			rsBDList.Update();
+		},
+		CleanData: function(){
+			this.ID = null;
+			this.ParentID = null;
+			this.bd = null;
+			this.bdlist = null;
+			this.TableName = null;
+			this.ModType = null;
 		}
 	}
 }
