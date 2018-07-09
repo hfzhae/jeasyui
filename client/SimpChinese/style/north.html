@@ -65,9 +65,12 @@
 												timeout: 3000,
 												showType: 'slide'
 											});	
-											tab.editstatus = false;											
-											//layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', result.bdlist);
-											layout.layout('panel', 'east').find('.propertygrid-f').datagrid('loadData', result.bd);
+											tab.editstatus = false;
+											var id = result.id;
+											//暂定回掉表明细
+											//layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
+											layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
+											
 										}else{
 											$.messager.show({
 												title: '错误',

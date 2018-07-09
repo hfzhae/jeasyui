@@ -780,8 +780,9 @@ var ebx = {
 				this._saveBD();
 				ebx.conn.commitTrans;
 				ebx.stdout['result'] = 1;
-				ebx.stdout['bd'] = {total: this.bd.RecordCount, rows: this.bd};
-				ebx.stdout['bdlist'] = {total: this.bdlist.RecordCount, rows: this.bdlist};
+				//ebx.stdout['bd'] = {total: this.bd.RecordCount, rows: this.bd};
+				//ebx.stdout['bdlist'] = {total: this.bdlist.RecordCount, rows: this.bdlist};
+				ebx.stdout['id'] = this.ID;
 			}catch(e){
 				ebx.conn.RollbackTrans;
 				ebx.stdout['result'] = 0;
@@ -810,6 +811,9 @@ var ebx = {
 			this.bd.MoveFirst();
 			while(!this.bd.eof){
 				rsBD(this.bd("field").value) = this.bd("value").value
+				if(this.bd("field").value == 'id'){
+					this.bd("value").value = this.ID;
+				}
 				this.bd.MoveNext();
 			}
 			rsBD('ID') = this.ID;
