@@ -78,10 +78,10 @@ $.extend($.fn.validatebox.defaults.rules, {//validatebox自定义校验
 	//英文字母|数字 
 	LetterInteger: {  
 		validator: function (value) {  
-			var reg = /^[a-zA-Z#][a-zA-Z0-9#]{1,30}$/;  
+			var reg = /^[a-zA-Z\.#][a-zA-Z0-9\.#]{1,30}$/;  
 			return reg.test(value);  
 		},  
-		message: '只能输入英文字母、数字或#；<br>必须以字母开头；<br>最少2个字符，最多30个字符。'  
+		message: '只能输入英文字母、数字、小数点或#；<br>必须以字母开头；<br>最少2个字符，最多30个字符。'  
 	},
 	//任何字符
 	String: {  

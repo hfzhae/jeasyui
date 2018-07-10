@@ -1,8 +1,8 @@
-<!--# include virtual="server/public.asp" -->
+<!-- #include file="../Common.asp" -->
 <%
 (function(){
 	var id = ebx.validInt(ebx.stdin['id']),
-		sql = "select id,title,[type],FieldStyle,HeaderStyle,FooterStyle,Border,Header,Footer,Height,Width from bdStyle where id=" + id,
+		sql = 'select id,title,[type],FieldStyle,HeaderStyle,FooterStyle,Border,Header,Footer,Height,Width from ' + TableName + ' where id=' + id,
 		rs = ebx.dbx.open(sql, 1, 1),
 		data = [],
 		id = 0, title = '', type = '', FieldStyle = '', HeaderStyle = '', FooterStyle = '', Border = 0, Header = 0, Footer = 0, Height = '', Width = '';

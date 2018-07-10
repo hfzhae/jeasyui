@@ -821,7 +821,7 @@ var ebx = {
 			rsBD('UpdateCount') = ebx.validInt(rsBD('UpdateCount').value) + 1;
 			rsBD.Update();
 
-			ebx.dbx.open('delete bdstylelist where id=' + this.ID);
+			ebx.dbx.open('delete ' + this.TableName + 'list where id=' + this.ID);
 			this.bdlist.MoveFirst();
 			while(!this.bdlist.eof){
 				rsBDList.AddNew();

@@ -1,60 +1,17 @@
 <script type="text/javascript">
-	easyloader.load([], function(){
-		var tabs = ebx.center.tabs('getSelected'),
-			tab = tabs.panel('options'),
-			layout = tabs.find('.layout'),
-			centerPanel = layout.layout('panel', 'center'),
-			storage = $('<div name="storage">').appendTo(centerPanel),
-			Paramet = ebx.getMenuParameter(tabs);
-		
-		$.ajax({
-			type: 'post', 
-			url: 'server/bi/style/',
-			data: {style:'stylelist',_:(new Date()).getTime()},
-			dataType: "json",
-			success: function(result){
-				if(result){
-					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
-					
-					//重造字段的editor的validatebox校验
-					ebx.setDatagridEditor.validatebox(columnsData[0], 'width', 'Number');
-					ebx.setDatagridEditor.validatebox(columnsData[0], 'SetHeaderText', 'String', true);
-					ebx.setDatagridEditor.validatebox(columnsData[0], 'field', 'LetterInteger', true);
-					//重造字段的editor的类型
-					ebx.setDatagridEditor.editorType(columnsData[0], 'Editable', 'checkbox', {on:'1',off:''});
-					ebx.setDatagridEditor.editorType(columnsData[0], 'Render', 'combobox', {
-						valueField:'value',    
-						textField:'label',
-						panelHeight:'auto',
-						reversed:false,
-						data: ebx.Render.render  
-					});
-										
-					storage.datagrid({
-						view:scrollview,//行操作存在bug，不能使用
-						pageSize:ebx.pagesize,
-						remoteSort:false,
-						rownumbers:true,
-						singleSelect:true,
-						pagination:false,
-						border:false,
-						fit:false,
-						fitColumns:false,
-						striped:true,
-						url:'server/style/center/',
-						nowrap:true,//禁用自动换行
-						method:'post',
-						queryParams:{_:(new Date()).getTime(),id:Paramet.id},
-						multiSort:false,
-						checkOnSelect:false,
-						columns:columnsData,
-						height: '100%',
-						border:result.bd[0].Border,
-						showFooter:result.bd[0].Footer,
-						showHeader:result.bd[0].Header
-					}).datagrid('renderformatterstyler');//启用显示式样回调函数
-				}
-			}
+	ebx.bd.init('center', function(c){
+		//重造字段的editor的validatebox校验
+		ebx.setDatagridEditor.validatebox(c[0], 'width', 'Number');
+		ebx.setDatagridEditor.validatebox(c[0], 'SetHeaderText', 'String', true);
+		ebx.setDatagridEditor.validatebox(c[0], 'field', 'LetterInteger', true);
+		//重造字段的editor的类型
+		ebx.setDatagridEditor.editorType(c[0], 'Editable', 'checkbox', {on:'1',off:''});
+		ebx.setDatagridEditor.editorType(c[0], 'Render', 'combobox', {
+			valueField:'value',    
+			textField:'label',
+			panelHeight:'auto',
+			reversed:false,
+			data: ebx.Render.render  
 		});
-	});
+	});		
 </script>
