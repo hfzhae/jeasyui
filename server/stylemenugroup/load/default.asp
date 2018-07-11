@@ -5,7 +5,7 @@
 		sql = 'select id,MenuGroupName,MenuGroupTitle from ' + TableName + ' where id=' + id,
 		rs = ebx.dbx.open(sql, 1, 1),
 		data = [],
-		id = 0, title = '', type = '', FieldStyle = '', HeaderStyle = '', FooterStyle = '', Border = 0, Header = 0, Footer = 0, Height = '', Width = '';
+		id = 0, title = '', type = '';
 	
 	if(!rs.eof){
 		id = rs('id').value

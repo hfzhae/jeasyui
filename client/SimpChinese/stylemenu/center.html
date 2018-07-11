@@ -1,0 +1,34 @@
+<script type="text/javascript">
+	easyloader.load([], function(){		
+		var bd = ebx.cloneObj(ebx.bd);
+		bd.init('center', function(c, s){
+			//重造字段的editor的validatebox校验
+			//ebx.setDatagridEditor.validatebox(c[0], 'MenuGroupTitle', 'String', true);
+			ebx.setDatagridEditor.validatebox(c[0], 'MenuGroupName', 'LetterInteger', true);
+			ebx.setDatagridEditor.editorType(c[0], 'MenuGroupName', 'combogrid', {
+				style:'StyleMenuGroup',
+				validType:'combogridValue',
+				required:true,
+				idField:'ID',
+				idField:'MenuGroupName',
+				rownumbers:true,
+				panelWidth:350,
+				template:183,
+				onSelect: function(record){
+					var selectrow = $(this).datagrid('getData').rows[record];
+					
+					setTimeout(function(){
+						s.datagrid('updateRow',{
+							index: s.datagrid('options').editIndex,
+							row: {
+								MenuGroupID: selectrow.ID,
+								MenuGroupName: selectrow.MenuGroupName,
+								MenuGroupTitle: selectrow.MenuGroupTitle
+							}
+						});
+					},0);
+				}
+			});
+		});
+	});
+</script>

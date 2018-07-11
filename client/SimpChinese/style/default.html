@@ -1,5 +1,6 @@
 <script type="text/javascript">
 	easyloader.load(['propertygrid', 'datagridkeyboard', 'datagridrenderstyler', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'ribbon', 'bd'], function(){
-		ebx.bd.init('default');		
+		var bd = ebx.cloneObj(ebx.bd);
+		bd.init('default');
 	});
 </script>

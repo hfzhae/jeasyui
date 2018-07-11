@@ -1,17 +1,20 @@
 <script type="text/javascript">
-	ebx.bd.init('center', function(c){
-		//重造字段的editor的validatebox校验
-		ebx.setDatagridEditor.validatebox(c[0], 'width', 'Number');
-		ebx.setDatagridEditor.validatebox(c[0], 'SetHeaderText', 'String', true);
-		ebx.setDatagridEditor.validatebox(c[0], 'field', 'LetterInteger', true);
-		//重造字段的editor的类型
-		ebx.setDatagridEditor.editorType(c[0], 'Editable', 'checkbox', {on:'1',off:''});
-		ebx.setDatagridEditor.editorType(c[0], 'Render', 'combobox', {
-			valueField:'value',    
-			textField:'label',
-			panelHeight:'auto',
-			reversed:false,
-			data: ebx.Render.render  
-		});
-	});		
+	easyloader.load([], function(){		
+		var bd = ebx.cloneObj(ebx.bd);
+		bd.init('center', function(c){
+			//重造字段的editor的validatebox校验
+			ebx.setDatagridEditor.validatebox(c[0], 'width', 'Number');
+			ebx.setDatagridEditor.validatebox(c[0], 'SetHeaderText', 'String', true);
+			ebx.setDatagridEditor.validatebox(c[0], 'field', 'LetterInteger', true);
+			//重造字段的editor的类型
+			ebx.setDatagridEditor.editorType(c[0], 'Editable', 'checkbox', {on:'1',off:''});
+			ebx.setDatagridEditor.editorType(c[0], 'Render', 'combobox', {
+				valueField:'value',    
+				textField:'label',
+				panelHeight:'auto',
+				reversed:false,
+				data: ebx.Render.render  
+			});
+		});		
+	});
 </script>

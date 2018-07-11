@@ -197,6 +197,23 @@ var ebx = {
 			return n;
 		}
 	},
+	cloneObj: function (obj) {//克隆对象函数，暂不支持嵌套
+		var newObj = {};
+		if (obj instanceof Array) {
+			newObj = [];
+		}
+		for (var key in obj) {
+			newObj[key] = obj[key];
+			//var val = obj[key];
+			//newObj[key] = typeof val === 'object' ? arguments.callee(val) : val; //arguments.callee 在哪一个函数中运行，它就代表哪个函数, 一般用在匿名函数中。
+			//if(typeof(val) === 'object'){
+			//	newObj[key] = this.cloneObj(val)
+			//}else{
+			//	newObj[key] = val;
+			//}
+		}
+		return newObj;
+	},
 	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
 		var s = '', arrtype;

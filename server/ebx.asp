@@ -793,7 +793,8 @@ var ebx = {
 		_saveBD: function(){
 			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2'),
-					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2');
+					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),
+					rsBDFields = rsBDList.Fields;
 					
 				this.ID = ebx.IDGen.CTIDGen(this.ModType);
 				rsBD.AddNew();
@@ -805,9 +806,10 @@ var ebx = {
 				rsBD("IsDeleted") = 0
 			}else{
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where id=' + this.ID),
-					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2');
+					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),
+					rsBDFields = rsBDList.Fields;
 			}
-			
+
 			this.bd.MoveFirst();
 			while(!this.bd.eof){
 				rsBD(this.bd("field").value) = this.bd("value").value
@@ -829,7 +831,11 @@ var ebx = {
 					fieldsName = '';
 				for(var i = 0; i < fields.Count; i++){
 					fieldsName = fields(i).name;
-					rsBDList(fieldsName) = this.bdlist(fieldsName).value
+					for(var j = 0; j < rsBDFields.Count; j++){//判断字段与rsBDList相吻合的，执行写库操作 2018-7-11 zz
+						if(rsBDFields(j).name.toLowerCase() == fieldsName.toLowerCase()){
+							rsBDList(fieldsName) = this.bdlist(fieldsName).value
+						}
+					}
 				}
 				rsBDList('ID') = this.ID;
 				this.bdlist.MoveNext();
