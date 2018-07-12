@@ -428,7 +428,9 @@ var ebx = {
 				
 		datagrid.datagrid('loadData', {total: copyData.length, rows: copyData}); 
 
-		if(tab) tab.editstatus = true;
+		if(tab){
+			ebx.setEditstatus(tab, true)
+		}
 		$.messager.show({
 			title: '提示',
 			msg: '成功粘贴了：' + ebx.copyData.length + ' 行数据。',
@@ -737,6 +739,11 @@ var ebx = {
 				return value;
 			}
 		}
+	},
+	setEditstatus: function(tab, s){//内容变化状态修改
+		var st = s?'* ':'';
+		tab.editstatus = s;
+		ebx.center.find('.tabs-selected').find('.tabs-closable').text(st + tab.title);
 	}
 };
 

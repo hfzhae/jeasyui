@@ -142,6 +142,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 		var bd = this,
 			_layout = this.layout,
 			_Paramet = this.Paramet,
+			_tabs = bd.tabs,
 			_tab = this.tab,
 			data = {
 				selected:0,
@@ -205,7 +206,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 												timeout: 3000,
 												showType: 'slide'
 											});	
-											_tab.editstatus = false;
+											ebx.setEditstatus(_tab, false);
 											var id = result.id;
 											
 											_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
@@ -253,12 +254,15 @@ ebx.bd = {//单据对象 2018-7-9 zz
 							iconAlign:'top',
 							size:'large',
 							onClick:function(){
-								var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f');
+								var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f'),
+									opts = listdatagrid.datagrid('options');
+								
+								opts.editIndex = listdatagrid.datagrid('getData').total;
 								listdatagrid.datagrid('appendRow',{});
 								listdatagrid.datagrid('scrollTo', listdatagrid.datagrid('getData').total - 1);//滚动到新增的行
 								listdatagrid.datagrid('selectRow', listdatagrid.datagrid('getData').total - 1);
 								listdatagrid.datagrid('editkeyboard', {index: listdatagrid.datagrid('getData').total - 1, field: listdatagrid.datagrid('options').columns[0][0].field}); //自动触发编辑第一个字段
-								_tab.editstatus = true;
+								ebx.setEditstatus(_tab, true);
 								//listdatagrid.datagrid('reload');
 							}
 						},{
@@ -291,7 +295,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 										listdatagrid.datagrid('selectRow', index);
 									}
 									
-									_tab.editstatus = true;
+									ebx.setEditstatus(_tab, true);
 								}
 							},{
 								name:'empty',
@@ -301,7 +305,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 									var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f'),
 										total = listdatagrid.datagrid('getData').total;
 									listdatagrid.datagrid('load', { total: 0, rows: [] }); 
-									_tab.editstatus = true;
+									ebx.setEditstatus(_tab, true)
 								}
 							}]
 						}]

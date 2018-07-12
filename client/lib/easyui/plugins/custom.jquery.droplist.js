@@ -87,6 +87,7 @@ $.extend($.fn.combogrid.defaults, {
 					find: t
 				});
 				/*
+				//客户端搜素
 				var rowsq = [],
 					serachon;
 				for (var i in rows) {
@@ -122,23 +123,29 @@ $.extend($.fn.combogrid.defaults, {
 			co.combo('setText', q);
 		},
 		esc: function(){
-			var co = $(this);
-			g = co.combogrid('grid'),
-			ops = co.combogrid('options');
+			var co = $(this),
+				g = co.combogrid('grid'),
+				ops = co.combogrid('options');
+
 			ops.asyn = 0;
 		}
 	},
 	onChange: function(newValue, oldValue){
 		var co = $(this);
 		co.combo('setText', unescape(newValue));
+		try{
+			var tabs = ebx.center.tabs('getSelected'),
+				tab = tabs.panel('options');
+			ebx.setEditstatus(tab, true);
+		}catch(e){}
 	},
 	onHidePanel: function(){
-		var co = $(this);
+		var co = $(this),
 			t = unescape(co.combo('getText'));
 		co.combo('setText', t);
 	},
 	onShowPanel: function(){
-		var co = $(this)
+		var co = $(this),
 			g = co.combogrid('grid'),
 			ops = co.combogrid('options'),
 			pageSize = ebx.pagesize;

@@ -70,7 +70,7 @@ $.extend($.fn.validatebox.defaults.rules, {//validatebox自定义校验
 	//非负整数  
 	Integer: {  
 		validator: function (value) {  
-			var reg = /^[1-9]\d*|0$/;  
+			var reg = /^\d+$/;  
 			return reg.test(value);  
 		},  
 		message: '请输入非负整数'  

@@ -25,9 +25,11 @@ var ebx = {
 		}
 		this.IDGen.init(0);
 		this.Accountid = 1;//读取账套ID，待处理。。。
+		this.Owner = 1;//读取登陆用户ID，待处理。。。
 	},
 	conn: [],
 	Accountid: 0,
+	Owner: 0,
 	stdin: new Array(),
 	stdout: new Array(),
 	parseToJson: function (json_data){//Json格式转对象
@@ -803,7 +805,9 @@ var ebx = {
 				rsBD('CreateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 				rsBD("BillType") = this.ModType;
 				rsBD("AccountID") = ebx.AccountID;
+				rsBD("Owner") = ebx.Owner;
 				rsBD("IsDeleted") = 0
+				rsBD("AuditID") = 0
 			}else{
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where id=' + this.ID),
 					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),

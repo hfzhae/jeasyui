@@ -6,7 +6,7 @@
 		return;
 	}
 	var data = new Array(),
-		sql = 'select * from ' + TableName + 'List where id=' + ebx.stdin['id'],
+		sql = 'select * from ' + TableName + 'List where id=' + ebx.stdin['id'] +' order by Serial',
 		rs = ebx.dbx.open(sql, 1, 1);
 		
 	data["total"] = rs.recordcount;
