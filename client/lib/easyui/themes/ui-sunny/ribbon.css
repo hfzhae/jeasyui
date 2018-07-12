@@ -1,6 +1,7 @@
 .ribbon-tab{
-	background:-webkit-gradient(linear, 0 0, 0 bottom, from(#ffffff), to(#eaedf1));
+	background:-webkit-gradient(linear, 0 0, 0 bottom, from(#FEEEBD), to(#FEEEBD));
 	padding:4px;
+	border-bottom:1px solid #FECE2F;
 }
 .ribbon-group{
 	position:relative;

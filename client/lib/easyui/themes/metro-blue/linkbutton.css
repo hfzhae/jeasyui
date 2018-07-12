@@ -133,15 +133,15 @@
 }
 .l-btn {
   color: #404040;
-  background: #1a7bc9;
+  background: #DAEEF5;
   background-repeat: repeat-x;
-  border: 1px solid #1a7bc9;
-  background: -webkit-linear-gradient(top,#1a7bc9 0,#1a7bc9 100%);
-  background: -moz-linear-gradient(top,#1a7bc9 0,#1a7bc9 100%);
-  background: -o-linear-gradient(top,#1a7bc9 0,#1a7bc9 100%);
-  background: linear-gradient(to bottom,#1a7bc9 0,#1a7bc9 100%);
+  border: 1px solid #C3D9E0;
+  background: -webkit-linear-gradient(top,#DAEEF5 0,#DAEEF5 100%);
+  background: -moz-linear-gradient(top,#DAEEF5 0,#DAEEF5 100%);
+  background: -o-linear-gradient(top,#DAEEF5 0,#DAEEF5 100%);
+  background: linear-gradient(to bottom,#DAEEF5 0,#DAEEF5 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#1a7bc9,endColorstr=#1a7bc9,GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#DAEEF5,endColorstr=#DAEEF5,GradientType=0);
   -moz-border-radius: 0px 0px 0px 0px;
   -webkit-border-radius: 0px 0px 0px 0px;
   border-radius: 0px 0px 0px 0px;

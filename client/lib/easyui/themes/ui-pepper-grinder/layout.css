@@ -131,16 +131,16 @@
   background-color: #cbc7bd;
 }
 .layout-split-north {
-  border-bottom: 5px solid #eceadf;
+  border-bottom: 1px solid #DDDDDD;
 }
 .layout-split-south {
-  border-top: 5px solid #eceadf;
+  border-top: 1px solid #DDDDDD;
 }
 .layout-split-east {
-  border-left: 5px solid #eceadf;
+  border-left: 1px solid #DDDDDD;
 }
 .layout-split-west {
-  border-right: 5px solid #eceadf;
+  border-right: 1px solid #DDDDDD;
 }
 .layout-expand {
   background-color: #f8f7f6;

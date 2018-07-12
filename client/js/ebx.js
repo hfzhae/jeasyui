@@ -741,9 +741,9 @@ var ebx = {
 		}
 	},
 	setEditstatus: function(tab, s){//内容变化状态修改
-		var st = s?'* ':'';
+		var st = s?'<span style="color:#F00;">○</span> ':'';
 		tab.editstatus = s;
-		ebx.center.find('.tabs-selected').find('.tabs-closable').text(st + tab.title);
+		ebx.center.find('.tabs-selected').find('.tabs-closable').html(st + tab.title);
 	}
 };
 
