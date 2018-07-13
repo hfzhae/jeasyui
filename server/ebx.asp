@@ -854,7 +854,74 @@ var ebx = {
 			this.TableName = null;
 			this.ModType = null;
 		}
+	},
+	saveBI: {//基本信息保存对象 2018-7-13 zz
+		ID:0,
+		ParentID:0,
+		bi:[],
+		TableName:'',
+		ModType:'',
+		init: function(TableName, ModType){//初始化对象，获取客户端发送得bd、bdlist、ID、ParentID、TableName、ModType参数
+			this.bi = ebx.convertJsonToRs(eval('(' + ebx.stdin['bi'] + ')')),
+			this.ID = ebx.validInt(ebx.stdin['id']),
+			this.ParentID = ebx.validInt(ebx.stdin['ParentID']);
+			this.TableName = ebx.sqlStringEncode(TableName);
+			this.ModType = ebx.validInt(ModType);
+		},
+		save: function(){
+			ebx.conn.begintrans
+			try{
+				this._saveBI();
+				ebx.conn.commitTrans;
+				ebx.stdout['result'] = 1;
+				//ebx.stdout['bi'] = {total: this.bi.RecordCount, rows: this.bi};
+				ebx.stdout['id'] = this.ID;
+			}catch(e){
+				ebx.conn.RollbackTrans;
+				ebx.stdout['result'] = 0;
+				ebx.stdout['msg'] = e;
+			}
+			this.CleanData();
+		},
+		_saveBI: function(){
+			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
+				var rsBI = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2');
+					
+				this.ID = ebx.IDGen.CTIDGen(this.ModType);
+				rsBI.AddNew();
+				rsBI('RootID') = this.ID;
+				rsBI('ParentID') = this.ParentID;
+				rsBI('CreateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
+				rsBI("BillType") = this.ModType;
+				rsBI("AccountID") = ebx.AccountID;
+				rsBI("Owner") = ebx.Owner;
+				rsBI("IsDeleted") = 0
+			}else{
+				var rsBI = ebx.dbx.open('select * from ' + this.TableName + ' where id=' + this.ID);
+			}
+
+			this.bi.MoveFirst();
+			while(!this.bi.eof){
+				rsBI(this.bi("field").value) = this.bi("value").value
+				if(this.bi("field").value == 'id'){
+					this.bi("value").value = this.ID;
+				}
+				this.bi.MoveNext();
+			}
+			rsBI('ID') = this.ID;
+			rsBI('UpdateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
+			rsBI('UpdateCount') = ebx.validInt(rsBI('UpdateCount').value) + 1;
+			rsBI.Update();
+		},
+		CleanData: function(){
+			this.ID = null;
+			this.ParentID = null;
+			this.bi = null;
+			this.TableName = null;
+			this.ModType = null;
+		}
 	}
+
 }
 ebx.init();
 %>

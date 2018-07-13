@@ -17,7 +17,8 @@
 						dnd: false,
 						onClick: function(node){
 							if(node.children) return;
-							var tabsid = '';
+							var tabsid = '',
+								href = node.href?node.href:'client/SimpChinese/' + node.mode + '/browser/';
 							if(ebx.multitabs){
 								tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
 							}else{
@@ -30,7 +31,7 @@
 								ebx.center.tabs('add',{
 									id:tabsid,
 									title:node.text,
-									href:node.href + '?eastwidth='+node.eastwidth+'&text='+node.text+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
+									href:href + '?text='+node.text+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit,
 									iconCls:node.iconCls,
 									selected: true,
 									closable:true
@@ -44,8 +45,7 @@
 						iconCls: 'layout-button-left',
 						disabled:true
 					})
-					//.addClass('l-btn-plain')
-					.css({position:'absolute',right:0,top:'50%',marginTop:-8,width:4,borderRadius:0,borderTopLeftRadius:3,borderBottomLeftRadius:3,cursor:'pointer'})
+					.css({position:'absolute',right:-3,top:'50%',marginTop:-8,width:6,borderRadius:0,borderTopLeftRadius:3,borderBottomLeftRadius:3,cursor:'pointer'})
 					.bind('click', function(){
 						ebx.bodylayout.layout('collapse','west');
 					})

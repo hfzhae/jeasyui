@@ -25,11 +25,14 @@ var ebx = {
 				}).layout('add',{
 					region: 'west',
 					width: 200,
+					maxWidth: '50%',
+					minWidth: 200,
 					title: '',
 					href: 'client/SimpChinese/west/',
 					hideExpandTool:false,
 					hideCollapsedContent:false,
-					split: false,
+					border:false,
+					split: true,
 					collapsedContent: function(title){
 						var region = $(this).panel('options').region;
 						if(region =='north'|| region =='south'){
@@ -46,6 +49,7 @@ var ebx = {
 					split: false
 				}).layout('add',{
 					region: 'center',
+					border:false,
 					href:'client/SimpChinese/center/'
 				}).layout({
 					onCollapse: function(){

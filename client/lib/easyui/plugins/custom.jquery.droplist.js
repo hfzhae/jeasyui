@@ -151,14 +151,14 @@ $.extend($.fn.combogrid.defaults, {
 			pageSize = ebx.pagesize;
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
-			var style = ops.style,//显示式样名称，获取地址server/bi/style/?
-				template = ops.template;//查询模板ID，获取地址server/bi/list/?
+			var style = ops.style,//显示式样名称，获取地址server/DataProvider/style/?
+				template = ops.template;//查询模板ID，获取地址server/DataProvider/list/?
 			if(!style)return;
 			if(!template)return;
 
 			$.ajax({
 				type: 'post', 
-				url: 'server/bi/style/',
+				url: 'server/DataProvider/style/',
 				//data: JSON.stringify(ebx.EscapeJson({style:style,_:(new Date()).getTime()})),
 				data:{style:style,_:(new Date()).getTime()},
 				dataType: "json",
@@ -168,12 +168,15 @@ $.extend($.fn.combogrid.defaults, {
 						g.datagrid({
 							view:scrollview,
 							pageSize:pageSize,
-							url:'server/bi/list/',
+							url:'server/DataProvider/list/',
 							queryParams:{template:template,_:(new Date()).getTime()},
 							method:'post',
 							loadMsg:$.fn.datagrid.defaults.loadMsg,
 							columns:data,
-							onLoadSuccess: function(){
+							onLoadSuccess: function(data){
+								if(data.total == 1){
+									g.datagrid('selectRow', 0);
+								}
 								ops.oRows = [];
 								ops.asyn = 1;
 							}
