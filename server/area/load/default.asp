@@ -3,14 +3,18 @@
 (function(){
 	var id = ebx.validInt(ebx.stdin['id']),
 		sql = 'select id,code,title from ' + TableName + ' where id=' + id,
-		rs = ebx.dbx.open(sql, 1, 1),
+		rs,
 		data = [],
-		id = 0, code = '', title = '';
+		code = '', title = '';
 	
-	if(!rs.eof){
-		id = rs('id').value
-		code = rs('code').value;
-		title = rs('title').value;
+	
+	if(id > 0){
+		rs = ebx.dbx.open(sql, 1, 1);
+		if(!rs.eof){
+			id = rs('id').value
+			code = rs('code').value;
+			title = rs('title').value;
+		}
 	}
 	data = {"total":3,"rows":[
 		{"name":"ID","value":id,"group":"系统生成","field":"id"},

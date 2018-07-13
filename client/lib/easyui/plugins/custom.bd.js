@@ -71,50 +71,6 @@ ebx.bd = {//单据对象 2018-7-9 zz
 		eastPanel.css({overflow:'hidden'});//隐藏layout滚动条
 		listPanel.css({overflow:'hidden'});//隐藏layout滚动条
 	},
-	_newbd: function(rowIndex, rowData){
-		var e,
-			id = rowData?rowData.ID:'',
-			index = rowIndex,
-			eastwidth = Paramet.eastwidth!='undefined'?Paramet.eastwidth:400,//获取菜单中编辑面板的宽度参数，默认400，-1打开新tabs
-			setEast = function(){
-				layout.layout('add',{//添加新的layout
-					region: 'east',
-					width: eastwidth,
-					maxWidth: '50%',
-					minWidth: 300,
-					title: '',
-					href: 'client/SimpChinese/' + e + '/?text='+Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + Paramet.mode,
-					hideExpandTool: false,
-					hideCollapsedContent: false,
-					border: false,
-					split: true
-				});
-			};
-			
-		if(Paramet.edit == 'undefined' || Paramet.edit == ''){//判断菜单参数
-			e = "browser/biedit";//如果没有edit参数，赋值默认编辑地址
-		}else{
-			e = Paramet.edit;//如果有edit参数，赋值参数编辑地址
-		}
-		if(ebx.validInt(eastwidth) == -1){//在新tabs中打开页面
-			var tabsid = 'tabs_'+ebx.RndNum(20)
-			ebx.center.tabs('add', {
-				id: tabsid,
-				title: ebx.unescapeEx(Paramet.text),
-				href: 'client/SimpChinese/' + e + '/?text='+Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + Paramet.mode +'&style=' + Paramet.style + '&template=' + Paramet.template,
-				//iconCls:node.iconCls,
-				selected: true,
-				closable:true
-			});
-			//$('#'+tabsid).css({padding:0});
-		}else{
-			ebx.EditStatusMessager(tabs.panel('options').editstatus,Paramet.text,function(){
-				layout.layout('remove', 'east');//删除编辑layout
-				tabs.panel('options').editstatus = false;
-				setEast();
-			});
-		}
-	},
 	_export: function(ExportBtn, _layout, _tab){//导入函数方法，参数：ExportBtn：点击的按钮对象，_layout：当前页的layout对象，_tab：当前页的tab对象
 		ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
 		ebx.importExcel.fileinput.change(function(){
@@ -454,7 +410,15 @@ ebx.bd = {//单据对象 2018-7-9 zz
 								text:'新建',
 								iconCls:'tree-file',
 								onClick: function(){
-									ebx.biedit();
+									var tabsid = 'tabs_'+ebx.RndNum(20)
+									ebx.center.tabs('add', {
+										id: tabsid,
+										title: ebx.unescapeEx(_Paramet.text),
+										href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&mode=' + _Paramet.mode +'&style=' + _Paramet.style + '&template=' + _Paramet.template,
+										//iconCls:node.iconCls,
+										selected: true,
+										closable:true
+									});
 								}
 							},{
 								name:'delete',
