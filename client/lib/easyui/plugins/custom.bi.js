@@ -76,7 +76,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			_search = this._search,
 			_open = this._open,
 			_layout = this.layout,
-			_tabs = this.tabs;
+			_tabs = this.tabs,
+			columnsData = [];
 		
 		delcombobox.combobox({
 			data:[{
@@ -117,7 +118,33 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		ImportExcelbtn.linkbutton({
 			iconCls: 'icon-ImportExcel',
 			plain:true,
-			text:'导出'
+			text:'导出',
+			onClick:function(){
+				var btn = $(this), 
+					Parametdata;
+					
+				if(btn.linkbutton('options').disabled == true) return;
+				btn.linkbutton('disable');
+				var find = escape(searchinput.textbox('getText')),
+					Parametdata = {template:_Paramet.template,_:(new Date()).getTime(),exportdata:1};
+					
+				if(find.length > 0){
+					Parametdata.find = find;
+				}
+
+				$.ajax({
+					type: 'post', 
+					url: 'server/DataProvider/list/',
+					data: Parametdata,
+					dataType: "json",
+					success: function(result){
+						if(result){
+							btn.linkbutton('enable');
+							ebx.clipboardData(columnsData, result)
+						}
+					}
+				});				
+			}
 		});
 		
 		ExportExcelbox.menu({
@@ -164,7 +191,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			dataType: "json",
 			success: function(result){
 				if(result){
-					var columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
+					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
 					_liststorage.datagrid({
 						view:scrollview,
 						pageSize:ebx.pagesize,
