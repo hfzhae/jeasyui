@@ -71,6 +71,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			ExportExcel = $('<div>').appendTo(toolbar),
 			ExportExcelbox = $('<div>'),
 			newbtn = $('<div>').appendTo(toolbar),
+			delbtn = $('<div>').appendTo(toolbar),
+			reloadbtn = $('<div>').appendTo(toolbar),
 			_Paramet = this.Paramet,
 			_liststorage = this.liststorage,
 			_search = this._search,
@@ -184,6 +186,19 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			}
 		});
 		
+		delbtn.linkbutton({
+			iconCls: 'icon-Delete',
+			plain:true,
+			disabled:true,
+			text:'删除'
+		});
+
+		reloadbtn.linkbutton({
+			iconCls: 'icon-reload',
+			plain:true,
+			disabled:true,
+			text:'恢复'
+		});
 		$.ajax({
 			type: 'post', 
 			url: 'server/DataProvider/style/',
@@ -211,7 +226,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 						checkOnSelect:false,
 						columns:columnsData,
 						height: '100%',
-						onClickRow: function(rowIndex, rowData){
+						onDblClickRow: function(rowIndex, rowData){
 							var id = rowData?rowData.ID:'',
 								index = rowIndex;
 
@@ -231,6 +246,58 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 									split: true
 								});
 							});
+						},
+						onRowContextMenu: function(e, rowIndex, rowData){
+							if(rowIndex < 0)return;
+							e.preventDefault();
+							var RowContextMenu = $('<div>');
+							RowContextMenu.menu({
+								width:100
+							}).menu('appendItem', {
+								text: '编辑',
+								iconCls: 'tree-file',
+								onclick:function(){
+									var id = rowData?rowData.ID:'',
+										index = rowIndex;
+
+									ebx.EditStatusMessager(_tabs.panel('options').editstatus, _Paramet.text,function(){
+										_layout.layout('remove', 'east');//删除编辑layout
+										ebx.setEditstatus(_tabs.panel('options'), false);
+										_layout.layout('add',{//添加新的layout
+											region: 'east',
+											width: 400,
+											maxWidth: '50%',
+											minWidth: 300,
+											title: '',
+											href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode,
+											hideExpandTool: false,
+											hideCollapsedContent: false,
+											border: false,
+											split: true
+										});
+									});
+								}
+							}).menu('appendItem', {
+								text: '删除',
+								iconCls: 'icon-Delete',
+								disabled:rowData.IsDeleted?true:false,
+								onclick:function(){
+									console.log(rowIndex);
+									console.log(rowData);
+								}
+							}).menu('appendItem', {
+								text: '恢复',
+								iconCls: 'icon-reload',
+								disabled:rowData.IsDeleted?false:true,
+								onclick:function(){
+									console.log(rowIndex);
+									console.log(rowData);
+								}
+							}).menu('show', {
+								left: e.pageX,
+								top: e.pageY
+							});
+
 						},
 						border:result.bd[0].Border,
 						showFooter:result.bd[0].Footer,

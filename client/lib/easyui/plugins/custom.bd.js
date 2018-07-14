@@ -129,7 +129,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 					callback(columnsData, _centerstorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 										
 					_centerstorage.datagrid({
-						view:scrollview,//行操作存在bug，不能使用
+						view:scrollview,
 						pageSize:ebx.pagesize,
 						remoteSort:false,
 						rownumbers:true,
@@ -170,6 +170,8 @@ ebx.bd = {//单据对象 2018-7-9 zz
 			ExportExcel = $('<div>').appendTo(toolbar),
 			ExportExcelbox = $('<div>'),
 			newbtn = $('<div>').appendTo(toolbar),
+			delbtn = $('<div>').appendTo(toolbar),
+			reloadbtn = $('<div>').appendTo(toolbar),
 			_Paramet = this.Paramet,
 			_liststorage = this.liststorage,
 			_search = this._search,
@@ -275,6 +277,20 @@ ebx.bd = {//单据对象 2018-7-9 zz
 				});
 			}
 		});
+
+		delbtn.linkbutton({
+			iconCls: 'icon-Delete',
+			plain:true,
+			disabled:true,
+			text:'删除'
+		});
+
+		reloadbtn.linkbutton({
+			iconCls: 'icon-reload',
+			plain:true,
+			disabled:true,
+			text:'恢复'
+		});
 		
 		$.ajax({
 			type: 'post', 
@@ -283,8 +299,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 			dataType: "json",
 			success: function(result){
 				if(result){
-					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
-					
+					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape					
 					_liststorage.datagrid({
 						view:scrollview,
 						pageSize:ebx.pagesize,
@@ -304,10 +319,9 @@ ebx.bd = {//单据对象 2018-7-9 zz
 						checkOnSelect:false,
 						columns:columnsData,
 						height: '100%',
-						onClickRow: function(rowIndex, rowData){
+						onDblClickRow: function(rowIndex, rowData){
 							var id = rowData?rowData.ID:'',
 								index = rowIndex;
-
 								
 							var tabsid = 'tabs_'+ebx.RndNum(20)
 							ebx.center.tabs('add', {
@@ -318,6 +332,51 @@ ebx.bd = {//单据对象 2018-7-9 zz
 								selected: true,
 								closable:true
 							});
+						},
+						onRowContextMenu: function(e, rowIndex, rowData){
+							if(rowIndex < 0)return;
+							e.preventDefault();
+							var RowContextMenu = $('<div>');
+							RowContextMenu.menu({
+								width:100
+							}).menu('appendItem', {
+								text: '编辑',
+								iconCls: 'tree-file',
+								onclick:function(){
+									var id = rowData?rowData.ID:'',
+										index = rowIndex;
+										
+									var tabsid = 'tabs_'+ebx.RndNum(20)
+									ebx.center.tabs('add', {
+										id: tabsid,
+										title: ebx.unescapeEx(_Paramet.text),
+										href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode +'&style=' + _Paramet.style + '&template=' + _Paramet.template,
+										//iconCls:node.iconCls,
+										selected: true,
+										closable:true
+									});
+								}
+							}).menu('appendItem', {
+								text: '删除',
+								iconCls: 'icon-Delete',
+								disabled:rowData.IsDeleted?true:false,
+								onclick:function(){
+									console.log(rowIndex);
+									console.log(rowData);
+								}
+							}).menu('appendItem', {
+								text: '恢复',
+								iconCls: 'icon-reload',
+								disabled:rowData.IsDeleted?false:true,
+								onclick:function(){
+									console.log(rowIndex);
+									console.log(rowData);
+								}
+							}).menu('show', {
+								left: e.pageX,
+								top: e.pageY
+							});
+
 						},
 						border:result.bd[0].Border,
 						showFooter:result.bd[0].Footer,
