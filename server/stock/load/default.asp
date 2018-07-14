@@ -21,7 +21,7 @@
 		}
 	}
 	
-	data = {"total":3,"rows":[
+	data = {"total":8,"rows":[
 		{'name':'ID','value':id,'group':'系统生成','field':'id'},
 		{'name':'编号','value':code,'group':'必填信息','editor':{'type':'validatebox', 'options':{'required':true,'validType':'String'}},'field':'code'},
 		{'name':'名称','value':title,'group':'必填信息','editor':{'type':'validatebox', 'options':{'required':true,'validType':'String'}},'field':'title'},
