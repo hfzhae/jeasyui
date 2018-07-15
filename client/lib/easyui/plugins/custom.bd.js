@@ -155,6 +155,21 @@ ebx.bd = {//单据对象 2018-7-9 zz
 			}
 		});
 	},
+	_edit: function(rowIndex, rowData, _Paramet){
+		var id = rowData?rowData.ID:'',
+			index = rowIndex;
+			
+		var tabsid = 'tabs_'+ebx.RndNum(20)
+		
+		ebx.center.tabs('add', {
+			id: tabsid,
+			title: ebx.unescapeEx(_Paramet.text),
+			href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode +'&style=' + _Paramet.style + '&template=' + _Paramet.template,
+			//iconCls:node.iconCls,
+			selected: true,
+			closable:true
+		});
+	},
 	_search: function(s, _liststorage, _Paramet){//搜索函数
 		_liststorage.datagrid('load', {
 			template:_Paramet.template,
@@ -170,10 +185,12 @@ ebx.bd = {//单据对象 2018-7-9 zz
 			ExportExcel = $('<div>').appendTo(toolbar),
 			ExportExcelbox = $('<div>'),
 			newbtn = $('<div>').appendTo(toolbar),
+			editbtn = $('<div>').appendTo(toolbar),
 			delbtn = $('<div>').appendTo(toolbar),
 			reloadbtn = $('<div>').appendTo(toolbar),
 			_Paramet = this.Paramet,
 			_liststorage = this.liststorage,
+			_edit = this._edit,
 			_search = this._search,
 			_open = this._open,
 			_layout = this.layout,
@@ -208,11 +225,35 @@ ebx.bd = {//单据对象 2018-7-9 zz
 		
 		searchinput.textbox('button').on('click', function(){
 			_search(searchinput.textbox('getText'), _liststorage, _Paramet);
+			reloadbtn.linkbutton({
+				disabled:true,
+				onClick: function(){}
+			});
+			delbtn.linkbutton({
+				disabled:true,
+				onClick: function(){}
+			});
+			editbtn.linkbutton({
+				disabled:true,
+				onClick: function(){}
+			});
 		})
 				
 		searchinput.textbox('textbox').bind('keydown', function(e) {  
 			if (e.keyCode == 13) {  
 				_search(searchinput.textbox('getText'), _liststorage, _Paramet);
+				reloadbtn.linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
+				delbtn.linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
+				editbtn.linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
 			}  
 		});
 				
@@ -278,6 +319,13 @@ ebx.bd = {//单据对象 2018-7-9 zz
 			}
 		});
 
+		editbtn.linkbutton({
+			iconCls: 'icon-DesignMode',
+			plain:true,
+			disabled:true,
+			text:'编辑'
+		});
+		
 		delbtn.linkbutton({
 			iconCls: 'icon-Delete',
 			plain:true,
@@ -319,37 +367,42 @@ ebx.bd = {//单据对象 2018-7-9 zz
 						checkOnSelect:false,
 						columns:columnsData,
 						height: '100%',
-						onClickRow: function(rowIndex, rowData){
+						onSelect: function(rowIndex, rowData){
 							if(rowData.IsDeleted){
 								reloadbtn.linkbutton({
 									disabled:false
 								});
 								delbtn.linkbutton({
-									disabled:true
+									disabled:true,
+									onClick: function(){}
+								});
+								editbtn.linkbutton({
+									disabled:false,
+									onClick: function(){
+										_edit(rowIndex, rowData, _Paramet);
+									}
 								});
 							}else{
 								delbtn.linkbutton({
 									disabled:false
 								});
 								reloadbtn.linkbutton({
-									disabled:true
+									disabled:true,
+									onClick: function(){}
+								});
+								editbtn.linkbutton({
+									disabled:false,
+									onClick: function(){
+										_edit(rowIndex, rowData, _Paramet);
+									}
 								});
 							}
 						},
-						onClickCell:function(){},//防止编辑插件影响后续操作
+						onClickRow: function(rowIndex, rowData){
+						},
+						onClickCell:function(){},//禁用单元格编辑功能，防止双击后onDblClickRow事件失效 2018-7-15 zz
 						onDblClickRow: function(rowIndex, rowData){
-							var id = rowData?rowData.ID:'',
-								index = rowIndex;
-								
-							var tabsid = 'tabs_'+ebx.RndNum(20);
-							ebx.center.tabs('add', {
-								id: tabsid,
-								title: ebx.unescapeEx(_Paramet.text),
-								href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode +'&style=' + _Paramet.style + '&template=' + _Paramet.template,
-								//iconCls:node.iconCls,
-								selected: true,
-								closable:true
-							});
+							_edit(rowIndex, rowData, _Paramet);
 						},
 						onRowContextMenu: function(e, rowIndex, rowData){
 							if(rowIndex < 0)return;
@@ -360,21 +413,9 @@ ebx.bd = {//单据对象 2018-7-9 zz
 								width:100
 							}).menu('appendItem', {
 								text: '编辑',
-								iconCls: 'tree-file',
+								iconCls: 'icon-DesignMode',
 								onclick:function(){
-									var id = rowData?rowData.ID:'',
-										index = rowIndex;
-										
-									var tabsid = 'tabs_'+ebx.RndNum(20)
-									
-									ebx.center.tabs('add', {
-										id: tabsid,
-										title: ebx.unescapeEx(_Paramet.text),
-										href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode +'&style=' + _Paramet.style + '&template=' + _Paramet.template,
-										//iconCls:node.iconCls,
-										selected: true,
-										closable:true
-									});
+									_edit(rowIndex, rowData, _Paramet);
 								}
 							}).menu('appendItem', {
 								text: '删除',

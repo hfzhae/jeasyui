@@ -56,6 +56,27 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		eastPanel.css({overflow:'hidden'});//隐藏layout滚动条
 		listPanel.css({overflow:'hidden'});//隐藏layout滚动条
 	},
+	_edit: function(rowIndex, rowData, _Paramet, _layout, _tabs){
+		var id = rowData?rowData.ID:'',
+			index = rowIndex;
+
+		ebx.EditStatusMessager(_tabs.panel('options').editstatus, _Paramet.text,function(){
+			_layout.layout('remove', 'east');//删除编辑layout
+			ebx.setEditstatus(_tabs.panel('options'), false);
+			_layout.layout('add',{//添加新的layout
+				region: 'east',
+				width: 400,
+				maxWidth: '50%',
+				minWidth: 300,
+				title: '',
+				href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode,
+				hideExpandTool: false,
+				hideCollapsedContent: false,
+				border: false,
+				split: true
+			});
+		});
+	},
 	_search: function(s, _liststorage, _Paramet){//搜索函数
 		_liststorage.datagrid('load', {
 			template:_Paramet.template,
@@ -71,11 +92,13 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			ExportExcel = $('<div>').appendTo(toolbar),
 			ExportExcelbox = $('<div>'),
 			newbtn = $('<div>').appendTo(toolbar),
+			editbtn = $('<div>').appendTo(toolbar),
 			delbtn = $('<div>').appendTo(toolbar),
 			reloadbtn = $('<div>').appendTo(toolbar),
 			_Paramet = this.Paramet,
 			_liststorage = this.liststorage,
 			_search = this._search,
+			_edit = this._edit,
 			_open = this._open,
 			_layout = this.layout,
 			_tabs = this.tabs,
@@ -109,11 +132,35 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		
 		searchinput.textbox('button').on('click', function(){
 			_search(searchinput.textbox('getText'), _liststorage, _Paramet);
+			reloadbtn.linkbutton({
+				disabled:true,
+				onClick: function(){}
+			});
+			delbtn.linkbutton({
+				disabled:true,
+				onClick: function(){}
+			});
+			editbtn.linkbutton({
+				disabled:true,
+				onClick: function(){}
+			});
 		})
 				
 		searchinput.textbox('textbox').bind('keydown', function(e) {  
 			if (e.keyCode == 13) {  
 				_search(searchinput.textbox('getText'), _liststorage, _Paramet);
+				reloadbtn.linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
+				delbtn.linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
+				editbtn.linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
 			}  
 		});
 				
@@ -186,6 +233,13 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			}
 		});
 		
+		editbtn.linkbutton({
+			iconCls: 'icon-DesignMode',
+			plain:true,
+			disabled:true,
+			text:'编辑'
+		});
+		
 		delbtn.linkbutton({
 			iconCls: 'icon-Delete',
 			plain:true,
@@ -199,6 +253,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			disabled:true,
 			text:'恢复'
 		});
+				
 		$.ajax({
 			type: 'post', 
 			url: 'server/DataProvider/style/',
@@ -226,44 +281,42 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 						checkOnSelect:false,
 						columns:columnsData,
 						height: '100%',
-						onClickRow: function(rowIndex, rowData){
+						onSelect: function(rowIndex, rowData){
 							if(rowData.IsDeleted){
 								reloadbtn.linkbutton({
 									disabled:false
 								});
 								delbtn.linkbutton({
-									disabled:true
+									disabled:true,
+									onClick: function(){}
+								});
+								editbtn.linkbutton({
+									disabled:false,
+									onClick: function(){
+										_edit(rowIndex, rowData, _Paramet, _layout, _tabs);
+									}
 								});
 							}else{
 								delbtn.linkbutton({
 									disabled:false
 								});
 								reloadbtn.linkbutton({
-									disabled:true
+									disabled:true,
+									onClick: function(){}
+								});
+								editbtn.linkbutton({
+									disabled:false,
+									onClick: function(){
+										_edit(rowIndex, rowData, _Paramet, _layout, _tabs);
+									}
 								});
 							}
 						},
-						onClickCell:function(){},//防止编辑插件影响后续操作
+						onClickRow: function(rowIndex, rowData){
+						},
+						onClickCell:function(){},//禁用单元格编辑功能，防止双击后onDblClickRow事件失效 2018-7-15 zz
 						onDblClickRow: function(rowIndex, rowData){
-							var id = rowData?rowData.ID:'',
-								index = rowIndex;
-
-							ebx.EditStatusMessager(_tabs.panel('options').editstatus, _Paramet.text,function(){
-								_layout.layout('remove', 'east');//删除编辑layout
-								ebx.setEditstatus(_tabs.panel('options'), false);
-								_layout.layout('add',{//添加新的layout
-									region: 'east',
-									width: 400,
-									maxWidth: '50%',
-									minWidth: 300,
-									title: '',
-									href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode,
-									hideExpandTool: false,
-									hideCollapsedContent: false,
-									border: false,
-									split: true
-								});
-							});
+							_edit(rowIndex, rowData, _Paramet, _layout, _tabs);
 						},
 						onRowContextMenu: function(e, rowIndex, rowData){
 							if(rowIndex < 0)return;
@@ -274,27 +327,9 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								width:100
 							}).menu('appendItem', {
 								text: '编辑',
-								iconCls: 'tree-file',
+								iconCls: 'icon-DesignMode',
 								onclick:function(){
-									var id = rowData?rowData.ID:'',
-										index = rowIndex;
-
-									ebx.EditStatusMessager(_tabs.panel('options').editstatus, _Paramet.text,function(){
-										_layout.layout('remove', 'east');//删除编辑layout
-										ebx.setEditstatus(_tabs.panel('options'), false);
-										_layout.layout('add',{//添加新的layout
-											region: 'east',
-											width: 400,
-											maxWidth: '50%',
-											minWidth: 300,
-											title: '',
-											href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode,
-											hideExpandTool: false,
-											hideCollapsedContent: false,
-											border: false,
-											split: true
-										});
-									});
+									_edit(rowIndex, rowData, _Paramet, _layout, _tabs);
 								}
 							}).menu('appendItem', {
 								text: '删除',

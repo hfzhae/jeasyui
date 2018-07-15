@@ -328,6 +328,15 @@
 	background:url('icon32/CopyToPersonalTaskList.png') no-repeat center center;
 }
 
+.icon-DesignMode{
+	background:url('icon32/DesignMode.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-DesignMode-large{
+	background:url('icon32/DesignMode.png') no-repeat center center;
+}
+
+
 
 /*新增图标end*/
 
