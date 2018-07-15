@@ -320,7 +320,21 @@ ebx.bd = {//单据对象 2018-7-9 zz
 						columns:columnsData,
 						height: '100%',
 						onClickRow: function(rowIndex, rowData){
-							//console.log(rowData);
+							if(rowData.IsDeleted){
+								reloadbtn.linkbutton({
+									disabled:false
+								});
+								delbtn.linkbutton({
+									disabled:true
+								});
+							}else{
+								delbtn.linkbutton({
+									disabled:false
+								});
+								reloadbtn.linkbutton({
+									disabled:true
+								});
+							}
 						},
 						onClickCell:function(){},//防止编辑插件影响后续操作
 						onDblClickRow: function(rowIndex, rowData){
