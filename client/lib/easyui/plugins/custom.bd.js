@@ -339,6 +339,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 						},
 						onRowContextMenu: function(e, rowIndex, rowData){
 							if(rowIndex < 0)return;
+							_liststorage.datagrid('selectRow', rowIndex)
 							e.preventDefault();
 							var RowContextMenu = $('<div>');
 							RowContextMenu.menu({

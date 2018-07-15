@@ -253,6 +253,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 						},
 						onRowContextMenu: function(e, rowIndex, rowData){
 							if(rowIndex < 0)return;
+							_liststorage.datagrid('selectRow', rowIndex)
 							e.preventDefault();
 							var RowContextMenu = $('<div>');
 							RowContextMenu.menu({
