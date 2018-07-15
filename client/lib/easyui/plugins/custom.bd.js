@@ -319,11 +319,15 @@ ebx.bd = {//单据对象 2018-7-9 zz
 						checkOnSelect:false,
 						columns:columnsData,
 						height: '100%',
+						onClickRow: function(rowIndex, rowData){
+							//console.log(rowData);
+						},
+						onClickCell:function(){},//防止编辑插件影响后续操作
 						onDblClickRow: function(rowIndex, rowData){
 							var id = rowData?rowData.ID:'',
 								index = rowIndex;
 								
-							var tabsid = 'tabs_'+ebx.RndNum(20)
+							var tabsid = 'tabs_'+ebx.RndNum(20);
 							ebx.center.tabs('add', {
 								id: tabsid,
 								title: ebx.unescapeEx(_Paramet.text),
@@ -347,6 +351,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 										index = rowIndex;
 										
 									var tabsid = 'tabs_'+ebx.RndNum(20)
+									
 									ebx.center.tabs('add', {
 										id: tabsid,
 										title: ebx.unescapeEx(_Paramet.text),

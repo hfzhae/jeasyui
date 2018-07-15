@@ -226,6 +226,10 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 						checkOnSelect:false,
 						columns:columnsData,
 						height: '100%',
+						onClickRow: function(rowIndex, rowData){
+							//console.log(rowData);
+						},
+						onClickCell:function(){},//防止编辑插件影响后续操作
 						onDblClickRow: function(rowIndex, rowData){
 							var id = rowData?rowData.ID:'',
 								index = rowIndex;
