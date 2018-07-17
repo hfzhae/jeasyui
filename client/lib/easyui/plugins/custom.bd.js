@@ -1,4 +1,11 @@
-ebx.bd = {//单据对象 2018-7-9 zz
+/****************************************************************
+Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
+dev by zz on 2018/7/16
+单据对象，包括单据的表头、表体，功能按钮模块的加载，支持保存、编辑、删除等功能
+
+*****************************************************************/
+
+ebx.bd = {
 	ID: 0,
 	ParentID: 0,
 	tabs: [],
@@ -11,10 +18,14 @@ ebx.bd = {//单据对象 2018-7-9 zz
 	biribbon: [],
 	centerstorage: [],
 	eaststorage: [],
-	init: function(layoutName, callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，list，browser，callback：回掉函数
+	showdate: 0,//是否显示查询日期控件，0为不显示，默认0
+	init: function(layoutName, callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Paramet = ebx.getMenuParameter(this.tabs);
+		if(this.Paramet.DateStyle){
+			this.showdate = 1;
+		}
 		
 		switch(layoutName.toLowerCase()){
 			case 'north':
@@ -39,37 +50,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 				this.layout = $('<div>').appendTo(this.tabs)
 				this._default();
 				break;
-			case 'list':
-				this.layout = this.tabs.find('.layout');
-				this.listPanel = this.layout.layout('panel', 'center');
-				this.liststorage = $('<div>').appendTo(this.listPanel)
-				this.Paramet = ebx.getMenuParameter(this.tabs);
-				this._list()
-				break;
-			case 'browser':
-				this.layout = $('<div>').appendTo(this.tabs);
-				this.Paramet = ebx.getMenuParameter(this.tabs);
-				this._browser();
-				break;
 		}
-	},
-	_browser: function(){
-		this.layout.layout({
-			fit: true
-		}).layout('add',{
-			region: 'center',
-			title: '',
-			href:'client/SimpChinese/' + this.Paramet.mode + '/browser/list.html',
-			hideExpandTool:false,
-			hideCollapsedContent:false,
-			border:false
-		});
-		
-		var eastPanel = this.layout.layout('panel', 'east'),
-			listPanel = this.layout.layout('panel', 'center');
-
-		eastPanel.css({overflow:'hidden'});//隐藏layout滚动条
-		listPanel.css({overflow:'hidden'});//隐藏layout滚动条
 	},
 	_export: function(ExportBtn, _layout, _tab){//导入函数方法，参数：ExportBtn：点击的按钮对象，_layout：当前页的layout对象，_tab：当前页的tab对象
 		ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
@@ -109,7 +90,7 @@ ebx.bd = {//单据对象 2018-7-9 zz
 			split: true
 		}).layout('add', {
 			region: 'north',
-			height: 140,
+			height: 115,
 			href: 'client/SimpChinese/' + this.Paramet.mode + '/north.html',
 			border: false,
 			split: false
@@ -147,305 +128,13 @@ ebx.bd = {//单据对象 2018-7-9 zz
 						checkOnSelect:false,
 						columns:columnsData,
 						height: '100%',
-						border:result.bd[0].Border,
-						showFooter:result.bd[0].Footer,
-						showHeader:result.bd[0].Header
+						border:result.bd[0].border,
+						showFooter:result.bd[0].footer,
+						showHeader:result.bd[0].header
 					}).datagrid('renderformatterstyler');//启用显示式样回调函数
 				}
 			}
 		});
-	},
-	_edit: function(rowIndex, rowData, _Paramet){
-		var id = rowData?rowData.ID:'',
-			index = rowIndex;
-			
-		var tabsid = 'tabs_'+ebx.RndNum(20)
-		
-		ebx.center.tabs('add', {
-			id: tabsid,
-			title: ebx.unescapeEx(_Paramet.text),
-			href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + _Paramet.mode +'&style=' + _Paramet.style + '&template=' + _Paramet.template,
-			//iconCls:node.iconCls,
-			selected: true,
-			closable:true
-		});
-	},
-	_search: function(s, _liststorage, _Paramet){//搜索函数
-		_liststorage.datagrid('load', {
-			template:_Paramet.template,
-			_:(new Date()).getTime(),
-			find: escape(s)
-		});
-	},
-	_list: function(){//读取并显示list列表方法
-		var toolbar = $('<div>'),
-			delcombobox = $('<div>').appendTo(toolbar),
-			searchinput = $('<div>').appendTo(toolbar),
-			ImportExcelbtn = $('<div>').appendTo(toolbar),
-			ExportExcel = $('<div>').appendTo(toolbar),
-			ExportExcelbox = $('<div>'),
-			newbtn = $('<div>').appendTo(toolbar),
-			editbtn = $('<div>').appendTo(toolbar),
-			delbtn = $('<div>').appendTo(toolbar),
-			reloadbtn = $('<div>').appendTo(toolbar),
-			_Paramet = this.Paramet,
-			_liststorage = this.liststorage,
-			_edit = this._edit,
-			_search = this._search,
-			_open = this._open,
-			_layout = this.layout,
-			_tabs = this.tabs,
-			columnsData = [];
-
-		delcombobox.combobox({
-			data:[{
-				"id":1,
-				"text":"已删除"
-			},{
-				"id":2,
-				"text":"未删除"
-			},{
-				"id":3,
-				"text":"全部",
-				"selected":true
-			}],
-			valueField:'id',
-			textField:'text',
-			panelHeight:'auto',
-			width:'65xp',
-			editable:false
-		});
-		
-		searchinput.textbox({
-			buttonText:'搜索',
-			iconCls:'icon-ZoomClassic_custom',
-			plain:true,
-			iconAlign:'left'
-		});
-		
-		searchinput.textbox('button').on('click', function(){
-			_search(searchinput.textbox('getText'), _liststorage, _Paramet);
-			reloadbtn.linkbutton({
-				disabled:true,
-				onClick: function(){}
-			});
-			delbtn.linkbutton({
-				disabled:true,
-				onClick: function(){}
-			});
-			editbtn.linkbutton({
-				disabled:true,
-				onClick: function(){}
-			});
-		})
-				
-		searchinput.textbox('textbox').bind('keydown', function(e) {  
-			if (e.keyCode == 13) {  
-				_search(searchinput.textbox('getText'), _liststorage, _Paramet);
-				reloadbtn.linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
-				delbtn.linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
-				editbtn.linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
-			}  
-		});
-				
-		ImportExcelbtn.linkbutton({
-			iconCls: 'icon-ImportExcel',
-			plain:true,
-			text:'导出',
-			onClick:function(){
-				var btn = $(this), 
-					Parametdata;
-					
-				if(btn.linkbutton('options').disabled == true) return;
-				btn.linkbutton('disable');
-				var find = escape(searchinput.textbox('getText')),
-					Parametdata = {template:_Paramet.template,_:(new Date()).getTime(),exportdata:1};
-					
-				if(find.length > 0){
-					Parametdata.find = find;
-				}
-
-				$.ajax({
-					type: 'post', 
-					url: 'server/DataProvider/list/',
-					data: Parametdata,
-					dataType: "json",
-					success: function(result){
-						if(result){
-							btn.linkbutton('enable');
-							ebx.clipboardData(columnsData, result)
-						}
-					}
-				});				
-			}
-		});
-		
-		ExportExcelbox.menu({
-			width:100
-		}).menu('appendItem', {
-			text: '下载模板',
-			iconCls: 'icon-FileSaveAsExcelXlsx'
-		});
-
-		ExportExcel.splitbutton({
-			iconCls: 'icon-ExportExcel',
-			text: '导入',
-			menu: ExportExcelbox
-		});
-		
-		newbtn.linkbutton({
-			iconCls: 'icon-file',
-			plain:true,
-			text:'新建',
-			onClick: function(){
-				var tabsid = 'tabs_'+ebx.RndNum(20)
-				ebx.center.tabs('add', {
-					id: tabsid,
-					title: ebx.unescapeEx(_Paramet.text),
-					href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&mode=' + _Paramet.mode +'&style=' + _Paramet.style + '&template=' + _Paramet.template,
-					//iconCls:node.iconCls,
-					selected: true,
-					closable:true
-				});
-			}
-		});
-
-		editbtn.linkbutton({
-			iconCls: 'icon-DesignMode',
-			plain:true,
-			disabled:true,
-			text:'编辑'
-		});
-		
-		delbtn.linkbutton({
-			iconCls: 'icon-Delete',
-			plain:true,
-			disabled:true,
-			text:'删除'
-		});
-
-		reloadbtn.linkbutton({
-			iconCls: 'icon-reload',
-			plain:true,
-			disabled:true,
-			text:'恢复'
-		});
-		
-		$.ajax({
-			type: 'post', 
-			url: 'server/DataProvider/style/',
-			data: {style:_Paramet.style,_:(new Date()).getTime()},
-			dataType: "json",
-			success: function(result){
-				if(result){
-					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape					
-					_liststorage.datagrid({
-						view:scrollview,
-						pageSize:ebx.pagesize,
-						remoteSort:true,
-						rownumbers:true,
-						singleSelect:true,
-						pagination:false,
-						fit:false,
-						fitColumns:false,
-						striped:true,
-						nowrap:true,//禁用自动换行
-						url:'server/DataProvider/list/',
-						method:'post',
-						queryParams:{template:_Paramet.template,_:(new Date()).getTime()},
-						toolbar: toolbar,
-						multiSort:false,
-						checkOnSelect:false,
-						columns:columnsData,
-						height: '100%',
-						onSelect: function(rowIndex, rowData){
-							if(rowData.IsDeleted){
-								reloadbtn.linkbutton({
-									disabled:false
-								});
-								delbtn.linkbutton({
-									disabled:true,
-									onClick: function(){}
-								});
-								editbtn.linkbutton({
-									disabled:false,
-									onClick: function(){
-										_edit(rowIndex, rowData, _Paramet);
-									}
-								});
-							}else{
-								delbtn.linkbutton({
-									disabled:false
-								});
-								reloadbtn.linkbutton({
-									disabled:true,
-									onClick: function(){}
-								});
-								editbtn.linkbutton({
-									disabled:false,
-									onClick: function(){
-										_edit(rowIndex, rowData, _Paramet);
-									}
-								});
-							}
-						},
-						onClickRow: function(rowIndex, rowData){
-						},
-						onClickCell:function(){},//禁用单元格编辑功能，防止双击后onDblClickRow事件失效 2018-7-15 zz
-						onDblClickRow: function(rowIndex, rowData){
-							_edit(rowIndex, rowData, _Paramet);
-						},
-						onRowContextMenu: function(e, rowIndex, rowData){
-							if(rowIndex < 0)return;
-							_liststorage.datagrid('selectRow', rowIndex)
-							e.preventDefault();
-							var RowContextMenu = $('<div>');
-							RowContextMenu.menu({
-								width:100
-							}).menu('appendItem', {
-								text: '编辑',
-								iconCls: 'icon-DesignMode',
-								onclick:function(){
-									_edit(rowIndex, rowData, _Paramet);
-								}
-							}).menu('appendItem', {
-								text: '删除',
-								iconCls: 'icon-Delete',
-								disabled:rowData.IsDeleted?true:false,
-								onclick:function(){
-									console.log(rowIndex);
-									console.log(rowData);
-								}
-							}).menu('appendItem', {
-								text: '恢复',
-								iconCls: 'icon-reload',
-								disabled:rowData.IsDeleted?false:true,
-								onclick:function(){
-									console.log(rowIndex);
-									console.log(rowData);
-								}
-							}).menu('show', {
-								left: e.pageX,
-								top: e.pageY
-							});
-
-						},
-						border:result.bd[0].Border,
-						showFooter:result.bd[0].Footer,
-						showHeader:result.bd[0].Header
-					}).datagrid('renderformatterstyler');
-				}
-			}
-		});		
 	},
 	_east: function(){//单据属性对象
 		this.eaststorage.propertygrid({
@@ -558,15 +247,13 @@ ebx.bd = {//单据对象 2018-7-9 zz
 								text:'新建',
 								iconCls:'tree-file',
 								onClick: function(){
-									var tabsid = 'tabs_'+ebx.RndNum(20)
-									ebx.center.tabs('add', {
-										id: tabsid,
-										title: ebx.unescapeEx(_Paramet.text),
-										href: 'client/SimpChinese/' + _Paramet.mode + '/?text='+_Paramet.text+'&mode=' + _Paramet.mode +'&style=' + _Paramet.style + '&template=' + _Paramet.template,
-										//iconCls:node.iconCls,
-										selected: true,
-										closable:true
-									});
+									var options = {
+										_Paramet: _Paramet,
+										browsertype: 'bd',
+										_tabs: _tabs,
+										_layout: _layout
+									}; 
+									ebx.browser._new(options);
 								}
 							},{
 								name:'delete',
@@ -731,7 +418,8 @@ ebx.bd = {//单据对象 2018-7-9 zz
 			width:'100%',
 			height:'100%',
 			border: false,
-			plain:true
+			plain:true,
+			showHeader: false
 		});
 	}
 }

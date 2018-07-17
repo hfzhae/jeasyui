@@ -73,7 +73,7 @@
 				$('<div class="ribbon-group-title"></div>').html(group.title||'').appendTo(g);
 				group.tools = group.tools || [];
 				$.map(group.tools, function(tool){
-					var type = tool.type || 'linkbutton';
+					var type = tool.type || 'linkbutton' || 'combobox';
 					if (type == 'toolbar'){
 						var toolbar = $('<div class="ribbon-toolbar"></div>').appendTo(g);
 						toolbar.css(tool.style||{});
@@ -93,7 +93,7 @@
 			}
 			
 			function buildTool(options, p, dir){
-				var type = options.type || 'linkbutton';
+				var type = options.type || 'linkbutton' || 'combobox';
 				options.plain = options.plain || true;
 				if (options.menuItems){
 					var m = $('<div></div>').appendTo('body');

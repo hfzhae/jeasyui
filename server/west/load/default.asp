@@ -2,6 +2,18 @@
 <%
 (function(){
 	ebx.stdout = [
+		{"id":18,"text":"销售","children":[
+			{"text":"新建","children":[
+				{"id":1307,"text":"销售出库单","href":"public.html"}
+			]},
+			{"text":"打开","children":[
+				{"id":1306,"text":"销售出库单","mode":"saleoutstock","style":"saleoutstock","edit":"saleoutstock","template":384,"datestyle":1,"IsAuditStyle":1}
+			]},
+			{"text":"查询","children":[
+				{"id":1308,"text":"销售出库查询","href":"public.html"},
+				{"id":1309,"text":"销售汇总查询","href":"public.html"}
+			]}
+		]},
 		{"id":16,"text":"基本资料","children":[
 			{"id":1700,"text":"区域","mode":"area","style":"area","edit":"area","template":241},
 			{"id":1701,"text":"产品类型","mode":"productclass","style":"productclass","template":84},
@@ -29,7 +41,7 @@
 				{"id":1817,"text":"权限组设置","mode":"Group","style":"Group","edit":"Group","template":134},
 				{"id":1818,"text":"权限组分配权限","href":"public.html"}
 			]},
-			{"text":"系统属性_","children":[
+			{"text":"系统属性","children":[
 				{"id":1819,"text":"日志分析","href":"public.html"},
 				{"id":1820,"text":"账套信息","href":"public.html"},
 				{"id":1821,"text":"系统信息","href":"public.html"}

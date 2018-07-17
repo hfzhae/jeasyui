@@ -159,6 +159,7 @@ var ebx = {
 	convertRsToJson: function(rs){//将rs对象转化成json文本 2018-5-4 zz
 		if(typeof(rs) != 'object')return('[]');
 		if(rs.RecordCount == undefined)return('[]');
+		if(rs.RecordCount == 0)return('[]');
 		var s = '';
 		rs.MoveFirst();
 		if(!rs.eof){ 
@@ -170,7 +171,7 @@ var ebx = {
 				for(var i = 0; i < fields.Count; i++){
 					var comma = ',';
 					if(i >= (fields.Count - 1)) comma = '';
-					s += '"' + fields(i).name + '":' + ebx.getType(fields(i)) + comma;
+					s += '"' + fields(i).name.toLowerCase() + '":' + ebx.getType(fields(i)) + comma;
 				}
 				//s = s.substr(0, s.length - 1);//效率太低，禁用了
 				s += '},';
@@ -542,34 +543,78 @@ var ebx = {
 			s += Wizard['Filter'];
 		}
 		
-		s = s.replaceAll('@@AccountID', 1);//账套
-		s = s.replaceAll('@@Owner', 1);//用户
+		s = s.toLowerCase();
 		
-		var find = ebx.sqlStringEncode(ebx.stdin['find']);//获取搜索字段
+		s = s.replaceAll('@@accountid', this.Accountid);//账套
+		s = s.replaceAll('@@owner', this.Owner);//用户
 
+		var find = ebx.sqlStringEncode(ebx.stdin['find']),//获取搜索字段
+			datefrom = ebx.sqlStringEncode(ebx.stdin['datefrom']),
+			dateto = ebx.sqlStringEncode(ebx.stdin['dateto']),
+			isdeleted = ebx.validInt(ebx.stdin['isdeleted']),
+			isaudit =  ebx.validInt(ebx.stdin['isaudit'], -1); 
+
+		if(datefrom.length > 0){
+			datefrom = (datefrom.split('+')[0] + ' ' + datefrom.split('+')[1]).replaceAll('-', '/');
+			s = s.replaceAll('@@datefrom', "'" + new Date(datefrom).Format('yyyy-MM-dd hh:mm:ss') + "'");//开始时间
+		}else{
+			s = s.replaceAll('@@datefrom', "'" + new Date('1900/1/1').Format('yyyy-MM-dd hh:mm:ss') + "'");//开始时间
+		}
+		
+		if(dateto.length > 0){
+			dateto = (dateto.split('+')[0] + ' ' + dateto.split('+')[1]).replaceAll('-', '/');
+			s = s.replaceAll('@@dateto', "'" + new Date(dateto).Format('yyyy-MM-dd hh:mm:ss') + "'");//结束时间
+		}else{
+			s = s.replaceAll('@@dateto', "'" + new Date().Format('yyyy-MM-dd hh:mm:ss') + "'");//结束时间
+		}
+
+		switch(isdeleted){
+			case 0:
+				s = s.replaceAll('where', 'where [bd].[isdeleted]=0 and ');//未删除
+				break;
+			case 1:
+				s = s.replaceAll('where', 'where [bd].[isdeleted]=1 and ');//已删除
+				break;
+			case 2:
+				//全部
+				break;
+		}
+		
+		switch(isaudit){
+			case 0:
+				s = s.replaceAll('where', 'where [bd].[auditid]=0 and ');//未审核
+				break;
+			case 1:
+				s = s.replaceAll('where', 'where [bd].[auditid]>=1 and ');//已审核
+				break;
+			case 2:
+				//全部
+				break;
+		}
+		
 		if(typeof(find) == 'string'){
 			if(find.length > 0){
-				s = s.replaceAll('@@FINDBEGIN', '');//搜索开始
-				s = s.replaceAll('@@FINDEND', '');//搜搜结束
-				s = s.replaceAll('@@FIND', '\'%' + find + '%\'');//搜索文字替换
+				s = s.replaceAll('@@findbegin', '');//搜索开始
+				s = s.replaceAll('@@findend', '');//搜搜结束
+				s = s.replaceAll('@@find', '\'%' + find + '%\'');//搜索文字替换
 			}else{
-				var FINDBEGIN = s.indexOf('@@FINDBEGIN'),
-					FINDEND = s.indexOf('@@FINDEND');
+				var FINDBEGIN = s.indexOf('@@findbegin'),
+					FINDEND = s.indexOf('@@findend');
 				s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
 			}
 		}else{
-			var FINDBEGIN = s.indexOf('@@FINDBEGIN'),
-				FINDEND = s.indexOf('@@FINDEND');
+			var FINDBEGIN = s.indexOf('@@findbegin'),
+				FINDEND = s.indexOf('@@findend');
 			s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
 		}
 		
 		if(GroupBy){//聚合group by合成
 			GroupByStr = GroupByStr.substr(0, GroupByStr.length - 1);
-			s += 'GROUP BY ' + GroupByStr;
+			s += 'group by ' + GroupByStr;
 		}
 
 		if(Sort.recordcount > 0){//排序合成
-			s += 'ORDER BY ';
+			s += 'order by ';
 			Sort.Sort = 'SortOrder desc';
 			while(!Sort.eof){
 				s += Sort('Sort') + ','
