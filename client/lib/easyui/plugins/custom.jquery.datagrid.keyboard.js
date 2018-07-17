@@ -5,6 +5,7 @@ dev by zz on 2018/4/26
 
 存在的问题：
 1、datebox和combobox控件编辑器不支持失去焦点自动结束编辑状态
+2、新增lastinsertRow属性，默认为true，默认编辑到表格最后一行最后一个字段回车时自动添加一行
 *****************************************************************/
 
 $.extend($.fn.datagrid.methods, {
@@ -165,13 +166,17 @@ $.extend($.fn.datagrid.methods, {
 								opts.editIndex++;
 							}
 							setTimeout(function(){
-								var datacount = thisGrid.datagrid('getData').total;
-								if(firstindex >= datacount){//如果最后一行最后一个字段，回车后自动新增一行
-									thisGrid.datagrid('insertRow',{
-										row: {}
-									});
+								var datacount = thisGrid.datagrid('getData').total,
+									lastinsertRow = thisGrid.datagrid('options').lastinsertRow;
+									
+								if(lastinsertRow){
+									if(firstindex >= datacount){//如果最后一行最后一个字段，回车后自动新增一行
+										thisGrid.datagrid('insertRow',{
+											row: {}
+										});
+									}
+									thisGrid.datagrid('editkeyboard', {index:firstindex,field:nextfield});
 								}
-								thisGrid.datagrid('editkeyboard', {index:firstindex,field:nextfield});
 							},0);
 							break;
 						case 27://esc
@@ -224,7 +229,8 @@ $.extend($.fn.datagrid.defaults, {
 				ebx.setEditstatus(tab, true);
 			}
 		}catch(e){}
-	}
+	},
+	lastinsertRow: true
 
 });
 $.extend($.fn.propertygrid.defaults, {

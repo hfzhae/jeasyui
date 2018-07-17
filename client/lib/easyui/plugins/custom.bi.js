@@ -234,11 +234,12 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			width:'100%',
 			height:'100%',
 			border:false,
-			showHeader: true,
+			lastinsertRow:false,
 			columns: [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
-			]]
+			]],
+			showHeader: true
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 
 	}
