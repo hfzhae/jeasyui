@@ -215,11 +215,11 @@ $.extend($.fn.datagrid.defaults, {
 		$(this).datagrid('selectRow', index).datagrid('editkeyboard', {index:index,field:field});
 		opts.editIndex = index
 	},
-	onLoadSuccess: function(data){//unescape所有文本数据
-		var dg = $(this);
-		dg.datagrid('fixRowHeight');
-		ebx.UnescapeJson(data);
-	},
+	//onLoadSuccess: function(data){//unescape所有文本数据
+	//	var dg = $(this);
+	//	dg.datagrid('fixRowHeight');
+	//	ebx.UnescapeJson(data);
+	//},
 	onAfterEdit: function(rowIndex, rowData, changes){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
 		try{
 			var tabs = ebx.center.tabs('getSelected'),
@@ -230,13 +230,12 @@ $.extend($.fn.datagrid.defaults, {
 			}
 		}catch(e){}
 	},
-	lastinsertRow: true
-
+	lastinsertRow: true//编辑状态，最后一行最后一个字段会车时是否新增一行标志，true为新增，默认true
 });
 $.extend($.fn.propertygrid.defaults, {
-	onLoadSuccess: function(data){//unescape所有文本数据
-		ebx.UnescapeJson(data);
-	},
+	//onLoadSuccess: function(data){//unescape所有文本数据
+	//	ebx.UnescapeJson(data);
+	//},
 	onAfterEdit: function(rowIndex, rowData, changes){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
 		try{
 			var tabs = ebx.center.tabs('getSelected'),

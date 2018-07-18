@@ -107,9 +107,12 @@ var ebx = {
 					try{
 						var Paramet = ebx.parseToJson(ParametStr);
 						ebx.convertObjToDic(ebx.stdin, ebx.UnescapeJson(Paramet));
+						//ebx.convertObjToDic(ebx.stdin, unescape(decodeURI(Paramet)));
+						
 					}catch(e){
 						if(e.name == 'SyntaxError'){
 							ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
+							//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
 						}
 					}
 				}
@@ -118,6 +121,7 @@ var ebx = {
 			ParametStr = Request.ServerVariables("QUERY_STRING")(1);
 			if(typeof(ParametStr) == 'string'){
 				ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
+				//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
 			}
 		}
 		
@@ -308,9 +312,9 @@ var ebx = {
 		
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
-			return escape(str);
+			//return escape(str);
 			//return ebx.GB2312ToUTF8(str);
-			//return str;
+			return str;
 		}else{
 			return(str);
 		}
@@ -320,7 +324,7 @@ var ebx = {
 		
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
-			return unescape(str);
+			return unescape(decodeURI(str));
 			//return str;
 		}else{
 			return(str);
@@ -395,6 +399,9 @@ var ebx = {
 		return(stm.read());
 	},
 	OnPageEnd: function(Response){//页面结束处理函数
+		Response.Clear();
+		Response.ContentType="text/HTML;charset=GB2312" 
+		Response.ContentEncoding = 'gzip';
 		Response.Write(ebx.convertDicToJson(ebx.stdout));
 		ebx.CleanData();
 	},
@@ -530,7 +537,7 @@ var ebx = {
 		}
 		s = s.substr(0, s.length - 1);
 
-		s += 'WHERE 1=1 AND ';
+		s += 'WHERE ';
 		
 		if(Wizard['Relates'].State){//条件关系
 			while(!Wizard['Relates'].eof){
@@ -849,7 +856,7 @@ var ebx = {
 				rsBD('ParentID') = this.ParentID;
 				rsBD('CreateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 				rsBD("BillType") = this.ModType;
-				rsBD("AccountID") = ebx.AccountID;
+				rsBD("AccountID") = ebx.Accountid;
 				rsBD("Owner") = ebx.Owner;
 				rsBD("IsDeleted") = 0
 				rsBD("AuditID") = 0
@@ -937,8 +944,8 @@ var ebx = {
 				rsBI('RootID') = this.ID;
 				rsBI('ParentID') = this.ParentID;
 				rsBI('CreateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
-				rsBI("BillType") = this.ModType;
-				rsBI("AccountID") = ebx.AccountID;
+				rsBI("Infotype") = this.ModType;
+				rsBI("AccountID") = ebx.Accountid;
 				rsBI("Owner") = ebx.Owner;
 				rsBI("IsDeleted") = 0
 			}else{

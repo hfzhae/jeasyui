@@ -28,7 +28,7 @@ var ebx = {
 					maxWidth: '50%',
 					minWidth: 200,
 					title: '',
-					href: 'client/SimpChinese/west/',
+					href: 'client/SimpChinese/ConceptUI/west/',
 					hideExpandTool:false,
 					hideCollapsedContent:false,
 					border:false,
@@ -44,13 +44,13 @@ var ebx = {
 				}).layout('add',{
 					region: 'north',
 					height: 30,
-					href:'client/SimpChinese/north/',
+					href:'client/SimpChinese/ConceptUI/north/',
 					border:false,
 					split: false
 				}).layout('add',{
 					region: 'center',
 					border:false,
-					href:'client/SimpChinese/center/'
+					href:'client/SimpChinese/ConceptUI/center/'
 				}).layout({
 					onCollapse: function(){
 						$('#homeDiv').portal('resize');
@@ -122,7 +122,8 @@ var ebx = {
 	},
 	EditStatusMessager: function(s, t, backcall){//编辑状态判断提醒函数，参数：s：状态true为被编辑，t：显示文本，backcall：回调函数
 		if(s){//判断数据是否被编辑过。
-			$.messager.confirm('提醒', ebx.UnescapeJson(t)+'的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
+			//$.messager.confirm('提醒', ebx.UnescapeJson(t)+'的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
+			$.messager.confirm('提醒', t + '的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
 				if (r){
 					backcall();
 				}
@@ -234,7 +235,8 @@ var ebx = {
 				arrtype = 0;//设置json数组类型，1=[],0={}
 				switch(typeof(d[i])){
 					case 'string':
-						s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
+						//s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
+						s += '"'+ i +'":"' + d[i] +'",';
 						break;
 					case 'object':
 						if(d[i].RecordCount == undefined){
@@ -335,7 +337,8 @@ var ebx = {
 			}); 
 			
 			for(var i in columns[0]){//表头文字
-				s += ebx.unescapeEx(columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
+				//s += ebx.unescapeEx(columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
+				s += columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_') + '\t';
 			}
 			s = s.substr(0, s.length - 1);
 			s += '\n';
@@ -344,7 +347,8 @@ var ebx = {
 				for(var j in columns[0]){//按表头顺序加载
 					for(var k in allData[i]){
 						if(columns[0][j].field == k){
-							s += ebx.unescapeEx(allData[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
+							//s += ebx.unescapeEx(allData[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
+							s += allData[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_') + '\t';
 							nullfield = 1
 						}
 					}
@@ -717,7 +721,7 @@ var ebx = {
 				value: '',
 				render: function(v, rowIndex){
 					if(typeof(v) == 'string'){
-						v = ebx.UnescapeJson(v);
+						v = v;//ebx.UnescapeJson(v);
 					}
 					return v;
 				}
@@ -725,7 +729,7 @@ var ebx = {
 		],
 		setRender: function(render, value, rowIndex){//设置datagrid回掉函数，参数：render：回掉函数名，value：值，rowIndex：datagrid中的行号
 			if(typeof(value) == 'string'){
-				value = ebx.UnescapeJson(value);
+				value = value;//ebx.UnescapeJson(value);
 			}
 			if(typeof(render) != 'string'){
 				return value;

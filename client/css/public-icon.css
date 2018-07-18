@@ -359,6 +359,13 @@
 	background:url('icon32/AcceptChanges.png') no-repeat center center;
 }
 
+.icon-SaveSelectionToTableOfContentsGallery{
+	background:url('icon32/SaveSelectionToTableOfContentsGallery.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-SaveSelectionToTableOfContentsGallery-large{
+	background:url('icon32/SaveSelectionToTableOfContentsGallery.png') no-repeat center center;
+}
 
 
 /*新增图标end*/

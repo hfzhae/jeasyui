@@ -72,7 +72,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								
 								$.ajax({
 									type: 'post', 
-									url: 'server/' + _Paramet.mode + '/save/',
+									url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
 									data: parameter,
 									dataType: "json",
 									success: function(result){
@@ -93,7 +93,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 										}else{
 											$.messager.show({
 												title: '错误',
-												msg: '保存失败！' + ebx.unescapeEx(result.msg.message),
+												//msg: '保存失败！' + ebx.unescapeEx(result.msg.message),
+												msg: '保存失败！' + result.msg.message,
 												timeout: 5000,
 												showType: 'slide'
 											});	
@@ -214,16 +215,18 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		var onresize = window.onresize;
 		window.onresize = function() {//窗口高度发生变化时，自动调整tabs的高度 2018-4-22 zz
 			setTimeout(function(){
-				_mapitem.tabs('resize', {
-					height:_eastPanel.height()-_eastPanel.find('.ribbon').height()
-				});
-				_eaststorage.propertygrid('resize');
+				try{
+					_mapitem.tabs('resize', {
+						height:_eastPanel.height()-_eastPanel.find('.ribbon').height()
+					});
+					_eaststorage.propertygrid('resize');
+				}catch(e){}
 			},200);
 			onresize();
 		}
 		
 		this.eaststorage.propertygrid({
-			url: 'server/' + _Paramet.mode + '/load/',
+			url: 'server/SimpChinese/' + _Paramet.mode + '/load/',
 			method:'post',
 			queryParams:{_:(new Date()).getTime(),id:this.Paramet.id},
 			showGroup: true,

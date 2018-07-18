@@ -402,6 +402,9 @@ var scrollview = $.extend({}, $.fn.datagrid.defaults.view, {
 		if (opts.onBeforeFetch.call(target, page) == false){return;}
 
 		var rows = state.data.firstRows.slice(index, index+opts.pageSize);
+
+		if(state.data.total == 0)return;//总记录数为0时跳出函数 2018-7-18 zz
+
 		if (rows.length && (rows.length==opts.pageSize || index+rows.length==state.data.total)){
 			opts.onFetch.call(target, page, rows);
 			callback.call(this, rows);

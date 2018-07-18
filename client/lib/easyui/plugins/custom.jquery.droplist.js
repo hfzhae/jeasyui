@@ -51,13 +51,14 @@ $.extend($.fn.combogrid.defaults, {
 		enter: function(){
 			$(this).combogrid('showPanel');
 			var co = $(this),
-				t = escape($.trim(co.combogrid('getText'))),
+				//t = escape($.trim(co.combogrid('getText'))),
+				t = $.trim(co.combogrid('getText')),
 				ops = co.combogrid('options'),
 				rows = ops.oRows,
 				selected = co.combogrid('grid').datagrid('getSelected'),
 				columns = co.combogrid('grid').datagrid('options').columns,
 				searchField = [],
-				template = ops.template;;
+				template = ops.template;
 				
 			/*	
 			for (var j in columns[0]){
@@ -132,7 +133,9 @@ $.extend($.fn.combogrid.defaults, {
 	},
 	onChange: function(newValue, oldValue){
 		var co = $(this);
-		co.combo('setText', unescape(newValue));
+			//co.combo('setText', unescape(newValue));
+			co.combo('setText', newValue);
+			
 		try{
 			var tabs = ebx.center.tabs('getSelected'),
 				tab = tabs.panel('options');
@@ -141,7 +144,8 @@ $.extend($.fn.combogrid.defaults, {
 	},
 	onHidePanel: function(){
 		var co = $(this),
-			t = unescape(co.combo('getText'));
+			//t = unescape(co.combo('getText'));
+			t = co.combo('getText');
 		co.combo('setText', t);
 	},
 	onShowPanel: function(){
@@ -158,17 +162,18 @@ $.extend($.fn.combogrid.defaults, {
 
 			$.ajax({
 				type: 'post', 
-				url: 'server/DataProvider/style/',
+				url: 'server/SimpChinese/DataProvider/style/',
 				//data: JSON.stringify(ebx.EscapeJson({style:style,_:(new Date()).getTime()})),
 				data:{style:style,_:(new Date()).getTime()},
 				dataType: "json",
 				success: function(result){
 					if(result){
-						var data = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
+						//var data = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
+						var data = [result.data];//转码所有嵌套json中文的escape
 						g.datagrid({
 							view:scrollview,
 							pageSize:pageSize,
-							url:'server/DataProvider/list/',
+							url:'server/SimpChinese/DataProvider/list/',
 							queryParams:{template:template,_:(new Date()).getTime()},
 							method:'post',
 							loadMsg:$.fn.datagrid.defaults.loadMsg,

@@ -103,12 +103,13 @@ ebx.bd = {
 			_Paramet = this.Paramet;
 		$.ajax({
 			type: 'post', 
-			url: 'server/DataProvider/style/',
+			url: 'server/SimpChinese/DataProvider/style/',
 			data: {style:_Paramet.mode+'list',_:(new Date()).getTime()},//style名称必须和mode相吻合
 			dataType: "json",
 			success: function(result){
 				if(result){
-					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
+					//columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
+					columnsData = [result.data];//转码所有嵌套json中文的escape
 					callback(columnsData, _centerstorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 										
 					_centerstorage.datagrid({
@@ -122,7 +123,7 @@ ebx.bd = {
 						fit:false,
 						fitColumns:false,
 						striped:true,
-						url:'server/'+_Paramet.mode+'/center/',
+						url:'server/SimpChinese/'+_Paramet.mode+'/center/',
 						nowrap:true,//禁用自动换行
 						method:'post',
 						queryParams:{_:(new Date()).getTime(),id:_Paramet.id},
@@ -140,7 +141,7 @@ ebx.bd = {
 	},
 	_east: function(){//单据属性对象
 		this.eaststorage.propertygrid({
-			url: 'server/'+this.Paramet.mode+'/load/',
+			url: 'server/SimpChinese/'+this.Paramet.mode+'/load/',
 			method:'post',
 			queryParams:{_:(new Date()).getTime(),id:this.Paramet.id},
 			showGroup: true,
@@ -210,7 +211,7 @@ ebx.bd = {
 								
 								$.ajax({
 									type: 'post', 
-									url: 'server/' + _Paramet.mode + '/save/',
+									url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
 									data: parameter,
 									dataType: "json",
 									success: function(result){
@@ -267,11 +268,20 @@ ebx.bd = {
 								iconCls:'icon-reload'
 							}]
 						},{
+							type:'splitbutton',
 							name:'audit',
 							text:'审核',
 							iconCls:'icon-AcceptChanges-large',
 							iconAlign:'top',
 							size:'large',
+							menuItems:[{
+								name:'saveas',
+								text:'保存并审核',
+								iconCls:'icon-SaveSelectionToTableOfContentsGallery',
+								onClick: function(){
+									console.log(_layout)
+								}
+							}]
 						}]
 					},{
 						title:'打印',

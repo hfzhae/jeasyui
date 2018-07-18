@@ -311,7 +311,7 @@ ebx.browser = {
 									_getsearchParamet(bd, function(){
 										$.ajax({
 											type: 'post', 
-											url: 'server/DataProvider/list/',
+											url: 'server/SimpChinese/DataProvider/list/',
 											data: bd.Paramet,
 											dataType: "json",
 											success: function(result){
@@ -514,7 +514,7 @@ ebx.browser = {
 		
 		$.ajax({
 			type: 'post', 
-			url: 'server/DataProvider/style/',
+			url: 'server/SimpChinese/DataProvider/style/',
 			data: {style:_Paramet.style,_:(new Date()).getTime()},
 			dataType: "json",
 			success: function(result){
@@ -542,7 +542,7 @@ ebx.browser = {
 							fitColumns:false,
 							striped:true,
 							nowrap:true,//禁用自动换行
-							url:'server/DataProvider/list/',
+							url:'server/SimpChinese/DataProvider/list/',
 							method:'post',
 							queryParams: bd.Paramet,
 							//toolbar: toolbar,
@@ -582,8 +582,6 @@ ebx.browser = {
 										onClick: function(){}
 									});
 								}
-							},
-							onClickRow: function(rowIndex, rowData){
 							},
 							onClickCell:function(){},//禁用单元格编辑功能，防止双击后onDblClickRow事件失效 2018-7-15 zz
 							onDblClickRow: function(rowIndex, rowData){
@@ -690,10 +688,12 @@ ebx.browser = {
 		var onresize = window.onresize;
 		window.onresize = function() {//窗口高度发生变化时，自动调整list的高度 2018-4-22 zz
 			setTimeout(function(){
-				_liststorage.datagrid('resize', {
-					height:_listPanel.height()-_listPanel.find('.ribbon').height()
-				});
-				_liststorage.datagrid('resize');
+				try{
+					_liststorage.datagrid('resize', {
+						height:_listPanel.height()-_listPanel.find('.ribbon').height()
+					});
+					_liststorage.datagrid('resize');
+				}catch(e){}
 			},200);
 			onresize();
 		}
