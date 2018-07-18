@@ -372,8 +372,8 @@ var ebx = {
 		}else{
 			data = data.rows;
 		}
-		
-		if(data.length <= 0) return;
+
+		if(ebx.validInt(data.length) <= 0) return;
 		
 		ebx.copyData = [];
 		
@@ -393,7 +393,7 @@ var ebx = {
 	cut: function(datagrid){//页面内剪切数据，参数：datagrid：被剪切的datagrid对象 2018-5-17 zz
 		if(typeof(datagrid) != 'object') return;
 		var data = datagrid.datagrid('getData').rows;
-		if(data.length <= 0) return;
+		if(ebx.validInt(data.length) <= 0) return;
 		ebx.copyData = [];
 		for(var i in data){
 			ebx.copyData.push(data[i]);

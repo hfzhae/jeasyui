@@ -164,21 +164,17 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 							}]
 						}]
 					},{
+						title:'关闭',
 						tools:[{
-							type:'toolbar',
-							tools:[{
-								text:'关闭',
-								iconCls:'icon-DeclineInvitation',
-								iconAlign:'top',
-								onClick:function(){
-									ebx.EditStatusMessager(_tab.editstatus, _Paramet.text, function(){
-										setTimeout(function(){
-											_layout.layout('remove', 'east');//删除编辑layout
-										},0);
-										ebx.setEditstatus(_tab, false)
-									});
-								}
-							}]
+							iconCls:'icon-DeclineInvitation',
+							onClick:function(){
+								ebx.EditStatusMessager(_tab.editstatus, _Paramet.text, function(){
+									setTimeout(function(){
+										_layout.layout('remove', 'east');//删除编辑layout
+									},0);
+									ebx.setEditstatus(_tab, false)
+								});
+							}
 						}]
 					}]
 				}]

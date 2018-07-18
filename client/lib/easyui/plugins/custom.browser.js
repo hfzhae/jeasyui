@@ -136,7 +136,7 @@ ebx.browser = {
 				break;
 		}
 	},
-	_getsearchParamet:function(bd){//查询参数统一函数
+	_getsearchParamet:function(bd, callback){//查询参数统一函数
 		var searchtextbox = bd._getbiribbonobj(bd.biribbon, 'searchtextbox', 'textbox'),
 			datefrom = bd._getbiribbonobj(bd.biribbon, 'datefrom', 'datetimebox'),
 			dateto = bd._getbiribbonobj(bd.biribbon, 'dateto', 'datetimebox'),
@@ -148,23 +148,24 @@ ebx.browser = {
 			_isdeleted = isdeleted?isdeleted.combobox('getValue'):'',
 			_isaudit = isaudit?isaudit.combobox('getValue'):'';
 		
-		bd.Paramet.searchtextbox = escape(_searchtextbox);
+		bd.Paramet.find = escape(_searchtextbox);
 		bd.Paramet.datefrom = _datefrom;
 		bd.Paramet.dateto = _dateto;
 		bd.Paramet.isdeleted = _isdeleted;
 		bd.Paramet.isaudit = _isaudit;
+		callback();
 	},
 	_search: function(bd){//搜索函数	
-		bd._getsearchParamet(bd);
-		
-		bd.liststorage.datagrid('load', {
-			template: bd.Paramet.template,
-			_:(new Date()).getTime(),
-			find: bd.Paramet.searchtextbox,
-			datefrom: bd.Paramet.datefrom,
-			dateto: bd.Paramet.dateto,
-			isdeleted: bd.Paramet.isdeleted,
-			isaudit: bd.Paramet.isaudit
+		bd._getsearchParamet(bd, function(){
+			bd.liststorage.datagrid('load', {
+				template: bd.Paramet.template,
+				_:(new Date()).getTime(),
+				find: bd.Paramet.find,
+				datefrom: bd.Paramet.datefrom,
+				dateto: bd.Paramet.dateto,
+				isdeleted: bd.Paramet.isdeleted,
+				isaudit: bd.Paramet.isaudit
+			});
 		});
 	},
 	_getbiribbonobj: function(biribbon, name, type){//获取biribbon指定对象，参数：biribbon：biribbon对象，name：name属性或按钮字符，type：空间类型 2018-7-17 zz
@@ -181,7 +182,15 @@ ebx.browser = {
 				}
 				break;
 			case 'linkbutton':
-			
+				var o = biribbon.find('.l-btn');
+				for(var i = 0;i < o.length; i++){
+					var _name = $(o[i]).linkbutton('options').name;
+					if(_name != undefined){
+						if(_name.toLowerCase() == name.toLowerCase()){
+							return $(o[i]);
+						}
+					}
+				}
 				break;
 			case 'textbox-button':
 				var o = biribbon.find('.textbox-button');
@@ -293,34 +302,26 @@ ebx.browser = {
 								iconAlign:'top',
 								size:'large',
 								onClick:function(){
-									var btn = $(this), 
-										Parametdata;
-										
-									if(btn.linkbutton('options').disabled == true) return;
-									btn.linkbutton('disable');
-									var find = escape(_getbiribbonobj(_biribbon, 'searchtextbox', 'textbox').textbox('getValue')),
-										datefrom = _getbiribbonobj(_biribbon, 'datefrom', 'datetimebox'),
-										dateto = _getbiribbonobj(_biribbon, 'dateto', 'datetimebox'),
-										Parametdata = {template:_Paramet.template,_:(new Date()).getTime(),exportdata:1};
-										Parametdata.datefrom = datefrom?datefrom.datetimebox('getValue'):'',
-										Parametdata.dateto = dateto?dateto.datetimebox('getValue'):'';
-										
-									if(find.length > 0){
-										Parametdata.find = find;
-									}
+									var btn = $(this);
 
-									$.ajax({
-										type: 'post', 
-										url: 'server/DataProvider/list/',
-										data: Parametdata,
-										dataType: "json",
-										success: function(result){
-											if(result){
-												btn.linkbutton('enable');
-												ebx.clipboardData(columnsData, result)
+									if(btn.linkbutton('options').disabled == true) return;
+									
+									btn.linkbutton('disable');
+									
+									_getsearchParamet(bd, function(){
+										$.ajax({
+											type: 'post', 
+											url: 'server/DataProvider/list/',
+											data: bd.Paramet,
+											dataType: "json",
+											success: function(result){
+												if(result){
+													btn.linkbutton('enable');
+													ebx.clipboardData(columnsData, result)
+												}
 											}
-										}
-									});				
+										});	
+									});									
 								}
 							},{
 								type:'splitbutton',
@@ -339,7 +340,7 @@ ebx.browser = {
 							}]
 						}]
 					},{
-						title:'状态和搜索',
+						title:'状态和条件',
 						type:'toolbar',
 						dir:'v',
 						tools:[{
@@ -395,9 +396,9 @@ ebx.browser = {
 							tools: [{
 								type:'textbox',
 								name:'searchtextbox',
-								buttonText:'搜索',
+								//buttonText:'搜索',
 								width:135,
-								//iconCls:'icon-ZoomClassic_custom',
+								iconCls:'icon-ZoomClassic_custom',
 								plain:true,
 								iconAlign:'left'
 							}]
@@ -426,6 +427,16 @@ ebx.browser = {
 								showSeconds: true
 							}]
 						}]
+					},{
+						type:'toolbar',
+						title:'搜索',
+						tools:[{
+							//text:'搜索',
+							name:'searchbtn',
+							iconCls:'icon-ZoomClassic_custom-large',
+							//iconAlign:'top',
+							size:'large'
+						}]
 					}]
 				}]
 			};
@@ -452,8 +463,32 @@ ebx.browser = {
 			}
 		});
 		
-		_getbiribbonobj(_biribbon, 'searchtextbox', 'textbox').textbox('textbox').bind('keydown', function(e) {  
-			if (e.keyCode == 13) {  
+		var searchtextbox = _getbiribbonobj(_biribbon, 'searchtextbox', 'textbox');
+		if(searchtextbox){
+			searchtextbox.textbox('textbox').bind('keydown', function(e) {  
+				if (e.keyCode == 13) {  
+					_search(bd);
+					
+					_biribbon.find('.icon-reload').parent().parent().linkbutton({
+						disabled:true,
+						onClick: function(){}
+					});
+					_biribbon.find('.icon-Delete').parent().parent().linkbutton({
+						disabled:true,
+						onClick: function(){}
+					});
+					_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
+						disabled:true,
+						onClick: function(){}
+					});
+				}  
+			});
+		}
+		
+		//var searchbtn = _getbiribbonobj(_biribbon, '搜索', 'textbox-button');
+		var searchbtn = _getbiribbonobj(_biribbon, 'searchbtn', 'linkbutton');
+		if(searchbtn){
+			searchbtn.on('click', function(e) {  
 				_search(bd);
 				
 				_biribbon.find('.icon-reload').parent().parent().linkbutton({
@@ -468,26 +503,8 @@ ebx.browser = {
 					disabled:true,
 					onClick: function(){}
 				});
-			}  
-		});
-		
-		_getbiribbonobj(_biribbon, '搜索', 'textbox-button').on('click', function(e) {  
-			_search(bd);
-			
-			_biribbon.find('.icon-reload').parent().parent().linkbutton({
-				disabled:true,
-				onClick: function(){}
 			});
-			_biribbon.find('.icon-Delete').parent().parent().linkbutton({
-				disabled:true,
-				onClick: function(){}
-			});
-			_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
-				disabled:true,
-				onClick: function(){}
-			});
-		});
-		
+		}
 		searchtext.textbox({
 			buttonText:'搜索',
 			iconCls:'icon-ZoomClassic_custom',
@@ -511,160 +528,161 @@ ebx.browser = {
 						_isaudit = -1;
 						if(isaudit)_isaudit = isaudit.combobox('getValue')
 					
-					_getsearchParamet(bd);
-					
 					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
 					
-					_liststorage.datagrid({
-						view:scrollview,
-						pageSize:ebx.pagesize,
-						remoteSort:true,
-						rownumbers:true,
-						singleSelect:true,
-						pagination:false,
-						fit:false,
-						fitColumns:false,
-						striped:true,
-						nowrap:true,//禁用自动换行
-						url:'server/DataProvider/list/',
-						method:'post',
-						queryParams: bd.Paramet,
-						//toolbar: toolbar,
-						multiSort:false,
-						checkOnSelect:false,
-						columns:columnsData,
-						height: _listPanel.height()-_listPanel.find('.ribbon').height(),//'100%',
-						width: '100%',
-						onSelect: function(rowIndex, rowData){
-							_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
-								disabled:false,
-								onClick: function(){
-									var options = {
-										_Paramet: _Paramet,
-										browsertype: _browsertype,
-										_tabs: _tabs,
-										_layout: _layout
-									};
-									_edit(rowIndex, rowData, options);
-								}
-							});
-							
-							if(rowData.isdeleted){
-								_biribbon.find('.icon-reload').parent().parent().linkbutton({
-									disabled:false
+					_getsearchParamet(bd, function(){
+						_liststorage.datagrid({
+							view:scrollview,
+							pageSize:ebx.pagesize,
+							remoteSort:true,
+							rownumbers:true,
+							singleSelect:true,
+							pagination:false,
+							fit:false,
+							fitColumns:false,
+							striped:true,
+							nowrap:true,//禁用自动换行
+							url:'server/DataProvider/list/',
+							method:'post',
+							queryParams: bd.Paramet,
+							//toolbar: toolbar,
+							multiSort:false,
+							checkOnSelect:false,
+							columns:columnsData,
+							height: _listPanel.height()-_listPanel.find('.ribbon').height(),//'100%',
+							width: '100%',
+							onSelect: function(rowIndex, rowData){
+								_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
+									disabled:false,
+									onClick: function(){
+										var options = {
+											_Paramet: _Paramet,
+											browsertype: _browsertype,
+											_tabs: _tabs,
+											_layout: _layout
+										};
+										_edit(rowIndex, rowData, options);
+									}
 								});
-								_biribbon.find('.icon-Delete').parent().parent().linkbutton({
-									disabled:true,
-									onClick: function(){}
-								});
-							}else{
-								_biribbon.find('.icon-Delete').parent().parent().linkbutton({
-									disabled:false
-								});
-								_biribbon.find('.icon-reload').parent().parent().linkbutton({
-									disabled:true,
-									onClick: function(){}
-								});
-							}
-						},
-						onClickRow: function(rowIndex, rowData){
-						},
-						onClickCell:function(){},//禁用单元格编辑功能，防止双击后onDblClickRow事件失效 2018-7-15 zz
-						onDblClickRow: function(rowIndex, rowData){
-							var options = {
-								_Paramet: _Paramet,
-								browsertype: _browsertype,
-								_tabs: _tabs,
-								_layout: _layout
-							};
-							_edit(rowIndex, rowData, options);
-						},
-						onRowContextMenu: function(e, rowIndex, rowData){
-							if(rowIndex < 0)return;
-							_liststorage.datagrid('selectRow', rowIndex)
-							e.preventDefault();
-							var RowContextMenu = $('<div>');
-							RowContextMenu.menu({
-								width:100
-							}).menu('appendItem', {
-								text: '编辑',
-								iconCls: 'icon-DesignMode',
-								onclick:function(){
-									var options = {
-										_Paramet: _Paramet,
-										browsertype: _browsertype,
-										_tabs: _tabs,
-										_layout: _layout
-									};
-									_edit(rowIndex, rowData, options);
+								
+								if(rowData.isdeleted){
+									_biribbon.find('.icon-reload').parent().parent().linkbutton({
+										disabled:false
+									});
+									_biribbon.find('.icon-Delete').parent().parent().linkbutton({
+										disabled:true,
+										onClick: function(){}
+									});
+								}else{
+									_biribbon.find('.icon-Delete').parent().parent().linkbutton({
+										disabled:false
+									});
+									_biribbon.find('.icon-reload').parent().parent().linkbutton({
+										disabled:true,
+										onClick: function(){}
+									});
 								}
-							}).menu('appendItem', {
-								text: '删除',
-								iconCls: 'icon-Delete',
-								disabled:rowData.IsDeleted?true:false,
-								onclick:function(){
-									console.log(rowIndex);
-									console.log(rowData);
-								}
-							}).menu('appendItem', {
-								text: '恢复',
-								iconCls: 'icon-reload',
-								disabled:rowData.IsDeleted?false:true,
-								onclick:function(){
-									console.log(rowIndex);
-									console.log(rowData);
-								}
-							}).menu('show', {
-								left: e.pageX,
-								top: e.pageY
-							});
+							},
+							onClickRow: function(rowIndex, rowData){
+							},
+							onClickCell:function(){},//禁用单元格编辑功能，防止双击后onDblClickRow事件失效 2018-7-15 zz
+							onDblClickRow: function(rowIndex, rowData){
+								var options = {
+									_Paramet: _Paramet,
+									browsertype: _browsertype,
+									_tabs: _tabs,
+									_layout: _layout
+								};
+								_edit(rowIndex, rowData, options);
+							},
+							onRowContextMenu: function(e, rowIndex, rowData){
+								if(rowIndex < 0)return;
+								_liststorage.datagrid('selectRow', rowIndex)
+								e.preventDefault();
+								var RowContextMenu = $('<div>');
+								RowContextMenu.menu({
+									width:100
+								}).menu('appendItem', {
+									text: '编辑',
+									iconCls: 'icon-DesignMode',
+									onclick:function(){
+										var options = {
+											_Paramet: _Paramet,
+											browsertype: _browsertype,
+											_tabs: _tabs,
+											_layout: _layout
+										};
+										_edit(rowIndex, rowData, options);
+									}
+								}).menu('appendItem', {
+									text: '删除',
+									iconCls: 'icon-Delete',
+									disabled:rowData.IsDeleted?true:false,
+									onclick:function(){
+										console.log(rowIndex);
+										console.log(rowData);
+									}
+								}).menu('appendItem', {
+									text: '恢复',
+									iconCls: 'icon-reload',
+									disabled:rowData.IsDeleted?false:true,
+									onclick:function(){
+										console.log(rowIndex);
+										console.log(rowData);
+									}
+								}).menu('show', {
+									left: e.pageX,
+									top: e.pageY
+								});
 
-						},
-						border:result.bd[0].border,
-						showFooter:result.bd[0].footer,
-						showHeader:result.bd[0].header
-					}).datagrid('renderformatterstyler');
+							},
+							border:result.bd[0].border,
+							showFooter:result.bd[0].footer,
+							showHeader:result.bd[0].header
+						}).datagrid('renderformatterstyler');
+						
+						/*combobox的onChange初始化时也会加再一次，临时禁用
+						var isdeletedcombobox = _getbiribbonobj(_biribbon, 'isdeleted', 'combobox');
+						if(isdeletedcombobox){
+							isdeletedcombobox.combobox({
+								onChange: function(newValue, oldValue){
+									var datefrom = _getbiribbonobj(_biribbon, 'datefrom', 'datetimebox'),
+										dateto = _getbiribbonobj(_biribbon, 'dateto', 'datetimebox'),
+										find = _getbiribbonobj(_biribbon, 'searchtextbox', 'textbox'),
+										isaudit = _getbiribbonobj(_biribbon, 'isaudit', 'combobox');
+									
+									_Paramet.isdeleted = newValue;
+									if(isaudit)_Paramet.isaudit = isaudit.combobox('getValue');
+									_Paramet.datefrom = datefrom?datefrom.datetimebox('getValue'):'';
+									_Paramet.dateto = dateto?dateto.datetimebox('getValue'):'';
+
+									_search(find.textbox('getValue'), _liststorage, _Paramet);
+								}
+							});
+						}
+						*/
+						/*combobox的onChange初始化时也会加再一次，临时禁用
+						var isauditcombobox = _getbiribbonobj(_biribbon, 'isaudit', 'combobox');
+						if(isauditcombobox){
+							isauditcombobox.combobox({
+								onChange: function(newValue, oldValue){
+									var datefrom = _getbiribbonobj(_biribbon, 'datefrom', 'datetimebox'),
+										dateto = _getbiribbonobj(_biribbon, 'dateto', 'datetimebox'),
+										isdeleted = _getbiribbonobj(_biribbon, 'isdeleted', 'combobox'),
+										find = _getbiribbonobj(_biribbon, 'searchtextbox', 'textbox');
+									
+									_Paramet.isdeleted = isdeleted?isdeleted.combobox('getValue'):0;
+									_Paramet.isaudit = newValue;
+									_Paramet.datefrom = datefrom?datefrom.datetimebox('getValue'):'';
+									_Paramet.dateto = dateto?dateto.datetimebox('getValue'):'';
+
+									_search(find.textbox('getValue'), _liststorage, _Paramet);
+								}
+							});
+						}
+						*/
+					});
 					
-					/*combobox的onChange初始化时也会加再一次，临时禁用
-					var isdeletedcombobox = _getbiribbonobj(_biribbon, 'isdeleted', 'combobox');
-					if(isdeletedcombobox){
-						isdeletedcombobox.combobox({
-							onChange: function(newValue, oldValue){
-								var datefrom = _getbiribbonobj(_biribbon, 'datefrom', 'datetimebox'),
-									dateto = _getbiribbonobj(_biribbon, 'dateto', 'datetimebox'),
-									find = _getbiribbonobj(_biribbon, 'searchtextbox', 'textbox'),
-									isaudit = _getbiribbonobj(_biribbon, 'isaudit', 'combobox');
-								
-								_Paramet.isdeleted = newValue;
-								if(isaudit)_Paramet.isaudit = isaudit.combobox('getValue');
-								_Paramet.datefrom = datefrom?datefrom.datetimebox('getValue'):'';
-								_Paramet.dateto = dateto?dateto.datetimebox('getValue'):'';
-
-								_search(find.textbox('getValue'), _liststorage, _Paramet);
-							}
-						});
-					}
-					*/
-					/*combobox的onChange初始化时也会加再一次，临时禁用
-					var isauditcombobox = _getbiribbonobj(_biribbon, 'isaudit', 'combobox');
-					if(isauditcombobox){
-						isauditcombobox.combobox({
-							onChange: function(newValue, oldValue){
-								var datefrom = _getbiribbonobj(_biribbon, 'datefrom', 'datetimebox'),
-									dateto = _getbiribbonobj(_biribbon, 'dateto', 'datetimebox'),
-									isdeleted = _getbiribbonobj(_biribbon, 'isdeleted', 'combobox'),
-									find = _getbiribbonobj(_biribbon, 'searchtextbox', 'textbox');
-								
-								_Paramet.isdeleted = isdeleted?isdeleted.combobox('getValue'):0;
-								_Paramet.isaudit = newValue;
-								_Paramet.datefrom = datefrom?datefrom.datetimebox('getValue'):'';
-								_Paramet.dateto = dateto?dateto.datetimebox('getValue'):'';
-
-								_search(find.textbox('getValue'), _liststorage, _Paramet);
-							}
-						});
-					}
-					*/
 				}
 			}
 		});
