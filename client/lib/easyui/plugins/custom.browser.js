@@ -223,6 +223,8 @@ ebx.browser = {
 	},
 	_list: function(){//读取并显示list列表方法
 		var bd = this,
+			toolbar = $('<div>'),
+			searchtext = $('<div>').appendTo(toolbar),
 			_Paramet = this.Paramet,
 			_liststorage = this.liststorage,
 			_edit = this._edit,
@@ -361,7 +363,7 @@ ebx.browser = {
 								valueField:'id',
 								textField:'text',
 								panelHeight:'auto',
-								width:'74xp',
+								width:'89xp',
 								editable:false
 							}]
 						},{
@@ -385,7 +387,7 @@ ebx.browser = {
 								valueField:'id',
 								textField:'text',
 								panelHeight:'auto',
-								width:'74xp',
+								width:'89xp',
 								editable:false
 							}]
 						},{
@@ -394,7 +396,7 @@ ebx.browser = {
 								type:'textbox',
 								name:'searchtextbox',
 								buttonText:'搜索',
-								width:120,
+								width:135,
 								//iconCls:'icon-ZoomClassic_custom',
 								plain:true,
 								iconAlign:'left'
@@ -484,6 +486,13 @@ ebx.browser = {
 				disabled:true,
 				onClick: function(){}
 			});
+		});
+		
+		searchtext.textbox({
+			buttonText:'搜索',
+			iconCls:'icon-ZoomClassic_custom',
+			iconAlign:'left',
+			width:'100%'
 		});
 		
 		$.ajax({

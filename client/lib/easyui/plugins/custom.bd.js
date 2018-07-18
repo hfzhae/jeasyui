@@ -82,7 +82,7 @@ ebx.bd = {
 			width: 400,
 			maxWidth: '50%',
 			minWidth: 300,
-			title: '基本信息',
+			//title: '基本信息',
 			href: 'client/SimpChinese/' + this.Paramet.mode + '/east.html',
 			hideExpandTool: false,
 			hideCollapsedContent: false,
@@ -90,10 +90,12 @@ ebx.bd = {
 			split: true
 		}).layout('add', {
 			region: 'north',
-			height: 115,
+			//title:'功能',
+			height: 113,
 			href: 'client/SimpChinese/' + this.Paramet.mode + '/north.html',
 			border: false,
-			split: false
+			split: false,
+			hideCollapsedContent: false
 		});
 	},
 	_center: function(callback){//单据表体对象
@@ -264,6 +266,25 @@ ebx.bd = {
 								text:'恢复',
 								iconCls:'icon-reload'
 							}]
+						},{
+							name:'audit',
+							text:'审核',
+							iconCls:'icon-AcceptChanges-large',
+							iconAlign:'top',
+							size:'large',
+						}]
+					},{
+						title:'打印',
+						tools:[{
+							text:'打印',
+							iconCls:'icon-PrintDialogAccess-large',
+							iconAlign:'top',
+							size:'large',
+						},{
+							text:'预览',
+							iconCls:'icon-ViewsAdpDiagramPrintPreview-large',
+							iconAlign:'top',
+							size:'large',
 						}]
 					},{
 						title:'行操作',

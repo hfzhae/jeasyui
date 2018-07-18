@@ -336,6 +336,29 @@
 	background:url('icon32/DesignMode.png') no-repeat center center;
 }
 
+.icon-PrintDialogAccess{
+	background:url('icon32/PrintDialogAccess.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-PrintDialogAccess-large{
+	background:url('icon32/PrintDialogAccess.png') no-repeat center center;
+}
+.icon-ViewsAdpDiagramPrintPreview{
+	background:url('icon32/ViewsAdpDiagramPrintPreview.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-ViewsAdpDiagramPrintPreview-large{
+	background:url('icon32/ViewsAdpDiagramPrintPreview.png') no-repeat center center;
+}
+
+.icon-AcceptChanges{
+	background:url('icon32/AcceptChanges.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-AcceptChanges-large{
+	background:url('icon32/AcceptChanges.png') no-repeat center center;
+}
+
 
 
 /*新增图标end*/

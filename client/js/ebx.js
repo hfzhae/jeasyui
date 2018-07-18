@@ -38,7 +38,7 @@ var ebx = {
 						if(region =='north'|| region =='south'){
 							//返回标题;
 						} else {
-							return '<div class="panel-title layout-expand-title layout-expand-title-down">功能菜单</ div>';
+							return '<div class="panel-title layout-expand-title layout-expand-title-down">菜单</ div>';
 						}
 					}
 				}).layout('add',{
