@@ -367,6 +367,21 @@
 	background:url('icon32/SaveSelectionToTableOfContentsGallery.png') no-repeat center center;
 }
 
+.icon-light-bulb-on{
+	background:url('icon32/light-bulb-on.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-light-bulb-on-large{
+	background:url('icon32/light-bulb-on.png') no-repeat center center;
+}
+.icon-light-bulb-off{
+	background:url('icon32/light-bulb-off.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-light-bulb-off-large{
+	background:url('icon32/light-bulb-off.png') no-repeat center center;
+}
+
 
 /*新增图标end*/
 

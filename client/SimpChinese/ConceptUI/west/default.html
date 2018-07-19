@@ -10,7 +10,7 @@
 			dataType: "json",
                 success: function(result){
 				if(result){
-					var data = ebx.UnescapeJson(result);//转码所有嵌套json中文的escape
+					var data = result;
 					$(west).tree({
 						data: data,
 						animate: true,

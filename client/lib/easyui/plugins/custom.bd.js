@@ -108,8 +108,7 @@ ebx.bd = {
 			dataType: "json",
 			success: function(result){
 				if(result){
-					//columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
-					columnsData = [result.data];//转码所有嵌套json中文的escape
+					columnsData = [result.data];
 					callback(columnsData, _centerstorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 										
 					_centerstorage.datagrid({
@@ -232,7 +231,7 @@ ebx.bd = {
 										}else{
 											$.messager.show({
 												title: '错误',
-												msg: '保存失败！' + ebx.unescapeEx(result.msg.message),
+												msg: '保存失败！' + result.msg.message,
 												timeout: 5000,
 												showType: 'slide'
 											});	

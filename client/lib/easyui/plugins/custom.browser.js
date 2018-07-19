@@ -68,7 +68,7 @@ ebx.browser = {
 				var tabsid = 'tabs_'+ebx.RndNum(20)
 				ebx.center.tabs('add', {
 					id: tabsid,
-					title: ebx.unescapeEx(options._Paramet.text),
+					title: '新建-' + options._Paramet.text,
 					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template,
 					//iconCls:node.iconCls,
 					selected: true,
@@ -105,7 +105,7 @@ ebx.browser = {
 				
 				ebx.center.tabs('add', {
 					id: tabsid,
-					title: ebx.unescapeEx(options._Paramet.text),
+					title: '打开-' + options._Paramet.text,
 					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template,
 					//iconCls:node.iconCls,
 					selected: true,
@@ -116,7 +116,6 @@ ebx.browser = {
 			case 'bi':
 				var id = rowData?rowData.id:'',
 					index = rowIndex;
-
 				ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Paramet.text,function(){
 					options._layout.layout('remove', 'east');//删除编辑layout
 					ebx.setEditstatus(options._tabs.panel('options'), false);
@@ -136,27 +135,25 @@ ebx.browser = {
 				break;
 		}
 	},
-	_getsearchParamet:function(bd, callback){//查询参数统一函数
-		var searchtextbox = bd._getbiribbonobj(bd.biribbon, 'searchtextbox', 'textbox'),
-			datefrom = bd._getbiribbonobj(bd.biribbon, 'datefrom', 'datetimebox'),
+	_getsearchParamet:function(bd, find, callback){//查询参数统一函数
+		var datefrom = bd._getbiribbonobj(bd.biribbon, 'datefrom', 'datetimebox'),
 			dateto = bd._getbiribbonobj(bd.biribbon, 'dateto', 'datetimebox'),
 			isdeleted = bd._getbiribbonobj(bd.biribbon, 'isdeleted', 'combobox'),
 			isaudit = bd._getbiribbonobj(bd.biribbon, 'isaudit', 'combobox'),
-			_searchtextbox = searchtextbox?searchtextbox.textbox('getValue'):'',
 			_datefrom = datefrom?datefrom.datetimebox('getValue'):'',
 			_dateto = dateto?dateto.datetimebox('getValue'):'',
 			_isdeleted = isdeleted?isdeleted.combobox('getValue'):'',
 			_isaudit = isaudit?isaudit.combobox('getValue'):'';
 		
-		bd.Paramet.find = escape(_searchtextbox);
+		bd.Paramet.find = find;
 		bd.Paramet.datefrom = _datefrom;
 		bd.Paramet.dateto = _dateto;
 		bd.Paramet.isdeleted = _isdeleted;
 		bd.Paramet.isaudit = _isaudit;
 		callback();
 	},
-	_search: function(bd){//搜索函数	
-		bd._getsearchParamet(bd, function(){
+	_search: function(bd, find){//搜索函数	
+		bd._getsearchParamet(bd, find, function(){
 			bd.liststorage.datagrid('load', {
 				template: bd.Paramet.template,
 				_:(new Date()).getTime(),
@@ -234,6 +231,8 @@ ebx.browser = {
 		var bd = this,
 			toolbar = $('<div>'),
 			searchtext = $('<div>').appendTo(toolbar),
+			newbtn = $('<div>').appendTo(toolbar),
+			functionbtn = $('<div>').appendTo(toolbar),
 			_Paramet = this.Paramet,
 			_liststorage = this.liststorage,
 			_edit = this._edit,
@@ -257,20 +256,12 @@ ebx.browser = {
 					groups:[{
 						title:'基本操作',
 						tools:[{
-							name:'save',
-							text:'新建',
-							iconCls:'icon-file-large',
+							name:'del',
+							text:'删除',
+							iconCls:'icon-Delete-large',
 							iconAlign:'top',
 							size:'large',
-							onClick: function(){
-								var options = {
-									_Paramet: _Paramet,
-									browsertype: _browsertype,
-									_tabs: _tabs,
-									_layout: _layout
-								}; 
-								_new(options);
-							}
+							disabled: true
 						},{
 							type:'toolbar',
 							dir:'v',
@@ -278,11 +269,6 @@ ebx.browser = {
 								name:'edit',
 								text:'编辑',
 								iconCls:'icon-DesignMode',
-								disabled: true
-							},{
-								name:'del',
-								text:'删除',
-								iconCls:'icon-Delete',
 								disabled: true
 							},{
 								name:'reload',
@@ -308,7 +294,7 @@ ebx.browser = {
 									
 									btn.linkbutton('disable');
 									
-									_getsearchParamet(bd, function(){
+									_getsearchParamet(bd, searchtext.textbox('getValue'), function(){
 										$.ajax({
 											type: 'post', 
 											url: 'server/SimpChinese/DataProvider/list/',
@@ -340,7 +326,7 @@ ebx.browser = {
 							}]
 						}]
 					},{
-						title:'状态和条件',
+						title:'状态',
 						type:'toolbar',
 						dir:'v',
 						tools:[{
@@ -391,17 +377,6 @@ ebx.browser = {
 								width:'89xp',
 								editable:false
 							}]
-						},{
-							type:'toolbar',
-							tools: [{
-								type:'textbox',
-								name:'searchtextbox',
-								//buttonText:'搜索',
-								width:135,
-								iconCls:'icon-ZoomClassic_custom',
-								plain:true,
-								iconAlign:'left'
-							}]
 						}]
 					},{
 						title:'时间',
@@ -426,16 +401,6 @@ ebx.browser = {
 								value: new Date().Format("yyyy-MM-dd hh:mm:ss"),
 								showSeconds: true
 							}]
-						}]
-					},{
-						type:'toolbar',
-						title:'搜索',
-						tools:[{
-							//text:'搜索',
-							name:'searchbtn',
-							iconCls:'icon-ZoomClassic_custom-large',
-							//iconAlign:'top',
-							size:'large'
 						}]
 					}]
 				}]
@@ -462,34 +427,13 @@ ebx.browser = {
 				}
 			}
 		});
-		
-		var searchtextbox = _getbiribbonobj(_biribbon, 'searchtextbox', 'textbox');
-		if(searchtextbox){
-			searchtextbox.textbox('textbox').bind('keydown', function(e) {  
-				if (e.keyCode == 13) {  
-					_search(bd);
-					
-					_biribbon.find('.icon-reload').parent().parent().linkbutton({
-						disabled:true,
-						onClick: function(){}
-					});
-					_biribbon.find('.icon-Delete').parent().parent().linkbutton({
-						disabled:true,
-						onClick: function(){}
-					});
-					_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
-						disabled:true,
-						onClick: function(){}
-					});
-				}  
-			});
-		}
-		
-		//var searchbtn = _getbiribbonobj(_biribbon, '搜索', 'textbox-button');
-		var searchbtn = _getbiribbonobj(_biribbon, 'searchbtn', 'linkbutton');
-		if(searchbtn){
-			searchbtn.on('click', function(e) {  
-				_search(bd);
+		searchtext.textbox({
+			buttonText:'搜索',
+			iconCls:'icon-ZoomClassic_custom',
+			iconAlign:'left',
+			width:200,
+			onClickButton: function(){
+				_search(bd, searchtext.textbox('getValue'));
 				
 				_biribbon.find('.icon-reload').parent().parent().linkbutton({
 					disabled:true,
@@ -503,13 +447,69 @@ ebx.browser = {
 					disabled:true,
 					onClick: function(){}
 				});
-			});
-		}
-		searchtext.textbox({
-			buttonText:'搜索',
-			iconCls:'icon-ZoomClassic_custom',
-			iconAlign:'left',
-			width:'100%'
+			}
+		});
+		newbtn.linkbutton({
+			text:'新建',
+			iconCls: 'icon-file',
+			plain:true,
+			onClick: function(){
+				var options = {
+					_Paramet: _Paramet,
+					browsertype: _browsertype,
+					_tabs: _tabs,
+					_layout: _layout
+				}; 
+				_new(options);
+			}
+		});
+		functionbtn.linkbutton({
+			text:'更多',
+			iconCls: 'icon-light-bulb-on',
+			plain:true,
+			onClick:function(){
+				if(_biribbon.height() < 100){
+					_biribbon.show();
+					_biribbon.animate({height:113}, 200, function(){
+						_liststorage.datagrid('resize', {
+							height:_listPanel.height()-_listPanel.find('.ribbon').height()
+						});
+					});
+					functionbtn.find('.l-btn-text').text('隐藏');
+					functionbtn.find('.l-btn-icon').addClass('icon-light-bulb-off').removeClass('icon-light-bulb-on');
+				}else{
+					_biribbon.animate({height:0}, 200, function(){
+						_biribbon.hide();
+						_liststorage.datagrid('resize', {
+							height:_listPanel.height()-_listPanel.find('.ribbon').height()
+						});
+					});
+					functionbtn.find('.l-btn-text').text('更多');
+					functionbtn.find('.l-btn-icon').addClass('icon-light-bulb-on').removeClass('icon-light-bulb-off');
+				}
+			}
+		});
+		
+		_biribbon.hide();
+		_biribbon.height(0);
+		
+		searchtext.textbox('textbox').bind('keydown', function(e) {  
+			if (e.keyCode == 13) {  
+				_search(bd, searchtext.textbox('getValue'));
+				
+				_biribbon.find('.icon-reload').parent().parent().linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
+				_biribbon.find('.icon-Delete').parent().parent().linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
+				_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
+					disabled:true,
+					onClick: function(){}
+				});
+			}  
 		});
 		
 		$.ajax({
@@ -528,9 +528,9 @@ ebx.browser = {
 						_isaudit = -1;
 						if(isaudit)_isaudit = isaudit.combobox('getValue')
 					
-					columnsData = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
+					columnsData = [result.data];
 					
-					_getsearchParamet(bd, function(){
+					_getsearchParamet(bd, searchtext.textbox('getValue'), function(){
 						_liststorage.datagrid({
 							view:scrollview,
 							pageSize:ebx.pagesize,
@@ -545,14 +545,14 @@ ebx.browser = {
 							url:'server/SimpChinese/DataProvider/list/',
 							method:'post',
 							queryParams: bd.Paramet,
-							//toolbar: toolbar,
+							toolbar: toolbar,
 							multiSort:false,
 							checkOnSelect:false,
 							columns:columnsData,
 							height: _listPanel.height()-_listPanel.find('.ribbon').height(),//'100%',
 							width: '100%',
 							onSelect: function(rowIndex, rowData){
-								_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
+								bd._getbiribbonobj(bd.biribbon, 'edit', 'linkbutton').linkbutton({
 									disabled:false,
 									onClick: function(){
 										var options = {
@@ -566,20 +566,18 @@ ebx.browser = {
 								});
 								
 								if(rowData.isdeleted){
-									_biribbon.find('.icon-reload').parent().parent().linkbutton({
-										disabled:false
+									bd._getbiribbonobj(bd.biribbon, 'del', 'linkbutton').linkbutton({
+										disabled:true
 									});
-									_biribbon.find('.icon-Delete').parent().parent().linkbutton({
-										disabled:true,
-										onClick: function(){}
+									bd._getbiribbonobj(bd.biribbon, 'reload', 'linkbutton').linkbutton({
+										disabled:false
 									});
 								}else{
-									_biribbon.find('.icon-Delete').parent().parent().linkbutton({
+									bd._getbiribbonobj(bd.biribbon, 'del', 'linkbutton').linkbutton({
 										disabled:false
 									});
-									_biribbon.find('.icon-reload').parent().parent().linkbutton({
-										disabled:true,
-										onClick: function(){}
+									bd._getbiribbonobj(bd.biribbon, 'reload', 'linkbutton').linkbutton({
+										disabled:true
 									});
 								}
 							},
@@ -639,46 +637,30 @@ ebx.browser = {
 							showHeader:result.bd[0].header
 						}).datagrid('renderformatterstyler');
 						
-						/*combobox的onChange初始化时也会加再一次，临时禁用
 						var isdeletedcombobox = _getbiribbonobj(_biribbon, 'isdeleted', 'combobox');
 						if(isdeletedcombobox){
-							isdeletedcombobox.combobox({
-								onChange: function(newValue, oldValue){
-									var datefrom = _getbiribbonobj(_biribbon, 'datefrom', 'datetimebox'),
-										dateto = _getbiribbonobj(_biribbon, 'dateto', 'datetimebox'),
-										find = _getbiribbonobj(_biribbon, 'searchtextbox', 'textbox'),
-										isaudit = _getbiribbonobj(_biribbon, 'isaudit', 'combobox');
-									
-									_Paramet.isdeleted = newValue;
-									if(isaudit)_Paramet.isaudit = isaudit.combobox('getValue');
-									_Paramet.datefrom = datefrom?datefrom.datetimebox('getValue'):'';
-									_Paramet.dateto = dateto?dateto.datetimebox('getValue'):'';
-
-									_search(find.textbox('getValue'), _liststorage, _Paramet);
-								}
-							});
+							var onSelectfn = isdeletedcombobox.combobox('options').onSelect;
+							isdeletedcombobox.combobox('options').onSelect = function(record){
+								setTimeout(function(){
+									var find = searchtext.textbox('getValue');
+									_search(bd, find);
+								}, 0);
+								onSelectfn(record);
+							}
 						}
-						*/
-						/*combobox的onChange初始化时也会加再一次，临时禁用
+						
 						var isauditcombobox = _getbiribbonobj(_biribbon, 'isaudit', 'combobox');
 						if(isauditcombobox){
-							isauditcombobox.combobox({
-								onChange: function(newValue, oldValue){
-									var datefrom = _getbiribbonobj(_biribbon, 'datefrom', 'datetimebox'),
-										dateto = _getbiribbonobj(_biribbon, 'dateto', 'datetimebox'),
-										isdeleted = _getbiribbonobj(_biribbon, 'isdeleted', 'combobox'),
-										find = _getbiribbonobj(_biribbon, 'searchtextbox', 'textbox');
-									
-									_Paramet.isdeleted = isdeleted?isdeleted.combobox('getValue'):0;
-									_Paramet.isaudit = newValue;
-									_Paramet.datefrom = datefrom?datefrom.datetimebox('getValue'):'';
-									_Paramet.dateto = dateto?dateto.datetimebox('getValue'):'';
-
-									_search(find.textbox('getValue'), _liststorage, _Paramet);
-								}
-							});
+							var onSelectfn = isauditcombobox.combobox('options').onSelect;
+							isauditcombobox.combobox('options').onSelect = function(record){
+								setTimeout(function(){
+									var find = searchtext.textbox('getValue');
+									_search(bd, find);
+								}, 0);
+								onSelectfn(record);
+							}
 						}
-						*/
+						
 					});
 					
 				}

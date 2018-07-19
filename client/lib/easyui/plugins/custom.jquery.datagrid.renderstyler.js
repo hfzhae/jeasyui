@@ -14,7 +14,7 @@ $.extend($.fn.datagrid.methods,{
 		if(d.parent().parent().parent().hasClass('propertygrid')){//针对propertygrid控件的处理
 
 			columns[0][0].formatter = function(value, rowData, rowIndex) {//标题字段
-				var v = value;//ebx.UnescapeJson(value);
+				var v = value;
 				return v;
 			}
 			columns[0][1].formatter = function(value, rowData, rowIndex) {//设置值字段返回值

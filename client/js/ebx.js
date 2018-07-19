@@ -122,7 +122,6 @@ var ebx = {
 	},
 	EditStatusMessager: function(s, t, backcall){//编辑状态判断提醒函数，参数：s：状态true为被编辑，t：显示文本，backcall：回调函数
 		if(s){//判断数据是否被编辑过。
-			//$.messager.confirm('提醒', ebx.UnescapeJson(t)+'的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
 			$.messager.confirm('提醒', t + '的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
 				if (r){
 					backcall();
@@ -721,7 +720,7 @@ var ebx = {
 				value: '',
 				render: function(v, rowIndex){
 					if(typeof(v) == 'string'){
-						v = v;//ebx.UnescapeJson(v);
+						v = v;
 					}
 					return v;
 				}
@@ -729,7 +728,7 @@ var ebx = {
 		],
 		setRender: function(render, value, rowIndex){//设置datagrid回掉函数，参数：render：回掉函数名，value：值，rowIndex：datagrid中的行号
 			if(typeof(value) == 'string'){
-				value = value;//ebx.UnescapeJson(value);
+				value = value;
 			}
 			if(typeof(render) != 'string'){
 				return value;

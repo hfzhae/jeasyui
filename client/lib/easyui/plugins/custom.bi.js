@@ -93,7 +93,6 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 										}else{
 											$.messager.show({
 												title: '错误',
-												//msg: '保存失败！' + ebx.unescapeEx(result.msg.message),
 												msg: '保存失败！' + result.msg.message,
 												timeout: 5000,
 												showType: 'slide'

@@ -163,12 +163,10 @@ $.extend($.fn.combogrid.defaults, {
 			$.ajax({
 				type: 'post', 
 				url: 'server/SimpChinese/DataProvider/style/',
-				//data: JSON.stringify(ebx.EscapeJson({style:style,_:(new Date()).getTime()})),
 				data:{style:style,_:(new Date()).getTime()},
 				dataType: "json",
 				success: function(result){
 					if(result){
-						//var data = [ebx.UnescapeJson(result.data)];//转码所有嵌套json中文的escape
 						var data = [result.data];//转码所有嵌套json中文的escape
 						g.datagrid({
 							view:scrollview,
