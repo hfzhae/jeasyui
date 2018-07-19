@@ -229,12 +229,7 @@ ebx.bd = {
 											_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 											
 										}else{
-											$.messager.show({
-												title: '错误',
-												msg: '保存失败！' + result.msg.message,
-												timeout: 5000,
-												showType: 'slide'
-											});	
+											$.messager.alert('错误', '保存失败！<br>' + result.msg.message, 'error');	
 										}
 										saveBtn.linkbutton('enable');
 										

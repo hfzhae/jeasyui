@@ -163,6 +163,15 @@ ebx.browser = {
 				isdeleted: bd.Paramet.isdeleted,
 				isaudit: bd.Paramet.isaudit
 			});
+			bd._getbiribbonobj(bd.biribbon, 'edit', 'linkbutton').linkbutton({
+				disabled:true
+			});
+			bd._getbiribbonobj(bd.biribbon, 'del', 'linkbutton').linkbutton({
+				disabled:true
+			});
+			bd._getbiribbonobj(bd.biribbon, 'reload', 'linkbutton').linkbutton({
+				disabled:true
+			});
 		});
 	},
 	_getbiribbonobj: function(biribbon, name, type){//获取biribbon指定对象，参数：biribbon：biribbon对象，name：name属性或按钮字符，type：空间类型 2018-7-17 zz
@@ -431,22 +440,8 @@ ebx.browser = {
 			buttonText:'搜索',
 			iconCls:'icon-ZoomClassic_custom',
 			iconAlign:'left',
-			width:200,
 			onClickButton: function(){
 				_search(bd, searchtext.textbox('getValue'));
-				
-				_biribbon.find('.icon-reload').parent().parent().linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
-				_biribbon.find('.icon-Delete').parent().parent().linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
-				_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
 			}
 		});
 		newbtn.linkbutton({
@@ -496,19 +491,6 @@ ebx.browser = {
 		searchtext.textbox('textbox').bind('keydown', function(e) {  
 			if (e.keyCode == 13) {  
 				_search(bd, searchtext.textbox('getValue'));
-				
-				_biribbon.find('.icon-reload').parent().parent().linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
-				_biribbon.find('.icon-Delete').parent().parent().linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
-				_biribbon.find('.icon-DesignMode').parent().parent().linkbutton({
-					disabled:true,
-					onClick: function(){}
-				});
 			}  
 		});
 		
