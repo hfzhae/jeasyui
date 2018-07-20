@@ -5,7 +5,7 @@
 		sql = 'select a.id,a.title,a.[type],a.FieldStyle,a.HeaderStyle,a.FooterStyle,a.Border,a.Header,a.Footer,a.Height,a.Width,a.isdeleted,a.updatedate,a.createdate,u.title as owner from ' + TableName + ' a,biuser u where a.owner=u.id and a.id=' + id,
 		rs,
 		data = [],
-		title = '', type = '', FieldStyle = '', HeaderStyle = '', FooterStyle = '', Border = 0, Header = 0, Footer = 0, Height = '', Width = '', isdeleted = 0;
+		title = '', type = '', FieldStyle = '', HeaderStyle = '', FooterStyle = '', Border = 0, Header = 0, Footer = 0, Height = '', Width = '', isdeleted = 0, updatedate = new Date(), createdate = new Date(), owner = '';
 	
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1)

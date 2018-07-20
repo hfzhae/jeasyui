@@ -5,7 +5,7 @@
 		sql = 'select a.id,a.code,a.title,a.isdeleted,a.updatedate,a.createdate,u.title as owner from ' + TableName + ' a,biuser u where a.owner=u.id and a.id=' + id,
 		rs,
 		data = [],
-		code = '', title = '', isdeleted = 0, updatedate = '', createdate = '', owner = '';
+		code = '', title = '', isdeleted = 0, updatedate = new Date(), createdate = new Date(), owner = '';
 	
 	
 	if(id > 0){
