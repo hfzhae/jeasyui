@@ -566,14 +566,14 @@ var ebx = {
 			isaudit =  ebx.validInt(ebx.stdin['isaudit'], -1); 
 
 		if(datefrom.length > 0){
-			datefrom = (datefrom.split('+')[0] + ' ' + datefrom.split('+')[1]).replaceAll('-', '/');
+			datefrom = datefrom.replaceAll('-', '/');
 			s = s.replaceAll('@@datefrom', "'" + new Date(datefrom).Format('yyyy-MM-dd hh:mm:ss') + "'");//开始时间
 		}else{
 			s = s.replaceAll('@@datefrom', "'" + new Date('1900/1/1').Format('yyyy-MM-dd hh:mm:ss') + "'");//开始时间
 		}
 		
 		if(dateto.length > 0){
-			dateto = (dateto.split('+')[0] + ' ' + dateto.split('+')[1]).replaceAll('-', '/');
+			dateto = dateto.replaceAll('-', '/');
 			s = s.replaceAll('@@dateto', "'" + new Date(dateto).Format('yyyy-MM-dd hh:mm:ss') + "'");//结束时间
 		}else{
 			s = s.replaceAll('@@dateto', "'" + new Date().Format('yyyy-MM-dd hh:mm:ss') + "'");//结束时间
