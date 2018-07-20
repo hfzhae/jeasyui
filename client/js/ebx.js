@@ -59,9 +59,9 @@ var ebx = {
 						$('#homeDiv').portal('resize');
 					}
 				});
-				//setTimeout(function(){
-				//	bl.layout('resize')
-				//}, 300);
+				setTimeout(function(){
+					bl.layout('resize')
+				}, 300);
 		});
 		
 		window.onbeforeunload=function(e){//处理编辑未保存时窗口关闭或刷新时的提醒 2018-4-25 zz
@@ -557,7 +557,7 @@ var ebx = {
 
 			datagrid.datagrid('loadData', {total: dataData.length, rows: dataData}); 
 			
-			if(tab) tab.editstatus = true;
+			if(tab) ebx.setEditstatus(tab, true);
 			$.messager.show({
 				title: '提示',
 				msg: '成功导入了：' + importData.length + ' 行数据。',
@@ -714,6 +714,12 @@ var ebx = {
 				value: 'dateRender',
 				render: function(v, rowIndex){
 					return new Date(v).Format("yyyy-MM-dd");
+				}
+			},{
+				label: '日期时间',
+				value: 'datetimeRender',
+				render: function(v, rowIndex){
+					return new Date(v).Format("yyyy-MM-dd hh:mm:ss");
 				}
 			},{
 				label: '无',

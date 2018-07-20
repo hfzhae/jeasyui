@@ -7,13 +7,13 @@ var ebx = {
 	init: function(){
 		Date.prototype.Format = function (fmt) { //author: meizz 
 			var o = {
-				"M+": this.getMonth() + 1, //æœˆä»½ 
-				"d+": this.getDate(), //æ—¥ 
-				"h+": this.getHours(), //å°æ—¶ 
-				"m+": this.getMinutes(), //åˆ† 
-				"s+": this.getSeconds(), //ç§’ 
-				"q+": Math.floor((this.getMonth() + 3) / 3), //å­£åº¦ 
-				"S": this.getMilliseconds() //æ¯«ç§’ 
+				"M+": this.getMonth() + 1, //ÔÂ·İ 
+				"d+": this.getDate(), //ÈÕ 
+				"h+": this.getHours(), //Ğ¡Ê± 
+				"m+": this.getMinutes(), //·Ö 
+				"s+": this.getSeconds(), //Ãë 
+				"q+": Math.floor((this.getMonth() + 3) / 3), //¼¾¶È 
+				"S": this.getMilliseconds() //ºÁÃë 
 			};
 			if (/(y+)/.test(fmt)) {
 				fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
@@ -24,19 +24,19 @@ var ebx = {
 			return fmt;
 		}
 		this.IDGen.init(0);
-		this.Accountid = 1;//è¯»å–è´¦å¥—IDï¼Œå¾…å¤„ç†ã€‚ã€‚ã€‚
-		this.Owner = 1;//è¯»å–ç™»é™†ç”¨æˆ·IDï¼Œå¾…å¤„ç†ã€‚ã€‚ã€‚
+		this.Accountid = 1;//¶ÁÈ¡ÕËÌ×ID£¬´ı´¦Àí¡£¡£¡£
+		this.Owner = 1;//¶ÁÈ¡µÇÂ½ÓÃ»§ID£¬´ı´¦Àí¡£¡£¡£
 	},
 	conn: [],
 	Accountid: 0,
 	Owner: 0,
 	stdin: new Array(),
 	stdout: new Array(),
-	parseToJson: function (json_data){//Jsonæ ¼å¼è½¬å¯¹è±¡
+	parseToJson: function (json_data){//Json¸ñÊ½×ª¶ÔÏó
 		eval("var o=" + json_data);
 		return(o);
 	},
-	getRequestParamet: function(s){//getå‚æ•°æ ¼å¼è½¬å¯¹è±¡
+	getRequestParamet: function(s){//get²ÎÊı¸ñÊ½×ª¶ÔÏó
 		var arr = s.split('&'),
 			d = new Array();
 		if(arr.length <= 0) return(d);
@@ -45,7 +45,7 @@ var ebx = {
 		}
 		return(d);
 	},
-	validFloat: function(f, def){//æµ®ç‚¹æ ¼å¼åŒ–
+	validFloat: function(f, def){//¸¡µã¸ñÊ½»¯
 		var n = parseFloat(f);
 		if (isNaN(n)){
 			return((def==undefined)?0:def);
@@ -53,7 +53,7 @@ var ebx = {
 			return(n);
 		}
 	},
-	validInt: function (i, def){//æ•´å½¢æ ¼å¼åŒ–
+	validInt: function (i, def){//ÕûĞÎ¸ñÊ½»¯
 		var n = parseInt(i);
 		if (isNaN(n)){
 			return((def==undefined)?0:def);
@@ -65,7 +65,7 @@ var ebx = {
 		if(s == undefined) return('');
 		return(s.replaceAll("'", "''"));
 	},
-	sqlstrTtodate: function (num) {//sqlçš„æ—¥æœŸæ–‡æœ¬æ ¼å¼åŒ–
+	sqlstrTtodate: function (num) {//sqlµÄÈÕÆÚÎÄ±¾¸ñÊ½»¯
         //Fri Oct 31 18:00:00 UTC+0800 2008  
         num=num+"";
         var date="";
@@ -93,7 +93,7 @@ var ebx = {
         str=num.split(" ");
         date=str[5]+"-";
         date=date+month[str[1]]+"-"+str[2]+" "+str[3];
-        //date=date+" å‘¨"+week[str[0]];
+        //date=date+" ÖÜ"+week[str[0]];
         return(date);
 	},
 	Initialize: function (){
@@ -131,7 +131,7 @@ var ebx = {
 			return(this.replace(new RegExp(s1,"gm"),s2)); 
 		}
 	},
-	stream_binarytostring: function (binary, charset){//ç”¨adodb.streamè·å–requetå†…å®¹ 2018-5-4 zz
+	stream_binarytostring: function (binary, charset){//ÓÃadodb.stream»ñÈ¡requetÄÚÈİ 2018-5-4 zz
 		var binarystream = Server.CreateObject('adodb.stream');
 
 		binarystream.type = 1
@@ -147,7 +147,7 @@ var ebx = {
 		}
 		return(binarystream.readtext);
 	},
-	convertObjToDic: function(dic, obj){//å°†Jsonè½¬æ¢æˆobjectçš„å¯¹è±¡è½¬æ¢æˆå¯åµŒå¥—çš„å­—å…¸å¯¹è±¡ 2018-5-5 zz
+	convertObjToDic: function(dic, obj){//½«Json×ª»»³ÉobjectµÄ¶ÔÏó×ª»»³É¿ÉÇ¶Ì×µÄ×Öµä¶ÔÏó 2018-5-5 zz
 		if(typeof(obj) == 'object'){
 			for(var i in obj){
 				if(typeof(obj[i]) == 'object'){
@@ -160,7 +160,7 @@ var ebx = {
 			}
 		}
 	},
-	convertRsToJson: function(rs){//å°†rså¯¹è±¡è½¬åŒ–æˆjsonæ–‡æœ¬ 2018-5-4 zz
+	convertRsToJson: function(rs){//½«rs¶ÔÏó×ª»¯³ÉjsonÎÄ±¾ 2018-5-4 zz
 		if(typeof(rs) != 'object')return('[]');
 		if(rs.RecordCount == undefined)return('[]');
 		if(rs.RecordCount == 0)return('[]');
@@ -177,7 +177,7 @@ var ebx = {
 					if(i >= (fields.Count - 1)) comma = '';
 					s += '"' + fields(i).name.toLowerCase() + '":' + ebx.getType(fields(i)) + comma;
 				}
-				//s = s.substr(0, s.length - 1);//æ•ˆç‡å¤ªä½ï¼Œç¦ç”¨äº†
+				//s = s.substr(0, s.length - 1);//Ğ§ÂÊÌ«µÍ£¬½ûÓÃÁË
 				s += '},';
 				rs.MoveNext();
 			}
@@ -185,7 +185,7 @@ var ebx = {
 		}
 		return('[' + s + ']');
 	},
-	convertJsonToRs: function (d){//jsonå¯¹è±¡è½¬æ¢æˆrsï¼Œnumberç±»å‹ç”±äºå…¶ä»–è¡Œä¸ç¡®å®šå†…å®¹ï¼Œæ‰€ä»¥ç”¨æ–‡æœ¬ç±»å‹åˆ›å»ºï¼Œå‚æ•°ï¼šdï¼šjsonå¯¹è±¡ 2018-5-16 zz
+	convertJsonToRs: function (d){//json¶ÔÏó×ª»»³Érs£¬numberÀàĞÍÓÉÓÚÆäËûĞĞ²»È·¶¨ÄÚÈİ£¬ËùÒÔÓÃÎÄ±¾ÀàĞÍ´´½¨£¬²ÎÊı£ºd£ºjson¶ÔÏó 2018-5-16 zz
 		var rs = ebx.dbx.getRs();
 		if(typeof(d) != 'object')return(rs);
 		
@@ -200,7 +200,7 @@ var ebx = {
 					rs.Fields.Append(i, 205);
 					break;
 				case 'number':
-					rs.Fields.Append(i, 203, -1);//æ•°å­—ç±»å‹æ— æ³•ç¡®å®šå…¶ä»–è¡Œçš„å†…å®¹ï¼Œæ‰€ä»¥æŒ‰æ–‡æœ¬ç±»å‹åˆ›å»º
+					rs.Fields.Append(i, 203, -1);//Êı×ÖÀàĞÍÎŞ·¨È·¶¨ÆäËûĞĞµÄÄÚÈİ£¬ËùÒÔ°´ÎÄ±¾ÀàĞÍ´´½¨
 					//rs.Fields.Append(i, 6);
 					break;
 				case 'boolean':
@@ -216,7 +216,7 @@ var ebx = {
 		}
 		rs.open();
 
-		if(d.firstRows){//åˆ¤æ–­æ˜¯å¦æœ‰åˆ†é¡µï¼Œå¦‚æœæœ‰åˆ†é¡µï¼Œè·å–å…¨éƒ¨æ•°æ®å¯¹è±¡ï¼›
+		if(d.firstRows){//ÅĞ¶ÏÊÇ·ñÓĞ·ÖÒ³£¬Èç¹ûÓĞ·ÖÒ³£¬»ñÈ¡È«²¿Êı¾İ¶ÔÏó£»
 			var rows = d.firstRows;
 		}else{
 			var rows = d.rows;
@@ -231,7 +231,7 @@ var ebx = {
 						rs(fields(j).name) = rows[i][fields(j).name];
 						break;
 					case 'object':
-						rs(fields(j).name) = ebx.convertRsToBin(convertJsonToRs(rows[i][fields(j).name]));//å¤„ç†åµŒå¥—rs
+						rs(fields(j).name) = ebx.convertRsToBin(convertJsonToRs(rows[i][fields(j).name]));//´¦ÀíÇ¶Ì×rs
 						break;
 					case 'number':
 						rs(fields(j).name) = ebx.validFloat(rows[i][fields(j).name]);
@@ -251,66 +251,66 @@ var ebx = {
 		rs.Update();
 		return rs;
 	},
-	getType: function(Fields){ //æ•°æ®ç±»å‹åˆ¤æ–­å‡½æ•°ï¼ŒFieldsï¼šå­—æ®µrs.Fieldså¯¹è±¡ï¼Œè¿”å›é’ˆå¯¹ç±»å‹å¤„ç†åçš„å€¼
+	getType: function(Fields){ //Êı¾İÀàĞÍÅĞ¶Ïº¯Êı£¬Fields£º×Ö¶Îrs.Fields¶ÔÏó£¬·µ»ØÕë¶ÔÀàĞÍ´¦ÀíºóµÄÖµ
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
 			case 200:
-				return('"' + v + '"'); //"æ–‡æœ¬"
+				return('"' + v + '"'); //"ÎÄ±¾"
 			case 202:
-				return('"' + v + '"'); //"æ–‡æœ¬"
+				return('"' + v + '"'); //"ÎÄ±¾"
 				break;
 			case 203:
-				return('"' + v + '"'); //"å¤‡æ³¨"
+				return('"' + v + '"'); //"±¸×¢"
 				break;
 			case 3:
-				return(ebx.validInt(v)); //"é•¿æ•´å‹"
+				return(ebx.validInt(v)); //"³¤ÕûĞÍ"
 				break;
 			case 2:
-				return(ebx.validInt(v)); //"æ•´å‹"
+				return(ebx.validInt(v)); //"ÕûĞÍ"
 				break;
 			case 17:
-				return(ebx.validInt(v)); //"å­—èŠ‚"
+				return(ebx.validInt(v)); //"×Ö½Ú"
 				break;
 			case 3:
-				return(ebx.validInt(v)); //"é•¿æ•´å‹"
+				return(ebx.validInt(v)); //"³¤ÕûĞÍ"
 				break;
 			case 4:
-				return(ebx.validFloat(v)); //"å•ç²¾æµ®ç‚¹"
+				return(ebx.validFloat(v)); //"µ¥¾«¸¡µã"
 				break;
 			case 5:
-				return(ebx.validFloat(v)); //"åŒç²¾æµ®ç‚¹"
+				return(ebx.validFloat(v)); //"Ë«¾«¸¡µã"
 				break;
 			case 3:
-				return(ebx.validInt(v)); //"é•¿æ•´å‹"
+				return(ebx.validInt(v)); //"³¤ÕûĞÍ"
 				break;
 			case 72:
-				return(ebx.validInt(v)); //"åŒæ­¥å¤åˆ¶ID"
+				return(ebx.validInt(v)); //"Í¬²½¸´ÖÆID"
 				break;
 			case 131:
-				return(ebx.validFloat(v)); //"å°æ•°"
+				return(ebx.validFloat(v)); //"Ğ¡Êı"
 				break;
 			case 135:
-				return('"' + ebx.sqlstrTtodate(v) + '"'); //"æ—¥æœŸ/æ—¶é—´"
-				//return '"' + v + '"'; //"æ—¥æœŸ/æ—¶é—´"
+				return('"' + ebx.sqlstrTtodate(v) + '"'); //"ÈÕÆÚ/Ê±¼ä"
+				//return '"' + v + '"'; //"ÈÕÆÚ/Ê±¼ä"
 				break;
 			case 6:
-				return(ebx.validFloat(v)); //"è´§å¸"
+				return(ebx.validFloat(v)); //"»õ±Ò"
 				break;
 			case 11:
-				return('"' + v + '"'); //"æ˜¯/å¦"
+				return('"' + v + '"'); //"ÊÇ/·ñ"
 				break;
 			case 205:
-				return(ebx.convertRsToJson(ebx.convertBinToRs(v))); //"OLEå¯¹è±¡" å¤„ç†æ•°æ®åº“é‡ŒåµŒå¥—çš„rså¯¹è±¡äºŒçº§åˆ¶å­˜å‚¨æ•°æ®
+				return(ebx.convertRsToJson(ebx.convertBinToRs(v))); //"OLE¶ÔÏó" ´¦ÀíÊı¾İ¿âÀïÇ¶Ì×µÄrs¶ÔÏó¶ş¼¶ÖÆ´æ´¢Êı¾İ
 				break;
 			default:
-				return('"' + v + '"'); //"å…¶ä»–"
+				return('"' + v + '"'); //"ÆäËû"
 				break;
 		}
 	},
-	escapeEx: function(str){ //åˆ¤æ–­æ˜¯å¦å­—ç¬¦ï¼Œå¦‚æœæ˜¯ç”¨escaptç¼–ç åŠ å¯† 2018-5-4 zz
+	escapeEx: function(str){ //ÅĞ¶ÏÊÇ·ñ×Ö·û£¬Èç¹ûÊÇÓÃescapt±àÂë¼ÓÃÜ 2018-5-4 zz
 		if(str == null) return('');
 		
-		//if(/^[\u3220-\uFA29]+$/.test(str)){//ä¸­æ–‡æ­£åˆ™
+		//if(/^[\u3220-\uFA29]+$/.test(str)){//ÖĞÎÄÕıÔò
 		if(typeof(str) == 'string'){
 			//return escape(str);
 			//return ebx.GB2312ToUTF8(str);
@@ -319,10 +319,10 @@ var ebx = {
 			return(str);
 		}
 	},
-	unescapeEx: function(str){ //åˆ¤æ–­æ˜¯å¦å­—ç¬¦ï¼Œå¦‚æœæ˜¯ç”¨escaptç¼–ç åŠ å¯† 2018-5-4 zz
+	unescapeEx: function(str){ //ÅĞ¶ÏÊÇ·ñ×Ö·û£¬Èç¹ûÊÇÓÃescapt±àÂë¼ÓÃÜ 2018-5-4 zz
 		if(str == null) return('');
 		
-		//if(/^[\u3220-\uFA29]+$/.test(str)){//ä¸­æ–‡æ­£åˆ™
+		//if(/^[\u3220-\uFA29]+$/.test(str)){//ÖĞÎÄÕıÔò
 		if(typeof(str) == 'string'){
 			return unescape(decodeURI(str));
 			//return str;
@@ -330,7 +330,7 @@ var ebx = {
 			return(str);
 		}
 	},
-	GB2312ToUTF8: function (OutStr){//ç”¨Adodb.Streamè½¬ç gb2312-utf8ï¼Œå­˜åœ¨é—®é¢˜ï¼Œè½¬ç å½»åº•
+	GB2312ToUTF8: function (OutStr){//ÓÃAdodb.Stream×ªÂëgb2312-utf8£¬´æÔÚÎÊÌâ£¬×ªÂë³¹µ×
 		var Stream = Server.CreateObject("Adodb.Stream")
 		Stream.Charset = 'UTF-8'
 		Stream.Mode = 3
@@ -342,7 +342,7 @@ var ebx = {
 		Stream.Charset = 'GB2312'
 		return Stream.ReadText;
 	},
-	UnescapeJson: function(s){//è½¬ç æ‰€æœ‰åµŒå¥—jsonä¸­æ–‡çš„escape
+	UnescapeJson: function(s){//×ªÂëËùÓĞÇ¶Ì×jsonÖĞÎÄµÄescape
 		if(typeof(s) == 'object'){
 			for(var i in s){
 				if(typeof(s[i]) == 'object'){
@@ -362,19 +362,19 @@ var ebx = {
 				if(typeof(s[i]) == 'object'){
 					s[i] = this.UnescapeJson(s[i]);
 				}else{
-					if(/^[\u3220-\uFA29]+$/.test(s[i])){//åˆ¤æ–­æ˜¯å¦åŒ…å«ä¸­æ–‡å­—ç¬¦
+					if(/^[\u3220-\uFA29]+$/.test(s[i])){//ÅĞ¶ÏÊÇ·ñ°üº¬ÖĞÎÄ×Ö·û
 						s[i] = ebx.escapeEx(s[i]);
 					}
 				}
 			}
 		}else{
-			if(/^[\u3220-\uFA29]+$/.test(s[i])){//åˆ¤æ–­æ˜¯å¦åŒ…å«ä¸­æ–‡å­—ç¬¦
+			if(/^[\u3220-\uFA29]+$/.test(s[i])){//ÅĞ¶ÏÊÇ·ñ°üº¬ÖĞÎÄ×Ö·û
 				s[i] = ebx.escapeEx(s[i]);
 			}
 		}
 		return(s);
 	},
-	convertBinToRs: function(sBin){ //äºŒè¿›åˆ¶æµè½¬æ¢æˆrså¯¹è±¡
+	convertBinToRs: function(sBin){ //¶ş½øÖÆÁ÷×ª»»³Érs¶ÔÏó
 		var stm = Server.CreateObject("adodb.stream"),
 			rs = ebx.dbx.getRs();
 		if(sBin != null){
@@ -386,7 +386,7 @@ var ebx = {
 		}
 		return(rs);
 	},
-	convertRsToBin: function(rs){ //rså¯¹è±¡è½¬æ¢æˆäºŒè¿›åˆ¶æµ
+	convertRsToBin: function(rs){ //rs¶ÔÏó×ª»»³É¶ş½øÖÆÁ÷
 		if(rs == null) return(null);
 		if(typeof(rs) == 'object') return(null);
 		if(rs.RecordCount == 0) return(null);
@@ -398,41 +398,45 @@ var ebx = {
 		stm.position = 0
 		return(stm.read());
 	},
-	OnPageEnd: function(Response){//é¡µé¢ç»“æŸå¤„ç†å‡½æ•°
+	OnPageEnd: function(Response){//Ò³Ãæ½áÊø´¦Àíº¯Êı
 		Response.Clear();
 		Response.ContentType="text/HTML;charset=GB2312" 
 		Response.ContentEncoding = 'gzip';
 		Response.Write(ebx.convertDicToJson(ebx.stdout));
 		ebx.CleanData();
 	},
-	CleanData: function(){//æ¸…é™¤å¯¹è±¡å‡½æ•°
+	CleanData: function(){//Çå³ı¶ÔÏóº¯Êı
 		ebx.conn.Close;
 		stdin = null;
 		stdout = null;
 	},
-	convertDicToJson: function(d){//å°†Dicå¯¹è±¡è½¬åŒ–æˆjsonæ–‡æœ¬ï¼Œæ”¯æŒå­—å…¸ã€æ•°ç»„å’Œrsçš„åµŒå¥— 2018-5-6 zz
+	convertDicToJson: function(d){//½«Dic¶ÔÏó×ª»¯³ÉjsonÎÄ±¾£¬Ö§³Ö×Öµä¡¢Êı×éºÍrsµÄÇ¶Ì× 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
 		var s = '', arrtype;
 		for(var i in d){
-			var n = Number(i);//é€šè¿‡æ˜¯å¦æ•°å­—æ ¼å¼åˆ¤æ–­æ˜¯å¦æ˜¯æ•°ç»„ï¼Œå¦‚æœæ˜¯æ•°å­—ï¼Œä»£è¡¨æ˜¯æ•°ç»„ï¼Œæ–‡æœ¬ç”¨[]åŒ…å«ï¼Œå¦åˆ™ä»£è¡¨æ˜¯å­—å…¸ï¼Œæ–‡æœ¬ç”¨{}åŒ…å«
+			var n = Number(i);//Í¨¹ıÊÇ·ñÊı×Ö¸ñÊ½ÅĞ¶ÏÊÇ·ñÊÇÊı×é£¬Èç¹ûÊÇÊı×Ö£¬´ú±íÊÇÊı×é£¬ÎÄ±¾ÓÃ[]°üº¬£¬·ñÔò´ú±íÊÇ×Öµä£¬ÎÄ±¾ÓÃ{}°üº¬
 			if (!isNaN(n)){
-				arrtype = 1;//è®¾ç½®jsonæ•°ç»„ç±»å‹ï¼Œ1=[],0={}
+				arrtype = 1;//ÉèÖÃjsonÊı×éÀàĞÍ£¬1=[],0={}
 				if(d[i].RecordCount == undefined){
-					s += ebx.convertDicToJson(d[i]) +',';//å¤„ç†åµŒå¥—å­—å…¸
+					s += ebx.convertDicToJson(d[i]) +',';//´¦ÀíÇ¶Ì××Öµä
 				}else{
-					s += ebx.convertRsToJson(d[i]) +',';//å¤„ç†åµŒå¥—çš„rs
+					s += ebx.convertRsToJson(d[i]) +',';//´¦ÀíÇ¶Ì×µÄrs
 				}
 			}else{
-				arrtype = 0;//è®¾ç½®jsonæ•°ç»„ç±»å‹ï¼Œ1=[],0={}
+				arrtype = 0;//ÉèÖÃjsonÊı×éÀàĞÍ£¬1=[],0={}
 				switch(typeof(d[i])){
 					case 'string':
 						s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
 						break;
 					case 'object':
-						if(d[i].RecordCount == undefined){
-							s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';//å¤„ç†åµŒå¥—å­—å…¸
+						if(d[i] == null){
+							s += '"'+ i +'":"",';
 						}else{
-							s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';//å¤„ç†åµŒå¥—çš„rs
+							if(d[i].RecordCount == undefined){
+								s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';//´¦ÀíÇ¶Ì××Öµä
+							}else{
+								s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';//´¦ÀíÇ¶Ì×µÄrs
+							}
 						}
 						break;
 					case 'number':
@@ -457,19 +461,19 @@ var ebx = {
 			return('{' + s + '}');
 		}
 	},
-	getTemplateSQL: function(id){//ä»æŸ¥è¯¢æ¨¡æ¿è·å–SQLï¼Œå‚æ•°idï¼šæ¨¡æ¿IDï¼Œè¿”å›sqlè¯­å¥
+	getTemplateSQL: function(id){//´Ó²éÑ¯Ä£°å»ñÈ¡SQL£¬²ÎÊıid£ºÄ£°åID£¬·µ»ØsqlÓï¾ä
 		var sql = 'select title,WizardID,Columns from biQueryTemplate where isdeleted=0 and id =' + id,
 			rs = ebx.dbx.open(sql, 1, 1),
-			Wizard,//æŸ¥è¯¢è®¾è®¡å¯¹è±¡
+			Wizard,//²éÑ¯Éè¼Æ¶ÔÏó
 			Title,
-			Columns,//æŸ¥è¯¢æ¨¡æ¿åˆ—rs
+			Columns,//²éÑ¯Ä£°åÁĞrs
 			s = '',
-			Sort = ebx.dbx.getRs(),//æ’åºå¯¹è±¡
-			SortCount = 0,//æ’åºåº
-			GroupBy = 0,//èšåˆå‡½æ•°è¡¨ç¤ºï¼Œ0æ²¡æœ‰èšåˆå‡½æ•°ï¼Œ1æœ‰èšåˆå‡½æ•°
-			GroupByStr = '',//group by ç”Ÿæˆæ–‡æœ¬
-			remoteorder = '',//å®¢æˆ·ç«¯ç‚¹å‡»æ’åºå‚æ•°
-			remotesort = '';//å®¢æˆ·ç«¯ç‚¹å‡»æ’åºåˆ—
+			Sort = ebx.dbx.getRs(),//ÅÅĞò¶ÔÏó
+			SortCount = 0,//ÅÅĞòĞò
+			GroupBy = 0,//¾ÛºÏº¯Êı±íÊ¾£¬0Ã»ÓĞ¾ÛºÏº¯Êı£¬1ÓĞ¾ÛºÏº¯Êı
+			GroupByStr = '',//group by Éú³ÉÎÄ±¾
+			remoteorder = '',//¿Í»§¶Ëµã»÷ÅÅĞò²ÎÊı
+			remotesort = '';//¿Í»§¶Ëµã»÷ÅÅĞòÁĞ
 			
 					
 		if(!rs.eof){
@@ -478,24 +482,24 @@ var ebx = {
 			Columns = ebx.convertBinToRs(rs('Columns').value);
 		}
 		
-		Sort.Fields.Append("SortOrder", 203, 1024);//å®šä¹‰æ’åºåº
-		Sort.Fields.Append("Sort", 203, 1024);//å®šä¹‰æ’åºæ–‡æœ¬
+		Sort.Fields.Append("SortOrder", 203, 1024);//¶¨ÒåÅÅĞòĞò
+		Sort.Fields.Append("Sort", 203, 1024);//¶¨ÒåÅÅĞòÎÄ±¾
 		Sort.Open();
 				
-		for(var i in ebx.stdin){//éå†è·å–å®¢æˆ·ç«¯æ’åºä¿¡æ¯
+		for(var i in ebx.stdin){//±éÀú»ñÈ¡¿Í»§¶ËÅÅĞòĞÅÏ¢
 			if(i == 'order'){
 				remoteorder = ebx.stdin['order'];
 				remotesort = ebx.stdin['sort'];
 			}
 		}
 		
-		if(remotesort){//å®¢æˆ·ç«¯ç‚¹å‡»æ’åºå‚æ•°
+		if(remotesort){//¿Í»§¶Ëµã»÷ÅÅĞò²ÎÊı
 			Sort.Addnew();
 			Sort('SortOrder') = 1;
 			Sort('Sort') = '[' + remotesort + '] ' + remoteorder;
 		}else{
 			Columns.MoveFirst();
-			while(!Columns.eof){//å­—æ®µæ’åºå¤„ç†ï¼Œæ”¯æŒæ’åºåº
+			while(!Columns.eof){//×Ö¶ÎÅÅĞò´¦Àí£¬Ö§³ÖÅÅĞòĞò
 				if(ebx.validInt(Columns('Sort').value) == 2){
 					Sort.Addnew();
 					Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
@@ -511,7 +515,7 @@ var ebx = {
 		}
 		s += 'SELECT ';
 
-		while(!Wizard['Columns'].eof){//å­—æ®µåŠ è½½ï¼Œæ”¯æŒèšåˆå‡½æ•°å¤„ç†
+		while(!Wizard['Columns'].eof){//×Ö¶Î¼ÓÔØ£¬Ö§³Ö¾ÛºÏº¯Êı´¦Àí
 			Columns.MoveFirst();
 			while(!Columns.eof){
 				if(Columns('Source').value == Wizard['Columns']('Alias').value){
@@ -531,7 +535,7 @@ var ebx = {
 		
 		s += 'FROM ';
 		
-		while(!Wizard['Tables'].eof){//è¡¨
+		while(!Wizard['Tables'].eof){//±í
 			s +=  Wizard['Tables']('id') + ' [' + Wizard['Tables']('Alias') + '] ,';
 			Wizard['Tables'].MoveNext;
 		}
@@ -539,23 +543,23 @@ var ebx = {
 
 		s += 'WHERE ';
 		
-		if(Wizard['Relates'].State){//æ¡ä»¶å…³ç³»
+		if(Wizard['Relates'].State){//Ìõ¼ş¹ØÏµ
 			while(!Wizard['Relates'].eof){
 				s +=  Wizard['Relates']('Table') + '.' + Wizard['Relates']('Column') + Wizard['Relates']('Relate') + Wizard['Relates']('RelateTable') + '.' + Wizard['Relates']('RelateColumn') + ' AND ';
 				Wizard['Relates'].MoveNext;
 			}
 		}
 		
-		if(Wizard['Filter']){//ç­›é€‰æ–‡æœ¬
+		if(Wizard['Filter']){//É¸Ñ¡ÎÄ±¾
 			s += Wizard['Filter'];
 		}
 		
 		s = s.toLowerCase();
 		
-		s = s.replaceAll('@@accountid', this.Accountid);//è´¦å¥—
-		s = s.replaceAll('@@owner', this.Owner);//ç”¨æˆ·
+		s = s.replaceAll('@@accountid', this.Accountid);//ÕËÌ×
+		s = s.replaceAll('@@owner', this.Owner);//ÓÃ»§
 
-		var find = ebx.sqlStringEncode(ebx.stdin['find']),//è·å–æœç´¢å­—æ®µ
+		var find = ebx.sqlStringEncode(ebx.stdin['find']),//»ñÈ¡ËÑË÷×Ö¶Î
 			datefrom = ebx.sqlStringEncode(ebx.stdin['datefrom']),
 			dateto = ebx.sqlStringEncode(ebx.stdin['dateto']),
 			isdeleted = ebx.validInt(ebx.stdin['isdeleted']),
@@ -563,47 +567,47 @@ var ebx = {
 
 		if(datefrom.length > 0){
 			datefrom = (datefrom.split('+')[0] + ' ' + datefrom.split('+')[1]).replaceAll('-', '/');
-			s = s.replaceAll('@@datefrom', "'" + new Date(datefrom).Format('yyyy-MM-dd hh:mm:ss') + "'");//å¼€å§‹æ—¶é—´
+			s = s.replaceAll('@@datefrom', "'" + new Date(datefrom).Format('yyyy-MM-dd hh:mm:ss') + "'");//¿ªÊ¼Ê±¼ä
 		}else{
-			s = s.replaceAll('@@datefrom', "'" + new Date('1900/1/1').Format('yyyy-MM-dd hh:mm:ss') + "'");//å¼€å§‹æ—¶é—´
+			s = s.replaceAll('@@datefrom', "'" + new Date('1900/1/1').Format('yyyy-MM-dd hh:mm:ss') + "'");//¿ªÊ¼Ê±¼ä
 		}
 		
 		if(dateto.length > 0){
 			dateto = (dateto.split('+')[0] + ' ' + dateto.split('+')[1]).replaceAll('-', '/');
-			s = s.replaceAll('@@dateto', "'" + new Date(dateto).Format('yyyy-MM-dd hh:mm:ss') + "'");//ç»“æŸæ—¶é—´
+			s = s.replaceAll('@@dateto', "'" + new Date(dateto).Format('yyyy-MM-dd hh:mm:ss') + "'");//½áÊøÊ±¼ä
 		}else{
-			s = s.replaceAll('@@dateto', "'" + new Date().Format('yyyy-MM-dd hh:mm:ss') + "'");//ç»“æŸæ—¶é—´
+			s = s.replaceAll('@@dateto', "'" + new Date().Format('yyyy-MM-dd hh:mm:ss') + "'");//½áÊøÊ±¼ä
 		}
 
 		switch(isdeleted){
 			case 0:
-				s = s.replaceAll('where', 'where [bd].[isdeleted]=0 and ');//æœªåˆ é™¤
+				s = s.replaceAll('where', 'where [bd].[isdeleted]=0 and ');//Î´É¾³ı
 				break;
 			case 1:
-				s = s.replaceAll('where', 'where [bd].[isdeleted]=1 and ');//å·²åˆ é™¤
+				s = s.replaceAll('where', 'where [bd].[isdeleted]=1 and ');//ÒÑÉ¾³ı
 				break;
 			case 2:
-				//å…¨éƒ¨
+				//È«²¿
 				break;
 		}
 		
 		switch(isaudit){
 			case 0:
-				s = s.replaceAll('where', 'where [bd].[auditid]=0 and ');//æœªå®¡æ ¸
+				s = s.replaceAll('where', 'where [bd].[auditid]=0 and ');//Î´ÉóºË
 				break;
 			case 1:
-				s = s.replaceAll('where', 'where [bd].[auditid]>=1 and ');//å·²å®¡æ ¸
+				s = s.replaceAll('where', 'where [bd].[auditid]>=1 and ');//ÒÑÉóºË
 				break;
 			case 2:
-				//å…¨éƒ¨
+				//È«²¿
 				break;
 		}
 		
 		if(typeof(find) == 'string'){
 			if(find.length > 0){
-				s = s.replaceAll('@@findbegin', '');//æœç´¢å¼€å§‹
-				s = s.replaceAll('@@findend', '');//æœæœç»“æŸ
-				s = s.replaceAll('@@find', '\'%' + find + '%\'');//æœç´¢æ–‡å­—æ›¿æ¢
+				s = s.replaceAll('@@findbegin', '');//ËÑË÷¿ªÊ¼
+				s = s.replaceAll('@@findend', '');//ËÑËÑ½áÊø
+				s = s.replaceAll('@@find', '\'%' + find + '%\'');//ËÑË÷ÎÄ×ÖÌæ»»
 			}else{
 				var FINDBEGIN = s.indexOf('@@findbegin'),
 					FINDEND = s.indexOf('@@findend');
@@ -615,12 +619,12 @@ var ebx = {
 			s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
 		}
 		
-		if(GroupBy){//èšåˆgroup byåˆæˆ
+		if(GroupBy){//¾ÛºÏgroup byºÏ³É
 			GroupByStr = GroupByStr.substr(0, GroupByStr.length - 1);
 			s += 'group by ' + GroupByStr;
 		}
 
-		if(Sort.recordcount > 0){//æ’åºåˆæˆ
+		if(Sort.recordcount > 0){//ÅÅĞòºÏ³É
 			s += 'order by ';
 			Sort.Sort = 'SortOrder desc';
 			while(!Sort.eof){
@@ -632,7 +636,7 @@ var ebx = {
 
 		return(s);
 	},
-	getWizard: function(id){//è·å–æŸ¥è¯¢è®¾è®¡å¯¹è±¡ï¼Œå‚æ•°idï¼šæŸ¥è¯¢è®¾è®¡IDï¼Œè¿”å›æŸ¥è¯¢è®¾è®¡å­—å…¸
+	getWizard: function(id){//»ñÈ¡²éÑ¯Éè¼Æ¶ÔÏó£¬²ÎÊıid£º²éÑ¯Éè¼ÆID£¬·µ»Ø²éÑ¯Éè¼Æ×Öµä
 		var sql = 'select Title,Filter,Tables,Relates,Columns from biQueryWizard where isdeleted=0 and id=' + id,
 			rs = ebx.dbx.open(sql, 1, 1),
 			Wizard = new Array();
@@ -647,7 +651,7 @@ var ebx = {
 		}
 		return(Wizard);
 	},
-	dbx: {//æ•°æ®åº“å¤„ç†å¯¹è±¡
+	dbx: {//Êı¾İ¿â´¦Àí¶ÔÏó
 		CursorLocation:3,
 		CacheSize:16,
 		getRs:function(){
@@ -656,7 +660,7 @@ var ebx = {
 			rs.CacheSize = ebx.dbx.CacheSize;
 			return(rs);
 		},
-		open: function(strSQL, iCur, iLock){//å¤åˆ»rs.openæ–¹æ³•
+		open: function(strSQL, iCur, iLock){//¸´¿Ìrs.open·½·¨
 			var rs = ebx.dbx.getRs();
 			if(typeof(strSQL) == 'string'){
 				if(strSQL.length > 0){
@@ -667,7 +671,7 @@ var ebx = {
 			}
 			return(rs);
 		},
-		openpage: function(strSQL, page){//åˆ†é¡µrså‡½æ•°ï¼Œå‚æ•°ï¼šstrSQLï¼šsqlè¯­å¥ï¼Œpage.iStartï¼šèµ·å§‹è¡Œæ•°ï¼Œpage.iLengthï¼šæ¯é¡µè¡Œæ•°ï¼Œpage.iTotalLengthï¼šæ€»è¡Œæ•°ï¼ˆå›è°ƒç”¨ï¼‰
+		openpage: function(strSQL, page){//·ÖÒ³rsº¯Êı£¬²ÎÊı£ºstrSQL£ºsqlÓï¾ä£¬page.iStart£ºÆğÊ¼ĞĞÊı£¬page.iLength£ºÃ¿Ò³ĞĞÊı£¬page.iTotalLength£º×ÜĞĞÊı£¨»Øµ÷ÓÃ£©
 			var rs,
 				sLength = ebx.validInt(page.iLength,0)<1?2147483647:ebx.validInt(page.iLength,0);
 			
@@ -679,7 +683,7 @@ var ebx = {
 			return(rs.NextRecordset());
 		}
 	},
-	IDGen: {//IDå‘ç”Ÿå™¨å¯¹è±¡ 2018-7-6 zz
+	IDGen: {//ID·¢ÉúÆ÷¶ÔÏó 2018-7-6 zz
 		conn: Server.CreateObject('ADODB.Connection'),
 		Connstring: Application('DateBase.ConnectString'),
 		ConnActive: function(){
@@ -690,7 +694,7 @@ var ebx = {
 		ConnDisActive: function(){
 			this.conn.Close();
 		},
-		init:function(bForce){//åˆå§‹åŒ–å‡½æ•°ï¼Œå‚æ•°ï¼šbForceï¼šæ˜¯å¦æ¸…ç©ºï¼Œé0åˆ™æ¸…ç©ºæ‰€æœ‰NPIDGenè¡¨æ•°æ®ï¼Œ0åˆ™é€€å‡ºå‡½æ•°
+		init:function(bForce){//³õÊ¼»¯º¯Êı£¬²ÎÊı£ºbForce£ºÊÇ·ñÇå¿Õ£¬·Ç0ÔòÇå¿ÕËùÓĞNPIDGen±íÊı¾İ£¬0ÔòÍË³öº¯Êı
 			this.ConnActive();
 			var v, sSQL, bUser
 			if(ebx.validInt(bForce) == 0){
@@ -714,16 +718,16 @@ var ebx = {
 				this.SetIDGen(sSQL);
 				
 				/*
-				bUser = NetBOX.SysInfo("PROG_Info").length;//åˆ¤æ–­æ˜¯å¦å¼€å‘ç‰ˆ
+				bUser = NetBOX.SysInfo("PROG_Info").length;//ÅĞ¶ÏÊÇ·ñ¿ª·¢°æ
 				if(bUser > 0){
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9465 and MaxID <10000'); //æŸ¥è¯¢è®¾è®¡biQueryWizard
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9466 and MaxID <10000'); //æŸ¥è¯¢æ¨¡æ¿biQueryTemplate
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9467 and MaxID <10000'); //æŸ¥è¯¢æ–¹æ¡ˆbiQueryRender
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1420 and MaxID <10000'); //æƒé™NPPrivileges
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1421 and MaxID <10000'); //æƒé™ç»„NPGroups
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1405 and MaxID <10000'); //æ˜¾ç¤ºå¼æ ·bdStyle
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1408 and MaxID <10000'); //èœå•bdStyleMenu
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1409 and MaxID <10000'); //èœå•ç»„bdStyleMenuGroup
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9465 and MaxID <10000'); //²éÑ¯Éè¼ÆbiQueryWizard
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9466 and MaxID <10000'); //²éÑ¯Ä£°åbiQueryTemplate
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9467 and MaxID <10000'); //²éÑ¯·½°¸biQueryRender
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1420 and MaxID <10000'); //È¨ÏŞNPPrivileges
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1421 and MaxID <10000'); //È¨ÏŞ×éNPGroups
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1405 and MaxID <10000'); //ÏÔÊ¾Ê½ÑùbdStyle
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1408 and MaxID <10000'); //²Ëµ¥bdStyleMenu
+					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1409 and MaxID <10000'); //²Ëµ¥×ébdStyleMenuGroup
 				}
 				*/
 				sSQL = 'Select Distinct IGID as [TableID], [TableName] from ResourceType';
@@ -736,7 +740,7 @@ var ebx = {
 			}
 			this.ConnDisActive();
 		},
-		SetIDGen: function(sSQL){//å†™NPIDGenè¡¨ï¼Œå‚æ•°ï¼šsSQLï¼šBaseInfoTypeè¡¨æˆ–BillDocumentTypeè¡¨çš„sqlè¯­å¥
+		SetIDGen: function(sSQL){//Ğ´NPIDGen±í£¬²ÎÊı£ºsSQL£ºBaseInfoType±í»òBillDocumentType±íµÄsqlÓï¾ä
 			var str, v, MaxID, rs;
 			
 			rs = Server.CreateObject('adodb.recordset');
@@ -753,7 +757,7 @@ var ebx = {
 			}
 			v = null;
 		},
-		SetAuditIDGen: function(sSQL){//å†™èµ„æºè¡¨çš„NPIDGenè¡¨ï¼Œå‚æ•°ï¼šsSQLï¼šResourceTypeè¡¨çš„sqlè¯­å¥
+		SetAuditIDGen: function(sSQL){//Ğ´×ÊÔ´±íµÄNPIDGen±í£¬²ÎÊı£ºsSQL£ºResourceType±íµÄsqlÓï¾ä
 			var str, v, MaxID, rs, vID, affectedRecords;
 			rs = ebx.dbx.getRs();
 			rs.Open(sSQL, this.conn, 0, 1, 1);
@@ -777,7 +781,7 @@ var ebx = {
 			this.conn.Execute(str);
 			v = null;
 		},
-		CTIDGen: function(Obj_ID, Obj_Number){//idå‘ç”Ÿå™¨å‡½æ•°ï¼Œå‚æ•°ï¼šObj_IDï¼šå‘ç”Ÿå™¨ç¼–å·ï¼ŒObj_Numberï¼šé€’å¢é•¿åº¦ï¼Œé»˜è®¤1
+		CTIDGen: function(Obj_ID, Obj_Number){//id·¢ÉúÆ÷º¯Êı£¬²ÎÊı£ºObj_ID£º·¢ÉúÆ÷±àºÅ£¬Obj_Number£ºµİÔö³¤¶È£¬Ä¬ÈÏ1
 			this.ConnActive();
 			
 			Obj_Number = ebx.validInt(Obj_Number, 1);
@@ -813,14 +817,14 @@ var ebx = {
 			return IDGen;
 		}
 	},
-	saveBD: {//å•æ®ä¿å­˜å¯¹è±¡ 2018-7-6 zz
+	saveBD: {//µ¥¾İ±£´æ¶ÔÏó 2018-7-6 zz
 		ID:0,
 		ParentID:0,
 		bd:[],
 		bdlist:[],
 		TableName:'',
 		ModType:'',
-		init: function(TableName, ModType){//åˆå§‹åŒ–å¯¹è±¡ï¼Œè·å–å®¢æˆ·ç«¯å‘é€å¾—bdã€bdlistã€IDã€ParentIDã€TableNameã€ModTypeå‚æ•°
+		init: function(TableName, ModType){//³õÊ¼»¯¶ÔÏó£¬»ñÈ¡¿Í»§¶Ë·¢ËÍµÃbd¡¢bdlist¡¢ID¡¢ParentID¡¢TableName¡¢ModType²ÎÊı
 			this.bd = ebx.convertJsonToRs(eval('(' + ebx.stdin['bd'] + ')')),
 			this.bdlist = ebx.convertJsonToRs(eval('(' + ebx.stdin['bdlist'] + ')')),
 			this.ID = ebx.validInt(ebx.stdin['id']),
@@ -834,8 +838,6 @@ var ebx = {
 				this._saveBD();
 				ebx.conn.commitTrans;
 				ebx.stdout['result'] = 1;
-				//ebx.stdout['bd'] = {total: this.bd.RecordCount, rows: this.bd};
-				//ebx.stdout['bdlist'] = {total: this.bdlist.RecordCount, rows: this.bdlist};
 				ebx.stdout['id'] = this.ID;
 			}catch(e){
 				ebx.conn.RollbackTrans;
@@ -845,7 +847,7 @@ var ebx = {
 			this.CleanData();
 		},
 		_saveBD: function(){
-			if(this.ID == 0 || this.ParentID > 0){//IDä¸º0æˆ–è€…ParentID>0(å¦å­˜)æ—¶æ–°å»ºè®°å½•
+			if(this.ID == 0 || this.ParentID > 0){//IDÎª0»òÕßParentID>0(Áí´æ)Ê±ĞÂ½¨¼ÇÂ¼
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2'),
 					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),
 					rsBDFields = rsBDList.Fields;
@@ -887,7 +889,7 @@ var ebx = {
 					fieldsName = '';
 				for(var i = 0; i < fields.Count; i++){
 					fieldsName = fields(i).name;
-					for(var j = 0; j < rsBDFields.Count; j++){//åˆ¤æ–­å­—æ®µä¸rsBDListç›¸å»åˆçš„ï¼Œæ‰§è¡Œå†™åº“æ“ä½œ 2018-7-11 zz
+					for(var j = 0; j < rsBDFields.Count; j++){//ÅĞ¶Ï×Ö¶ÎÓërsBDListÏàÎÇºÏµÄ£¬Ö´ĞĞĞ´¿â²Ù×÷ 2018-7-11 zz
 						if(rsBDFields(j).name.toLowerCase() == fieldsName.toLowerCase()){
 							rsBDList(fieldsName) = this.bdlist(fieldsName).value
 						}
@@ -897,6 +899,8 @@ var ebx = {
 				this.bdlist.MoveNext();
 			}
 			rsBDList.Update();
+			rsBD = null;
+			rsBDList = null;
 		},
 		CleanData: function(){
 			this.ID = null;
@@ -907,13 +911,13 @@ var ebx = {
 			this.ModType = null;
 		}
 	},
-	saveBI: {//åŸºæœ¬ä¿¡æ¯ä¿å­˜å¯¹è±¡ 2018-7-13 zz
+	saveBI: {//»ù±¾ĞÅÏ¢±£´æ¶ÔÏó 2018-7-13 zz
 		ID:0,
 		ParentID:0,
 		bi:[],
 		TableName:'',
 		ModType:'',
-		init: function(TableName, ModType){//åˆå§‹åŒ–å¯¹è±¡ï¼Œè·å–å®¢æˆ·ç«¯å‘é€å¾—bdã€bdlistã€IDã€ParentIDã€TableNameã€ModTypeå‚æ•°
+		init: function(TableName, ModType){//³õÊ¼»¯¶ÔÏó£¬»ñÈ¡¿Í»§¶Ë·¢ËÍµÃbd¡¢bdlist¡¢ID¡¢ParentID¡¢TableName¡¢ModType²ÎÊı
 			this.bi = ebx.convertJsonToRs(eval('(' + ebx.stdin['bi'] + ')')),
 			this.ID = ebx.validInt(ebx.stdin['id']),
 			this.ParentID = ebx.validInt(ebx.stdin['ParentID']);
@@ -926,7 +930,6 @@ var ebx = {
 				this._saveBI();
 				ebx.conn.commitTrans;
 				ebx.stdout['result'] = 1;
-				//ebx.stdout['bi'] = {total: this.bi.RecordCount, rows: this.bi};
 				ebx.stdout['id'] = this.ID;
 			}catch(e){
 				ebx.conn.RollbackTrans;
@@ -936,7 +939,7 @@ var ebx = {
 			this.CleanData();
 		},
 		_saveBI: function(){
-			if(this.ID == 0 || this.ParentID > 0){//IDä¸º0æˆ–è€…ParentID>0(å¦å­˜)æ—¶æ–°å»ºè®°å½•
+			if(this.ID == 0 || this.ParentID > 0){//IDÎª0»òÕßParentID>0(Áí´æ)Ê±ĞÂ½¨¼ÇÂ¼
 				var rsBI = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2');
 					
 				this.ID = ebx.IDGen.CTIDGen(this.ModType);
@@ -954,6 +957,7 @@ var ebx = {
 
 			this.bi.MoveFirst();
 			while(!this.bi.eof){
+				if(this.bi("field").value == 'isdeleted') break;
 				rsBI(this.bi("field").value) = this.bi("value").value
 				if(this.bi("field").value == 'id'){
 					this.bi("value").value = this.ID;
@@ -964,6 +968,7 @@ var ebx = {
 			rsBI('UpdateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 			rsBI('UpdateCount') = ebx.validInt(rsBI('UpdateCount').value) + 1;
 			rsBI.Update();
+			rsBI = null;
 		},
 		CleanData: function(){
 			this.ID = null;
@@ -972,8 +977,95 @@ var ebx = {
 			this.TableName = null;
 			this.ModType = null;
 		}
+	},
+	deleted: {
+		ID: 0,
+		TableName:'',
+		init:function(TableName){
+			this.ID = ebx.validInt(ebx.stdin['id']),
+			this.TableName = ebx.sqlStringEncode(TableName);
+		},
+		deleted: function(){
+			ebx.conn.begintrans
+			try{
+				this._del();
+				ebx.conn.commitTrans;
+				ebx.stdout['result'] = 1;
+				ebx.stdout['id'] = this.ID;
+			}catch(e){
+				ebx.conn.RollbackTrans;
+				ebx.stdout['result'] = 0;
+				ebx.stdout['msg'] = e;
+			}
+			this.CleanData();
+		},
+		_del: function(){
+			if(this.ID > 0){
+				var rs = ebx.dbx.open('select IsDeleted,updatedate,Owner from ' + this.TableName + ' where id=' + this.ID);
+				if(!rs.eof){
+					if(rs('IsDeleted').value == 1) throw '¼ÇÂ¼ÒÑÉ¾³ı£¡';
+					rs('IsDeleted') = 1;
+					rs('updatedate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
+					rs("Owner") = ebx.Owner;
+					rs.update;
+				}else{
+					throw '¼ÇÂ¼²»´æÔÚ£¡';
+				}
+				rs = null
+			}else{
+				throw '¼ÇÂ¼²»´æÔÚ£¡';
+			}
+		},
+		CleanData: function(){
+			this.ID = null;
+			this.TableName = null;
+			this.ModType = null;
+		}
+	},
+	undeleted: {
+		ID: 0,
+		TableName:'',
+		init:function(TableName){
+			this.ID = ebx.validInt(ebx.stdin['id']),
+			this.TableName = ebx.sqlStringEncode(TableName);
+		},
+		deleted: function(){
+			ebx.conn.begintrans
+			try{
+				this._del();
+				ebx.conn.commitTrans;
+				ebx.stdout['result'] = 1;
+				ebx.stdout['id'] = this.ID;
+			}catch(e){
+				ebx.conn.RollbackTrans;
+				ebx.stdout['result'] = 0;
+				ebx.stdout['msg'] = e;
+			}
+			this.CleanData();
+		},
+		_del: function(){
+			if(this.ID > 0){
+				var rs = ebx.dbx.open('select IsDeleted,updatedate,Owner from ' + this.TableName + ' where id=' + this.ID);
+				if(!rs.eof){
+					if(rs('IsDeleted').value == 0) throw '¼ÇÂ¼Î´É¾³ı£¡';
+					rs('IsDeleted') = 0;
+					rs('updatedate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
+					rs("Owner") = ebx.Owner;
+					rs.update;
+				}else{
+					throw '¼ÇÂ¼²»´æÔÚ£¡';
+				}
+				rs = null
+			}else{
+				throw '¼ÇÂ¼²»´æÔÚ£¡';
+			}
+		},
+		CleanData: function(){
+			this.ID = null;
+			this.TableName = null;
+			this.ModType = null;
+		}
 	}
-
 }
 ebx.init();
 %>

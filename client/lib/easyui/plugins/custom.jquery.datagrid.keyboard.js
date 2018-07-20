@@ -175,8 +175,8 @@ $.extend($.fn.datagrid.methods, {
 											row: {}
 										});
 									}
-									thisGrid.datagrid('editkeyboard', {index:firstindex,field:nextfield});
 								}
+								thisGrid.datagrid('editkeyboard', {index:firstindex,field:nextfield});
 							},0);
 							break;
 						case 27://esc

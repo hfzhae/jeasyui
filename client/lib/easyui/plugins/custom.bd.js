@@ -147,6 +147,7 @@ ebx.bd = {
 			width:'100%',
 			height:'100%',
 			border:false,
+			lastinsertRow:false,
 			columns: [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}

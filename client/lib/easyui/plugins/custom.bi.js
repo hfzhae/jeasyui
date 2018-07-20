@@ -39,9 +39,11 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			_Paramet = this.Paramet,
 			_mapitem = this.mapitem,
 			_eaststorage = this.eaststorage,
-			_eastPanel = this.eastPanel;
+			_eastPanel = this.eastPanel,
+			_ID = this.ID,
+			_biribbon = this.biribbon;
 			
-		this.biribbon.ribbon({
+		_biribbon.ribbon({
 			data:{
 				selected:0,
 				tabs:[{
@@ -122,13 +124,55 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 									},0);
 								}
 							},{
-								name:'delete',
+								name:'deleted',
 								text:'删除',
-								iconCls:'icon-Delete'
+								iconCls:'icon-Delete',
+								onClick:function(){
+									var btn = $(this),
+										undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
+									ebx.browser._deleted(_ID, _Paramet.mode, function(result){
+										if(result.result){
+											$.messager.show({
+												title: '提示',
+												msg: '删除成功！',
+												timeout: 2000,
+												showType: 'slide'
+											});	
+											btn.linkbutton('disable');
+											if(undeleted)undeleted.linkbutton('enable');
+											_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
+											_eaststorage.datagrid('reload');
+											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
+										}else{
+											$.messager.alert('错误', '删除失败！<br>' + result.msg, 'error');
+										}
+									});
+								}
 							},{
-								name:'recovery',
+								name:'undeleted',
 								text:'恢复',
-								iconCls:'icon-reload'
+								iconCls:'icon-reload',
+								onClick: function(){
+									var btn = $(this),
+										deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton');
+									ebx.browser._undeleted(_ID, _Paramet.mode, function(result){
+										if(result.result){
+											$.messager.show({
+												title: '提示',
+												msg: '恢复成功！',
+												timeout: 2000,
+												showType: 'slide'
+											});	
+											btn.linkbutton('disable');
+											if(deleted)deleted.linkbutton('enable');
+											_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
+											_eaststorage.datagrid('reload');
+											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
+										}else{
+											$.messager.alert('错误', '恢复失败！<br>' + result.msg, 'error');	
+										}
+									});
+								}
 							}]
 						}]
 					},{
@@ -202,7 +246,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		
 		this.mapitem.tabs('add', {
 			title: '基本资料',
-			content: this.eaststorage,
+			content: _eaststorage,
 			selected: true
 		});
 		
@@ -219,7 +263,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			onresize();
 		}
 		
-		this.eaststorage.propertygrid({
+		_eaststorage.propertygrid({
 			url: 'server/SimpChinese/' + _Paramet.mode + '/load/',
 			method:'post',
 			queryParams:{_:(new Date()).getTime(),id:this.Paramet.id},
@@ -232,7 +276,31 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
 			]],
-			showHeader: true
+			showHeader: true,
+			onLoadSuccess: function(data){
+				var onLoadSuccessfn = _eaststorage.propertygrid('options').onLoadSuccess,
+					deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
+					undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
+					
+				for(var i in data.rows){
+					if(data.rows[i].field == 'id'){
+						_ID = ebx.validInt(data.rows[i].value);
+					}
+					if(data.rows[i].field == 'isdeleted'){
+						if(ebx.validInt(data.rows[i].value) == 0){
+							if(undeleted)undeleted.linkbutton('disable');
+							if(deleted)deleted.linkbutton('enable');
+						}else{
+							if(deleted)deleted.linkbutton('disable');
+							if(undeleted)undeleted.linkbutton('enable');
+						}
+					}
+				}
+				if(_ID == 0){
+					if(undeleted)undeleted.linkbutton('disable');
+					if(deleted)deleted.linkbutton('disable');
+				}
+			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 
 	}
