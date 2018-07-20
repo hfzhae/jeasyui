@@ -77,29 +77,20 @@ ebx.browser = {
 				break;
 			case 'bi':
 				ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Paramet.text,function(){
-					var _east = options._layout.layout('panel', 'east');
-					if(_east.find('div').length > 0){
-						ebx.setEditstatus(options._tabs.panel('options'), false);
-						_eaststorage = _east.find('.datagrid-f').datagrid('load', {
-							id: 0,
-							_:(new Date()).getTime()
-						})
-					}else{
-						options._layout.layout('remove', 'east');//删除编辑layout
-						ebx.setEditstatus(options._tabs.panel('options'), false);
-						options._layout.layout('add',{//添加新的layout
-							region: 'east',
-							width: 400,
-							maxWidth: '50%',
-							minWidth: 300,
-							title: '',
-							href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode,
-							hideExpandTool: false,
-							hideCollapsedContent: false,
-							border: false,
-							split: true
-						});
-					}
+					options._layout.layout('remove', 'east');//删除编辑layout
+					ebx.setEditstatus(options._tabs.panel('options'), false);
+					options._layout.layout('add',{//添加新的layout
+						region: 'east',
+						width: 400,
+						maxWidth: '50%',
+						minWidth: 300,
+						title: '',
+						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode,
+						hideExpandTool: false,
+						hideCollapsedContent: false,
+						border: false,
+						split: true
+					});
 				});
 				break;
 		}
@@ -157,29 +148,20 @@ ebx.browser = {
 					index = rowIndex;
 					
 				ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Paramet.text,function(){
-					var _east = options._layout.layout('panel', 'east');
-					if(_east.find('div').length > 0){
-						ebx.setEditstatus(options._tabs.panel('options'), false);
-						_eaststorage = _east.find('.datagrid-f').datagrid('load', {
-							id: id,
-							_:(new Date()).getTime()
-						})
-					}else{
-						options._layout.layout('remove', 'east');//删除编辑layout
-						ebx.setEditstatus(options._tabs.panel('options'), false);
-						options._layout.layout('add',{//添加新的layout
-							region: 'east',
-							width: 400,
-							maxWidth: '50%',
-							minWidth: 300,
-							title: '',
-							href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode,
-							hideExpandTool: false,
-							hideCollapsedContent: false,
-							border: false,
-							split: true
-						});
-					}
+					options._layout.layout('remove', 'east');//删除编辑layout
+					ebx.setEditstatus(options._tabs.panel('options'), false);
+					options._layout.layout('add',{//添加新的layout
+						region: 'east',
+						width: 400,
+						maxWidth: '50%',
+						minWidth: 350,
+						title: '',
+						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode,
+						hideExpandTool: false,
+						hideCollapsedContent: false,
+						border: false,
+						split: true
+					});
 				});
 				break;
 		}

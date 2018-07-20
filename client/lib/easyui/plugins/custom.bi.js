@@ -66,7 +66,6 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 									bistr = ebx.convertDicToJson(bi),
 									parameter = {bi: bistr, _: (new Date()).getTime(), id: _Paramet.id};
 
-								
 								if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
 									saveBtn.linkbutton('enable');
 									return;
@@ -286,7 +285,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 					if(data.rows[i].field == 'id'){
 						_ID = ebx.validInt(data.rows[i].value);
 					}
-					if(data.rows[i].field == 'isdeleted'){
+					if(data.rows[i].field == '_isdeleted'){
 						if(ebx.validInt(data.rows[i].value) == 0){
 							if(undeleted)undeleted.linkbutton('disable');
 							if(deleted)deleted.linkbutton('enable');

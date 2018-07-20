@@ -2,7 +2,7 @@
 <%
 (function(){
 	var id = ebx.validInt(ebx.stdin['id']),
-		sql = 'select id,title,[type],FieldStyle,HeaderStyle,FooterStyle,Border,Header,Footer,Height,Width,isdeleted from ' + TableName + ' where id=' + id,
+		sql = 'select a.id,a.title,a.[type],a.FieldStyle,a.HeaderStyle,a.FooterStyle,a.Border,a.Header,a.Footer,a.Height,a.Width,a.isdeleted,a.updatedate,a.createdate,u.title as owner from ' + TableName + ' a,biuser u where a.owner=u.id and a.id=' + id,
 		rs,
 		data = [],
 		title = '', type = '', FieldStyle = '', HeaderStyle = '', FooterStyle = '', Border = 0, Header = 0, Footer = 0, Height = '', Width = '', isdeleted = 0;
@@ -22,11 +22,17 @@
 			Height = rs('Height').value;
 			Width = rs('Width').value;
 			isdeleted = rs('isdeleted').value;
+			updatedate = rs('updatedate').value;
+			createdate = rs('createdate').value;
+			owner = rs('owner').value
 		}
 	}
 	data = {"total":11,"rows":[
 		{"name":"ID","value":id,"group":"系统生成","field":"id"},
-		{"name":"删除","value":isdeleted,"group":"系统生成","field":"isdeleted","hidden":true,"render":"boolRender"},
+		{"name":"删除","value":isdeleted,"group":"系统生成","field":"_isdeleted","hidden":true,"render":"boolRender"},
+		{"name":"创建时间","value":"'" + createdate + "'","group":"系统生成","field":"_createdate","hidden":true,"render":"datetimeRender"},
+		{"name":"更新时间","value":"'" + updatedate + "'","group":"系统生成","field":"_updatedate","hidden":true,"render":"datetimeRender"},
+		{"name":"操作员","value":owner,"group":"系统生成","field":"_owner"},
 		{"name":"名称","value":title,"group":"必填信息","editor":{"type":"validatebox", "options":{"required":true,"validType":"LetterInteger"}},"field":"title"},//validatebox校验录入值合法性的支持方法
 		{"name":"类型","value":type,"group":"其他","editor":"text","field":"type"},
 		{"name":"单元格样式","value":FieldStyle,"group":"其他","editor":"text","field":"FieldStyle"},

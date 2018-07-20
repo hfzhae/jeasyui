@@ -23,6 +23,9 @@ var ebx = {
 					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			return fmt;
 		}
+		String.prototype.replaceAll = function(s1,s2){ 
+			return(this.replace(new RegExp(s1,"gm"),s2)); 
+		}
 		this.IDGen.init(0);
 		this.Accountid = 1;//读取账套ID，待处理。。。
 		this.Owner = 1;//读取登陆用户ID，待处理。。。
@@ -102,6 +105,7 @@ var ebx = {
 			FormSize = Request.TotalBytes;
 			FormData = Request.BinaryRead(FormSize);
 			ParametStr = ebx.stream_binarytostring(FormData, '');
+			ParametStr = ParametStr.replaceAll('\\+', ' ');//把jquery的ajax传递时空格转换成的加号替换成空格
 			if(typeof(ParametStr) == 'string'){
 				if(ParametStr.length > 0){
 					try{
@@ -124,12 +128,8 @@ var ebx = {
 				//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
 			}
 		}
-		
 		ebx.conn = Server.CreateObject('ADODB.Connection');
 		ebx.conn.open(Application('DateBase.ConnectString'));
-		String.prototype.replaceAll = function(s1,s2){ 
-			return(this.replace(new RegExp(s1,"gm"),s2)); 
-		}
 	},
 	stream_binarytostring: function (binary, charset){//用adodb.stream获取requet内容 2018-5-4 zz
 		var binarystream = Server.CreateObject('adodb.stream');
@@ -850,7 +850,8 @@ var ebx = {
 			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2'),
 					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),
-					rsBDFields = rsBDList.Fields;
+					rsBDFields = rsBD.Fields,
+					rsBDListFields = rsBDList.Fields;
 					
 				this.ID = ebx.IDGen.CTIDGen(this.ModType);
 				rsBD.AddNew();
@@ -865,12 +866,17 @@ var ebx = {
 			}else{
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where id=' + this.ID),
 					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),
-					rsBDFields = rsBDList.Fields;
+					rsBDFields = rsBD.Fields,
+					rsBDListFields = rsBDList.Fields;
 			}
 
 			this.bd.MoveFirst();
 			while(!this.bd.eof){
-				rsBD(this.bd("field").value) = this.bd("value").value
+				for(var i = 0; i < rsBDFields.Count; i++){
+					if(rsBDFields(i).name.toLowerCase() == this.bd("field").value.toLowerCase()){
+						rsBD(this.bd("field").value) = this.bd("value").value
+					}
+				}
 				if(this.bd("field").value == 'id'){
 					this.bd("value").value = this.ID;
 				}
@@ -889,8 +895,8 @@ var ebx = {
 					fieldsName = '';
 				for(var i = 0; i < fields.Count; i++){
 					fieldsName = fields(i).name;
-					for(var j = 0; j < rsBDFields.Count; j++){//判断字段与rsBDList相吻合的，执行写库操作 2018-7-11 zz
-						if(rsBDFields(j).name.toLowerCase() == fieldsName.toLowerCase()){
+					for(var j = 0; j < rsBDListFields.Count; j++){//判断字段与rsBDList相吻合的，执行写库操作 2018-7-11 zz
+						if(rsBDListFields(j).name.toLowerCase() == fieldsName.toLowerCase()){
 							rsBDList(fieldsName) = this.bdlist(fieldsName).value
 						}
 					}
@@ -950,18 +956,22 @@ var ebx = {
 				rsBI("Infotype") = this.ModType;
 				rsBI("AccountID") = ebx.Accountid;
 				rsBI("Owner") = ebx.Owner;
-				rsBI("IsDeleted") = 0
+				rsBI("IsDeleted") = 0,
+				rsBIFields = rsBI.Fields;
 			}else{
-				var rsBI = ebx.dbx.open('select * from ' + this.TableName + ' where id=' + this.ID);
+				var rsBI = ebx.dbx.open('select * from ' + this.TableName + ' where id=' + this.ID),
+					rsBIFields = rsBI.Fields;
 			}
-
 			this.bi.MoveFirst();
 			while(!this.bi.eof){
-				if(this.bi("field").value == 'isdeleted') break;
-				rsBI(this.bi("field").value) = this.bi("value").value
-				if(this.bi("field").value == 'id'){
-					this.bi("value").value = this.ID;
+				for(var i = 0; i < rsBIFields.Count; i++){
+					if(rsBIFields(i).name.toLowerCase() == this.bi("field").value.toLowerCase()){
+						rsBI(this.bi("field").value) = this.bi("value").value
+					}
 				}
+				//if(this.bi("field").value == 'id'){
+				//	this.bi("value").value = this.ID;
+				//}
 				this.bi.MoveNext();
 			}
 			rsBI('ID') = this.ID;
