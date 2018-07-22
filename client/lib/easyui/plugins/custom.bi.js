@@ -32,6 +32,45 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 				break;
 		}
 	},
+	_save:function(asSave, _layout, _Paramet, _tab, callback){
+		var bi = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
+			bistr = ebx.convertDicToJson(bi),
+			ParentID = asSave?_Paramet.id:0,
+			savetext = asSave?'另存':'保存',
+			parameter = {bi: bistr, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+
+		if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
+			callback();
+			return;
+		}
+		
+		$.ajax({
+			type: 'post', 
+			url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
+			data: parameter,
+			dataType: "json",
+			success: function(result){
+				if(result.result){
+					$.messager.show({
+						title: '提示',
+						msg: savetext + '成功！',
+						timeout: 3000,
+						showType: 'slide'
+					});	
+					ebx.setEditstatus(_tab, false);
+					var id = result.id;
+					
+					_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
+					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
+					
+				}else{
+					$.messager.alert('错误', savetext + '失败！<br>' + result.msg.message, 'error');	
+				}
+				callback();
+				
+			}
+		});
+	},
 	_east: function(){//编辑对象
 		var _layout = this.layout,
 			_tabs = this.tabs,
@@ -41,7 +80,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			_eaststorage = this.eaststorage,
 			_eastPanel = this.eastPanel,
 			_ID = this.ID,
-			_biribbon = this.biribbon;
+			_biribbon = this.biribbon,
+			_save = this._save;
 			
 		_biribbon.ribbon({
 			data:{
@@ -58,51 +98,23 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 							iconAlign:'top',
 							size:'large',
 							onClick: function(){
-								var saveBtn = $(this);
-								
+								var saveBtn = $(this)
 								saveBtn.linkbutton('disable');
-								
-								var bi = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
-									bistr = ebx.convertDicToJson(bi),
-									parameter = {bi: bistr, _: (new Date()).getTime(), id: _Paramet.id};
-
-								if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
+								_save(0, _layout, _Paramet, _tab, function(){
 									saveBtn.linkbutton('enable');
-									return;
-								}
-								
-								$.ajax({
-									type: 'post', 
-									url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
-									data: parameter,
-									dataType: "json",
-									success: function(result){
-										//console.log(result);
-										if(result.result){
-											$.messager.show({
-												title: '提示',
-												msg: '保存成功！',
-												timeout: 3000,
-												showType: 'slide'
-											});	
-											ebx.setEditstatus(_tab, false);
-											var id = result.id;
-											
-											_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
-											_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
-											
-										}else{
-											$.messager.alert('错误', '保存失败！<br>' + result.msg.message, 'error');	
-										}
-										saveBtn.linkbutton('enable');
-										
-									}
-								});
+								})
 							},
 							menuItems:[{
 								name:'saveas',
 								text:'另存为',
-								iconCls:'icon-FileSaveAs'
+								iconCls:'icon-FileSaveAs',
+								onclick: function(){
+									$.messager.confirm('提示', '是否需要另存？', function(r){
+										if (r){
+											_save(1, _layout, _Paramet, _tab, function(){ });
+										}
+									});
+								}
 							}]
 						},{
 							type:'toolbar',

@@ -33,7 +33,7 @@ $.extend($.fn.combogrid.defaults, {
 			} catch(err) {}
 		},
 		down: function(){
-			try{
+			//try{
 				$(this).combogrid('showPanel');
 				var co = $(this).combogrid('grid');
 				var selected = co.datagrid('getSelected');
@@ -41,10 +41,10 @@ $.extend($.fn.combogrid.defaults, {
 				if (selected) {  
 					var index = co.datagrid('getRowIndex', selected);  
 					co.datagrid('selectRow', index + 1);  
-				} else {  
+				} else {
 					co.datagrid('selectRow', 0);
 				} 
-			} catch(err) {}
+			//} catch(err) {}
 		},
 		left: function(){},
 		right:function(){},
@@ -176,13 +176,14 @@ $.extend($.fn.combogrid.defaults, {
 							method:'post',
 							loadMsg:$.fn.datagrid.defaults.loadMsg,
 							columns:data,
+							/*
 							onLoadSuccess: function(data){
 								if(data.total == 1){
 									g.datagrid('selectRow', 0);
 								}
 								ops.oRows = [];
 								ops.asyn = 1;
-							}
+							}*/
 						}).datagrid('renderformatterstyler');
 						
 					}

@@ -926,7 +926,7 @@ var ebx = {
 		init: function(TableName, ModType){//初始化对象，获取客户端发送得bd、bdlist、ID、ParentID、TableName、ModType参数
 			this.bi = ebx.convertJsonToRs(eval('(' + ebx.stdin['bi'] + ')')),
 			this.ID = ebx.validInt(ebx.stdin['id']),
-			this.ParentID = ebx.validInt(ebx.stdin['ParentID']);
+			this.ParentID = ebx.validInt(ebx.stdin['parentid']);
 			this.TableName = ebx.sqlStringEncode(TableName);
 			this.ModType = ebx.validInt(ModType);
 		},

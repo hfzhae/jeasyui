@@ -4,7 +4,7 @@
 	ebx.stdout = {"total":29,"rows":[
 		{"name":"编号","value":"","group":"必填信息","editor":"text","field":"code"},
 		{"name":"名称","value":"","group":"必填信息","editor":"text","field":"title"},
-		{"name":"产品类型","value":"","group":"必填信息","editor":{"type":"combogrid","options":{"style":"biOpen2","validType":"combogridValue","required":true,"idField":"Code","idField":"Title","rownumbers":true,"panelWidth":250,"template":84}},"field":"productclass"},
+		{"name":"产品类型","value":"","group":"必填信息","editor":{"type":"combogrid","options":{"style":"biOpen2","validType":"combogridValue","required":true,"idField":"id","idField":"title","rownumbers":true,"panelWidth":250,"template":84}},"field":"productclass"},
 		{"name":"规格","value":"","group":"基本信息","editor":"text","field":"memo"},
 		{"name":"单位","value":"","group":"基本信息","editor":"text","field":"memo"},
 		{"name":"材质","value":"","group":"基本信息","editor":"text","field":"memo"},

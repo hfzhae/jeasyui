@@ -494,13 +494,14 @@ ebx.browser = {
 				}
 			}
 		});
-		searchtext.textbox({
-			buttonText:'搜索',
-			iconCls:'icon-ZoomClassic_custom',
-			iconAlign:'left',
-			onClickButton: function(){
+		searchtext.searchbox({
+			//buttonText:'搜索',
+			//iconCls:'icon-ZoomClassic_custom',
+			//iconAlign:'left',
+			searcher: function(){
 				_search(browser, searchtext.textbox('getValue'));
-			}
+			},
+			prompt:'输入搜索文字并回车'
 		});
 		newbtn.linkbutton({
 			text:'新建',
@@ -518,7 +519,8 @@ ebx.browser = {
 		});
 		functionbtn.linkbutton({
 			text:'更多',
-			iconCls: 'icon-datagrid_icons_h_down',
+			iconCls: 'icon-arrow-down',
+			iconAlign:'right',
 			plain:true,
 			onClick:function(){
 				if(_biribbon.height() < 100){
@@ -529,7 +531,7 @@ ebx.browser = {
 						});
 					});
 					functionbtn.find('.l-btn-text').text('隐藏');
-					functionbtn.find('.l-btn-icon').addClass('icon-datagrid_icons_h_up').removeClass('icon-datagrid_icons_h_down');
+					functionbtn.find('.l-btn-icon').addClass('icon-arrow-up').removeClass('icon-arrow-down');
 				}else{
 					_biribbon.animate({height:0}, 200, function(){
 						_biribbon.hide();
@@ -538,7 +540,7 @@ ebx.browser = {
 						});
 					});
 					functionbtn.find('.l-btn-text').text('更多');
-					functionbtn.find('.l-btn-icon').addClass('icon-datagrid_icons_h_down').removeClass('icon-datagrid_icons_h_up');
+					functionbtn.find('.l-btn-icon').addClass('icon-arrow-down').removeClass('icon-arrow-up');
 				}
 			}
 		}).addClass('browser-functionbtn');

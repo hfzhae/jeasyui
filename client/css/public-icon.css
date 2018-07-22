@@ -429,21 +429,6 @@
 	background:url('icon32/DeclineInvitationNull.png') no-repeat center center;
 }
 
-
-.icon-datagrid_icons_h_down {
-	display: inline!important;
-	padding: 0 13px 0 0!important;
-	background: url('icon32/datagrid_icons_h.png') no-repeat -16px center!important;
-	background-size:80px 16px!important;
-}
-
-.icon-datagrid_icons_h_up {
-	display: inline!important;
-	padding: 0 13px 0 0!important;
-	background: url('icon32/datagrid_icons_h.png') no-repeat 0px center!important;
-	background-size:80px 16px!important;
-}
-
 /*新增图标end*/
 
 
