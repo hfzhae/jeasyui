@@ -23,6 +23,7 @@ ebx.bd = {
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Paramet = ebx.getMenuParameter(this.tabs);
+		this.ID = ebx.validInt(this.Paramet.id);
 		if(this.Paramet.DateStyle){
 			this.showdate = 1;
 		}
@@ -138,8 +139,62 @@ ebx.bd = {
 			}
 		});
 	},
+	_save:function(asSave, _layout, _Paramet, _tab, callback){
+		var bdlist = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData'),
+			bd = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
+			bdliststr =  ebx.convertDicToJson(bdlist),
+			bdstr = ebx.convertDicToJson(bd),
+			ParentID = asSave?_Paramet.id:0,
+			savetext = asSave?'另存':'保存',
+			parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+
+		if(bdlist.total == 0){
+			$.messager.show({
+				title: '错误',
+				msg: savetext + '失败！表格不能为空。',
+				timeout: 3000,
+				showType: 'slide'
+			});	
+			saveBtn.linkbutton('enable');
+			return;
+		}
+		
+		if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
+			saveBtn.linkbutton('enable');
+			return;
+		}
+		
+		$.ajax({
+			type: 'post', 
+			url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
+			data: parameter,
+			dataType: "json",
+			success: function(result){
+				if(result.result){
+					$.messager.show({
+						title: '提示',
+						msg: savetext + '成功！',
+						timeout: 3000,
+						showType: 'slide'
+					});	
+					ebx.setEditstatus(_tab, false);
+					var id = result.id;
+					
+					_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
+					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
+					
+				}else{
+					$.messager.alert('错误', savetext + '失败！<br>' + result.msg.message, 'error');	
+				}
+				callback()
+			}
+		});
+	},
 	_east: function(){//单据属性对象
-		this.eaststorage.propertygrid({
+		var _eaststorage = this.eaststorage,
+			_tabs = this.tabs;
+		
+		_eaststorage.propertygrid({
 			url: 'server/SimpChinese/'+this.Paramet.mode+'/load/',
 			method:'post',
 			queryParams:{_:(new Date()).getTime(),id:this.Paramet.id},
@@ -152,7 +207,27 @@ ebx.bd = {
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
 			]],
-			showHeader: true
+			showHeader: true,
+			onLoadSuccess: function(data){
+				var _biribbon = _tabs.find('.layout').layout('panel', 'north').find('.ribbon-tab'),
+					deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
+					undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
+					
+				if(undeleted)undeleted.linkbutton('disable');
+				if(deleted)deleted.linkbutton('disable');
+					
+				for(var i in data.rows){
+					if(data.rows[i].field == '_isdeleted'){
+						if(ebx.validInt(data.rows[i].value) == 0){
+							if(undeleted)undeleted.linkbutton('disable');
+							if(deleted)deleted.linkbutton('enable');
+						}else{
+							if(deleted)deleted.linkbutton('disable');
+							if(undeleted)undeleted.linkbutton('enable');
+						}
+					}
+				}
+			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 	},
 	_north: function (){//单据表头按钮对象 2018-7-9 zz
@@ -161,6 +236,9 @@ ebx.bd = {
 			_Paramet = this.Paramet,
 			_tabs = bd.tabs,
 			_tab = this.tab,
+			_biribbon = this.biribbon,
+			_save = this._save,
+			_ID = this.ID,
 			data = {
 				selected:0,
 				tabs:[{
@@ -179,62 +257,18 @@ ebx.bd = {
 								text:'另存为',
 								iconCls:'icon-FileSaveAs',
 								onClick: function(){
-									console.log(_layout)
+									$.messager.confirm('提示', '是否需要另存？', function(r){
+										if (r){
+											_save(1, _layout, _Paramet, _tab, function(){ });
+										}
+									});
 								}
 							}],
 							onClick: function(){
 								var saveBtn = $(this);
-								
 								saveBtn.linkbutton('disable');
-								
-								var bdlist = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData'),
-									bd = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
-									bdliststr =  ebx.convertDicToJson(bdlist),
-									bdstr = ebx.convertDicToJson(bd),
-									parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime(), id: _Paramet.id};
-
-								if(bdlist.total == 0){
-									$.messager.show({
-										title: '错误',
-										msg: '保存失败！表格不能为空。',
-										timeout: 3000,
-										showType: 'slide'
-									});	
+								_save(0, _layout, _Paramet, _tab, function(){
 									saveBtn.linkbutton('enable');
-									return;
-								}
-								
-								if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
-									saveBtn.linkbutton('enable');
-									return;
-								}
-								
-								$.ajax({
-									type: 'post', 
-									url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
-									data: parameter,
-									dataType: "json",
-									success: function(result){
-										//console.log(result);
-										if(result.result){
-											$.messager.show({
-												title: '提示',
-												msg: '保存成功！',
-												timeout: 3000,
-												showType: 'slide'
-											});	
-											ebx.setEditstatus(_tab, false);
-											var id = result.id;
-											
-											_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
-											_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
-											
-										}else{
-											$.messager.alert('错误', '保存失败！<br>' + result.msg.message, 'error');	
-										}
-										saveBtn.linkbutton('enable');
-										
-									}
 								});
 							}
 						},{
@@ -254,13 +288,61 @@ ebx.bd = {
 									ebx.browser._new(options);
 								}
 							},{
-								name:'delete',
+								name:'deleted',
 								text:'删除',
-								iconCls:'icon-Delete'
+								iconCls:'icon-Delete',
+								disable:true,
+								onClick:function(){
+									var btn = $(this),
+										undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton'),
+										_eaststorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
+										
+									ebx.browser._deleted(_ID, _Paramet.mode, function(result){
+										if(result.result){
+											$.messager.show({
+												title: '提示',
+												msg: '删除成功！',
+												timeout: 2000,
+												showType: 'slide'
+											});	
+											btn.linkbutton('disable');
+											if(undeleted)undeleted.linkbutton('enable');
+											//_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
+											_eaststorage.propertygrid('reload');
+											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
+										}else{
+											$.messager.alert('错误', '删除失败！<br>' + result.msg, 'error');
+										}
+									});
+								}
 							},{
-								name:'recovery',
+								name:'undeleted',
 								text:'恢复',
-								iconCls:'icon-reload'
+								iconCls:'icon-reload',
+								disable:true,
+								onClick:function(){
+									var btn = $(this),
+										deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
+										_eaststorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
+										
+									ebx.browser._undeleted(_ID, _Paramet.mode, function(result){
+										if(result.result){
+											$.messager.show({
+												title: '提示',
+												msg: '恢复成功！',
+												timeout: 2000,
+												showType: 'slide'
+											});	
+											btn.linkbutton('disable');
+											if(deleted)deleted.linkbutton('enable');
+											//_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
+											_eaststorage.propertygrid('reload');
+											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
+										}else{
+											$.messager.alert('错误', '恢复失败！<br>' + result.msg, 'error');
+										}
+									});
+								}
 							}]
 						},{
 							type:'splitbutton',
@@ -274,22 +356,28 @@ ebx.bd = {
 								text:'保存并审核',
 								iconCls:'icon-SaveSelectionToTableOfContentsGallery',
 								onClick: function(){
-									console.log(_layout)
+									//console.log(_layout)
 								}
 							}]
 						}]
 					},{
 						title:'打印',
+						dir:'v',
 						tools:[{
 							text:'打印',
-							iconCls:'icon-PrintDialogAccess-large',
-							iconAlign:'top',
-							size:'large',
+							iconCls:'icon-PrintDialogAccess',
+							//iconAlign:'top',
+							//size:'large',
 						},{
 							text:'预览',
-							iconCls:'icon-ViewsAdpDiagramPrintPreview-large',
-							iconAlign:'top',
-							size:'large',
+							iconCls:'icon-ViewsAdpDiagramPrintPreview',
+							//iconAlign:'top',
+							//size:'large',
+						},{
+							text:'设置',
+							iconCls:'icon-PrintOptionsMenu',
+							//iconAlign:'top',
+							//size:'large',
 						}]
 					},{
 						title:'行操作',
@@ -439,7 +527,7 @@ ebx.bd = {
 				}]
 			};
 			
-		this.biribbon.ribbon({
+		_biribbon.ribbon({
 			data:data,
 			width:'100%',
 			height:'100%',

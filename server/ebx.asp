@@ -828,7 +828,7 @@ var ebx = {
 			this.bd = ebx.convertJsonToRs(eval('(' + ebx.stdin['bd'] + ')')),
 			this.bdlist = ebx.convertJsonToRs(eval('(' + ebx.stdin['bdlist'] + ')')),
 			this.ID = ebx.validInt(ebx.stdin['id']),
-			this.ParentID = ebx.validInt(ebx.stdin['ParentID']);
+			this.ParentID = ebx.validInt(ebx.stdin['parentid']);
 			this.TableName = ebx.sqlStringEncode(TableName);
 			this.ModType = ebx.validInt(ModType);
 		},

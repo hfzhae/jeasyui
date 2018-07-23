@@ -429,6 +429,15 @@
 	background:url('icon32/DeclineInvitationNull.png') no-repeat center center;
 }
 
+.icon-PrintOptionsMenu{
+	background:url('icon32/PrintOptionsMenu.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-PrintOptionsMenu-large{
+	background:url('icon32/PrintOptionsMenu.png') no-repeat center center;
+}
+
+
 /*新增图标end*/
 
 

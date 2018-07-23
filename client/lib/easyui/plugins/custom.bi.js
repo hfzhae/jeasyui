@@ -79,7 +79,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			_mapitem = this.mapitem,
 			_eaststorage = this.eaststorage,
 			_eastPanel = this.eastPanel,
-			_ID = this.ID,
+			_ID = _Paramet.id,
 			_biribbon = this.biribbon,
 			_save = this._save;
 			
@@ -138,6 +138,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								name:'deleted',
 								text:'删除',
 								iconCls:'icon-Delete',
+								disable:true,
 								onClick:function(){
 									var btn = $(this),
 										undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
@@ -163,6 +164,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								name:'undeleted',
 								text:'恢复',
 								iconCls:'icon-reload',
+								disable:true,
 								onClick: function(){
 									var btn = $(this),
 										deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton');
@@ -293,10 +295,10 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 					deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
 					undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
 					
+				if(undeleted)undeleted.linkbutton('disable');
+				if(deleted)deleted.linkbutton('disable');
+				
 				for(var i in data.rows){
-					if(data.rows[i].field == 'id'){
-						_ID = ebx.validInt(data.rows[i].value);
-					}
 					if(data.rows[i].field == '_isdeleted'){
 						if(ebx.validInt(data.rows[i].value) == 0){
 							if(undeleted)undeleted.linkbutton('disable');
@@ -306,10 +308,6 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 							if(undeleted)undeleted.linkbutton('enable');
 						}
 					}
-				}
-				if(_ID == 0){
-					if(undeleted)undeleted.linkbutton('disable');
-					if(deleted)deleted.linkbutton('disable');
 				}
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数

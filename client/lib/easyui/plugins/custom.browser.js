@@ -650,6 +650,7 @@ ebx.browser = {
 								}).menu('appendItem', {
 									text: '编辑',
 									iconCls: 'icon-DesignMode',
+									disable:true,
 									onclick:function(){
 										var options = {
 											_Paramet: _Paramet,
