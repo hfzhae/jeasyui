@@ -10,9 +10,9 @@ dev by zz on 2018/4/24
 
 $.extend($.fn.datagrid.methods,{
 	renderformatterstyler: function(d){
-		var columns = d.datagrid('options').columns;
+		var ots = d.datagrid('options'),
+			columns = ots.columns;
 		if(d.parent().parent().parent().hasClass('propertygrid')){//针对propertygrid控件的处理
-
 			columns[0][0].formatter = function(value, rowData, rowIndex) {//标题字段
 				var v = value;
 				return v;
@@ -26,7 +26,15 @@ $.extend($.fn.datagrid.methods,{
 					return rowData.fieldstyle;
 				}
 			}
-		}else{//针对其他datagrid控件
+			ots.rowStyler = function(index,row){
+				if(row.hidden){//hidden属性为true时，隐藏该行
+					return 'display:none';
+				}
+				if(row.rowstyle){//行式样
+					return row.rowstyle;
+				}
+			}
+		}else{//针对datagrid控件
 			for(var i in columns[0]){
 				var _c = columns[0][i];
 				if(_c.render.toLowerCase() == 'hiddenrender'){//隐藏列显示函数特殊处理

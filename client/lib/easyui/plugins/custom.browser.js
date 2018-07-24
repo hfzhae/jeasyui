@@ -83,7 +83,7 @@ ebx.browser = {
 						region: 'east',
 						width: 400,
 						maxWidth: '50%',
-						minWidth: 300,
+						minWidth: 400,
 						title: '',
 						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode,
 						hideExpandTool: false,
@@ -154,7 +154,7 @@ ebx.browser = {
 						region: 'east',
 						width: 400,
 						maxWidth: '50%',
-						minWidth: 350,
+						minWidth: 400,
 						title: '',
 						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode,
 						hideExpandTool: false,
@@ -308,7 +308,7 @@ ebx.browser = {
 										});	
 										_search(browser, searchtext.textbox('getValue'));
 									}else{
-										$.messager.alert('错误', '删除失败！<br>' + result.msg, 'error');
+										$.messager.alert('错误', '删除失败！<br>' + JSON.stringify(result.msg), 'error');
 									}
 								});
 							}
@@ -338,7 +338,7 @@ ebx.browser = {
 											});	
 											_search(browser, searchtext.textbox('getValue'));
 										}else{
-											$.messager.alert('错误', '恢复失败！<br>' + result.msg, 'error');
+											$.messager.alert('错误', '恢复失败！<br>' + JSON.stringify(result.msg), 'error');
 										}
 									});
 								}
@@ -677,7 +677,7 @@ ebx.browser = {
 												});	
 												_search(browser, searchtext.textbox('getValue'));
 											}else{
-												$.messager.alert('错误', '删除失败！<br>' + result.msg, 'error');
+												$.messager.alert('错误', '删除失败！<br>' + JSON.stringify(result.msg), 'error');
 											}
 										});
 									}
@@ -698,7 +698,7 @@ ebx.browser = {
 												});	
 												_search(browser, searchtext.textbox('getValue'));
 											}else{
-												$.messager.alert('错误', '恢复失败！<br>' + result.msg, 'error');
+												$.messager.alert('错误', '恢复失败！<br>' + JSON.stringify(result.msg), 'error');
 											}
 										});
 									}
@@ -793,7 +793,6 @@ ebx.browser = {
 					_liststorage.datagrid('resize', {
 						height:_listPanel.height()-_listPanel.find('.ribbon').height()
 					});
-					_liststorage.datagrid('resize');
 				}catch(e){}
 			},200);
 			onresize();

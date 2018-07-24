@@ -82,7 +82,7 @@ ebx.bd = {
 			region: 'east',
 			width: 400,
 			maxWidth: '50%',
-			minWidth: 300,
+			minWidth: 400,
 			//title: '基本信息',
 			href: 'client/SimpChinese/' + this.Paramet.mode + '/east.html',
 			hideExpandTool: false,
@@ -184,7 +184,7 @@ ebx.bd = {
 					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 					
 				}else{
-					$.messager.alert('错误', savetext + '失败！<br>' + result.msg.message, 'error');	
+					$.messager.alert('错误', savetext + '失败！<br>' + JSON.stringify(result.msg), 'error');	
 				}
 				callback()
 			}
@@ -311,7 +311,7 @@ ebx.bd = {
 											_eaststorage.propertygrid('reload');
 											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 										}else{
-											$.messager.alert('错误', '删除失败！<br>' + result.msg, 'error');
+											$.messager.alert('错误', '删除失败！<br>' + JSON.stringify(result.msg), 'error');
 										}
 									});
 								}
@@ -339,7 +339,7 @@ ebx.bd = {
 											_eaststorage.propertygrid('reload');
 											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 										}else{
-											$.messager.alert('错误', '恢复失败！<br>' + result.msg, 'error');
+											$.messager.alert('错误', '恢复失败！<br>' + JSON.stringify(result.msg), 'error');
 										}
 									});
 								}

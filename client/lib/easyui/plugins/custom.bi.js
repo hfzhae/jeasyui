@@ -64,7 +64,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 					
 				}else{
-					$.messager.alert('错误', savetext + '失败！<br>' + result.msg.message, 'error');	
+					$.messager.alert('错误', savetext + '失败！<br>' + JSON.stringify(result.msg), 'error');	
 				}
 				callback();
 				
@@ -156,7 +156,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 											_eaststorage.datagrid('reload');
 											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 										}else{
-											$.messager.alert('错误', '删除失败！<br>' + result.msg, 'error');
+											$.messager.alert('错误', '删除失败！<br>' + JSON.stringify(result.msg), 'error');
 										}
 									});
 								}
@@ -182,7 +182,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 											_eaststorage.datagrid('reload');
 											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 										}else{
-											$.messager.alert('错误', '恢复失败！<br>' + result.msg, 'error');	
+											$.messager.alert('错误', '恢复失败！<br>' + JSON.stringify(result.msg), 'error');	
 										}
 									});
 								}
@@ -270,7 +270,6 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 					_mapitem.tabs('resize', {
 						height:_eastPanel.height()-_eastPanel.find('.ribbon').height()
 					});
-					_eaststorage.propertygrid('resize');
 				}catch(e){}
 			},200);
 			onresize();
@@ -284,6 +283,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			width:'100%',
 			height:'100%',
 			border:false,
+			singleSelect: false,
 			lastinsertRow:false,
 			columns: [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
