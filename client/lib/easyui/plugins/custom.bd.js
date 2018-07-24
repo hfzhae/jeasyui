@@ -88,7 +88,15 @@ ebx.bd = {
 			hideExpandTool: false,
 			hideCollapsedContent: false,
 			border: false,
-			split: true
+			split: true,
+			collapsedContent: function(title){
+				var region = $(this).panel('options').region;
+				if(region =='north'|| region =='south'){
+					//返回标题;
+				} else {
+					return '<div class="panel-title layout-expand-title layout-expand-title-down">属性</ div>';
+				}
+			}
 		}).layout('add', {
 			region: 'north',
 			//title:'功能',
@@ -96,7 +104,15 @@ ebx.bd = {
 			href: 'client/SimpChinese/' + this.Paramet.mode + '/north.html',
 			border: false,
 			split: false,
-			hideCollapsedContent: false
+			hideCollapsedContent: false,
+			collapsedContent: function(title){
+				var region = $(this).panel('options').region;
+				if(region =='east'|| region =='south'){
+					//返回标题;
+				} else {
+					return '<div class="panel-title layout-expand-title-down">功能</ div>';
+				}
+			}
 		});
 	},
 	_center: function(callback){//单据表体对象
@@ -233,6 +249,7 @@ ebx.bd = {
 	_north: function (){//单据表头按钮对象 2018-7-9 zz
 		var bd = this,
 			_layout = this.layout,
+			_eastPanel = this.eastPanel,
 			_Paramet = this.Paramet,
 			_tabs = bd.tabs,
 			_tab = this.tab,
@@ -521,6 +538,32 @@ ebx.bd = {
 								iconCls:'icon-Lock-large',
 								iconAlign:'top',
 								size:'large'
+							}]
+						}]
+					},{
+						title:'显示/隐藏',
+						tools:[{
+							type:'toolbar',
+							dir:'v',
+							tools:[{
+								text:'功能',
+								iconCls:'icon-TableInsertRowsAbove',
+								onClick: function(){
+									_layout.layout('collapse', 'north');
+									_layout.find('.layout-expand-north').find('.panel-header').css({'border-top':0,'border-left':0,'border-right':0});
+								}
+							},{
+								text:'属性',
+								iconCls:'icon-TableInsertColumnsRight',
+								onClick: function(){
+									if(_layout.layout("panel", "east")[0].clientWidth > 0){
+										_layout.layout('collapse', 'east');
+										_layout.find('.layout-expand-east').find('.panel-header').css({'border-top':0,'border-right':0});
+										_layout.find('.layout-expand-east').find('.panel-body').css({'border-top':0,'border-right':0,'border-bottom':0});
+									}else{
+										_layout.layout('expand', 'east');
+									}
+								}
 							}]
 						}]
 					}]

@@ -437,6 +437,24 @@
 	background:url('icon32/PrintOptionsMenu.png') no-repeat center center;
 }
 
+.icon-TableInsertColumnsRight{
+	background:url('icon32/TableInsertColumnsRight.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-TableInsertColumnsRight-large{
+	background:url('icon32/TableInsertColumnsRight.png') no-repeat center center;
+}
+
+.icon-TableInsertRowsAbove{
+	background:url('icon32/TableInsertRowsAbove.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-TableInsertRowsAbove-large{
+	background:url('icon32/TableInsertRowsAbove.png') no-repeat center center;
+}
+
+
+
 
 /*新增图标end*/
 

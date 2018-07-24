@@ -1101,7 +1101,7 @@ var ebx = {
 					if(typeof(v) != 'string') throw name + '不能为空！';
 					if(v.length == 0) throw name + '不能为空！';
 					
-					var rs = ebx.dbx.open("select id from " + Paramet.TableName + " where accountid=" + ebx.Accountid + " and " + Paramet.ModType + " and " + Paramet.field + "='" + v +"' and id<>" + Paramet.id, 1, 1);
+					var rs = ebx.dbx.open("select id from " + Paramet.TableName + " where (accountid=" + ebx.Accountid + " or accountid=0) and " + Paramet.ModType + " and " + Paramet.field + "='" + v +"' and id<>" + Paramet.id, 1, 1);
 					if(!rs.eof){
 						throw Paramet.rs('name').value + ' 不能重复！';
 					}
