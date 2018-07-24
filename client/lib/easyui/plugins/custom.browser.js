@@ -519,7 +519,7 @@ ebx.browser = {
 		});
 		functionbtn.linkbutton({
 			text:'更多',
-			iconCls: 'icon-arrow-down',
+			iconCls: 'icon-TableInsertRowsAbove',
 			iconAlign:'right',
 			plain:true,
 			onClick:function(){
@@ -531,7 +531,7 @@ ebx.browser = {
 						});
 					});
 					functionbtn.find('.l-btn-text').text('隐藏');
-					functionbtn.find('.l-btn-icon').addClass('icon-arrow-up').removeClass('icon-arrow-down');
+					//functionbtn.find('.l-btn-icon').addClass('icon-TableInsertRowsAbove').removeClass('icon-TableInsertRowsAbove');
 				}else{
 					_biribbon.animate({height:0}, 200, function(){
 						_biribbon.hide();
@@ -540,7 +540,7 @@ ebx.browser = {
 						});
 					});
 					functionbtn.find('.l-btn-text').text('更多');
-					functionbtn.find('.l-btn-icon').addClass('icon-arrow-down').removeClass('icon-arrow-up');
+					//functionbtn.find('.l-btn-icon').addClass('icon-TableInsertRowsAbove').removeClass('icon-TableInsertRowsAbove');
 				}
 			}
 		}).addClass('browser-functionbtn');
