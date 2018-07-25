@@ -7,7 +7,7 @@
 				{"id":1307,"text":"销售出库单","href":"public.html"}
 			]},
 			{"text":"打开","children":[
-				{"id":1306,"text":"销售出库单","mode":"saleoutstock","style":"saleoutstock","edit":"saleoutstock","template":384,"datestyle":1,"IsAuditStyle":1}
+				{"id":1306,"text":"销售出库单","mode":"saleoutstock","style":"saleoutstock","edit":"saleoutstock","template":384,"datestyle":1,"IsAuditStyle":1,"print":1,"lock":1}
 			]},
 			{"text":"查询","children":[
 				{"id":1308,"text":"销售出库查询","href":"public.html"},
@@ -18,7 +18,7 @@
 			{"id":1700,"text":"区域","mode":"area","style":"area","edit":"area","template":241},
 			{"id":1701,"text":"产品类型","mode":"productclass","style":"productclass","template":84},
 			{"id":1702,"text":"产品目录","mode":"product","style":"product","edit":"product","template":80},
-			{"id":1703,"text":"仓库","mode":"stock","style":"stock","template":86},
+			{"id":1703,"text":"仓库","mode":"stock","style":"stock","template":86,"lock":1},
 			{"id":1704,"text":"客户","mode":"custom","style":"custom","template":90},
 			{"id":1705,"text":"供应商","mode":"vender","style":"vender","template":89}
 		]},
@@ -32,12 +32,12 @@
 		]},
 		{"id":18,"text":"系统设置","children":[
 			{"text":"配置工具","children":[
-				{"id":1811,"text":"菜单","mode":"StyleMenu","style":"StyleMenu","edit":"StyleMenu","template":182},
-				{"id":1812,"text":"菜单组","mode":"StyleMenuGroup","style":"StyleMenuGroup","edit":"StyleMenuGroup","template":183},
-				{"id":1813,"text":"显示式样","mode":"style","style":"style","edit":"style","template":181},
-				{"id":1814,"text":"查询设计","mode":"QueryWizard","style":"QueryWizard","edit":"QueryWizard","template":93},
-				{"id":1815,"text":"查询模板","mode":"QueryTemplate","style":"QueryTemplate","edit":"QueryTemplate","template":94},
-				{"id":1816,"text":"权限设置","mode":"Privilege","style":"Privilege","edit":"Privilege","template":255},
+				{"id":1811,"text":"菜单","mode":"StyleMenu","style":"StyleMenu","edit":"StyleMenu","template":182,"lock":1},
+				{"id":1812,"text":"菜单组","mode":"StyleMenuGroup","style":"StyleMenuGroup","edit":"StyleMenuGroup","template":183,"lock":1},
+				{"id":1813,"text":"显示式样","mode":"style","style":"style","edit":"style","template":181,"lock":1},
+				{"id":1814,"text":"查询设计","mode":"QueryWizard","style":"QueryWizard","edit":"QueryWizard","template":93,"lock":1},
+				{"id":1815,"text":"查询模板","mode":"QueryTemplate","style":"QueryTemplate","edit":"QueryTemplate","template":94,"lock":1},
+				{"id":1816,"text":"权限设置","mode":"Privilege","style":"Privilege","edit":"Privilege","template":255,"lock":1},
 				{"id":1817,"text":"权限组设置","mode":"Group","style":"Group","edit":"Group","template":134},
 				{"id":1818,"text":"权限组分配权限","href":"public.html"}
 			]},

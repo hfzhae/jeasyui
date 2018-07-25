@@ -14,20 +14,19 @@ ebx.browser = {
 	biribbon: [],
 	browsertype: '',//打开类型
 	showdate: 0,//是否显示查询日期控件，0为不显示，默认0
-	showAudit: 0,
+	showAudit: 0,//是否显示审核combobox
 	init: function(layoutName, browsertype, callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：list，default，browsertype：类型，包括：'bd','bi',callback：回掉函数
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Paramet = ebx.getMenuParameter(this.tabs);
 		this.browsertype = browsertype;
 		
-		if(this.Paramet.datestyle == 1){
-			this.showdate = 1;
-		}
-		if(this.Paramet.IsAuditStyle == 1){
+		if(ebx.validInt(this.Paramet.IsAuditStyle) == 1){
 			this.showAudit = 1;
 		}
-		
+		if(ebx.validInt(this.Paramet.datestyle) == 1){
+			this.showdate = 1;
+		}
 		switch(layoutName.toLowerCase()){
 			case 'default':
 				this.layout = $('<div>').appendTo(this.tabs);
@@ -69,7 +68,7 @@ ebx.browser = {
 				ebx.center.tabs('add', {
 					id: tabsid,
 					title: '新建-' + options._Paramet.text,
-					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template,
+					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template +'&IsAuditStyle=' + options._Paramet.IsAuditStyle +'&print=' + options._Paramet.print + '&lock=' + options._Paramet.lock,
 					//iconCls:node.iconCls,
 					selected: true,
 					closable:true
@@ -85,7 +84,7 @@ ebx.browser = {
 						maxWidth: '50%',
 						minWidth: 400,
 						title: '',
-						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode,
+						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode + '&lock=' + options._Paramet.lock,
 						hideExpandTool: false,
 						hideCollapsedContent: false,
 						border: false,
@@ -136,7 +135,7 @@ ebx.browser = {
 				ebx.center.tabs('add', {
 					id: tabsid,
 					title: '打开-' + options._Paramet.text,
-					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template,
+					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template +'&IsAuditStyle=' + options._Paramet.IsAuditStyle +'&print=' + options._Paramet.print + '&lock=' + options._Paramet.lock,
 					//iconCls:node.iconCls,
 					selected: true,
 					closable:true
@@ -156,7 +155,7 @@ ebx.browser = {
 						maxWidth: '50%',
 						minWidth: 400,
 						title: '',
-						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode,
+						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode + '&lock=' + options._Paramet.lock,
 						hideExpandTool: false,
 						hideCollapsedContent: false,
 						border: false,
@@ -246,6 +245,17 @@ ebx.browser = {
 				var o = biribbon.find('.datetimebox-f');
 				for(var i = 0;i < o.length; i++){
 					var _name = $(o[i]).datetimebox('options').name;
+					if(_name != undefined){
+						if(_name.toLowerCase() == name.toLowerCase()){
+							return $(o[i]);
+						}
+					}
+				}
+				break;
+			case 'toolbar':
+				var o = biribbon.find('.ribbon-group');
+				for(var i = 0;i < o.length; i++){
+					var _name = $(o[i]).find('.ribbon-group-title').text();
 					if(_name != undefined){
 						if(_name.toLowerCase() == name.toLowerCase()){
 							return $(o[i]);
@@ -422,8 +432,10 @@ ebx.browser = {
 							}]
 						},{
 							type:'toolbar',
+							name:'isaudit',
 							tools: [{
-								text:'审核：'
+								text:'审核：',
+								name:'isaudittext'
 							},{
 								type: 'combobox',
 								name:'isaudit',
@@ -473,10 +485,6 @@ ebx.browser = {
 				}]
 			};
 			
-		if(!_showAudit){
-			biribbondata.tabs[0].groups[2].tools.splice(1, 1);
-		}
-
 		if(!_showdate){
 			biribbondata.tabs[0].groups.splice(3, 1)
 		}
@@ -485,15 +493,19 @@ ebx.browser = {
 			width:'100%',
 			border: false,
 			plain:true,
-			showHeader: false,
-			onClick: function(name, target){
-				switch($(target).find('.l-btn-text').text()){
-					case '搜索':
-						
-						break;
-				}
-			}
+			showHeader: false
 		});
+		
+		if(_showAudit == 0){
+			//debugger;
+			var isaudittext = _getbiribbonobj(_biribbon, 'isaudittext', 'linkbutton');
+			if(isaudittext)isaudittext.hide();
+			var isaudit = _getbiribbonobj(_biribbon, 'isaudit', 'combobox');
+			if(isaudit)isaudit.combobox('destroy');
+			//biribbondata.tabs[0].groups[2].tools.splice(1, 1);
+		}
+
+		
 		searchtext.searchbox({
 			//buttonText:'搜索',
 			//iconCls:'icon-ZoomClassic_custom',
@@ -519,7 +531,7 @@ ebx.browser = {
 		});
 		functionbtn.linkbutton({
 			text:'更多',
-			iconCls: 'icon-TableInsertRowsAbove',
+			iconCls: 'icon-arrow-down',
 			iconAlign:'right',
 			plain:true,
 			onClick:function(){
@@ -531,7 +543,7 @@ ebx.browser = {
 						});
 					});
 					functionbtn.find('.l-btn-text').text('隐藏');
-					//functionbtn.find('.l-btn-icon').addClass('icon-TableInsertRowsAbove').removeClass('icon-TableInsertRowsAbove');
+					functionbtn.find('.l-btn-icon').addClass('icon-arrow-up').removeClass('icon-arrow-down');
 				}else{
 					_biribbon.animate({height:0}, 200, function(){
 						_biribbon.hide();
@@ -540,7 +552,7 @@ ebx.browser = {
 						});
 					});
 					functionbtn.find('.l-btn-text').text('更多');
-					//functionbtn.find('.l-btn-icon').addClass('icon-TableInsertRowsAbove').removeClass('icon-TableInsertRowsAbove');
+					functionbtn.find('.l-btn-icon').addClass('icon-arrow-down').removeClass('icon-arrow-up');
 				}
 			}
 		}).addClass('browser-functionbtn');

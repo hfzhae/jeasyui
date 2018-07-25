@@ -18,13 +18,28 @@ ebx.bd = {
 	biribbon: [],
 	centerstorage: [],
 	eaststorage: [],
+	showAudit: 0,//是否显示审核bombobox
+	showPrint: 0,//是否显示打印group
+	showLock: 0,//是否显示安全group
 	showdate: 0,//是否显示查询日期控件，0为不显示，默认0
 	init: function(layoutName, callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Paramet = ebx.getMenuParameter(this.tabs);
 		this.ID = ebx.validInt(this.Paramet.id);
-		if(this.Paramet.DateStyle){
+		if(ebx.validInt(this.Paramet.IsAuditStyle) == 1){
+			this.showAudit = 1;
+		}
+
+		if(ebx.validInt(this.Paramet.print) == 1){
+			this.showPrint = 1;
+		}
+
+		if(ebx.validInt(this.Paramet.lock) == 1){
+			this.showLock = 1;
+		}
+		
+		if(ebx.validInt(this.Paramet.DateStyle) == 1){
 			this.showdate = 1;
 		}
 		
@@ -250,6 +265,7 @@ ebx.bd = {
 		var bd = this,
 			_layout = this.layout,
 			_eastPanel = this.eastPanel,
+			_showLock = this.showLock,
 			_Paramet = this.Paramet,
 			_tabs = bd.tabs,
 			_tab = this.tab,
@@ -282,12 +298,39 @@ ebx.bd = {
 								}
 							}],
 							onClick: function(){
+								var lockbtn = ebx.browser._getbiribbonobj(_biribbon, 'lock', 'linkbutton');
+								if(lockbtn && _showLock == 1){
+									if(lockbtn.find('.l-btn-icon').hasClass('icon-Lock-large')){
+										$.messager.alert('提醒', '编辑锁为锁定状态，请点击解锁后再保存。', 'warning');
+										lockbtn.linkbutton('select');
+										return;
+									}
+								}
 								var saveBtn = $(this);
 								saveBtn.linkbutton('disable');
 								_save(0, _layout, _Paramet, _tab, function(){
+									if(lockbtn && _showLock == 1){
+										lockbtn.find('.l-btn-icon').removeClass('icon-unLock-large').addClass('icon-Lock-large');
+										lockbtn.linkbutton('unselect');
+									}
 									saveBtn.linkbutton('enable');
 								});
 							}
+						},{
+							type:'splitbutton',
+							name:'audit',
+							text:'审核',
+							iconCls:'icon-AcceptChanges-large',
+							iconAlign:'top',
+							size:'large',
+							menuItems:[{
+								name:'saveas',
+								text:'保存并审核',
+								iconCls:'icon-SaveSelectionToTableOfContentsGallery',
+								onClick: function(){
+									//console.log(_layout)
+								}
+							}]
 						},{
 							type:'toolbar',
 							dir:'v',
@@ -361,42 +404,33 @@ ebx.bd = {
 									});
 								}
 							}]
-						},{
-							type:'splitbutton',
-							name:'audit',
-							text:'审核',
-							iconCls:'icon-AcceptChanges-large',
-							iconAlign:'top',
-							size:'large',
-							menuItems:[{
-								name:'saveas',
-								text:'保存并审核',
-								iconCls:'icon-SaveSelectionToTableOfContentsGallery',
-								onClick: function(){
-									//console.log(_layout)
-								}
-							}]
 						}]
 					},{
+						type:'toolbar',
 						title:'打印',
+						name:'printgroup',
 						dir:'v',
 						tools:[{
 							text:'打印',
+							name:'print',
 							iconCls:'icon-PrintDialogAccess',
 							//iconAlign:'top',
 							//size:'large',
 						},{
 							text:'预览',
+							name:'printview',
 							iconCls:'icon-ViewsAdpDiagramPrintPreview',
 							//iconAlign:'top',
 							//size:'large',
 						},{
 							text:'设置',
+							name:'printsetup',
 							iconCls:'icon-PrintOptionsMenu',
 							//iconAlign:'top',
 							//size:'large',
 						}]
 					},{
+						type:'toolbar',
 						title:'行操作',
 						tools:[{
 							name:'copy',
@@ -537,7 +571,17 @@ ebx.bd = {
 								text:'编辑锁',
 								iconCls:'icon-Lock-large',
 								iconAlign:'top',
-								size:'large'
+								size:'large',
+								onClick: function(){
+									var btnicon = $(this).find('.l-btn-icon');
+									if(btnicon.hasClass('icon-Lock-large')){
+										btnicon.removeClass('icon-Lock-large').addClass('icon-unLock-large');
+										$(this).linkbutton('unselect');
+									}else{
+										btnicon.removeClass('icon-unLock-large').addClass('icon-Lock-large');
+										$(this).linkbutton('unselect');
+									}
+								}
 							}]
 						}]
 					},{
@@ -569,7 +613,7 @@ ebx.bd = {
 					}]
 				}]
 			};
-			
+		
 		_biribbon.ribbon({
 			data:data,
 			width:'100%',
@@ -578,5 +622,27 @@ ebx.bd = {
 			plain:true,
 			showHeader: false
 		});
+		
+		if(this.showAudit == 0){
+			var auditbtn = ebx.browser._getbiribbonobj(_biribbon, 'audit', 'linkbutton');
+			if(auditbtn)auditbtn.hide();
+		}
+		
+		if(this.showPrint == 0){
+			var printgroup = ebx.browser._getbiribbonobj(_biribbon, '打印', 'toolbar');
+			if(printgroup){
+				printgroup.next().hide();
+				printgroup.hide();
+			}
+		}
+		
+		if(this.showLock == 0){
+			var lockgroup = ebx.browser._getbiribbonobj(_biribbon, '安全', 'toolbar');
+			if(lockgroup){
+				lockgroup.next().hide();
+				lockgroup.hide();
+			}
+		}
+		
 	}
 }
