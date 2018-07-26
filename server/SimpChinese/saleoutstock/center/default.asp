@@ -5,6 +5,7 @@
 		ebx.stdout = {total:0, rows:[]};
 		return;
 	}
+
 	var id = ebx.validInt(ebx.stdin['id']),
 		data = new Array(),
 		sql = 'select * from ' + TableName + 'List where id=' + id +' order by Serial',

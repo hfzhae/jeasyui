@@ -6,13 +6,14 @@
 		return;
 	}
 	
-	var data = new Array(),
-		sql = 'select * from ' + TableName + 'List where id=' + ebx.stdin['id'],
+	var id = ebx.validInt(ebx.stdin['id']),
+		data = new Array(),
+		sql = 'select * from ' + TableName + 'List where id=' + id +' order by Serial',
 		rs = ebx.dbx.open(sql, 1, 1);
 		
-	data["total"] = rs.recordcount;
-	data["rows"] = rs;
-	data["footer"] = [{}]
-	ebx.stdout = data;
+	//data["total"] = rs.recordcount;
+	//data["rows"] = eval('('+ebx.convertRsToJson(rs, 1)+')');
+	//data["footer"] = [{}]
+	ebx.stdout = rs;
 })();
 %>

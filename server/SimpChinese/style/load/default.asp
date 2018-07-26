@@ -28,8 +28,8 @@
 	}
 	data = {"total":11,"rows":[
 		{"name":"删除","value":isdeleted,"group":"系统生成","field":"_isdeleted","render":"boolRender","func":"",'rowstyle':'color:#999;','fieldstyle':'color:#f00;'},
-		{"name":"创建时间","value":"'" + createdate + "'","group":"系统生成","field":"_createdate","render":"datetimeRender",'rowstyle':'color:#999;'},
-		{"name":"更新时间","value":"'" + updatedate + "'","group":"系统生成","field":"_updatedate","render":"datetimeRender",'rowstyle':'color:#999;'},
+		{"name":"创建时间","value":new Date(createdate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成","field":"_createdate",'rowstyle':'color:#999;'},
+		{"name":"更新时间","value":new Date(updatedate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成","field":"_updatedate",'rowstyle':'color:#999;'},
 		{"name":"操作员","value":owner,"group":"系统生成","field":"_owner",'rowstyle':'color:#999;'},
 		{"name":"名称","value":title,"group":"必填信息","editor":{"type":"validatebox", "options":{"required":true,"validType":"LetterInteger"}},"field":"title","func":"cbRSNotNullAndNotRepeatCheck"},//validatebox校验录入值合法性的支持方法
 		{"name":"类型","value":type,"group":"其他","editor":"text","field":"type"},

@@ -28,8 +28,8 @@
 	data = {"total":8,"rows":[
 		{'name':'int1','value':int1,'group':'系统生成','field':'int1','hidden':true,'func':''},
 		{"name":"删除","value":isdeleted,"group":"系统生成","field":"_isdeleted","render":"boolRender",'rowstyle':'color:#999;','fieldstyle':'color:#f00;'},
-		{"name":"创建时间","value":"'" + createdate + "'","group":"系统生成","field":"_createdate","render":"datetimeRender",'rowstyle':'color:#999;'},
-		{"name":"更新时间","value":"'" + updatedate + "'","group":"系统生成","field":"_updatedate","render":"datetimeRender",'rowstyle':'color:#999;'},
+		{"name":"创建时间","value": new Date(createdate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成","field":"_createdate",'rowstyle':'color:#999;'},
+		{"name":"更新时间","value": new Date(updatedate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成","field":"_updatedate",'rowstyle':'color:#999;'},
 		{"name":"操作员","value":owner,"group":"系统生成","field":"_owner",'rowstyle':'color:#999;'},
 		{'name':'编号','value':code,'group':'必填信息','editor':{'type':'validatebox', 'options':{'required':true,'validType':'String'}},'field':'code','func':'cbRSNotNullAndNotRepeatCheck'},
 		{'name':'名称','value':title,'group':'必填信息','editor':{'type':'validatebox', 'options':{'required':true,'validType':'String'}},'field':'title',"func":"cbRSDirectPy"},

@@ -54,7 +54,7 @@ ebx.bd = {
 				this.layout = this.tabs.find('.layout');
 				this.eastPanel = this.layout.layout('panel', 'east');
 				this.eaststorage = $('<div>').appendTo(this.eastPanel);
-				this._east();
+				this._east(callback);
 				break;
 			case 'center':
 				this.layout = this.tabs.find('.layout');
@@ -221,7 +221,7 @@ ebx.bd = {
 			}
 		});
 	},
-	_east: function(){//单据属性对象
+	_east: function(callback){//单据属性对象
 		var _eaststorage = this.eaststorage,
 			_tabs = this.tabs;
 		
@@ -248,7 +248,7 @@ ebx.bd = {
 				if(deleted)deleted.linkbutton('disable');
 					
 				for(var i in data.rows){
-					if(data.rows[i].field == '_isdeleted'){
+					if(data.rows[i].field == '_isdeleted'){//处理删除显示
 						if(ebx.validInt(data.rows[i].value) == 0){
 							if(undeleted)undeleted.linkbutton('disable');
 							if(deleted)deleted.linkbutton('enable');
@@ -258,8 +258,10 @@ ebx.bd = {
 						}
 					}
 				}
+				if(callback)callback(data, _eaststorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
+
 	},
 	_north: function (){//单据表头按钮对象 2018-7-9 zz
 		var bd = this,

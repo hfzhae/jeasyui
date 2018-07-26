@@ -160,7 +160,7 @@ var ebx = {
 			}
 		}
 	},
-	convertRsToJson: function(rs){//将rs对象转化成json文本 2018-5-4 zz
+	convertRsToJson: function(rs, type){//将rs对象转化成json文本，参数：rs：RecodeSet对象，type：输出类型，0为带total和rows属性格式，1为仅有rows内容的格式 2018-5-4 zz
 		if(typeof(rs) != 'object')return('[]');
 		if(rs.RecordCount == undefined)return('[]');
 		if(rs.RecordCount == 0)return('[]');
@@ -183,7 +183,11 @@ var ebx = {
 			}
 			s = s.substr(0, s.length - 1);
 		}
-		return('[' + s + ']');
+		if(ebx.validInt(type) == 1){
+			return('[' + s + ']');
+		}else{
+			return('{"total":' + rs.RecordCount + ',"rows":[' + s + ']}');
+		}
 	},
 	convertJsonToRs: function (d){//json对象转换成rs，number类型由于其他行不确定内容，所以用文本类型创建，参数：d：json对象 2018-5-16 zz
 		var rs = ebx.dbx.getRs();
@@ -197,7 +201,7 @@ var ebx = {
 					rs.Fields.Append(i, 203, -1);
 					break;
 				case 'object':
-					rs.Fields.Append(i, 205);
+					rs.Fields.Append(i, 205, -1);
 					break;
 				case 'number':
 					rs.Fields.Append(i, 203, -1);//数字类型无法确定其他行的内容，所以按文本类型创建
@@ -231,7 +235,7 @@ var ebx = {
 						rs(fields(j).name) = rows[i][fields(j).name];
 						break;
 					case 'object':
-						rs(fields(j).name) = ebx.convertRsToBin(convertJsonToRs(rows[i][fields(j).name]));//处理嵌套rs
+						rs(fields(j).name) = ebx.convertRsToBin(ebx.convertJsonToRs(rows[i][fields(j).name]));//处理嵌套rs
 						break;
 					case 'number':
 						rs(fields(j).name) = ebx.validFloat(rows[i][fields(j).name]);
@@ -377,13 +381,16 @@ var ebx = {
 	convertBinToRs: function(sBin){ //二进制流转换成rs对象
 		var stm = Server.CreateObject("adodb.stream"),
 			rs = ebx.dbx.getRs();
-		if(sBin != null){
-			stm.type = 1;
-			stm.Open();
-			stm.Write(sBin);
-			stm.position = 0;
-			rs.open(stm);
-		}
+
+		if(typeof(sBin) != 'unknown')return('');
+		if(sBin == null)return('');
+		
+		stm.type = 1;
+		stm.Open();
+		stm.Write(sBin);
+		stm.position = 0;
+		rs.open(stm);
+		
 		return(rs);
 	},
 	convertRsToBin: function(rs){ //rs对象转换成二进制流
@@ -412,53 +419,62 @@ var ebx = {
 	},
 	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
-		var s = '', arrtype;
-		for(var i in d){
-			var n = Number(i);//通过是否数字格式判断是否是数组，如果是数字，代表是数组，文本用[]包含，否则代表是字典，文本用{}包含
-			if (!isNaN(n)){
-				arrtype = 1;//设置json数组类型，1=[],0={}
-				if(d[i].RecordCount == undefined){
-					s += ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
+		var s = '', arrtype = 0;
+		
+		if(d.RecordCount == undefined){
+			for(var i in d){
+				var n = Number(i);//通过是否数字格式判断是否是数组，如果是数字，代表是数组，文本用[]包含，否则代表是字典，文本用{}包含
+				if (!isNaN(n)){
+					arrtype = 1;//设置json数组类型，1=[],0={}
+					if(d[i].RecordCount == undefined){
+						s += ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
+					}else{
+						s += ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
+					}
 				}else{
-					s += ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
-				}
-			}else{
-				arrtype = 0;//设置json数组类型，1=[],0={}
-				switch(typeof(d[i])){
-					case 'string':
-						s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
-						break;
-					case 'object':
-						if(d[i] == null){
-							s += '"'+ i +'":"",';
-						}else{
-							if(d[i].RecordCount == undefined){
-								s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
+					arrtype = 0;//设置json数组类型，1=[],0={}
+					switch(typeof(d[i])){
+						case 'string':
+							s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
+							break;
+						case 'object':
+							if(d[i] == null){
+								s += '"'+ i +'":"",';
 							}else{
-								s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
+								if(d[i].RecordCount == undefined){
+									s += '"'+ i +'":' + ebx.convertDicToJson(d[i]) +',';//处理嵌套字典
+								}else{
+									//s += '"'+ i +'":{"total":'+d[i].RecordCount+',"rows":' + ebx.convertRsToJson(d[i]) +'},';//处理嵌套的rs
+									s += '"'+ i +'":' + ebx.convertRsToJson(d[i]) +',';//处理嵌套的rs
+								}
 							}
-						}
-						break;
-					case 'number':
-						s += '"'+ i +'":' + d[i] +',';
-						break;
-					case 'boolean':
-						s += '"'+ i +'":' + d[i] +',';
-						break;
-					case 'function':
-						s += '"'+ i +'":' + d[i] +',';
-						break;
-					case undefined:
-						s += ',';
-						break;
+							break;
+						case 'number':
+							s += '"'+ i +'":' + d[i] +',';
+							break;
+						case 'boolean':
+							s += '"'+ i +'":' + d[i] +',';
+							break;
+						case 'function':
+							s += '"'+ i +'":' + d[i] +',';
+							break;
+						case undefined:
+							s += ',';
+							break;
+					}
 				}
 			}
-		}
-		s = s.substr(0, s.length - 1);
-		if(arrtype){
-			return('[' + s + ']');
+			s = s.substr(0, s.length - 1);
+			if(arrtype){
+				return('[' + s + ']');
+			}else{
+				return('{' + s + '}');
+			}
 		}else{
-			return('{' + s + '}');
+			s += ebx.convertRsToJson(d) +',';//处理rs
+			s = s.substr(0, s.length - 1);
+			return(s)
+			//return('{"total":'+ d.RecordCount + ',rows:' + s + '}');
 		}
 	},
 	getTemplateSQL: function(id){//从查询模板获取SQL，参数id：模板ID，返回sql语句
@@ -581,10 +597,10 @@ var ebx = {
 
 		switch(isdeleted){
 			case 0:
-				s = s.replaceAll('where', 'where [bd].[isdeleted]=0 and ');//未删除
+				s = s.replaceAll('where', 'where [bd].[isdeleted]=0 and ');//未删除，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
 				break;
 			case 1:
-				s = s.replaceAll('where', 'where [bd].[isdeleted]=1 and ');//已删除
+				s = s.replaceAll('where', 'where [bd].[isdeleted]=1 and ');//已删除，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
 				break;
 			case 2:
 				//全部
@@ -593,10 +609,10 @@ var ebx = {
 		
 		switch(isaudit){
 			case 0:
-				s = s.replaceAll('where', 'where [bd].[auditid]=0 and ');//未审核
+				s = s.replaceAll('where', 'where [bd].[auditid]=0 and ');//未审核，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
 				break;
 			case 1:
-				s = s.replaceAll('where', 'where [bd].[auditid]>=1 and ');//已审核
+				s = s.replaceAll('where', 'where [bd].[auditid]>=1 and ');//已审核，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
 				break;
 			case 2:
 				//全部
@@ -1101,9 +1117,11 @@ var ebx = {
 					if(typeof(v) != 'string') throw name + '不能为空！';
 					if(v.length == 0) throw name + '不能为空！';
 					
-					var rs = ebx.dbx.open("select id from " + Paramet.TableName + " where (accountid=" + ebx.Accountid + " or accountid=0) and " + Paramet.ModType + " and " + Paramet.field + "='" + v +"' and id<>" + Paramet.id, 1, 1);
+					var rs = ebx.dbx.open("select count(id) as n from " + Paramet.TableName + " where (accountid=" + ebx.Accountid + " or accountid=0) and " + Paramet.ModType + " and " + Paramet.field + "='" + v +"' and id<>" + Paramet.id, 1, 1);
 					if(!rs.eof){
-						throw Paramet.rs('name').value + ' 不能重复！';
+						if(rs('n').value > 0){
+							throw Paramet.rs('name').value + ' 不能重复！';
+						}
 					}
 					rs = null;
 					rsBI = null;

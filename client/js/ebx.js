@@ -220,7 +220,7 @@ var ebx = {
 	},
 	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
-		var s = '', arrtype;
+		var s = '', arrtype = 1;
 		for(var i in d){
 			var n = Number(i);//通过是否数字格式判断是否是数组，如果是数字，代表是数组，文本用[]包含，否则代表是字典，文本用{}包含
 			if (!isNaN(n)){
@@ -251,7 +251,8 @@ var ebx = {
 						s += '"'+ i +'":' + d[i] +',';
 						break;
 					case 'function':
-						s += '"'+ i +'":"' + d[i] +'",';
+						//s += '"'+ i +'":"' + d[i] +'",';
+						s += '"'+ i +'":"",';//function类型设置为空
 						break;
 					case undefined:
 						s += ',';
@@ -617,7 +618,7 @@ var ebx = {
 			return(true);
 		}
 	},
-	setDatagridEditor: {//设置datagrid的editor的编辑属性 2018-5-22 zz
+	setDatagridEditor: {//设置datagrid的editor的编辑属性 2018-7-26 zz
 		validatebox: function (c, f, e, t){//编辑框校验设置，参数：c：datagrid的列对象，f：字段名称，e：校验类型，详见renderstyler插件，t：是否必填，true为必填
 			if(typeof(c) != 'object') return;
 			if(typeof(f) != 'string') return;
@@ -643,6 +644,34 @@ var ebx = {
 						c[i]['editor'] = {"type":t, "options":o};
 					}
 				}
+			}
+		},
+		editorMethods: function(c, f, t, o){//设置编辑得方法，参数：c：datagrid的列对象，f：字段名称，t：编辑类型，o：编辑类型的方法对象
+			if(typeof(c) != 'object') return;
+			if(typeof(f) != 'string') return;
+			if(typeof(t) != 'string') t = 'text';
+			if(typeof(o) != 'object') o = {};
+			
+			for(var i in c){
+				for(var j in c[i]){
+					if(j == 'field' && (c[i][j].toLowerCase() == f.toLowerCase())){
+						this._setFunc(c[i], t, o);
+						break;
+					}
+				}
+			}
+		},
+		_setFunc: function(c, t, o){//方法写入
+			switch(t){
+				case 'combogrid':
+					for(var i in o){
+						switch(i){
+							case 'onSelect':
+								c['editor'].options.onSelect = o[i];
+								break;
+						}
+					}
+					break;
 			}
 		}
 	},

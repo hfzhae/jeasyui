@@ -1,6 +1,39 @@
 <script type="text/javascript">
 	easyloader.load([], function(){		
 		var bd = ebx.cloneObj(ebx.bd);
-		bd.init('east');
+		bd.init('east', function(c, s){
+			ebx.setDatagridEditor.editorMethods(c.rows, 'custom', 'combogrid', {//用来重造客户的combogrid得方法
+				onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+					var r = s.datagrid('getData').rows;
+					for(var i in r){
+						if(r[i].field == 'organization'){
+							r[i].value = rowData.id;
+						}
+					}
+				}
+			});
+			
+			ebx.setDatagridEditor.editorMethods(c.rows, 'stockname', 'combogrid', {//用来重造仓库的combogrid的方法
+				onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+					var r = s.datagrid('getData').rows;
+					for(var i in r){
+						if(r[i].field == 'stock'){
+							r[i].value = rowData.id;
+						}
+					}
+				}
+			});
+			
+			ebx.setDatagridEditor.editorMethods(c.rows, 'operatorname', 'combogrid', {//用来重造业务员的combogrid的方法
+				onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+					var r = s.datagrid('getData').rows;
+					for(var i in r){
+						if(r[i].field == 'operator'){
+							r[i].value = rowData.id;
+						}
+					}
+				}
+			});
+		});
 	});
 </script>
