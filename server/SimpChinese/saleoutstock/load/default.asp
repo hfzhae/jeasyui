@@ -82,7 +82,7 @@
 				}
 			},
 			'field':'custom','func':''},
-		{'name':'organization','value':Organization,'group':'必填信息','hidden':true,'field':'organization','func':''},
+		{'name':'organization','value':Organization,'group':'系统生成','hidden':true,'field':'organization','func':''},
 		{'name':'仓库','value':stockname,'group':'必填信息',"editor":{
 				"type":"combogrid",
 				"options":{
@@ -97,7 +97,7 @@
 				}
 			},
 			'field':'stockname','func':''},
-		{'name':'stock','value':stock,'group':'必填信息','hidden':true,'field':'stock','func':''},
+		{'name':'stock','value':stock,'group':'系统生成','hidden':true,'field':'stock','func':''},
 		{'name':'业务员','value':operatorname,'group':'必填信息',"editor":{
 				"type":"combogrid",
 				"options":{
@@ -112,7 +112,7 @@
 				}
 			},
 			'field':'operatorname','func':''},
-		{'name':'operator','value':operator,'group':'必填信息','hidden':true,'field':'operator','func':''},
+		{'name':'operator','value':operator,'group':'系统生成','hidden':true,'field':'operator','func':''},
 		{'name':'发票类型','value':InvoiceTypename,'group':'发票',"editor":{
 				"type":"combogrid",
 				"options":{
@@ -127,7 +127,7 @@
 				}
 			},
 			'field':'InvoiceTypename','func':''},
-		{'name':'InvoiceType','value':InvoiceType,'group':'发票','hidden':true,'field':'InvoiceType','func':''},
+		{'name':'InvoiceType','value':InvoiceType,'group':'系统生成','hidden':true,'field':'InvoiceType','func':''},
 		{"name":"发票号码","value":InvoiceNum,"group":"发票","editor":"text","field":"InvoiceNum"},
 		{"name":"发票备注","value":InvoiceMemo,"group":"发票","editor":{"type":"textbox","options":{"buttonText":"保存"}},"field":"InvoiceMemo"},
 		{'name':'会员','value':VIPCustomname,'group':'会员',"editor":{
@@ -144,7 +144,7 @@
 				}
 			},
 			'field':'VIPCustomname','func':''},
-		{'name':'VIPCustomID','value':VIPCustomID,'group':'会员','hidden':true,'field':'VIPCustomID','func':''},
+		{'name':'VIPCustomID','value':VIPCustomID,'group':'系统生成','hidden':true,'field':'VIPCustomID','func':''},
 		{'name':'币种','value':Currencyname,'group':'其他',"editor":{
 				"type":"combogrid",
 				"options":{
@@ -159,8 +159,8 @@
 				}
 			},
 			'field':'Currencyname','func':''},
-		{'name':'Currency','value':VIPCustomID,'group':'其他','hidden':true,'field':'Currency','func':''},
-		{"name":"汇率","value":Relation,"group":"其他",'field':'Relation'},
+		{'name':'Currency','value':VIPCustomID,'group':'系统生成','hidden':true,'field':'Currency','func':''},
+		{"name":"汇率","value":Relation,"group":"其他","editor":"text",'field':'Relation'},
 		{'name':'结算方式','value':CheckTypename,'group':'其他',"editor":{
 				"type":"combogrid",
 				"options":{
@@ -175,7 +175,7 @@
 				}
 			},
 			'field':'CheckTypename','func':''},
-		{'name':'CheckType','value':CheckType,'group':'其他','hidden':true,'field':'Currency','CheckType':''},
+		{'name':'CheckType','value':CheckType,'group':'系统生成','hidden':true,'field':'Currency','CheckType':''},
 	]};
 	for(var i in Payment){
 		data.rows.push(Payment[i])

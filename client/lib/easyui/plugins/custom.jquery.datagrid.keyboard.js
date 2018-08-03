@@ -32,7 +32,7 @@ $.extend($.fn.datagrid.methods, {
 					var inputObj = $(obj.target);//输入框自动激活焦点并全选
 				}
 				inputObj.select();
-				/*
+				
 				switch(obj.type){
 					case 'combogrid':
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
@@ -47,14 +47,17 @@ $.extend($.fn.datagrid.methods, {
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					default:
-						inputObj.blur(function(){//编辑控件失去焦点时，结束编辑状态
-							setTimeout(function(){
-								thisGrid.datagrid('endEdit', param.index);
-								thisGrid.datagrid('cancelEdit', param.index);//针对validatebox校验失败无法endEdit的调用cancelEdit方法
-							},0);
-						});
+						if($(obj.target).hasClass('textbox-f') == false){
+							inputObj.blur(function(){//编辑控件失去焦点时，结束编辑状态
+								setTimeout(function(){
+									thisGrid.datagrid('endEdit', param.index);
+									thisGrid.datagrid('cancelEdit', param.index);//针对validatebox校验失败无法endEdit的调用cancelEdit方法
+								},0);
+							});
+						}
 						break;
-				}*/
+				}
+				/*
 				if($(obj.target).hasClass('textbox-f') == false){
 					inputObj.blur(function(){//编辑控件失去焦点时，结束编辑状态
 						setTimeout(function(){
@@ -63,7 +66,7 @@ $.extend($.fn.datagrid.methods, {
 						},0);
 					});
 				}
-				
+				*/
 				inputObj.keyup(function(event){//全键盘操作
 					switch(event.keyCode){
 						case 40://down
@@ -98,10 +101,10 @@ $.extend($.fn.datagrid.methods, {
 								for(var i=fields.length; i>0; i--){
 									var col = thisGrid.datagrid('getColumnOption', fields[i - 1]);
 									if (fields[i] == nextfieldname && col != null){
-										if(col.editor == undefined){
+										if(col.editor == undefined || col.editor == ''){
 											nextfieldname = fields[i - 1];
 										}else{
-											if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
+											if(col.editor == 'textbox' || col.editor.type == 'textbox' || col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
 												nextfield = fields[i - 1];
 											}
 										}
@@ -122,10 +125,10 @@ $.extend($.fn.datagrid.methods, {
 								for(var i=0; i<fields.length; i++){
 									var col = thisGrid.datagrid('getColumnOption', fields[i + 1]);
 									if (fields[i] == nextfieldname && col != null){
-										if(col.editor == undefined){
+										if(col.editor == undefined || col.editor == ''){
 											nextfieldname = fields[i + 1];
 										}else{
-										if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
+										if(col.editor == 'textbox' || col.editor.type == 'textbox' || col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
 												nextfield = fields[i + 1];
 											}
 										}
@@ -150,20 +153,22 @@ $.extend($.fn.datagrid.methods, {
 								nextfieldname = param.field, 
 								firstfield = "",
 								firstindex = param.index;
+
 							for(var i=0; i<fields.length; i++){
 								var col = thisGrid.datagrid('getColumnOption', fields[i + 1]),
 									col1 = thisGrid.datagrid('getColumnOption', fields[i]);
 								if(col1 != null){
-									if(col1.editor != undefined && firstfield == ""){
+									if(col1.editor != undefined && firstfield == '' && col1.editor != '' && !col.hidden){
 										firstfield = fields[i];
 									}
 								}
 
 								if (fields[i] == nextfieldname && col != null){
-									if(col.editor == undefined){
+									if(col.hidden)break;
+									if((col.editor == undefined || col.editor == '') ){
 										nextfieldname = fields[i + 1];
 									}else{
-										if(col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
+										if(col.editor == 'textbox' || col.editor.type == 'textbox' || col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
 											nextfield = fields[i + 1];
 										}
 									}

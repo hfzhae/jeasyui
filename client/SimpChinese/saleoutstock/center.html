@@ -3,23 +3,75 @@
 		var bd = ebx.cloneObj(ebx.bd);
 				
 		bd.init('center', function(c, s){
-			//重造字段的editor的validatebox校验
-			ebx.setDatagridEditor.validatebox(c[0], 'Serial', 'Integer', true);
-			//ebx.setDatagridEditor.validatebox(c[0], 'MenuGroupTitle', 'String', true);
-			ebx.setDatagridEditor.editorType(c[0], 'MenuGroupName', 'combogrid', {//用来选择菜单组的combogrid
-				style:'StyleMenuGroup',
-				//validType:'LetterInteger',
-				required:true,
-				idField:'ID',
-				idField:'MenuGroupName',
-				rownumbers:true,
-				panelWidth:400,
-				template:183,
-				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
-					var r = s.datagrid('getData').rows[s.datagrid('options').editIndex];
-					r.MenuGroupID = rowData.ID;
-					r.MenuGroupName = rowData.MenuGroupName;
-					r.MenuGroupTitle = ebx.unescapeEx(rowData.MenuGroupTitle);
+			ebx.setDatagridEditor.editorType(c[0], 'Quantity', 'textbox', {//处理编辑数量时的运算
+				onChange: function(newValue, oldValue){
+					if(newValue != oldValue){
+						var data = s.datagrid('getData'),
+							r = s.datagrid('getSelected'),
+							index = s.datagrid('getRowIndex', r),
+							quantity = ebx.validFloat(newValue),
+							TaxRate = ebx.validFloat(data.rows[index].taxrate);
+						
+						if(data.rows[index] != undefined){
+							data.rows[index].aquantity = ebx.validFloat(data.rows[index].relation) * quantity;
+							data.rows[index].amount = ebx.validFloat(data.rows[index].price) * quantity;
+							if(TaxRate != -1){
+								data.rows[index].taxamount = data.rows[index].amount / (TaxRate + 1) * TaxRate;
+							}else{
+								data.rows[index].taxamount = 0;
+							}
+							data.rows[index].nat = data.rows[index].amount - data.rows[index].taxamount;
+						}
+					}
+				}
+			});
+			
+			ebx.setDatagridEditor.editorType(c[0], 'price', 'textbox', {//处理编辑数量时的运算
+				onChange: function(newValue, oldValue){
+					if(newValue != oldValue){
+						var data = s.datagrid('getData'),
+							r = s.datagrid('getSelected'),
+							index = s.datagrid('getRowIndex', r),
+							price = ebx.validFloat(newValue),
+							TaxRate = ebx.validFloat(data.rows[index].taxrate);
+						
+						if(data.rows[index] != undefined){
+							data.rows[index].amount = ebx.validFloat(data.rows[index].quantity) * price
+							if(TaxRate != -1){
+								data.rows[index].taxamount = data.rows[index].amount / (TaxRate + 1) * TaxRate;
+							}else{
+								data.rows[index].taxamount = 0;
+							}
+							data.rows[index].nat = data.rows[index].amount - data.rows[index].taxamount;
+						}
+					}
+				}
+			});
+			
+			ebx.setDatagridEditor.editorType(c[0], 'amount', 'textbox', {//处理编辑金额时的运算
+				onChange: function(newValue, oldValue){
+					if(newValue != oldValue){
+						var data = s.datagrid('getData'),
+							r = s.datagrid('getSelected'),
+							index = s.datagrid('getRowIndex', r),
+							amount = ebx.validFloat(newValue),
+							quantity = ebx.validFloat(data.rows[index].quantity),
+							TaxRate = ebx.validFloat(data.rows[index].taxrate);
+						
+						if(data.rows[index] != undefined){
+							if(quantity == 0){
+								data.rows[index].price = 0
+							}else{
+								data.rows[index].price = amount/quantity;
+							}
+							if(TaxRate != -1){
+								data.rows[index].taxamount = data.rows[index].amount / (TaxRate + 1) * TaxRate;
+							}else{
+								data.rows[index].taxamount = 0;
+							}
+							data.rows[index].nat = data.rows[index].amount - data.rows[index].taxamount;
+						}
+					}
 				}
 			});
 		});
