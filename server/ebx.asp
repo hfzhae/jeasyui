@@ -235,7 +235,10 @@ var ebx = {
 						rs(fields(j).name) = rows[i][fields(j).name];
 						break;
 					case 'object':
-						rs(fields(j).name) = ebx.convertRsToBin(ebx.convertJsonToRs(rows[i][fields(j).name]));//处理嵌套rs
+						var bin = ebx.convertRsToBin(ebx.convertJsonToRs(rows[i][fields(j).name]));
+						if(bin != null){
+							rs(fields(j).name) = bin;//处理嵌套rs
+						}
 						break;
 					case 'number':
 						rs(fields(j).name) = ebx.validFloat(rows[i][fields(j).name]);
@@ -863,6 +866,7 @@ var ebx = {
 			this.CleanData();
 		},
 		_saveBD: function(){
+			debugger;
 			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2'),
 					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),

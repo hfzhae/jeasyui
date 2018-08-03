@@ -2,7 +2,7 @@
 <%
 (function(){
 	var id = ebx.validInt(ebx.stdin['id']),
-		sql = 'select a.isdeleted,a.updatedate,a.createdate,u.title as owner,c.title as custom,a.Organization,a.billdate,s.title as stockname,a.stock, o.title as operatorname,a.operator,i.title as InvoiceTypename,a.InvoiceType,a.InvoiceNum,a.InvoiceMemo,v.title as VIPCustomname,a.VIPCustomID,a.UUID from ' + TableName + ' a,biuser u,bicustom c,bistock s,biuser o,biInvoiceType i, biVIPCustom v where a.VIPCustomID=v.id and a.InvoiceType=i.id and a.Operator=o.id and a.Stock=s.id and a.Organization=c.id and a.owner=u.id and a.id=' + id,
+		sql = 'select a.isdeleted,a.updatedate,a.createdate,u.title as owner,c.title as custom,a.Organization,a.billdate,s.title as stockname,a.stock, o.title as operatorname,a.operator,i.title as InvoiceTypename,a.InvoiceType,a.InvoiceNum,a.InvoiceMemo,v.title as VIPCustomname,a.VIPCustomID,a.UUID,r.title as Currencyname,a.Currency,a.Relation,sm.title as CheckTypename,a.CheckType from ' + TableName + ' a,biuser u,bicustom c,bistock s,biuser o,biInvoiceType i, biVIPCustom v,biCurrency r,biSettlement sm where a.CheckType=sm.id and r.id=a.Currency and a.VIPCustomID=v.id and a.InvoiceType=i.id and a.Operator=o.id and a.Stock=s.id and a.Organization=c.id and a.owner=u.id and a.id=' + id,
 		rs,
 		data = [],
 		isdeleted = 0, 
@@ -23,7 +23,12 @@
 		VIPCustomname = '',
 		VIPCustomID = 0,
 		UUID = '',
-		Payment = {};
+		Payment = {},
+		Currency = 0,
+		Currencyname = '',
+		Relation = 1,
+		CheckTypename = ''
+		CheckType = 0;
 	
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1)
@@ -44,17 +49,24 @@
 			InvoiceNum = rs('InvoiceNum').value;
 			InvoiceMemo = rs('InvoiceMemo').value;
 			VIPCustomname = rs('VIPCustomname').value;
-			VIPCustomID = rs('VIPCustomID').value;
-			UUID = rs('UUID').value
+			VIPCustomID = ebx.validInt(rs('VIPCustomID').value);
+			UUID = rs('UUID').value;
 			Payment = getPayment(id);
+			Currencyname = rs('Currencyname').value;
+			Currency = ebx.validInt(rs('Currency').value);
+			Relation = ebx.validFloat(rs('Relation').value);
+			CheckTypename = rs('CheckTypename').value;
+			CheckType = ebx.validInt(rs('CheckType').value);
+			
 		}
 	}
 	data = {"total":11,"rows":[
-		{"name":"单据号","value":id,"group":"系统生成","field":"_id","func":"",'rowstyle':'color:#999;'},
-		{"name":"删除","value":isdeleted,"group":"系统生成","field":"_isdeleted","render":"boolRender",'rowstyle':'color:#999;','fieldstyle':'color:#f00;'},
-		{"name":"创建时间","value":new Date(createdate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成","field":"_createdate",'rowstyle':'color:#999;'},
-		{"name":"更新时间","value":new Date(updatedate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成","field":"_updatedate",'rowstyle':'color:#999;'},
-		{"name":"操作员","value":owner,"group":"系统生成","field":"_owner",'rowstyle':'color:#999;'},
+		{"name":"单据号","value":id,"group":"系统生成","func":"",'rowstyle':'color:#999;','field':''},
+		{"name":"删除","value":isdeleted,"group":"系统生成","render":"boolRender",'rowstyle':'color:#999;','fieldstyle':'color:#f00;'},
+		{"name":"创建时间","value":new Date(createdate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成",'rowstyle':'color:#999;'},
+		{"name":"更新时间","value":new Date(updatedate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成",'rowstyle':'color:#999;'},
+		{"name":"操作员","value":owner,"group":"系统生成",'rowstyle':'color:#999;'},
+		{"name":"UUID","value":UUID,"group":"系统生成",'hidden':UUID==null?true:false,'rowstyle':'color:#999;'},
 		{'name':'单据日期','value':new Date(billdate).Format('yyyy-MM-dd'),'group':'必填信息','editor':'datebox','field':'billdate'},
 		{'name':'客户','value':custom,'group':'必填信息',"editor":{
 				"type":"combogrid",
@@ -133,7 +145,37 @@
 			},
 			'field':'VIPCustomname','func':''},
 		{'name':'VIPCustomID','value':VIPCustomID,'group':'会员','hidden':true,'field':'VIPCustomID','func':''},
-		{"name":"UUID","value":UUID,"group":"POS",'rowstyle':'color:#999;'},
+		{'name':'币种','value':Currencyname,'group':'其他',"editor":{
+				"type":"combogrid",
+				"options":{
+					"style":"biOpen2",
+					"validType":"combogridValue",
+					"required":true,
+					"idField":"id",
+					"idField":"title",
+					"rownumbers":true,
+					"panelWidth":250,
+					"template":272
+				}
+			},
+			'field':'Currencyname','func':''},
+		{'name':'Currency','value':VIPCustomID,'group':'其他','hidden':true,'field':'Currency','func':''},
+		{"name":"汇率","value":Relation,"group":"其他",'field':'Relation'},
+		{'name':'结算方式','value':CheckTypename,'group':'其他',"editor":{
+				"type":"combogrid",
+				"options":{
+					"style":"biOpen2",
+					"validType":"combogridValue",
+					"required":true,
+					"idField":"id",
+					"idField":"title",
+					"rownumbers":true,
+					"panelWidth":250,
+					"template":130
+				}
+			},
+			'field':'CheckTypename','func':''},
+		{'name':'CheckType','value':CheckType,'group':'其他','hidden':true,'field':'Currency','CheckType':''},
 	]};
 	for(var i in Payment){
 		data.rows.push(Payment[i])
@@ -141,13 +183,16 @@
 	ebx.stdout = data;
 	
 	function getPayment(id){
-		var data =[
-			{"name":"现金","value":100,"group":"收款方式","editor":{"type":"textbox","options":{"buttonText":"保存"}},"render":"currencyRender"},
-			{"name":"刷卡","value":200,"group":"收款方式","editor":{"type":"textbox","options":{"buttonText":"保存"}},"render":"currencyRender"},
-			{"name":"支付宝","value":100,"group":"收款方式","editor":{"type":"textbox","options":{"buttonText":"保存"}},"render":"currencyRender"},
-			{"name":"微信","value":500,"group":"收款方式","editor":{"type":"textbox","options":{"buttonText":"保存"}},"render":"currencyRender"}
-		];
-			
+		var sql = 'select Payment,Amount from bdOutStockPayment where id=' + id,
+			rs = ebx.dbx.open(sql),
+			data = [];
+		
+		if(!rs.eof){
+			while(!rs.eof){
+				data.push({"name":rs('Payment').value,"value":rs('Amount').value,"group":"收款方式","editor":{"type":"textbox","options":{"buttonText":"保存"}},"render":"currencyRender"});
+			rs.MoveNext();
+			}
+		}
 		return data;
 	}
 })();

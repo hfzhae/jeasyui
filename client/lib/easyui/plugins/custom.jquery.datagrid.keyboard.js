@@ -26,12 +26,13 @@ $.extend($.fn.datagrid.methods, {
 			var obj = $(this).datagrid('getEditor', {index:param.index, field:param.field}),//获取激活的输入框对象
 				thisGrid = $(this);
 			if(obj != null){
-				if(obj.type == 'datebox' || obj.type == 'combobox' || obj.type == 'datetimebox' || obj.type == 'combogrid'){
+				if($(obj.target).hasClass('textbox-f') == true){//判断是否是textbox-f对象还是text输入框，选用不同的获取对象方法
 					var inputObj = $(obj.target).parent().find('input:eq(1)')
 				}else{
 					var inputObj = $(obj.target);//输入框自动激活焦点并全选
 				}
 				inputObj.select();
+				/*
 				switch(obj.type){
 					case 'combogrid':
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
@@ -53,7 +54,16 @@ $.extend($.fn.datagrid.methods, {
 							},0);
 						});
 						break;
+				}*/
+				if($(obj.target).hasClass('textbox-f') == false){
+					inputObj.blur(function(){//编辑控件失去焦点时，结束编辑状态
+						setTimeout(function(){
+							thisGrid.datagrid('endEdit', param.index);
+							thisGrid.datagrid('cancelEdit', param.index);//针对validatebox校验失败无法endEdit的调用cancelEdit方法
+						},0);
+					});
 				}
+				
 				inputObj.keyup(function(event){//全键盘操作
 					switch(event.keyCode){
 						case 40://down

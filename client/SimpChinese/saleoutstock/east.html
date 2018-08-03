@@ -34,6 +34,55 @@
 					}
 				}
 			});
+			
+			ebx.setDatagridEditor.editorMethods(c.rows, 'InvoiceTypename', 'combogrid', {//用来重造发票类型的combogrid的方法
+				onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+					var r = s.datagrid('getData').rows;
+					for(var i in r){
+						if(r[i].field == 'InvoiceType'){
+							r[i].value = rowData.id;
+						}
+					}
+				}
+			});
+			
+			ebx.setDatagridEditor.editorMethods(c.rows, 'VIPCustomname', 'combogrid', {//用来重造会员的combogrid的方法
+				onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+					var r = s.datagrid('getData').rows;
+					for(var i in r){
+						if(r[i].field == 'VIPCustomID'){
+							r[i].value = rowData.id;
+						}
+					}
+				}
+			});
+			
+			ebx.setDatagridEditor.editorMethods(c.rows, 'Currencyname', 'combogrid', {//用来重造币种的combogrid的方法
+				onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+					var r = s.datagrid('getData').rows;
+					for(var i in r){
+						if(r[i].field == 'Currency'){
+							r[i].value = rowData.id;
+						}
+						if(r[i].field == 'Relation'){
+							r[i].value = rowData.relation;
+							s.datagrid('refreshRow', i);
+						}
+					}
+				}
+			});
+			
+			ebx.setDatagridEditor.editorMethods(c.rows, 'CheckTypename', 'combogrid', {//用来重造结算方式的combogrid的方法
+				onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+					var r = s.datagrid('getData').rows;
+					for(var i in r){
+						if(r[i].field == 'CheckType'){
+							r[i].value = rowData.id;
+						}
+					}
+				}
+			});
+			
 		});
 	});
 </script>
