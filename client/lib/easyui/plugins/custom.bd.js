@@ -449,6 +449,7 @@ ebx.bd = {
 								listdatagrid.datagrid('scrollTo', listdatagrid.datagrid('getData').total - 1);//滚动到新增的行
 								listdatagrid.datagrid('selectRow', listdatagrid.datagrid('getData').total - 1);
 								listdatagrid.datagrid('editkeyboard', {index: listdatagrid.datagrid('getData').total - 1, field: listdatagrid.datagrid('options').columns[0][0].field}); //自动触发编辑第一个字段
+								
 								ebx.setEditstatus(_tab, true);
 								//listdatagrid.datagrid('reload');
 							}

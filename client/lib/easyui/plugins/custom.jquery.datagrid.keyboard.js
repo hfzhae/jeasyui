@@ -12,20 +12,32 @@ $.extend($.fn.datagrid.methods, {
 	editkeyboard: function(jq,param){
 		return jq.each(function(){
 			setColumnleft($(this), param.field);
-			var opts = $(this).datagrid('options');
-			var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+			var opts = $(this).datagrid('options'),
+				k = 0,
+				fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+			
 			$(this).datagrid('highlightRow', param.index);
 			$(this).datagrid('endEdit', param.index);
+
 			for(var i=0; i<fields.length; i++){
 				var col = $(this).datagrid('getColumnOption', fields[i]);
 				col.editor1 = col.editor;
 				if (fields[i] != param.field){
 					col.editor = null;
+				}else{
+					if(col.hidden == true){//支持隐藏列//支持隐藏列
+						col.editor = null;
+					}else{
+						k = 1;
+					}
 				}
+				if(col.hidden == true && fields[i] == param.field && k == 0)param.field = fields[i + 1];//如果存在隐藏列，设置字段为下一个
 			}
 			$(this).datagrid('beginEdit', param.index);
+			
 			var obj = $(this).datagrid('getEditor', {index:param.index, field:param.field}),//获取激活的输入框对象
 				thisGrid = $(this);
+			
 			if(obj != null){
 				if($(obj.target).hasClass('textbox-f') == true){//判断是否是textbox-f对象还是text输入框，选用不同的获取对象方法
 					var inputObj = $(obj.target).parent().find('input:eq(1)')
