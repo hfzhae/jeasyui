@@ -135,7 +135,6 @@ $.extend($.fn.combogrid.defaults, {
 		var co = $(this);
 			//co.combo('setText', unescape(newValue));
 			co.combo('setText', newValue);
-			
 		try{
 			var tabs = ebx.center.tabs('getSelected'),
 				tab = tabs.panel('options');

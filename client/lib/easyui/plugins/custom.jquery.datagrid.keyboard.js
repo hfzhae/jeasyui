@@ -11,6 +11,7 @@ dev by zz on 2018/4/26
 $.extend($.fn.datagrid.methods, {
 	editkeyboard: function(jq,param){
 		return jq.each(function(){
+			setColumnleft($(this), param.field);
 			var opts = $(this).datagrid('options');
 			var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
 			$(this).datagrid('highlightRow', param.index);
@@ -33,21 +34,47 @@ $.extend($.fn.datagrid.methods, {
 				}
 				inputObj.select();
 				
+				//':not(.datagrid-row)',
+				/*
+				
+				$('body').bind('click', function(e){
+					e.stopPropagation();
+					var grid = $('body').find('.datagrid-f');
+					grid.each(function(index,item){
+						var eaRows = $(this).datagrid('getRows');
+						for(var i in eaRows){    
+							$(this).datagrid('endEdit',i);    
+						}; 
+					})
+				})
+				*/
 				switch(obj.type){
 					case 'combogrid':
+						setTimeout(function(){
+							obj.target.combo("showPanel");
+						},100);
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'datetimebox':
+						setTimeout(function(){
+							obj.target.combo("showPanel");
+						},100);
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'datebox':
+						setTimeout(function(){
+							obj.target.combo("showPanel");
+						},100);
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'combobox':
+						setTimeout(function(){
+							obj.target.combo("showPanel");
+						},100);
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
-					default:
-						if($(obj.target).hasClass('textbox-f') == false){
+					case 'textbox':
+						if(obj.target.parent().find('.textbox-button').length == 0){
 							inputObj.blur(function(){//编辑控件失去焦点时，结束编辑状态
 								setTimeout(function(){
 									thisGrid.datagrid('endEdit', param.index);
@@ -55,6 +82,15 @@ $.extend($.fn.datagrid.methods, {
 								},0);
 							});
 						}
+						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
+						break;
+					default:
+						inputObj.blur(function(){//编辑控件失去焦点时，结束编辑状态
+							setTimeout(function(){
+								thisGrid.datagrid('endEdit', param.index);
+								thisGrid.datagrid('cancelEdit', param.index);//针对validatebox校验失败无法endEdit的调用cancelEdit方法
+							},0);
+						});
 						break;
 				}
 				/*
@@ -158,7 +194,7 @@ $.extend($.fn.datagrid.methods, {
 								var col = thisGrid.datagrid('getColumnOption', fields[i + 1]),
 									col1 = thisGrid.datagrid('getColumnOption', fields[i]);
 								if(col1 != null){
-									if(col1.editor != undefined && firstfield == '' && col1.editor != '' && !col.hidden){
+									if(col1.editor != undefined && firstfield == '' && col1.editor != '' && !col1.hidden){
 										firstfield = fields[i];
 									}
 								}
@@ -189,6 +225,7 @@ $.extend($.fn.datagrid.methods, {
 										thisGrid.datagrid('insertRow',{
 											row: {}
 										});
+										thisGrid.datagrid('selectRow', firstindex);
 									}
 								}
 								thisGrid.datagrid('editkeyboard', {index:firstindex,field:nextfield});
@@ -260,3 +297,20 @@ $.extend($.fn.propertygrid.defaults, {
 	}
 
 });
+
+function setColumnleft(s, Column){//调整编辑框的滚动位置 2018-8-4 zz，参数：s：datagrid对象，Column：列名
+	if(typeof(s) != 'object') return;
+	if(typeof(Column) != 'string') return;
+	var w = 0,
+		f = 0,
+		c = s.datagrid('getColumnFields'),
+		firstW = ebx.validFloat(s.datagrid('getColumnOption', c[0]).width);
+	for(var i in c){
+		if(c[i].toLowerCase() == Column.toLowerCase())f++;
+		if(f == 0){
+			w += (ebx.validFloat(s.datagrid('getColumnOption', c[i]).width) + 1);
+		};
+	}
+	w -= firstW;
+	s.prev().find('div.datagrid-body').animate({scrollLeft:  w - s.prev().width() / 3}, 100);
+}
