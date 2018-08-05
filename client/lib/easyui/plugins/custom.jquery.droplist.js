@@ -166,7 +166,8 @@ $.extend($.fn.combogrid.defaults, {
 				dataType: "json",
 				success: function(result){
 					if(result){
-						var data = [result.data];//转码所有嵌套json中文的escape
+						var data = [result.data];
+							
 						g.datagrid({
 							view:scrollview,
 							pageSize:pageSize,
@@ -175,14 +176,13 @@ $.extend($.fn.combogrid.defaults, {
 							method:'post',
 							loadMsg:$.fn.datagrid.defaults.loadMsg,
 							columns:data,
-							/*
 							onLoadSuccess: function(data){
-								if(data.total == 1){
+								if(data.total == 1){//查询结果只有一条记录时，默认选中
 									g.datagrid('selectRow', 0);
 								}
 								ops.oRows = [];
 								ops.asyn = 1;
-							}*/
+							}
 						}).datagrid('renderformatterstyler');
 						
 					}

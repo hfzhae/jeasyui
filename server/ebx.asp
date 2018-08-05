@@ -258,16 +258,19 @@ var ebx = {
 		rs.Update();
 		return rs;
 	},
+	validstring: function(v){
+		return v.replaceAll('"', '\'\'');
+	},
 	getType: function(Fields){ //数据类型判断函数，Fields：字段rs.Fields对象，返回针对类型处理后的值
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
 			case 200:
-				return('"' + v + '"'); //"文本"
+				return('"' + ebx.validstring(v) + '"'); //"文本"
 			case 202:
-				return('"' + v + '"'); //"文本"
+				return('"' + ebx.validstring(v) + '"'); //"文本"
 				break;
 			case 203:
-				return('"' + v + '"'); //"备注"
+				return('"' + ebx.validstring(v) + '"'); //"备注"
 				break;
 			case 3:
 				return(ebx.validInt(v)); //"长整型"

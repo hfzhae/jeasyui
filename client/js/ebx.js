@@ -641,7 +641,11 @@ var ebx = {
 			for(var i in c){
 				for(var j in c[i]){
 					if(j == 'field' && c[i][j].toLowerCase() == f.toLowerCase()){
-						c[i]['editor'] = {"type":t, "options":o};
+						if(t == ''){
+							delete c[i]['editor'];
+						}else{
+							c[i]['editor'] = {"type":t, "options":o};
+						}
 					}
 				}
 			}
@@ -742,7 +746,9 @@ var ebx = {
 				label: '日期',
 				value: 'dateRender',
 				render: function(v, rowIndex){
-					return new Date(v).Format("yyyy-MM-dd");
+					if(isNaN(v)&&!isNaN(Date.parse(v))){
+						return new Date(v).Format("yyyy-MM-dd");
+					}
 				}
 			},{
 				label: '日期时间',

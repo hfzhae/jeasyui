@@ -64,25 +64,25 @@ $.extend($.fn.datagrid.methods, {
 					case 'combogrid':
 						setTimeout(function(){
 							obj.target.combo("showPanel");
-						},100);
+						},200);
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'datetimebox':
 						setTimeout(function(){
 							obj.target.combo("showPanel");
-						},100);
+						},200);
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'datebox':
 						setTimeout(function(){
 							obj.target.combo("showPanel");
-						},100);
+						},200);
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'combobox':
 						setTimeout(function(){
 							obj.target.combo("showPanel");
-						},100);
+						},200);
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'textbox':
@@ -234,9 +234,7 @@ $.extend($.fn.datagrid.methods, {
 									
 								if(lastinsertRow){
 									if(firstindex >= datacount){//如果最后一行最后一个字段，回车后自动新增一行
-										thisGrid.datagrid('insertRow',{
-											row: {}
-										});
+										thisGrid.datagrid('appendRow',{});
 										thisGrid.datagrid('selectRow', firstindex);
 									}
 								}
@@ -324,5 +322,5 @@ function setColumnleft(s, Column){//调整编辑框的滚动位置 2018-8-4 zz�
 		};
 	}
 	w -= firstW;
-	s.prev().find('div.datagrid-body').animate({scrollLeft:  w - s.prev().width() / 3}, 100);
+	s.prev().find('div.datagrid-body').animate({scrollLeft:  w - s.prev().width() / 3}, 200);
 }

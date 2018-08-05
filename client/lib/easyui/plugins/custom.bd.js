@@ -22,7 +22,7 @@ ebx.bd = {
 	showPrint: 0,//是否显示打印group
 	showLock: 0,//是否显示安全group
 	showdate: 0,//是否显示查询日期控件，0为不显示，默认0
-	init: function(layoutName, callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数
+	init: function(layoutName, callback, callback1){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Paramet = ebx.getMenuParameter(this.tabs);
@@ -60,7 +60,7 @@ ebx.bd = {
 				this.layout = this.tabs.find('.layout');
 				this.centerPanel = this.layout.layout('panel', 'center');
 				this.centerstorage = $('<div>').appendTo(this.centerPanel);
-				this._center(callback);
+				this._center(callback, callback1);
 				break;
 			case 'default':
 				this.layout = $('<div>').appendTo(this.tabs)
@@ -130,7 +130,7 @@ ebx.bd = {
 			}
 		});
 	},
-	_center: function(callback){//单据表体对象
+	_center: function(callback, callback1){//单据表体对象，参数：callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
 		var _centerstorage = this.centerstorage,
 			_Paramet = this.Paramet;
 		$.ajax({
@@ -141,7 +141,7 @@ ebx.bd = {
 			success: function(result){
 				if(result){
 					columnsData = [result.data];
-					callback(columnsData, _centerstorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
+					if(callback)callback(columnsData, _centerstorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 										
 					_centerstorage.datagrid({
 						view:scrollview,
@@ -167,6 +167,7 @@ ebx.bd = {
 						showHeader:result.bd[0].header
 					}).datagrid('renderformatterstyler');//启用显示式样回调函数
 				}
+				if(callback1)callback1(_centerstorage);
 			}
 		});
 	},

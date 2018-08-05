@@ -118,7 +118,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
-					"required":true,
+					//"required":true,
 					"idField":"id",
 					"idField":"title",
 					"rownumbers":true,
@@ -135,7 +135,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
-					"required":true,
+					//"required":true,
 					"idField":"id",
 					"idField":"title",
 					"rownumbers":true,
@@ -150,7 +150,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
-					"required":true,
+					//"required":true,
 					"idField":"id",
 					"idField":"title",
 					"rownumbers":true,
@@ -166,7 +166,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
-					"required":true,
+					//"required":true,
 					"idField":"id",
 					"idField":"title",
 					"rownumbers":true,

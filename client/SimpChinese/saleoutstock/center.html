@@ -1,31 +1,8 @@
 <script type="text/javascript">
-	easyloader.load([], function(){		
+	easyloader.load(['productserial'], function(){		
 		var bd = ebx.cloneObj(ebx.bd);
 				
 		bd.init('center', function(c, s){
-			ebx.setDatagridEditor.editorType(c[0], 'productcode', 'combogrid', {//用来选择菜单组的combogrid
-				style:'product',
-				//validType:'LetterInteger',
-				required:true,
-				idField:'id',
-				idField:'code',
-				rownumbers:true,
-				panelWidth:400,
-				template:147,
-				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
-					var r = s.datagrid('getData');
-					r.rows[s.datagrid('options').editIndex].id = ebx.validInt(rowData.id);
-					r.rows[s.datagrid('options').editIndex].productcode = rowData.code;
-					r.rows[s.datagrid('options').editIndex].spec = rowData.spec;
-					r.rows[s.datagrid('options').editIndex].relation = ebx.validFloat(rowData.relation);
-					r.rows[s.datagrid('options').editIndex].aquantity = ebx.validFloat(rowData.relation * 1);
-					r.rows[s.datagrid('options').editIndex].quantity = 1;
-					r.rows[s.datagrid('options').editIndex].price = ebx.validFloat(rowData.detailprice);
-					r.rows[s.datagrid('options').editIndex].amount = ebx.validFloat(rowData.detailprice);
-					//r.menugroupname = rowData.menugroupname;
-					//r.menugrouptitle = ebx.unescapeEx(rowData.menugrouptitle);
-				}
-			});
 			ebx.setDatagridEditor.editorType(c[0], 'productname', 'combogrid', {//用来选择菜单组的combogrid
 				style:'product',
 				//validType:'LetterInteger',
@@ -39,12 +16,18 @@
 					var r = s.datagrid('getData');
 					r.rows[s.datagrid('options').editIndex].id = ebx.validInt(rowData.id);
 					r.rows[s.datagrid('options').editIndex].productcode = rowData.code;
-					r.rows[s.datagrid('options').editIndex].spec = rowData.spec;
+					r.rows[s.datagrid('options').editIndex].spec = rowData.nvarchar2;
+					r.rows[s.datagrid('options').editIndex].unit = rowData.unit;
+					r.rows[s.datagrid('options').editIndex].aunit = rowData.aunit;
+					r.rows[s.datagrid('options').editIndex].oldprice = ebx.validFloat(rowData.detailprice);
 					r.rows[s.datagrid('options').editIndex].relation = ebx.validFloat(rowData.relation);
 					r.rows[s.datagrid('options').editIndex].aquantity = ebx.validFloat(rowData.relation * 1);
 					r.rows[s.datagrid('options').editIndex].quantity = 1;
 					r.rows[s.datagrid('options').editIndex].price = ebx.validFloat(rowData.detailprice);
 					r.rows[s.datagrid('options').editIndex].amount = ebx.validFloat(rowData.detailprice);
+					r.rows[s.datagrid('options').editIndex].taxrate = ebx.validFloat(rowData.taxrate);
+					
+					
 				}
 			});
 			
@@ -119,6 +102,48 @@
 					}
 				}
 			});
+
+			ebx.setDatagridEditor.editorType(c[0], 'ProductSerial', '', {});//清除串号编辑功能
+			ebx.setDatagridEditor.editorType(c[0], 'ColorSize', '', {});//清除色码编辑功能
+			
+		}, function(s){
+			s.datagrid('options').onClickCell = function(index, field, value){
+				switch(field.toLowerCase()){//处理串号编辑
+					case 'productserial':
+						var productserialopen = ebx.cloneObj(ebx.productserial);//复制产品串号编辑对象
+						productserialopen.init(0, s.datagrid('getData').rows[index].productname);
+						productserialopen.open(value);
+						break;
+					case 'colorsize':
+						console.log(index);
+						console.log(value);
+						var win = $('<div>').appendTo(s);
+						win.window({
+							title: s.datagrid('getData').rows[index].productname + ' 的颜色尺码',
+							width:640,    
+							height:480, 
+							modal:true,
+							collapsible:false,
+							minimizable:false,
+							maximizable:false,
+							resizable:false,
+							border:'thin',
+							shadow:false
+						}); 
+						$('body').find('.window-mask').on('click', function(){
+							win.window('close');
+						}); 
+						break;
+					default:
+						var opts = s.datagrid('options');
+						if(opts.editIndex>=0){
+							s.datagrid('endEdit', opts.editIndex);
+						}
+						s.datagrid('selectRow', index).datagrid('editkeyboard', {index:index,field:field});
+						opts.editIndex = index
+						break;
+				}
+			}
 		});
 	});
 </script>
