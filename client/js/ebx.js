@@ -268,7 +268,7 @@ var ebx = {
 		}
 	},
 	importTemplate:function(columns, title){//导入模板的导出函数 2018-5-17 zz
-		ebx.clipboardData(columns, {total:1, rows:[eval('({' + columns[0][0].field +':"这是导入' + title + '数据的模板，请按以上格式编辑数据。（本行为说明文字，编辑前请删除）"})')]});
+		ebx.clipboardData(columns, {total:1, rows:[eval('({' + columns[0][0].field +':"这是导入“' + title + '”的模板，请按以上格式编辑数据。（本行为说明文字，编辑前请删除）"})')]});
 	},
 	clipboardData: function (columns, data){//导出函数，复制到剪贴板方法用到了clipboard.js插件，参数：columns：表头对象，data：数据内容，包含total和rows 2018-5-15 zz
 		easyloader.load(['clipboard'], function(){//异步加载clipboard.min.js

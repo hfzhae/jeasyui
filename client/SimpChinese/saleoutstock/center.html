@@ -111,7 +111,7 @@
 				switch(field.toLowerCase()){//处理串号编辑
 					case 'productserial':
 						var productserialopen = ebx.cloneObj(ebx.productserial);//复制产品串号编辑对象
-						productserialopen.open(s.datagrid('getData').rows[index].id, value);
+						productserialopen.open(s.datagrid('getData').rows[index].productname, 2, s, index);
 						break;
 					case 'colorsize':
 						console.log(index);
