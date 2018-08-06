@@ -63,9 +63,9 @@ ebx.productserial = {
 								timeout: 3000,
 								showType: 'slide'
 							});
-							productserial.datagrid('selectRow', i);
-							productserial.datagrid('scrollTo', i);
+							//productserial.datagrid('scrollTo', i);
 							productserial.datagrid('editkeyboard', {index: i, field:'productserial'});
+							productserial.datagrid('selectRow', i);
 							return false;
 						}
 					}
@@ -80,12 +80,7 @@ ebx.productserial = {
 				}
 
 				if(reserial.length > 0){
-					$.messager.show({
-						title: '错误',
-						msg: '串号：' + reserial.substr(0, reserial.length - 1) + ' 存在重复',
-						timeout: 6000,
-						showType: 'slide'
-					});
+					$.messager.alert('错误','串号：' + reserial.substr(0, reserial.length - 1) + ' 存在重复','error');
 					return false;
 				}
 				
@@ -102,8 +97,8 @@ ebx.productserial = {
 			win.window('close');
 		}); 
 		productserial.datagrid({    
-			view:scrollview,
-			pageSize:ebx.pagesize,
+			//view:scrollview,
+			//pageSize:ebx.pagesize,
 			data: v,
 			border:false,
 			rownumbers:true,
@@ -117,12 +112,13 @@ ebx.productserial = {
 			buttonText:'搜索',
 			onClickButton: function(){
 				productserial.datagrid('clearSelections');
-				var find = searchtext.textbox('getValue');
+				var find = searchtext.textbox('getValue'),
+					data = productserial.datagrid('getData').rows;
 				if(find.length <= 0) return;
-				for(var i in v.rows){
-					if(find.toLowerCase() == v.rows[i].productserial.toLowerCase()){
+				for(var i in data){
+					if(find.toLowerCase() == data[i].productserial.toLowerCase()){
 						productserial.datagrid('selectRow', i);
-						productserial.datagrid('scrollTo', i);
+						//productserial.datagrid('scrollTo', i);
 					}
 				}
 			}
@@ -130,12 +126,13 @@ ebx.productserial = {
 		searchtext.textbox('textbox').bind('keydown', function(e) {  
 			if (e.keyCode == 13) { 
 				productserial.datagrid('clearSelections');
-				var find = searchtext.textbox('getValue');
+				var find = searchtext.textbox('getValue'),
+					data = productserial.datagrid('getData').rows;
 				if(find.length <= 0) return;
-				for(var i in v.rows){
-					if(find.toLowerCase() == v.rows[i].productserial.toLowerCase()){
+				for(var i in data){
+					if(find.toLowerCase() == data[i].productserial.toLowerCase()){
 						productserial.datagrid('selectRow', i);
-						productserial.datagrid('scrollTo', i);
+						//productserial.datagrid('scrollTo', i);
 					}
 				}
 			}  
