@@ -11,7 +11,8 @@
 				idField:'title',
 				rownumbers:true,
 				panelWidth:400,
-				template:147,
+				droplisturl:'server/SimpChinese/DataProvider/list/',
+				//template:147,
 				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
 					var r = s.datagrid('getData');
 					r.rows[s.datagrid('options').editIndex].id = ebx.validInt(rowData.id);

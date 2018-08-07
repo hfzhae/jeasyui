@@ -155,10 +155,19 @@ $.extend($.fn.combogrid.defaults, {
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
 			var style = ops.style,//显示式样名称，获取地址server/DataProvider/style/?
-				template = ops.template;//查询模板ID，获取地址server/DataProvider/list/?
+				template = ops.template,//查询模板ID，获取地址server/DataProvider/list/?
+				url = 'server/SimpChinese/DataProvider/list/',
+				queryParams = {_:(new Date()).getTime()};
 			if(!style)return;
-			if(!template)return;
-
+			if(!template){
+				if(ops.droplisturl){
+					url = ops.droplisturl;//支持自定义url获取list数据
+				}else{
+					return;
+				}
+			}else{
+				queryParams = {template:template,_:(new Date()).getTime()}
+			};
 			$.ajax({
 				type: 'post', 
 				url: 'server/SimpChinese/DataProvider/style/',
@@ -167,12 +176,11 @@ $.extend($.fn.combogrid.defaults, {
 				success: function(result){
 					if(result){
 						var data = [result.data];
-							
 						g.datagrid({
 							view:scrollview,
 							pageSize:pageSize,
-							url:'server/SimpChinese/DataProvider/list/',
-							queryParams:{template:template,_:(new Date()).getTime()},
+							url:url,
+							queryParams:queryParams,
 							method:'post',
 							loadMsg:$.fn.datagrid.defaults.loadMsg,
 							columns:data,

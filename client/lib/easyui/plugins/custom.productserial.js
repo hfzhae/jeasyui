@@ -80,6 +80,7 @@ ebx.productserial = {
 				}
 
 				if(reserial.length > 0){
+					productserial.datagrid('clearSelections');
 					$.messager.alert('错误','串号：' + reserial.substr(0, reserial.length - 1) + ' 存在重复','error');
 					return false;
 				}
