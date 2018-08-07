@@ -73,6 +73,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
+					"hasDownArrow":false,//隐藏右边得下箭头
 					"required":true,
 					"idField":"id",
 					"idField":"title",
@@ -88,6 +89,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
+					"hasDownArrow":false,//隐藏右边得下箭头
 					"required":true,
 					"idField":"id",
 					"idField":"title",
@@ -103,6 +105,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
+					"hasDownArrow":false,//隐藏右边得下箭头
 					"required":true,
 					"idField":"id",
 					"idField":"title",
@@ -118,6 +121,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
+					"hasDownArrow":false,//隐藏右边得下箭头
 					//"required":true,
 					"idField":"id",
 					"idField":"title",
@@ -135,6 +139,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
+					"hasDownArrow":false,//隐藏右边得下箭头
 					//"required":true,
 					"idField":"id",
 					"idField":"title",
@@ -150,6 +155,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
+					"hasDownArrow":false,//隐藏右边得下箭头
 					//"required":true,
 					"idField":"id",
 					"idField":"title",
@@ -166,6 +172,7 @@
 				"options":{
 					"style":"biOpen2",
 					"validType":"combogridValue",
+					"hasDownArrow":false,//隐藏右边得下箭头
 					//"required":true,
 					"idField":"id",
 					"idField":"title",

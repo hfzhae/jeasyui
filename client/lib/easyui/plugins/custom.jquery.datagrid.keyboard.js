@@ -65,6 +65,14 @@ $.extend($.fn.datagrid.methods, {
 						setTimeout(function(){
 							obj.target.combo("showPanel");
 						},200);
+						if(obj.target.parent().find('.textbox-button').length == 0){
+							inputObj.blur(function(){//编辑控件失去焦点时，结束编辑状态
+								setTimeout(function(){
+									thisGrid.datagrid('endEdit', param.index);
+									thisGrid.datagrid('cancelEdit', param.index);//针对validatebox校验失败无法endEdit的调用cancelEdit方法
+								},0);
+							});
+						}
 						//不支持失去焦点时，结束编辑状态，因会导致点击下拉框按钮无效
 						break;
 					case 'datetimebox':

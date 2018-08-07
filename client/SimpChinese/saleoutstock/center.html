@@ -11,13 +11,14 @@
 				idField:'title',
 				rownumbers:true,
 				panelWidth:400,
-				droplisturl:'server/SimpChinese/DataProvider/list/',
+				droplisturl:'server/SimpChinese/product/open/',
+				hasDownArrow:false,//隐藏右边得下箭头
 				//template:147,
 				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
 					var r = s.datagrid('getData');
 					r.rows[s.datagrid('options').editIndex].id = ebx.validInt(rowData.id);
 					r.rows[s.datagrid('options').editIndex].productcode = rowData.code;
-					r.rows[s.datagrid('options').editIndex].spec = rowData.nvarchar2;
+					r.rows[s.datagrid('options').editIndex].spec = rowData.spec;
 					r.rows[s.datagrid('options').editIndex].unit = rowData.unit;
 					r.rows[s.datagrid('options').editIndex].aunit = rowData.aunit;
 					r.rows[s.datagrid('options').editIndex].oldprice = ebx.validFloat(rowData.detailprice);
