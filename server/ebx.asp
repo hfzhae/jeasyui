@@ -211,7 +211,7 @@ var ebx = {
 					rs.Fields.Append(i, 11);
 					break;
 				case 'function':
-					rs.Fields.Append(i, 205);
+					rs.Fields.Append(i, 205, -1);
 					break;
 				case undefined:
 					rs.Fields.Append(i, 203);
@@ -387,21 +387,19 @@ var ebx = {
 	convertBinToRs: function(sBin){ //二进制流转换成rs对象
 		var stm = Server.CreateObject("adodb.stream"),
 			rs = ebx.dbx.getRs();
-
 		if(typeof(sBin) != 'unknown')return('');
 		if(sBin == null)return('');
-		
 		stm.type = 1;
 		stm.Open();
 		stm.Write(sBin);
 		stm.position = 0;
 		rs.open(stm);
-		
 		return(rs);
 	},
 	convertRsToBin: function(rs){ //rs对象转换成二进制流
 		if(rs == null) return(null);
-		if(typeof(rs) == 'object') return(null);
+		if(typeof(rs) != 'object') return(null);
+		if(rs.State == 0) return(null);
 		if(rs.RecordCount == 0) return(null);
 		
 		var stm = Server.CreateObject("adodb.stream");
@@ -869,7 +867,6 @@ var ebx = {
 			this.CleanData();
 		},
 		_saveBD: function(){
-			debugger;
 			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2'),
 					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),

@@ -23,9 +23,9 @@ ebx.productserial = {
 					editor:{
 						type:'textbox',
 						options:{
-							validType:['string','length[' + seriallength + ', ' + seriallength + ']'],
+							validType:seriallength>0?['string','length[' + seriallength + ', ' + seriallength + ']']:'string',
 							invalidMessage:'串号长度必须为：' + seriallengthtext,
-							required:true
+							required:seriallength>0?true:false
 						}
 					}
 				}  
@@ -84,14 +84,17 @@ ebx.productserial = {
 					$.messager.alert('错误','串号：' + reserial.substr(0, reserial.length - 1) + ' 存在重复','error');
 					return false;
 				}
-				
+				var oldquantity = d.datagrid('getRows')[index].quantity;
 				d.datagrid('updateRow', {
 					index: index,
 					row:{
-						productserial: data1.length>0?{total: data1.length, rows: data1}:[]
+						productserial: data1.length>0?{total: data1.length, rows: data1}:[],
+						quantity: data1.length==0?1:data1.length
 					}
-					
 				})
+				if(oldquantity != data1.length && data1.length > 0){
+					d.datagrid('editkeyboard', {index: index, field:'quantity'});
+				}
 			}
 		});
 		$('body').find('.window-mask').on('click', function(){
@@ -117,9 +120,11 @@ ebx.productserial = {
 					data = productserial.datagrid('getData').rows;
 				if(find.length <= 0) return;
 				for(var i in data){
-					if(find.toLowerCase() == data[i].productserial.toLowerCase()){
-						productserial.datagrid('selectRow', i);
-						//productserial.datagrid('scrollTo', i);
+					if(data[i].productserial != undefined && data[i].productserial != ''){
+						if(find.toLowerCase() == data[i].productserial.toLowerCase()){
+							productserial.datagrid('selectRow', i);
+							//productserial.datagrid('scrollTo', i);
+						}
 					}
 				}
 			}
@@ -131,9 +136,11 @@ ebx.productserial = {
 					data = productserial.datagrid('getData').rows;
 				if(find.length <= 0) return;
 				for(var i in data){
-					if(find.toLowerCase() == data[i].productserial.toLowerCase()){
-						productserial.datagrid('selectRow', i);
-						//productserial.datagrid('scrollTo', i);
+					if(data[i].productserial != undefined && data[i].productserial != ''){
+						if(find.toLowerCase() == data[i].productserial.toLowerCase()){
+							productserial.datagrid('selectRow', i);
+							//productserial.datagrid('scrollTo', i);
+						}
 					}
 				}
 			}  

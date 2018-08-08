@@ -34,8 +34,19 @@
 		{'name':'编号','value':code,'group':'必填信息','editor':{'type':'validatebox', 'options':{'required':true,'validType':'String'}},'field':'code','func':'cbRSNotNullAndNotRepeatCheck'},
 		{'name':'名称','value':title,'group':'必填信息','editor':{'type':'validatebox', 'options':{'required':true,'validType':'String'}},'field':'title',"func":"cbRSDirectPy"},
 		{'name':'备注','value':MemoInfo,'group':'其他','editor':'text','field':'MemoInfo'},
-		{'name':'积分起始时间','value':new Date(VIPDateFrom).Format('yyyy-MM-dd hh:mm:ss'),'group':'会员相关','editor':'datetimebox','field':'VIPDateFrom'},
-		{'name':'积分结束时间','value':new Date(VIPDateTo).Format('yyyy-MM-dd hh:mm:ss'),'group':'会员相关','editor':'datetimebox','field':'VIPDateTo'},
+		{'name':'积分起始时间','value':new Date(VIPDateFrom).Format('yyyy-MM-dd hh:mm:ss'),'group':'会员相关','editor':{
+				"type":'datetimebox',
+				"options":{
+					"hasDownArrow":false
+				}
+			},'field':'VIPDateFrom'},
+		{'name':'积分结束时间','value':new Date(VIPDateTo).Format('yyyy-MM-dd hh:mm:ss'),'group':'会员相关','editor':{
+				"type":'datetimebox',
+				"options":{
+					"hasDownArrow":false
+				}
+			},
+			'field':'VIPDateTo'},
 		{'name':'积分倍数','value':VIPPoints,'group':'会员相关','editor':{'type':'validatebox', 'options':{'required':true,'validType':'Number'}},'field':'VIPPoints'},
 		{'name':'积分赠送','value':VIPCoefficient,'group':'会员相关','editor':{'type':'validatebox', 'options':{'required':true,'validType':'Number'}},'field':'VIPCoefficient'}
 	]};

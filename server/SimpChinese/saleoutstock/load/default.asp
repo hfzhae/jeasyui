@@ -67,7 +67,13 @@
 		{"name":"更新时间","value":new Date(updatedate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成",'rowstyle':'color:#999;'},
 		{"name":"操作员","value":owner,"group":"系统生成",'rowstyle':'color:#999;'},
 		{"name":"UUID","value":UUID,"group":"系统生成",'hidden':UUID==null?true:false,'rowstyle':'color:#999;'},
-		{'name':'单据日期','value':new Date(billdate).Format('yyyy-MM-dd'),'group':'必填信息','editor':'datebox','field':'billdate'},
+		{'name':'单据日期','value':new Date(billdate).Format('yyyy-MM-dd'),'group':'必填信息','editor':{
+				"type":'datebox',
+				"options":{
+					"hasDownArrow":false
+				}
+			},
+			'field':'billdate'},
 		{'name':'客户','value':custom,'group':'必填信息',"editor":{
 				"type":"combogrid",
 				"options":{

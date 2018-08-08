@@ -28,8 +28,8 @@
 					r.rows[s.datagrid('options').editIndex].price = ebx.validFloat(rowData.detailprice);
 					r.rows[s.datagrid('options').editIndex].amount = ebx.validFloat(rowData.detailprice);
 					r.rows[s.datagrid('options').editIndex].taxrate = ebx.validFloat(rowData.taxrate);
-					
-					
+					r.rows[s.datagrid('options').editIndex].productserial = rowData.productserial;
+					r.rows[s.datagrid('options').editIndex].lengthserial = rowData.lengthserial;
 				}
 			});
 			
@@ -107,13 +107,15 @@
 
 			ebx.setDatagridEditor.editorType(c[0], 'ProductSerial', '', {});//清除串号编辑功能
 			ebx.setDatagridEditor.editorType(c[0], 'ColorSize', '', {});//清除色码编辑功能
+			ebx.setDatagridEditor.editorType(c[0], 'ProductCode', '', {});//清除串号编辑功能
 			
 		}, function(s){
 			s.datagrid('options').onClickCell = function(index, field, value){
 				switch(field.toLowerCase()){//处理串号编辑
 					case 'productserial':
-						var productserialopen = ebx.cloneObj(ebx.productserial);//复制产品串号编辑对象
-						productserialopen.open(s.datagrid('getData').rows[index].productname, 2, s, index);
+						var productserialopen = ebx.cloneObj(ebx.productserial),//复制产品串号编辑对象
+							row = s.datagrid('getRows')[index];
+						productserialopen.open(row.productname, row.lengthserial, s, index);
 						break;
 					case 'colorsize':
 						console.log(index);

@@ -262,7 +262,6 @@ ebx.bd = {
 				if(callback)callback(data, _eaststorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
-
 	},
 	_north: function (){//单据表头按钮对象 2018-7-9 zz
 		var bd = this,
@@ -443,13 +442,23 @@ ebx.bd = {
 							size:'large',
 							onClick:function(){
 								var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f'),
-									opts = listdatagrid.datagrid('options');
+									opts = listdatagrid.datagrid('options'),
+									fields = listdatagrid.datagrid('options').columns[0],
+									field = fields[0].field;
 								
 								opts.editIndex = listdatagrid.datagrid('getData').total;
 								listdatagrid.datagrid('appendRow',{});
 								listdatagrid.datagrid('scrollTo', listdatagrid.datagrid('getData').total - 1);//滚动到新增的行
 								listdatagrid.datagrid('selectRow', listdatagrid.datagrid('getData').total - 1);
-								listdatagrid.datagrid('editkeyboard', {index: listdatagrid.datagrid('getData').total - 1, field: listdatagrid.datagrid('options').columns[0][0].field}); //自动触发编辑第一个字段
+								
+								for(var i in fields){
+									if(fields[i].editor && !fields[i].hidden){
+										field = fields[i].field;
+										break;
+									}
+								}
+
+								listdatagrid.datagrid('editkeyboard', {index: listdatagrid.datagrid('getData').total - 1, field: field}); //自动触发编辑第一个字段
 								
 								ebx.setEditstatus(_tab, true);
 								//listdatagrid.datagrid('reload');
