@@ -272,11 +272,14 @@ ebx.productserial = {
 											}
 										}
 										rows.push(result.rows[0].productserial.rows[0]);
+										data[index].productserial.total++;
 									}else{
 										data[index].productserial = result.rows[0].productserial;
 									}
 									serialText = '<br>串号：' + result.rows[0].productserial.rows[0].productserial;
 									data[index].quantity = data[index].productserial.total;
+								}else{
+									return;
 								}
 							}else{
 								data[index].quantity++;
