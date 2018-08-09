@@ -461,6 +461,14 @@
 	background:url('icon32/unLock.png') no-repeat center center;
 }
 
+.icon-BarcodeInsert{
+	background:url('icon32/BarcodeInsert.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-BarcodeInsert-large{
+	background:url('icon32/BarcodeInsert.png') no-repeat center center;
+}
+
 
 
 

@@ -68,7 +68,7 @@ ebx.browser = {
 				ebx.center.tabs('add', {
 					id: tabsid,
 					title: '新建-' + options._Paramet.text,
-					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template +'&IsAuditStyle=' + options._Paramet.IsAuditStyle +'&print=' + options._Paramet.print + '&lock=' + options._Paramet.lock,
+					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template +'&IsAuditStyle=' + options._Paramet.IsAuditStyle +'&print=' + options._Paramet.print + '&lock=' + options._Paramet.lock+'&searchserial='+options._Paramet.searchserial,
 					//iconCls:node.iconCls,
 					selected: true,
 					closable:true
@@ -84,7 +84,7 @@ ebx.browser = {
 						maxWidth: '50%',
 						minWidth: 400,
 						title: '',
-						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode + '&lock=' + options._Paramet.lock,
+						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&mode=' + options._Paramet.mode + '&lock=' + options._Paramet.lock+'&searchserial='+options._Paramet.searchserial,
 						hideExpandTool: false,
 						hideCollapsedContent: false,
 						border: false,
@@ -135,7 +135,7 @@ ebx.browser = {
 				ebx.center.tabs('add', {
 					id: tabsid,
 					title: '打开-' + options._Paramet.text,
-					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template +'&IsAuditStyle=' + options._Paramet.IsAuditStyle +'&print=' + options._Paramet.print + '&lock=' + options._Paramet.lock,
+					href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode +'&style=' + options._Paramet.style + '&template=' + options._Paramet.template +'&IsAuditStyle=' + options._Paramet.IsAuditStyle +'&print=' + options._Paramet.print + '&lock=' + options._Paramet.lock+'&searchserial='+options._Paramet.searchserial,
 					//iconCls:node.iconCls,
 					selected: true,
 					closable:true
@@ -155,7 +155,7 @@ ebx.browser = {
 						maxWidth: '50%',
 						minWidth: 400,
 						title: '',
-						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode + '&lock=' + options._Paramet.lock,
+						href: 'client/SimpChinese/' + options._Paramet.mode + '/?text='+options._Paramet.text+'&id=' + id + '&index=' + index + '&mode=' + options._Paramet.mode + '&lock=' + options._Paramet.lock+'&searchserial='+options._Paramet.searchserial,
 						hideExpandTool: false,
 						hideCollapsedContent: false,
 						border: false,

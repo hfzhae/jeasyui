@@ -7,7 +7,7 @@
 	if(!find){find = ''}else{find = find.replaceAll('\'', '');}
 	
 	if(find.length > 0){
-		var sql ="select top 1 [bd].[id] as [id] ,[bd].[code] as [code] ,[bd].[title] as [title] ,[bd].[nvarchar1] as [unit] ,[bd].[nvarchar2] as [Spec] ,[bd].[nvarchar3] as [nvarchar3] ,[bd].[currency7] as [price] ,[bd].[currency6] as [detailprice] ,[bd].[taxrate] as [taxrate] ,[bd].[isdeleted] as [isdeleted] ,[bd].[nvarchar1] as [nvarchar1] ,[bd].[searchcode1] as [searchcode1] ,[bd].[currency10] as [currency10] ,[bd].[nvarchar4] as [nvarchar4] ,[bd].[vendercode] as [vendercode] ,[bd].[vipcash] as [vipcash] ,1 as [quantity],bd.LengthSerial from biproduct [bd], resProductStock res where res.productid=bd.id and res.ProductSerial='"+find+"' and [bd].[isdeleted]=0 and  [bd].[accountid]=1 and [bd].[isdeleted]=0",
+		var sql ="select top 1 [bd].[code] as code,[bd].[title] as title,[bd].[id] as [id] ,[bd].[code] as [productcode],[bd].[title] as [productname] ,[bd].[nvarchar1] as [unit] ,[bd].[nvarchar2] as [Spec] ,[bd].[nvarchar3] as [nvarchar3] ,[bd].[currency7] as [price] ,[bd].[currency6] as [detailprice] ,[bd].[taxrate] as [taxrate] ,[bd].[isdeleted] as [isdeleted] ,[bd].[nvarchar1] as [nvarchar1] ,[bd].[searchcode1] as [searchcode1] ,[bd].[currency10] as [currency10] ,[bd].[nvarchar4] as [nvarchar4] ,[bd].[vendercode] as [vendercode] ,[bd].[vipcash] as [vipcash] ,1 as [quantity],bd.LengthSerial from biproduct [bd], resProductStock res where res.productid=bd.id and res.ProductSerial='"+find+"' and [bd].[isdeleted]=0 and  [bd].[accountid]=1 and [bd].[isdeleted]=0",
 			rs = ebx.dbx.open(sql);
 			
 		if(rs.eof){
@@ -17,7 +17,7 @@
 					iTotalLength: 0
 				},
 				strwhere = " and (bd.title like '%" + find + "%' or bd.code like '%" + find + "%' or bd.SearchCode1 like '%" + find + "%')",
-				sql = "select [bd].[id] as [id] ,[bd].[code] as [code] ,[bd].[title] as [title] ,[bd].[nvarchar1] as [unit] ,[bd].[nvarchar2] as [Spec] ,[bd].[nvarchar3] as [nvarchar3] ,[bd].[currency7] as [price] ,[bd].[currency6] as [detailprice] ,[bd].[taxrate] as [taxrate] ,[bd].[isdeleted] as [isdeleted] ,[bd].[nvarchar1] as [nvarchar1] ,[bd].[searchcode1] as [searchcode1] ,[bd].[currency10] as [currency10] ,[bd].[nvarchar4] as [nvarchar4] ,[bd].[vendercode] as [vendercode] ,[bd].[vipcash] as [vipcash] ,1 as [quantity],bd.LengthSerial from biproduct [bd] where [bd].[isdeleted]=0 and  [bd].[accountid]=1 and [bd].[isdeleted]=0 " + strwhere +" order by [ID]",
+				sql = "select [bd].[code] as code,[bd].[title] as title,[bd].[id] as [id] ,[bd].[code] as [productcode] ,[bd].[title] as [productname] ,[bd].[nvarchar1] as [unit] ,[bd].[nvarchar2] as [Spec] ,[bd].[nvarchar3] as [nvarchar3] ,[bd].[currency7] as [price] ,[bd].[currency6] as [detailprice] ,[bd].[taxrate] as [taxrate] ,[bd].[isdeleted] as [isdeleted] ,[bd].[nvarchar1] as [nvarchar1] ,[bd].[searchcode1] as [searchcode1] ,[bd].[currency10] as [currency10] ,[bd].[nvarchar4] as [nvarchar4] ,[bd].[vendercode] as [vendercode] ,[bd].[vipcash] as [vipcash] ,1 as [quantity],bd.LengthSerial from biproduct [bd] where [bd].[isdeleted]=0 and  [bd].[accountid]=1 and [bd].[isdeleted]=0 " + strwhere +" order by [ID]",
 				rs = ebx.dbx.openpage(sql, page);//∑÷“≥≤È—Ø”Ôæ‰
 				
 			data["total"] = page.iTotalLength;
@@ -61,7 +61,7 @@
 				iLength: ebx.validInt(ebx.stdin['rows']), 
 				iTotalLength: 0
 			},
-			sql = "select [bd].[id] as [id] ,[bd].[code] as [code] ,[bd].[title] as [title] ,[bd].[nvarchar1] as [unit] ,[bd].[nvarchar2] as [Spec] ,[bd].[nvarchar3] as [nvarchar3] ,[bd].[currency7] as [price] ,[bd].[currency6] as [detailprice] ,[bd].[taxrate] as [taxrate] ,[bd].[isdeleted] as [isdeleted] ,[bd].[nvarchar1] as [nvarchar1] ,[bd].[searchcode1] as [searchcode1] ,[bd].[currency10] as [currency10] ,[bd].[nvarchar4] as [nvarchar4] ,[bd].[vendercode] as [vendercode] ,[bd].[vipcash] as [vipcash] ,1 as [quantity] from biproduct [bd] where [bd].[isdeleted]=0 and  [bd].[accountid]=1 and [bd].[isdeleted]=0 order by [ID]",
+			sql = "select [bd].[code] as code,[bd].[title] as title,[bd].[id] as [id] ,[bd].[code] as [productcode] ,[bd].[title] as [productname] ,[bd].[nvarchar1] as [unit] ,[bd].[nvarchar2] as [Spec] ,[bd].[nvarchar3] as [nvarchar3] ,[bd].[currency7] as [price] ,[bd].[currency6] as [detailprice] ,[bd].[taxrate] as [taxrate] ,[bd].[isdeleted] as [isdeleted] ,[bd].[nvarchar1] as [nvarchar1] ,[bd].[searchcode1] as [searchcode1] ,[bd].[currency10] as [currency10] ,[bd].[nvarchar4] as [nvarchar4] ,[bd].[vendercode] as [vendercode] ,[bd].[vipcash] as [vipcash] ,1 as [quantity] from biproduct [bd] where [bd].[isdeleted]=0 and  [bd].[accountid]=1 and [bd].[isdeleted]=0 order by [ID]",
 			rs = ebx.dbx.openpage(sql, page);//∑÷“≥≤È—Ø”Ôæ‰
 			
 		data["total"] = page.iTotalLength;

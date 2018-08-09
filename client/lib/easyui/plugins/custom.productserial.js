@@ -227,5 +227,87 @@ ebx.productserial = {
 			},
 			menu:inputbtntemplate
 		});
+	},
+	SerialtoProduct: function(t, d, tab){//搜索串号添加产品，参数：t：搜索文本框的textbox对象，d：datagrid表格对象，tab：bd的tab属性（用于标记单据修改状态） 2018-8-9 zz
+		$.ajax({
+			type: 'post', 
+			url: 'server/SimpChinese/product/open/',
+			data: {find: t.textbox('getValue'), _:(new Date()).getTime()},//style名称必须和mode相吻合
+			dataType: "json",
+			success: function(result){
+				if(result){
+					if(result.total == 1){
+						var data = d.datagrid('getRows'),
+							addflag = 0,
+							index = 0,
+							serialText = '';
+						
+						for(var i in data){
+							if(data[i].id == result.rows[0].id){
+								addflag = 1;
+								index = i;
+								break;
+							}
+						}
+						
+						if(addflag == 0){
+							d.datagrid('appendRow', result.rows[0]);
+							d.datagrid('selectRow', d.datagrid('getData').total - 1);
+							if(result.rows[0].productserial){
+								if(result.rows[0].productserial.total == 1){
+									serialText = '<br>串号：' + result.rows[0].productserial.rows[0].productserial;
+								}
+							}
+						}else{
+							if(result.rows[0].productserial){
+								if(result.rows[0].productserial.total == 1){
+									if(data[index].productserial){
+										var rows = data[index].productserial.rows;
+										for(var i in rows){
+											if(rows[i].productserial == result.rows[0].productserial.rows[0].productserial){
+												$.messager.alert('错误', '串号：' + rows[i].productserial + ' 已存在！', 'error', function(){
+													t.textbox('textbox').focus().select();
+												});	
+												return;
+											}
+										}
+										rows.push(result.rows[0].productserial.rows[0]);
+									}else{
+										data[index].productserial = result.rows[0].productserial;
+									}
+									serialText = '<br>串号：' + result.rows[0].productserial.rows[0].productserial;
+								}
+							}
+							
+							var TaxRate = ebx.validFloat(data[index].taxrate);
+							
+							data[index].quantity++;
+							data[index].amount = ebx.validFloat(data[i].price) * ebx.validFloat(data[i].quantity);
+							data[index].aquantity = ebx.validFloat(data[index].quantity) * ebx.validFloat(data[index].relation);
+							
+							if(TaxRate != -1){
+								data[index].taxamount = data[index].amount / (TaxRate + 1) * TaxRate;
+							}else{
+								data[index].taxamount = 0;
+							}
+							data[index].nat = ebx.validFloat(data[index].amount) - ebx.validFloat(data[index].taxamount);
+							
+							d.datagrid('appendRow', {});
+							d.datagrid('deleteRow', d.datagrid('getData').total - 1);
+							d.datagrid('selectRow', index);
+						}
+						$.messager.show({
+							title: '提示',
+							msg: '产品：' + result.rows[0].productname + ' 添加成功！' + serialText,
+							timeout: 3000,
+							showType: 'slide'
+						});	
+
+						if(tab) ebx.setEditstatus(tab, true);
+					}
+				}
+				t.textbox('textbox').focus().select();
+			}
+		});
 	}
 }

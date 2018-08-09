@@ -131,8 +131,13 @@ ebx.bd = {
 		});
 	},
 	_center: function(callback, callback1){//单据表体对象，参数：callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
-		var _centerstorage = this.centerstorage,
-			_Paramet = this.Paramet;
+		var bd = this,
+			_layout = this.layout,
+			_centerstorage = this.centerstorage,
+			_Paramet = this.Paramet,
+			toolbar = $('<div>'),
+			serialScan = $('<div>').appendTo(toolbar);
+			
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/DataProvider/style/',
@@ -164,8 +169,31 @@ ebx.bd = {
 						height: '100%',
 						border:result.bd[0].border,
 						showFooter:result.bd[0].footer,
-						showHeader:result.bd[0].header
+						showHeader:result.bd[0].header,
+						toolbar: toolbar
 					}).datagrid('renderformatterstyler');//启用显示式样回调函数
+					serialScan.textbox({
+						prompt:'搜索串号添加产品',
+						buttonText:'搜索',
+						//iconCls:'icon-BarcodeInsert', 
+						//iconAlign:'right',
+						onClickButton: function(index){
+							var textbox = $(this),
+								v = textbox.textbox('getValue');
+							if(v.length == 0)return;
+							ebx.productserial.SerialtoProduct(textbox, _centerstorage, bd.tab)
+							
+						}
+					});
+					
+					serialScan.textbox('textbox').bind('keydown', function(e) {  
+						if (e.keyCode == 13) { 
+							var v = serialScan.textbox('getValue');
+							if(v.length == 0)return;
+							ebx.productserial.SerialtoProduct(serialScan, _centerstorage, bd.tab)
+						}  
+					});
+					if(ebx.validInt(_Paramet.searchserial) == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
 				}
 				if(callback1)callback1(_centerstorage);
 			}
@@ -269,9 +297,10 @@ ebx.bd = {
 			_eastPanel = this.eastPanel,
 			_showLock = this.showLock,
 			_Paramet = this.Paramet,
-			_tabs = bd.tabs,
+			_tabs = this.tabs,
 			_tab = this.tab,
 			_biribbon = this.biribbon,
+			_centerstorage = this.centerstorage,
 			_save = this._save,
 			_ID = this.ID,
 			data = {

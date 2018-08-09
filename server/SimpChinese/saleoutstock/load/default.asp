@@ -138,7 +138,7 @@
 			},
 			'field':'InvoiceTypename','func':''},
 		{'name':'InvoiceType','value':InvoiceType,'group':'系统生成','hidden':true,'field':'InvoiceType','func':''},
-		{"name":"发票号码","value":InvoiceNum,"group":"发票","editor":"text","field":"InvoiceNum"},
+		{"name":"发票号码","value":InvoiceNum,"group":"发票","editor":{"type":"textbox","options":{"buttonText":"保存"}},"field":"InvoiceNum"},
 		{"name":"发票备注","value":InvoiceMemo,"group":"发票","editor":{"type":"textbox","options":{"buttonText":"保存"}},"field":"InvoiceMemo"},
 		{'name':'会员','value':VIPCustomname,'group':'会员',"editor":{
 				"type":"combogrid",

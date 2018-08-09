@@ -1,14 +1,13 @@
 <script type="text/javascript">
 	easyloader.load(['productserial'], function(){		
 		var bd = ebx.cloneObj(ebx.bd);
-				
 		bd.init('center', function(c, s){
 			ebx.setDatagridEditor.editorType(c[0], 'productname', 'combogrid', {//用来选择菜单组的combogrid
 				style:'product',
 				//validType:'LetterInteger',
 				required:true,
 				idField:'id',
-				idField:'title',
+				idField:'productname',
 				rownumbers:true,
 				panelWidth:400,
 				droplisturl:'server/SimpChinese/product/open/',
@@ -17,7 +16,7 @@
 				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
 					var r = s.datagrid('getData');
 					r.rows[s.datagrid('options').editIndex].id = ebx.validInt(rowData.id);
-					r.rows[s.datagrid('options').editIndex].productcode = rowData.code;
+					r.rows[s.datagrid('options').editIndex].productcode = rowData.productcode;
 					r.rows[s.datagrid('options').editIndex].spec = rowData.spec;
 					r.rows[s.datagrid('options').editIndex].unit = rowData.unit;
 					r.rows[s.datagrid('options').editIndex].aunit = rowData.aunit;
