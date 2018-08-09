@@ -276,13 +276,16 @@ ebx.productserial = {
 										data[index].productserial = result.rows[0].productserial;
 									}
 									serialText = '<br>串号：' + result.rows[0].productserial.rows[0].productserial;
+									data[index].quantity = data[index].productserial.total;
 								}
+							}else{
+								data[index].quantity++;
 							}
 							
 							var TaxRate = ebx.validFloat(data[index].taxrate);
 							
-							data[index].quantity++;
-							data[index].amount = ebx.validFloat(data[i].price) * ebx.validFloat(data[i].quantity);
+							
+							data[index].amount = ebx.validFloat(data[index].price) * ebx.validFloat(data[index].quantity);
 							data[index].aquantity = ebx.validFloat(data[index].quantity) * ebx.validFloat(data[index].relation);
 							
 							if(TaxRate != -1){
