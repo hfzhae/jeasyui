@@ -299,7 +299,7 @@ ebx.productserial = {
 						$.messager.show({
 							title: '提示',
 							msg: '产品：' + result.rows[0].productname + ' 添加成功！' + serialText,
-							timeout: 3000,
+							timeout: 2000,
 							showType: 'slide'
 						});	
 
