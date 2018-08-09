@@ -265,7 +265,7 @@ ebx.productserial = {
 										var rows = data[index].productserial.rows;
 										for(var i in rows){
 											if(rows[i].productserial == result.rows[0].productserial.rows[0].productserial){
-												$.messager.alert('错误', '串号：' + rows[i].productserial + ' 已存在！', 'error', function(){
+												$.messager.alert('错误', '产品：' + data[index].productname +' 的串号：' + rows[i].productserial + ' 已存在！', 'error', function(){
 													t.textbox('textbox').focus().select();
 												});	
 												return;
@@ -286,7 +286,6 @@ ebx.productserial = {
 							}
 							
 							var TaxRate = ebx.validFloat(data[index].taxrate);
-							
 							
 							data[index].amount = ebx.validFloat(data[index].price) * ebx.validFloat(data[index].quantity);
 							data[index].aquantity = ebx.validFloat(data[index].quantity) * ebx.validFloat(data[index].relation);

@@ -718,7 +718,6 @@ ebx.browser = {
 									left: e.pageX,
 									top: e.pageY
 								});
-
 							},
 							border:result.bd[0].border,
 							showFooter:result.bd[0].footer,

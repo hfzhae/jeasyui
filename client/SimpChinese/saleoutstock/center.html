@@ -146,6 +146,32 @@
 						break;
 				}
 			}
+			s.datagrid('options').onRowContextMenu = function(e, rowIndex, rowData){
+				if(rowIndex < 0)return;
+				$(this).datagrid('selectRow', rowIndex)
+				e.preventDefault();
+				var RowContextMenu = $('<div>');
+				RowContextMenu.menu({
+					width:100
+				}).menu('appendItem', {
+					text: '查看库存',
+					iconCls: 'icon-DesignMode',
+					disable:true,
+					onclick:function(){
+						
+					}
+				}).menu('appendItem', {
+					text: '删除',
+					iconCls: 'icon-Delete',
+					disabled:rowData.auditid?true:(rowData.isdeleted?true:false),
+					onclick: function(){
+						
+					}
+				}).menu('show', {
+					left: e.pageX,
+					top: e.pageY
+				});
+			}
 		});
 	});
 </script>
