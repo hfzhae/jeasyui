@@ -27,12 +27,12 @@ var ebx = {
 			return(this.replace(new RegExp(s1,"gm"),s2)); 
 		}
 		this.IDGen.init(0);
-		this.Accountid = 1;//读取账套ID，待处理。。。
-		this.Owner = 1;//读取登陆用户ID，待处理。。。
+		this.accountid = 1;//读取账套ID，待处理。。。
+		this.owner = 1;//读取登陆用户ID，待处理。。。
 	},
 	conn: [],
-	Accountid: 0,
-	Owner: 0,
+	accountid: 1,
+	owner: 1,
 	stdin: new Array(),
 	stdout: new Array(),
 	parseToJson: function (json_data){//Json格式转对象
@@ -576,8 +576,8 @@ var ebx = {
 		
 		s = s.toLowerCase();
 		
-		s = s.replaceAll('@@accountid', this.Accountid);//账套
-		s = s.replaceAll('@@owner', this.Owner);//用户
+		s = s.replaceAll('@@accountid', this.accountid);//账套
+		s = s.replaceAll('@@owner', this.owner);//用户
 
 		var find = ebx.sqlStringEncode(ebx.stdin['find']),//获取搜索字段
 			datefrom = ebx.sqlStringEncode(ebx.stdin['datefrom']),
@@ -879,8 +879,8 @@ var ebx = {
 				rsBD('ParentID') = this.ParentID;
 				rsBD('CreateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 				rsBD("BillType") = this.ModType;
-				rsBD("AccountID") = ebx.Accountid;
-				rsBD("Owner") = ebx.Owner;
+				rsBD("AccountID") = ebx.accountid;
+				rsBD("owner") = ebx.owner;
 				rsBD("IsDeleted") = 0
 				rsBD("AuditID") = 0
 			}else{
@@ -982,8 +982,8 @@ var ebx = {
 				rsBI('ParentID') = this.ParentID;
 				rsBI('CreateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 				rsBI("Infotype") = this.ModType;
-				rsBI("AccountID") = ebx.Accountid;
-				rsBI("Owner") = ebx.Owner;
+				rsBI("AccountID") = ebx.accountid;
+				rsBI("owner") = ebx.owner;
 				rsBI("IsDeleted") = 0,
 				rsBIFields = rsBI.Fields;
 			}else{
@@ -1048,12 +1048,12 @@ var ebx = {
 		},
 		_del: function(){
 			if(this.ID > 0){
-				var rs = ebx.dbx.open('select IsDeleted,updatedate,Owner from ' + this.TableName + ' where id=' + this.ID);
+				var rs = ebx.dbx.open('select IsDeleted,updatedate,owner from ' + this.TableName + ' where id=' + this.ID);
 				if(!rs.eof){
 					if(rs('IsDeleted').value == 1) throw '记录已删除！';
 					rs('IsDeleted') = 1;
 					rs('updatedate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
-					rs("Owner") = ebx.Owner;
+					rs("owner") = ebx.owner;
 					rs.update;
 				}else{
 					throw '记录不存在！';
@@ -1092,12 +1092,12 @@ var ebx = {
 		},
 		_del: function(){
 			if(this.ID > 0){
-				var rs = ebx.dbx.open('select IsDeleted,updatedate,Owner from ' + this.TableName + ' where id=' + this.ID);
+				var rs = ebx.dbx.open('select IsDeleted,updatedate,owner from ' + this.TableName + ' where id=' + this.ID);
 				if(!rs.eof){
 					if(rs('IsDeleted').value == 0) throw {message: '记录未删除！'};
 					rs('IsDeleted') = 0;
 					rs('updatedate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
-					rs("Owner") = ebx.Owner;
+					rs("owner") = ebx.owner;
 					rs.update;
 				}else{
 					throw '记录不存在！';
@@ -1121,7 +1121,7 @@ var ebx = {
 					if(typeof(v) != 'string') throw name + '不能为空！';
 					if(v.length == 0) throw name + '不能为空！';
 					
-					var rs = ebx.dbx.open("select count(id) as n from " + Paramet.TableName + " where (accountid=" + ebx.Accountid + " or accountid=0) and " + Paramet.ModType + " and " + Paramet.field + "='" + v +"' and id<>" + Paramet.id, 1, 1);
+					var rs = ebx.dbx.open("select count(id) as n from " + Paramet.TableName + " where (accountid=" + ebx.accountid + " or accountid=0) and " + Paramet.ModType + " and " + Paramet.field + "='" + v +"' and id<>" + Paramet.id, 1, 1);
 					if(!rs.eof){
 						if(rs('n').value > 0){
 							throw Paramet.rs('name').value + ' 不能重复！';

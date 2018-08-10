@@ -146,8 +146,8 @@ ebx.bd = {
 			success: function(result){
 				if(result){
 					columnsData = [result.data];
+					ebx.setListVies(columnsData[0]);
 					if(callback)callback(columnsData, _centerstorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
-										
 					_centerstorage.datagrid({
 						view:scrollview,
 						pageSize:ebx.pagesize,
@@ -512,27 +512,35 @@ ebx.bd = {
 										});									
 										return;
 									}
-									listdatagrid.datagrid('deleteRow', index);
+									$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+										if (r){
+											listdatagrid.datagrid('deleteRow', index);
 
-									if(index >= listdatagrid.datagrid('getData').total && index > 0) index--;
-									
-									if(listdatagrid.datagrid('getData').total == 0 || index < 0){
-										listdatagrid.datagrid('load', { total: 0, rows: [] }); 
-									}else{
-										listdatagrid.datagrid('selectRow', index);
-									}
-									
-									ebx.setEditstatus(_tab, true);
+											if(index >= listdatagrid.datagrid('getData').total && index > 0) index--;
+											
+											if(listdatagrid.datagrid('getData').total == 0 || index < 0){
+												listdatagrid.datagrid('load', { total: 0, rows: [] }); 
+											}else{
+												listdatagrid.datagrid('selectRow', index);
+											}
+											
+											ebx.setEditstatus(_tab, true);
+										}
+									});
 								}
 							},{
 								name:'empty',
 								text:'清空',
 								iconCls:'icon-TableDelete',
 								onClick:function(){
-									var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f'),
-										total = listdatagrid.datagrid('getData').total;
-									listdatagrid.datagrid('load', { total: 0, rows: [] }); 
-									ebx.setEditstatus(_tab, true)
+									$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
+										if (r){
+											var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f'),
+												total = listdatagrid.datagrid('getData').total;
+											listdatagrid.datagrid('load', { total: 0, rows: [] }); 
+											ebx.setEditstatus(_tab, true)
+										}
+									});
 								}
 							}]
 						}]

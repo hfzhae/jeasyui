@@ -7,6 +7,21 @@ var ebx = {
 	decimal:2,//小数位数，默认2
 	pagesize: 128,//datagrid分页行数
 	importFileMaxSize: 1024*5,//导入文件大小控制，单位K
+	listview:{ //显示列数组
+		productserial:1, //串号
+		colorsize:0,//色码
+		nat:0, //不含税额
+		taxrate: 0, //税率
+		taxamount: 0, //税额
+		discount: 0,//折扣
+		expire: 0, //保质期
+		oldprice: 0, //零售价
+		batch: 0, //批次
+		unit: 0, //单位
+		aunit: 0, //辅助单位
+		aquantity: 0, //辅助数量
+		relation: 0,//核算关系
+	},
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -792,6 +807,20 @@ var ebx = {
 		var st = s?'<span style="color:#F00;">○</span> ':'';
 		tab.editstatus = s;
 		ebx.center.find('.tabs-selected').find('.tabs-closable').html(st + tab.title);
+	},
+	setListVies: function(c){//设置显示列，参数：c：datagrid的columns列对象
+		for(var i in ebx.listview){
+			for(var j in c){
+				if(i.toLowerCase() == c[j].field.toLowerCase() && ebx.listview[i] == 0){
+					c[j].hidden = true;
+				}
+				if(i.toLowerCase() == 'colorsize' && ebx.listview[i] == 0){
+					if(c[j].field.toLowerCase() == 'color' || c[j].field.toLowerCase() == 'size'){
+						c[j].hidden = true;
+					}
+				}
+			}
+		}
 	}
 };
 

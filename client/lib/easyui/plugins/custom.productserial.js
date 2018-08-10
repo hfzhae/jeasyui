@@ -19,7 +19,7 @@ ebx.productserial = {
 			inputbtn = $('<div>').appendTo(toolbar),
 			seriallengthtext = ebx.validInt(seriallength)==0?'不限制':ebx.validInt(seriallength)+'位',
 			columnsData = [[    
-				{field:'productserial',title:'串号',width:300,
+				{field:'productserial',title:'串号',width:300,sortable:true,
 					editor:{
 						type:'textbox',
 						options:{
@@ -103,6 +103,7 @@ ebx.productserial = {
 		productserial.datagrid({    
 			//view:scrollview,
 			//pageSize:ebx.pagesize,
+			remoteSort:false,
 			data: v,
 			border:false,
 			rownumbers:true,
@@ -170,13 +171,17 @@ ebx.productserial = {
 					});									
 					return;
 				}
-				productserial.datagrid('deleteRow', index);
-				if(index >= productserial.datagrid('getData').total && index > 0) index--;
-				if(productserial.datagrid('getData').total == 0 || index < 0){
-					productserial.datagrid('loadData', { total: 0, rows: [] }); 
-				}else{
-					productserial.datagrid('selectRow', index);
-				}
+				$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+					if (r){
+						productserial.datagrid('deleteRow', index);
+						if(index >= productserial.datagrid('getData').total && index > 0) index--;
+						if(productserial.datagrid('getData').total == 0 || index < 0){
+							productserial.datagrid('loadData', { total: 0, rows: [] }); 
+						}else{
+							productserial.datagrid('selectRow', index);
+						}
+					}
+				});
 					
 			}
 		});
@@ -185,7 +190,7 @@ ebx.productserial = {
 			iconCls: 'icon-TableDelete',
 			plain:true,
 			onClick: function(){
-				$.messager.confirm('确认对话框', '您想要清空所有串号吗？', function(r){
+				$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
 					if (r){
 						productserial.datagrid('loadData', { total: 0, rows: [] }); 
 					}
@@ -243,7 +248,7 @@ ebx.productserial = {
 							serialText = '';
 						
 						for(var i in data){
-							if(data[i].id == result.rows[0].id){
+							if(data[i].productid == result.rows[0].productid){
 								addflag = 1;
 								index = i;
 								break;
@@ -271,8 +276,12 @@ ebx.productserial = {
 												return;
 											}
 										}
-										rows.push(result.rows[0].productserial.rows[0]);
-										data[index].productserial.total++;
+										if(data[index].productserial.length == 0){
+											data[index].productserial = result.rows[0].productserial;
+										}else{
+											rows.push(result.rows[0].productserial.rows[0]);
+											data[index].productserial.total++;
+										}
 									}else{
 										data[index].productserial = result.rows[0].productserial;
 									}

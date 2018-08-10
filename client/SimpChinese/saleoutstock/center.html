@@ -5,17 +5,19 @@
 			ebx.setDatagridEditor.editorType(c[0], 'productname', 'combogrid', {//用来选择菜单组的combogrid
 				style:'product',
 				//validType:'LetterInteger',
+				remoteSort:false,
 				required:true,
 				idField:'id',
 				idField:'productname',
 				rownumbers:true,
 				panelWidth:400,
+				panelHeight:300,
 				droplisturl:'server/SimpChinese/product/open/',
 				hasDownArrow:false,//隐藏右边得下箭头
 				//template:147,
 				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
 					var r = s.datagrid('getData');
-					r.rows[s.datagrid('options').editIndex].id = ebx.validInt(rowData.id);
+					r.rows[s.datagrid('options').editIndex].productid = ebx.validInt(rowData.productid);
 					r.rows[s.datagrid('options').editIndex].productcode = rowData.productcode;
 					r.rows[s.datagrid('options').editIndex].spec = rowData.spec;
 					r.rows[s.datagrid('options').editIndex].unit = rowData.unit;
@@ -148,24 +150,84 @@
 			}
 			s.datagrid('options').onRowContextMenu = function(e, rowIndex, rowData){
 				if(rowIndex < 0)return;
-				$(this).datagrid('selectRow', rowIndex)
+				d = $(this);
+				d.datagrid('selectRow', rowIndex)
 				e.preventDefault();
 				var RowContextMenu = $('<div>');
 				RowContextMenu.menu({
 					width:100
 				}).menu('appendItem', {
 					text: '查看库存',
-					iconCls: 'icon-DesignMode',
+					iconCls: 'icon-ChartTypePieInsertGallery',
 					disable:true,
 					onclick:function(){
-						
+						var win = $('<div>').appendTo($('body')),
+							stockquery = $('<div>').appendTo(win);
+						win.window({
+							title: rowData.productname + ' 的库存',
+							width:800,    
+							height:600, 
+							maxWidth:'90%',
+							maxHeight:'90%',
+							modal:true,
+							collapsible:false,
+							minimizable:false,
+							maximizable:false,
+							resizable:false,
+							border:'thin',
+							shadow:false
+						});
+						$('body').find('.window-mask').on('click', function(){
+							win.window('close');
+						});
+						$.ajax({
+							type: 'post', 
+							url: 'server/SimpChinese/DataProvider/style/',
+							data: {style:'ItemBatch',_:(new Date()).getTime()},//style名称必须和mode相吻合
+							dataType: "json",
+							success: function(result){
+								if(result){
+									columnsData = [result.data];
+									ebx.setListVies(columnsData[0]);
+									stockquery.datagrid({
+										view:scrollview,
+										pageSize:ebx.pagesize,
+										remoteSort:false,
+										rownumbers:true,
+										singleSelect:true,
+										pagination:false,
+										border:false,
+										fit:false,
+										fitColumns:false,
+										striped:true,
+										data:{total:0,rows:[]},
+										url:'server/SimpChinese/product/stock/',
+										nowrap:true,//禁用自动换行
+										method:'post',
+										queryParams:{_:(new Date()).getTime(),id:rowData.productid},
+										multiSort:false,
+										checkOnSelect:false,
+										columns:columnsData,
+										height: '100%',
+										border:result.bd[0].border,
+										showFooter:result.bd[0].footer,
+										showHeader:result.bd[0].header
+									}).datagrid('renderformatterstyler');//启用显示式样回调函数
+								}
+							}
+						});
 					}
 				}).menu('appendItem', {
 					text: '删除',
 					iconCls: 'icon-Delete',
 					disabled:rowData.auditid?true:(rowData.isdeleted?true:false),
 					onclick: function(){
-						
+						$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+							if (r){
+								d.datagrid('deleteRow', rowIndex);						
+								ebx.setEditstatus(bd.tab, true);
+							}
+						});
 					}
 				}).menu('show', {
 					left: e.pageX,
