@@ -193,7 +193,7 @@ ebx.bd = {
 							ebx.productserial.SerialtoProduct(serialScan, _centerstorage, bd.tab)
 						}  
 					});
-					if(ebx.validInt(_Paramet.searchserial) == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
+					if(ebx.validInt(_Paramet.searchserial) == 0 || ebx.listview.productserial == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
 				}
 				if(callback1)callback1(_centerstorage);
 			}

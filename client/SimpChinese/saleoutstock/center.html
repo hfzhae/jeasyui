@@ -161,6 +161,15 @@
 					iconCls: 'icon-ChartTypePieInsertGallery',
 					disable:true,
 					onclick:function(){
+						if(ebx.validInt(rowData.productid) == 0){
+							$.messager.show({
+								title: '错误',
+								msg: '请选择产品。',
+								timeout: 3000,
+								showType: 'slide'
+							});
+							return;
+						}
 						var win = $('<div>').appendTo($('body')),
 							stockquery = $('<div>').appendTo(win);
 						win.window({
@@ -204,7 +213,7 @@
 										url:'server/SimpChinese/product/stock/',
 										nowrap:true,//禁用自动换行
 										method:'post',
-										queryParams:{_:(new Date()).getTime(),id:rowData.productid},
+										queryParams:{_:(new Date()).getTime(),id:rowData.productid,listview:ebx.convertDicToJson(ebx.listview)},
 										multiSort:false,
 										checkOnSelect:false,
 										columns:columnsData,
