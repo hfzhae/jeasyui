@@ -13,7 +13,8 @@ $.extend($.fn.datagrid.methods, {
 		return jq.each(function(){
 			var opts = $(this).datagrid('options'),
 				k = 0,
-				fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+				fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields')),
+				editorfields = [];
 			
 			$(this).datagrid('highlightRow', param.index);
 			$(this).datagrid('endEdit', param.index);
@@ -21,6 +22,9 @@ $.extend($.fn.datagrid.methods, {
 			for(var i=0; i<fields.length; i++){
 				var col = $(this).datagrid('getColumnOption', fields[i]);
 				col.editor1 = col.editor;
+				if(col.editor1 != undefined && col.editor1 != '' && !col.hidden){
+					editorfields.push(col.field);//获取可编辑字段数组
+				}
 				if (fields[i] != param.field){
 					col.editor = null;
 				}else{
@@ -177,17 +181,11 @@ $.extend($.fn.datagrid.methods, {
 							}else{
 								thisGrid.datagrid('endEdit', param.index);
 								thisGrid.datagrid('cancelEdit', param.index);//针对validatebox校验失败无法endEdit的调用cancelEdit方法
-								var nextfield, nextfieldname = param.field;
-								for(var i=fields.length; i>0; i--){
-									var col = thisGrid.datagrid('getColumnOption', fields[i - 1]);
-									if (fields[i] == nextfieldname && col != null){
-										if(col.editor == undefined || col.editor == ''){
-											nextfieldname = fields[i - 1];
-										}else{
-											if(col.editor == 'textbox' || col.editor.type == 'textbox' || col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
-												nextfield = fields[i - 1];
-											}
-										}
+								var nextfield;
+								
+								for(var i=editorfields.length; i>0; i--){
+									if(editorfields[i] == param.field){
+										nextfield = editorfields[ebx.validInt(i) - 1];
 									}
 								}
 								setTimeout(function(){
@@ -201,19 +199,14 @@ $.extend($.fn.datagrid.methods, {
 							}else{
 								thisGrid.datagrid('endEdit', param.index);
 								thisGrid.datagrid('cancelEdit', param.index);//针对validatebox校验失败无法endEdit的调用cancelEdit方法
-								var nextfield, nextfieldname = param.field;
-								for(var i=0; i<fields.length; i++){
-									var col = thisGrid.datagrid('getColumnOption', fields[i + 1]);
-									if (fields[i] == nextfieldname && col != null){
-										if(col.editor == undefined || col.editor == ''){
-											nextfieldname = fields[i + 1];
-										}else{
-										if(col.editor == 'textbox' || col.editor.type == 'textbox' || col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
-												nextfield = fields[i + 1];
-											}
-										}
+								var nextfield;
+								
+								for(var i in editorfields){
+									if(editorfields[i] == param.field){
+										nextfield = editorfields[ebx.validInt(i) + 1];
 									}
 								}
+								
 								setTimeout(function(){
 									thisGrid.datagrid('editkeyboard', {index:param.index,field:nextfield});
 								},0);
@@ -230,32 +223,17 @@ $.extend($.fn.datagrid.methods, {
 							thisGrid.datagrid('cancelEdit', param.index);//针对validatebox校验失败无法endEdit的调用cancelEdit方法
 							
 							var nextfield = "", 
-								nextfieldname = param.field, 
-								firstfield = "",
+								//nextfieldname = param.field, 
+								firstfield = editorfields[0],
 								firstindex = param.index;
-
-							for(var i=0; i<fields.length; i++){
-								var col = thisGrid.datagrid('getColumnOption', fields[i + 1]),
-									col1 = thisGrid.datagrid('getColumnOption', fields[i]);
-								if(col1 != null){
-									if(col1.editor != undefined && firstfield == '' && col1.editor != '' && !col1.hidden){
-										firstfield = fields[i];
-									}
-								}
-
-								if (fields[i] == nextfieldname && col != null){
-									if(col.hidden)break;
-									if((col.editor == undefined || col.editor == '') ){
-										nextfieldname = fields[i + 1];
-									}else{
-										if(col.editor == 'textbox' || col.editor.type == 'textbox' || col.editor.type == 'text' || col.editor.type == 'numberbox' || col.editor == 'text' || col.editor == 'numberbox' || col.editor.type == 'checkbox' || col.editor.type == 'datebox' || col.editor.type == 'combobox' || col.editor.type == 'datetimebox' || col.editor == 'datetimebox' || col.editor.type == 'combogrid' || obj.type == 'combogrid' || col.editor.type == 'validatebox'){
-											nextfield = fields[i + 1];
-										}
-									}
+								
+							for(var i in editorfields){
+								if(editorfields[i] == param.field){
+									nextfield = editorfields[ebx.validInt(i) + 1];
 								}
 							}
 							
-							if(nextfield == ""){
+							if(nextfield == "" || nextfield == undefined){
 								nextfield = firstfield;
 								firstindex++;
 								opts.editIndex++;

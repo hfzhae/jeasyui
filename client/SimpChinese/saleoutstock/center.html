@@ -119,8 +119,6 @@
 						productserialopen.open(row.productname, row.lengthserial, s, index);
 						break;
 					case 'colorsize':
-						console.log(index);
-						console.log(value);
 						var win = $('<div>').appendTo(s);
 						win.window({
 							title: s.datagrid('getData').rows[index].productname + ' 的颜色尺码',

@@ -9,7 +9,7 @@ var ebx = {
 	importFileMaxSize: 1024*5,//导入文件大小控制，单位K
 	listview:{ //显示列数组
 		productserial:1, //串号
-		colorsize:1,//色码
+		colorsize:0,//色码
 		nat:0, //不含税额
 		taxrate: 0, //税率
 		taxamount: 0, //税额
