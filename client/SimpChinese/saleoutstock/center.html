@@ -119,22 +119,10 @@
 						productserialopen.open(row.productname, row.lengthserial, s, index);
 						break;
 					case 'colorsize':
-						var win = $('<div>').appendTo(s);
-						win.window({
-							title: s.datagrid('getData').rows[index].productname + ' 的颜色尺码',
-							width:640,    
-							height:480, 
-							modal:true,
-							collapsible:false,
-							minimizable:false,
-							maximizable:false,
-							resizable:false,
-							border:'thin',
-							shadow:false
-						}); 
-						$('body').find('.window-mask').on('click', function(){
-							win.window('close');
-						}); 
+						var colorsizeopen = ebx.cloneObj(ebx.colorsize),//复制产品色码编辑对象
+							row = s.datagrid('getRows')[index];
+						colorsizeopen.init(row.productname, s, index, bd.tab);
+						colorsizeopen.open();
 						break;
 					default:
 						var opts = s.datagrid('options');

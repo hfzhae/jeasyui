@@ -37,11 +37,13 @@ $.extend($.fn.datagrid.methods,{
 		}else{//针对datagrid控件
 			for(var i in columns[0]){
 				var _c = columns[0][i];
-				if(_c.render.toLowerCase() == 'hiddenrender'){//隐藏列显示函数特殊处理
-					d.datagrid('hideColumn', columns[0][i].field);
-				}
-				_c.formatter = function(value, rowData, rowIndex){//设置返回值
-					return ebx.Render.setRender(this.render, value, rowIndex);
+				if(_c.render){
+					if(_c.render.toLowerCase() == 'hiddenrender'){//隐藏列显示函数特殊处理
+						d.datagrid('hideColumn', columns[0][i].field);
+					}
+					_c.formatter = function(value, rowData, rowIndex){//设置返回值
+						return ebx.Render.setRender(this.render, value, rowIndex);
+					}
 				}
 				if(_c.fieldstyle){
 					_c.styler = function(value, rowData, rowIndex, d){//设置单元格样式

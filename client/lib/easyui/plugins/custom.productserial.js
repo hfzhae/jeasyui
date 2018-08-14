@@ -1,12 +1,12 @@
 /****************************************************************
 Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/8/5
-单据串号编辑对象
+单据串号/色码编辑对象
 
 *****************************************************************/
 
 ebx.productserial = {
-	open: function(title, seriallength, d, index){//打开串号编辑界面
+	open: function(title, seriallength, d, index){//打开串号编辑界面，参数：title：产品名称，seriallength：串号长度，d：单据明细datagrid对象，index：单据明细datagrid得index
 		var v = d.datagrid('getRows')[index].productserial,
 			win = $('<div>').appendTo($('body')),
 			productserial = $('<div>').appendTo(win),
@@ -31,7 +31,12 @@ ebx.productserial = {
 				}  
 			]],
 			inputbtntemplate = $('<div>');
-			
+		
+		if(ebx.validInt(d.datagrid('getRows')[index].colorsize.total) > 0){
+			$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
+			return;
+		}
+		
 		win.window({
 			title: title + ' 的串号，长度：' + seriallengthtext,
 			width:640,    
@@ -108,6 +113,7 @@ ebx.productserial = {
 			border:false,
 			rownumbers:true,
 			singleSelect:true,
+			striped:true,
 			width:'100%',
 			height:'100%',
 			columns:columnsData,
@@ -323,5 +329,184 @@ ebx.productserial = {
 				t.textbox('textbox').focus().select();
 			}
 		});
+	}
+}
+
+ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
+	title:'',
+	productid:0,
+	group:{},
+	row:{},
+	index:0,
+	d: [],
+	tab: [],
+	init:function(title, d, index, tab){//色码编辑初始化，参数：title：产品名称，d：单据明细datagrid对象，index：单据明细datagrid的index，tab：用于表示编辑状态的tab对象
+		this.title = title;
+		this.index = index;
+		this.d = d;
+		this.row = d.datagrid('getRows')[index];
+		this.productid = ebx.validInt(this.row.productid);
+		this.tab = tab
+	},
+	open: function(){//打开编辑面板
+		var _group = this.group,
+			_productid = this.productid,
+			_title = this.title,
+			_getColorSize = this._getColorSize,
+			_title = this.title,
+			_row = this.row,
+			_d = this.d,
+			_index = this.index,
+			_tab = this.tab,
+			oldquantity = _d.datagrid('getRows')[_index].quantity;
+			
+		if(ebx.validInt(_d.datagrid('getRows')[_index].productserial.total) > 0){
+			$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
+			return;
+		}
+		
+		$.ajax({
+			type: 'post', 
+			url: 'server/SimpChinese/product/getgroup/',
+			data: {id: _productid, _:(new Date()).getTime()},
+			dataType: "json",
+			success: function(result){
+				if(result){
+					if(result.total == 0){
+						$.messager.alert('错误','产品：' + _title + ' 未设置颜色尺码组！','error');
+						return false;
+					}else{
+						_group = result.rows[0];
+						var win = $('<div>').appendTo($('body')),
+							colorsize = $('<div>').appendTo(win),
+							toolbar = $('<div>'),
+							outbtn = $('<div>').appendTo(toolbar),
+							delall = $('<div>').appendTo(toolbar),
+							colorsizedata = $('<div>').appendTo(win);
+						
+						win.window({
+							title: _title + ' 的颜色尺码，色码组：' + _group.title,
+							width:800,    
+							height:600, 
+							maxWidth:'90%',
+							maxHeight:'90%',
+							modal:true,
+							collapsible:false,
+							minimizable:false,
+							maximizable:false,
+							resizable:true,
+							border:'thin',
+							shadow:false,
+							onBeforeClose: function(){
+								var data = colorsizedata.datagrid('getRows'),
+									colorsize = {total:0, rows: []},
+									qty = 0;
+								
+								for(var i in data){
+									for(var k in data[i]){
+										if(k.toLowerCase() != 'color' && k.toLowerCase() != 'colorid'){
+											if(ebx.validInt(data[i][k]) != 0){
+												colorsize.rows.push({colorid:data[i].colorid,sizeid:ebx.validInt(k.substr(5, k.length)),quantity:ebx.validInt(data[i][k])});
+												qty += ebx.validInt(data[i][k]);
+												colorsize.total++
+											}
+										}
+									}
+								}
+								_d.datagrid('updateRow', {
+									index: _index,
+									row:{
+										colorsize: colorsize.rows.length>0?colorsize:[],
+										quantity: qty==0?1:qty
+									}
+								})
+								if(oldquantity != qty && qty > 0){
+									_d.datagrid('editkeyboard', {index: _index, field:'quantity'});
+								}
+
+							}
+						});
+						$('body').find('.window-mask').on('click', function(){
+							win.window('close');
+						});
+
+						$.ajax({
+							type: 'post', 
+							url: 'server/SimpChinese/product/getcolorsize/',
+							data: {id: _group.id, _:(new Date()).getTime()},
+							dataType: "json",
+							success: function(result){
+								if(result){
+									for(var i in result.rows){
+										for(var k in _row.colorsize.rows){
+											if(ebx.validInt(_row.colorsize.rows[k].colorid) == ebx.validInt(result.rows[i].colorid)){
+												for(var j in result.rows[i]){
+													if(ebx.validInt(j.substr(5, j.length)) == ebx.validInt(_row.colorsize.rows[k].sizeid)){
+														result.rows[i][j] = ebx.validInt(_row.colorsize.rows[k].quantity);
+													}
+												}
+											}
+										}
+									}
+									
+									colorsizedata.datagrid({
+										remoteSort:false,
+										view:scrollview,//使用scrollview插件，否则无法使用renderformatterstyler插件
+										pageSize:500,
+										data: result,
+										border:false,
+										//rownumbers:true,
+										singleSelect:true,
+										striped:true,
+										width:'100%',
+										height:'100%',
+										columns: [result.style.rows],
+										toolbar: toolbar,
+										onAfterEdit: function(index, row, changes){
+											console.log(123)
+										}
+									}).datagrid('renderformatterstyler');
+									
+									outbtn.linkbutton({
+										text:'导出',
+										iconCls: 'icon-ImportExcel',
+										plain:true,
+										onClick: function(){
+											var data = colorsizedata.datagrid('getRows')
+											ebx.clipboardData([result.style.rows], {total: data.length, rows: data} );
+										}
+									});
+									
+									delall.linkbutton({
+										text:'清空',
+										iconCls: 'icon-TableDelete',
+										plain:true,
+										onClick: function(){
+											$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
+												if (r){
+													var data = colorsizedata.datagrid('getRows');
+													for(var i in data){
+														for(var j in data[i]){
+															if(j.toLowerCase() != 'colorid' && j.toLowerCase() != 'color'){
+																data[i][j] = '';
+															}
+														}
+														colorsizedata.datagrid('refreshRow', i);
+													}
+													if(_tab) ebx.setEditstatus(_tab, true);
+												}
+											});
+										}
+									});
+								}
+							}
+						});
+					}
+				}
+			}
+		});
+	},
+	_getColorSize: function(id){//获取色码组的recordset结构，参数：id：色码组ID
+		
 	}
 }
