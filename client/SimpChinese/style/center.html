@@ -3,6 +3,7 @@
 		var bd = ebx.cloneObj(ebx.bd);
 		bd.init('center', function(c){
 			//重造字段的editor的validatebox校验
+			ebx.setDatagridEditor.validatebox(c[0], 'serial', 'Integer');
 			ebx.setDatagridEditor.validatebox(c[0], 'width', 'Number');
 			ebx.setDatagridEditor.validatebox(c[0], 'SetHeaderText', 'String', true);
 			ebx.setDatagridEditor.validatebox(c[0], 'field', 'LetterInteger', true);

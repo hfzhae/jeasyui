@@ -52,7 +52,7 @@ ebx.productserial = {
 			border:'thin',
 			shadow:false,
 			onBeforeClose: function(){
-				var data = productserial.datagrid('getRows'),
+				var data = productserial.datagrid('getData').firstRows,
 					data1 = [],
 					data2 = [],
 					reserialcount = 0,
@@ -107,8 +107,8 @@ ebx.productserial = {
 			win.window('close');
 		}); 
 		productserial.datagrid({    
-			//view:scrollview,
-			//pageSize:ebx.pagesize,
+			view:scrollview,
+			pageSize:ebx.pagesize,
 			remoteSort:false,
 			data: v,
 			border:false,
@@ -125,13 +125,19 @@ ebx.productserial = {
 			onClickButton: function(){
 				productserial.datagrid('clearSelections');
 				var find = searchtext.textbox('getValue'),
-					data = productserial.datagrid('getData').rows;
+					data = productserial.datagrid('getData').firstRows;
 				if(find.length <= 0) return;
 				for(var i in data){
 					if(data[i].productserial != undefined && data[i].productserial != ''){
 						if(find.toLowerCase() == data[i].productserial.toLowerCase()){
-							productserial.datagrid('selectRow', i);
-							//productserial.datagrid('scrollTo', i);
+							if(i > ebx.pagesize){
+								productserial.datagrid('gotoPage', (ebx.validInt(i/ebx.pagesize) + 1));
+							}
+							setTimeout(function(){
+								//productserial.datagrid('scrollTo', i + i%ebx.pagesize);
+								productserial.datagrid('selectRow', i);
+							},0);
+							return;
 						}
 					}
 				}
@@ -141,13 +147,19 @@ ebx.productserial = {
 			if (e.keyCode == 13) { 
 				productserial.datagrid('clearSelections');
 				var find = searchtext.textbox('getValue'),
-					data = productserial.datagrid('getData').rows;
+					data = productserial.datagrid('getData').firstRows;
 				if(find.length <= 0) return;
 				for(var i in data){
 					if(data[i].productserial != undefined && data[i].productserial != ''){
 						if(find.toLowerCase() == data[i].productserial.toLowerCase()){
-							productserial.datagrid('selectRow', i);
-							//productserial.datagrid('scrollTo', i);
+							if(i > ebx.pagesize){
+								productserial.datagrid('gotoPage', (ebx.validInt(i/ebx.pagesize) + 1));
+							}
+							setTimeout(function(){
+								//productserial.datagrid('scrollTo', (i - 70));
+								productserial.datagrid('selectRow', i);
+							},0);
+							return;
 						}
 					}
 				}

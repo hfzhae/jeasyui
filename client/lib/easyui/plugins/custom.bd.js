@@ -200,7 +200,30 @@ ebx.bd = {
 		});
 	},
 	_save:function(asSave, _layout, _Paramet, _tab, callback){
-		var bdlist = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData'),
+		var listgrid = _layout.layout('panel', 'center').find('.datagrid-f'),
+			bdlistdata = listgrid.datagrid('getRows'),
+			by = function(name){
+				return function(o, p){
+					var a, b;
+					if (typeof o === "object" && typeof p === "object" && o && p) {
+						a = ebx.validInt(o[name]);
+						b = ebx.validInt(p[name]);
+						if (a === b) {
+							return 0;
+						}
+						if (typeof a === typeof b) {
+							return a < b ? -1 : 1;
+						}
+						return typeof a < typeof b ? -1 : 1;
+					}
+					else {
+						throw ("error");
+					}
+				}
+			};
+		bdlistdata.sort(by('serial'));//保存前按serial字段由小到大排序处理
+		
+		var bdlist = {total: bdlistdata.length, rows: bdlistdata},
 			bd = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
 			columns = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('options').columns,
 			bdliststr =  ebx.convertDicToJson(bdlist),

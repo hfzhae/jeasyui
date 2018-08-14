@@ -611,7 +611,7 @@ var ebx = {
 							}else{
 								datagrid.datagrid('endEdit', i);
 							}
-							bresk;
+							break;
 						case 'combogrid': case 'datebox': 
 							if(!editors[j].target.combo('isValid')){
 								checked.push(data[i]);
@@ -633,12 +633,13 @@ var ebx = {
 			for(var i in checked){
 				checkedtext += checked[i].name + '，'
 			}
-			$.messager.show({
-				title: '提示',
-				msg: checkedtext + '输入有误。',
-				timeout: 3000,
-				showType: 'slide'
-			});	
+			$.messager.alert('错误', '保存失败！<br>'+ checkedtext + '输入有误。', 'warning');
+			//$.messager.show({
+			//	title: '提示',
+			//	msg: checkedtext + '输入有误。',
+			//	timeout: 3000,
+			//	showType: 'slide'
+			//});	
 			return(false);
 		}else{
 			return(true);
