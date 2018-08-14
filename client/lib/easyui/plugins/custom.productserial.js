@@ -31,10 +31,11 @@ ebx.productserial = {
 				}  
 			]],
 			inputbtntemplate = $('<div>');
-		
-		if(ebx.validInt(d.datagrid('getRows')[index].colorsize.total) > 0){
-			$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
-			return;
+		if(d.datagrid('getRows')[index].colorsize){
+			if(ebx.validInt(d.datagrid('getRows')[index].colorsize.total) > 0){
+				$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
+				return;
+			}
 		}
 		
 		win.window({
@@ -311,7 +312,6 @@ ebx.productserial = {
 								data[index].taxamount = 0;
 							}
 							data[index].nat = ebx.validFloat(data[index].amount) - ebx.validFloat(data[index].taxamount);
-							
 							d.datagrid('appendRow', {});
 							d.datagrid('deleteRow', d.datagrid('getData').total - 1);
 							d.datagrid('selectRow', index);
@@ -360,9 +360,11 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 			_tab = this.tab,
 			oldquantity = _d.datagrid('getRows')[_index].quantity;
 			
-		if(ebx.validInt(_d.datagrid('getRows')[_index].productserial.total) > 0){
-			$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
-			return;
+		if(_d.datagrid('getRows')[_index].productserial){
+			if(ebx.validInt(_d.datagrid('getRows')[_index].productserial.total) > 0){
+				$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
+				return;
+			}
 		}
 		
 		$.ajax({
@@ -437,12 +439,14 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 							dataType: "json",
 							success: function(result){
 								if(result){
-									for(var i in result.rows){
-										for(var k in _row.colorsize.rows){
-											if(ebx.validInt(_row.colorsize.rows[k].colorid) == ebx.validInt(result.rows[i].colorid)){
-												for(var j in result.rows[i]){
-													if(ebx.validInt(j.substr(5, j.length)) == ebx.validInt(_row.colorsize.rows[k].sizeid)){
-														result.rows[i][j] = ebx.validInt(_row.colorsize.rows[k].quantity);
+									if(_row.colorsize){
+										for(var i in result.rows){
+											for(var k in _row.colorsize.rows){
+												if(ebx.validInt(_row.colorsize.rows[k].colorid) == ebx.validInt(result.rows[i].colorid)){
+													for(var j in result.rows[i]){
+														if(ebx.validInt(j.substr(5, j.length)) == ebx.validInt(_row.colorsize.rows[k].sizeid)){
+															result.rows[i][j] = ebx.validInt(_row.colorsize.rows[k].quantity);
+														}
 													}
 												}
 											}
@@ -461,10 +465,7 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 										width:'100%',
 										height:'100%',
 										columns: [result.style.rows],
-										toolbar: toolbar,
-										onAfterEdit: function(index, row, changes){
-											console.log(123)
-										}
+										toolbar: toolbar
 									}).datagrid('renderformatterstyler');
 									
 									outbtn.linkbutton({

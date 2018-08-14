@@ -17,7 +17,7 @@
 		var rsSize1 = ebx.dbx.getRs();
 		var stylerows = [
 			{field:'colorid',title:'colorid',"hidden":true},
-			{field:'color',title:"C/S"}
+			{field:'color',title:'—’…´/≥ﬂ¬Î'}
 		];
 		rsSize1.Fields.Append('colorid', 203, -1);
 		rsSize1.Fields.Append('color', 203, -1);
@@ -35,7 +35,7 @@
 		];
 		rsSize1.Fields.Append('colorid', 203, -1);
 		rsSize.Fields.Append(0, 203, -1);
-		stylerows.push({editor:'text',field:'size_0',fieldstyle:'text-align:right;',title:'ÈÄöÁ†Å',width:60});
+		stylerows.push({editor:'text',field:'size_0',fieldstyle:'text-align:right;',title:'Õ®¬Î',width:60});
 	}
 	
 	var style = {"total":stylerows.length,"rows":stylerows}

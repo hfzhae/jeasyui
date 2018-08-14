@@ -168,7 +168,7 @@ ebx.bd = {
 						columns:columnsData,
 						height: '100%',
 						border:result.bd[0].border,
-						showFooter:result.bd[0].footer,
+						showFooter:result.bd[0].footer?true:false,
 						showHeader:result.bd[0].header,
 						toolbar: toolbar
 					}).datagrid('renderformatterstyler');//启用显示式样回调函数
@@ -202,11 +202,13 @@ ebx.bd = {
 	_save:function(asSave, _layout, _Paramet, _tab, callback){
 		var bdlist = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData'),
 			bd = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
+			columns = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('options').columns,
 			bdliststr =  ebx.convertDicToJson(bdlist),
 			bdstr = ebx.convertDicToJson(bd),
+			columnsstr = ebx.convertDicToJson(columns),
 			ParentID = asSave?_Paramet.id:0,
 			savetext = asSave?'另存':'保存',
-			parameter = {bd: bdstr, bdlist: bdliststr, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+			parameter = {bd: bdstr, bdlist: bdliststr, columns:columnsstr, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
 
 		if(bdlist.total == 0){
 			$.messager.show({
@@ -215,12 +217,14 @@ ebx.bd = {
 				timeout: 3000,
 				showType: 'slide'
 			});	
-			saveBtn.linkbutton('enable');
+			callback();
+			//saveBtn.linkbutton('enable');
 			return;
 		}
 		
 		if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
-			saveBtn.linkbutton('enable');
+			callback();
+			//saveBtn.linkbutton('enable');
 			return;
 		}
 		

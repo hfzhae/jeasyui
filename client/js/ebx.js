@@ -14,7 +14,7 @@ var ebx = {
 		taxrate: 0, //税率
 		taxamount: 0, //税额
 		discount: 0,//折扣
-		expire: 0, //保质期
+		expire: 1, //保质期
 		oldprice: 0, //零售价
 		batch: 0, //批次
 		unit: 0, //单位
@@ -604,14 +604,25 @@ var ebx = {
 			var editors = datagrid.datagrid('getEditors', i);
 			if(editors.length > 0){
 				for(var j in editors){
-					if(editors[j].type == 'validatebox'){//判断如果编辑器是validatebox类型，那么调用validatebox的isValid方法判断录入值的合法性
-						if(!editors[j].target.validatebox('isValid')){
-							checked.push(data[i]);
-						}else{
+					switch(editors[j].type.toLowerCase()){
+						case 'validatebox'://判断如果编辑器是validatebox类型，那么调用validatebox的isValid方法判断录入值的合法性
+							if(!editors[j].target.validatebox('isValid')){
+								checked.push(data[i]);
+							}else{
+								datagrid.datagrid('endEdit', i);
+							}
+							bresk;
+						case 'combogrid': case 'datebox': 
+							if(!editors[j].target.combo('isValid')){
+								checked.push(data[i]);
+							}else{
+								datagrid.datagrid('endEdit', i);
+							}
+							break;
+						default:
 							datagrid.datagrid('endEdit', i);
-						}
-					}else{
-						datagrid.datagrid('endEdit', i);
+							break;
+						//validatebox-text
 					}
 				}
 			}
@@ -691,6 +702,18 @@ var ebx = {
 						}
 					}
 					break;
+			}
+		},
+		setColumnsFunc:function(c, f, func){//写入明细列表字段的服务器端回调函数，参数：c：datagrid的列对象，f：字段名称，func：回掉函数名
+			if(typeof(c) != 'object') return;
+			if(typeof(f) != 'string') return;
+			if(typeof(func) != 'string') return;
+			
+			for(var i in c){
+				if(c[i].field.toLowerCase() == f.toLowerCase()){
+					c[i].func = func;
+					break;
+				}
 			}
 		}
 	},

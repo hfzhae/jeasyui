@@ -17,6 +17,7 @@
 				//template:147,
 				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
 					var r = s.datagrid('getData');
+					r.rows[s.datagrid('options').editIndex].serial = r.rows.length;
 					r.rows[s.datagrid('options').editIndex].productid = ebx.validInt(rowData.productid);
 					r.rows[s.datagrid('options').editIndex].productcode = rowData.productcode;
 					r.rows[s.datagrid('options').editIndex].spec = rowData.spec;
@@ -29,7 +30,6 @@
 					r.rows[s.datagrid('options').editIndex].price = ebx.validFloat(rowData.detailprice);
 					r.rows[s.datagrid('options').editIndex].amount = ebx.validFloat(rowData.detailprice);
 					r.rows[s.datagrid('options').editIndex].taxrate = ebx.validFloat(rowData.taxrate);
-					r.rows[s.datagrid('options').editIndex].productserial = rowData.productserial;
 					r.rows[s.datagrid('options').editIndex].lengthserial = rowData.lengthserial;
 				}
 			});
@@ -105,11 +105,14 @@
 					}
 				}
 			});
+			
+			ebx.setDatagridEditor.editorType(c[0], 'expire', 'datebox', {});//处理质保期
 
 			ebx.setDatagridEditor.editorType(c[0], 'ProductSerial', '', {});//清除串号编辑功能
 			ebx.setDatagridEditor.editorType(c[0], 'ColorSize', '', {});//清除色码编辑功能
 			ebx.setDatagridEditor.editorType(c[0], 'ProductCode', '', {});//清除串号编辑功能
 			
+			ebx.setDatagridEditor.setColumnsFunc(c[0], 'expire', 'cbRSDate');//写入服务器端用回掉函数
 		}, function(s){
 			s.datagrid('options').onClickCell = function(index, field, value){
 				switch(field.toLowerCase()){//处理串号编辑
@@ -134,7 +137,7 @@
 						break;
 				}
 			}
-			s.datagrid('options').onRowContextMenu = function(e, rowIndex, rowData){
+			s.datagrid('options').onRowContextMenu = function(e, rowIndex, rowData){//鼠标右键处理方法
 				if(rowIndex < 0)return;
 				d = $(this);
 				d.datagrid('selectRow', rowIndex)

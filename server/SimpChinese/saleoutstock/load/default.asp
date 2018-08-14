@@ -2,7 +2,7 @@
 <%
 (function(){
 	var id = ebx.validInt(ebx.stdin['id']),
-		sql = 'select a.isdeleted,a.updatedate,a.createdate,u.title as owner,c.title as custom,a.Organization,a.billdate,s.title as stockname,a.stock, o.title as operatorname,a.operator,i.title as InvoiceTypename,a.InvoiceType,a.InvoiceNum,a.InvoiceMemo,v.title as VIPCustomname,a.VIPCustomID,a.UUID,r.title as Currencyname,a.Currency,a.Relation,sm.title as CheckTypename,a.CheckType from ' + TableName + ' a,biuser u,bicustom c,bistock s,biuser o,biInvoiceType i, biVIPCustom v,biCurrency r,biSettlement sm where a.CheckType=sm.id and r.id=a.Currency and a.VIPCustomID=v.id and a.InvoiceType=i.id and a.Operator=o.id and a.Stock=s.id and a.Organization=c.id and a.owner=u.id and a.id=' + id,
+		sql = 'select a.billmemo,a.isdeleted,a.updatedate,a.createdate,u.title as owner,c.title as custom,a.Organization,a.billdate,s.title as stockname,a.stock, o.title as operatorname,a.operator,i.title as InvoiceTypename,a.InvoiceType,a.InvoiceNum,a.InvoiceMemo,v.title as VIPCustomname,a.VIPCustomID,a.UUID,r.title as Currencyname,a.Currency,a.Relation,sm.title as CheckTypename,a.CheckType from ' + TableName + ' a,biuser u,bicustom c,bistock s,biuser o,biInvoiceType i, biVIPCustom v,biCurrency r,biSettlement sm where a.CheckType=sm.id and r.id=a.Currency and a.VIPCustomID=v.id and a.InvoiceType=i.id and a.Operator=o.id and a.Stock=s.id and a.Organization=c.id and a.owner=u.id and a.id=' + id,
 		rs,
 		data = [],
 		isdeleted = 0, 
@@ -28,7 +28,8 @@
 		Currencyname = '',
 		Relation = 1,
 		CheckTypename = ''
-		CheckType = 0;
+		CheckType = 0,
+		billmemo = '';
 	
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1)
@@ -57,7 +58,7 @@
 			Relation = ebx.validFloat(rs('Relation').value);
 			CheckTypename = rs('CheckTypename').value;
 			CheckType = ebx.validInt(rs('CheckType').value);
-			
+			billmemo = rs('billmemo').value;
 		}
 	}
 	data = {"total":11,"rows":[
@@ -70,6 +71,8 @@
 		{'name':'单据日期','value':new Date(billdate).Format('yyyy-MM-dd'),'group':'必填信息','editor':{
 				"type":'datebox',
 				"options":{
+					"required":true,
+					"validType":"Date",
 					"hasDownArrow":false
 				}
 			},
@@ -188,7 +191,9 @@
 				}
 			},
 			'field':'CheckTypename','func':''},
-		{'name':'CheckType','value':CheckType,'group':'系统生成','hidden':true,'field':'Currency','CheckType':''},
+		{'name':'CheckType','value':CheckType,'group':'系统生成','hidden':true,'field':'CheckType','func':''},
+		{"name":"备注","value":billmemo,"group":"其他","editor":"text","field":"billmemo"},
+
 	]};
 	for(var i in Payment){
 		data.rows.push(Payment[i])

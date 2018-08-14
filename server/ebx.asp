@@ -842,20 +842,24 @@ var ebx = {
 		ParentID:0,
 		bd:[],
 		bdlist:[],
+		columns:[],
 		TableName:'',
 		ModType:'',
-		init: function(TableName, ModType){//初始化对象，获取客户端发送得bd、bdlist、ID、ParentID、TableName、ModType参数
+		IGID:'',
+		init: function(TableName, ModType, IGID){//初始化对象，获取客户端发送得bd、bdlist、ID、ParentID、TableName、ModType、IGID参数
 			this.bd = ebx.convertJsonToRs(eval('(' + ebx.stdin['bd'] + ')')),
 			this.bdlist = ebx.convertJsonToRs(eval('(' + ebx.stdin['bdlist'] + ')')),
+			this.columns = eval('(' + ebx.stdin['columns'] + ')'),
 			this.ID = ebx.validInt(ebx.stdin['id']),
 			this.ParentID = ebx.validInt(ebx.stdin['parentid']);
 			this.TableName = ebx.sqlStringEncode(TableName);
 			this.ModType = ebx.validInt(ModType);
+			this.IGID = ebx.validInt(IGID);
 		},
-		save: function(){
+		save: function(begincallback, endcallback){
 			ebx.conn.begintrans
 			try{
-				this._saveBD();
+				this._saveBD(begincallback, endcallback);
 				ebx.conn.commitTrans;
 				ebx.stdout['result'] = 1;
 				ebx.stdout['id'] = this.ID;
@@ -866,14 +870,14 @@ var ebx = {
 			}
 			this.CleanData();
 		},
-		_saveBD: function(){
+		_saveBD: function(begincallback, endcallback){
 			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
 				var rsBD = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2'),
 					rsBDList = ebx.dbx.open('select * from ' + this.TableName + 'list where 1=2'),
 					rsBDFields = rsBD.Fields,
 					rsBDListFields = rsBDList.Fields;
 					
-				this.ID = ebx.IDGen.CTIDGen(this.ModType);
+				this.ID = ebx.IDGen.CTIDGen(this.IGID);
 				rsBD.AddNew();
 				rsBD('RootID') = this.ID;
 				rsBD('ParentID') = this.ParentID;
@@ -889,34 +893,36 @@ var ebx = {
 					rsBDFields = rsBD.Fields,
 					rsBDListFields = rsBDList.Fields;
 			}
-
+			if(begincallback)begincallback(rsBD, rsBDList)
 			this.bd.MoveFirst();
 			while(!this.bd.eof){
-				for(var i = 0; i < rsBDFields.Count; i++){
-					if(rsBDFields(i).name.toLowerCase() == this.bd("field").value.toLowerCase()){
-						var _Paramet = {//回调函数用参数对象
-								id: this.ID,
-								field: this.bd("field").value, 
-								rs: this.bd, 
-								rslist: {}, 
-								TableName: this.TableName,
-								ModType: 'BillType=' + this.ModType
-							}
-						rsBD(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Paramet);
+				if(this.bd("field").value){
+					for(var i = 0; i < rsBDFields.Count; i++){
+						if(rsBDFields(i).name.toLowerCase() == this.bd("field").value.toLowerCase()){
+							var _Paramet = {//回调函数用参数对象
+									id: this.ID,
+									field: this.bd("field").value, 
+									rs: this.bd, 
+									rslist: {}, 
+									TableName: this.TableName,
+									ModType: 'BillType=' + this.ModType
+								}
+							rsBD(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Paramet);
+						}
 					}
+					//if(this.bd("field").value == 'id'){
+					//	this.bd("value").value = this.ID;
+					//}
 				}
-				//if(this.bd("field").value == 'id'){
-				//	this.bd("value").value = this.ID;
-				//}
 				this.bd.MoveNext();
 			}
 			rsBD('ID') = this.ID;
 			rsBD('UpdateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 			rsBD('UpdateCount') = ebx.validInt(rsBD('UpdateCount').value) + 1;
-			rsBD.Update();
 
 			ebx.dbx.open('delete ' + this.TableName + 'list where id=' + this.ID);
 			this.bdlist.MoveFirst();
+			var serial = 1;
 			while(!this.bdlist.eof){
 				rsBDList.AddNew();
 				var fields = this.bdlist.Fields,
@@ -924,14 +930,42 @@ var ebx = {
 				for(var i = 0; i < fields.Count; i++){
 					fieldsName = fields(i).name;
 					for(var j = 0; j < rsBDListFields.Count; j++){//判断字段与rsBDList相吻合的，执行写库操作 2018-7-11 zz
-						if(rsBDListFields(j).name.toLowerCase() == fieldsName.toLowerCase()){
-							rsBDList(fieldsName) = this.bdlist(fieldsName).value
+						if(fieldsName.toLowerCase() == 'serial'){
+							rsBDList('serial') = serial
+						}else{
+							if(rsBDListFields(j).name.toLowerCase() == fieldsName.toLowerCase()){
+								if(typeof(this.bdlist(fieldsName).value) != 'undefined'){
+									var funcField = 0;
+									for(var k in this.columns[0]){
+										if(this.columns[0][k].field.toLowerCase() == fieldsName.toLowerCase()){
+											if(this.columns[0][k].func){
+												var _Paramet = {//回调函数用参数对象
+														id: this.ID,
+														field: fieldsName, 
+														rs: this.bd, 
+														rslist: this.bdlist, 
+														TableName: this.TableName + 'list'
+													}
+												rsBDList(fieldsName) = ebx.func.callback(this.columns[0][k].func, this.bdlist(fieldsName).value, _Paramet);
+												funcField = 1;
+											}
+										}
+									}
+									if(funcField == 0){
+										rsBDList(fieldsName) = this.bdlist(fieldsName).value
+									}
+								}
+							}
 						}
 					}
 				}
+				serial++;
 				rsBDList('ID') = this.ID;
 				this.bdlist.MoveNext();
 			}
+			if(endcallback)endcallback(rsBD, rsBDList);
+			rsBDList.MoveFirst();
+			rsBD.Update();
 			rsBDList.Update();
 			rsBD = null;
 			rsBDList = null;
@@ -951,12 +985,14 @@ var ebx = {
 		bi:[],
 		TableName:'',
 		ModType:'',
-		init: function(TableName, ModType){//初始化对象，获取客户端发送得bd、bdlist、ID、ParentID、TableName、ModType参数
+		IGID: '',
+		init: function(TableName, ModType, IGID){//初始化对象，获取客户端发送得bd、bdlist、ID、ParentID、TableName、ModType参数
 			this.bi = ebx.convertJsonToRs(eval('(' + ebx.stdin['bi'] + ')')),
 			this.ID = ebx.validInt(ebx.stdin['id']),
 			this.ParentID = ebx.validInt(ebx.stdin['parentid']);
 			this.TableName = ebx.sqlStringEncode(TableName);
 			this.ModType = ebx.validInt(ModType);
+			this.IGID = ebx.validInt(IGID);
 		},
 		save: function(){
 			ebx.conn.begintrans
@@ -976,7 +1012,7 @@ var ebx = {
 			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
 				var rsBI = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2');
 					
-				this.ID = ebx.IDGen.CTIDGen(this.ModType);
+				this.ID = ebx.IDGen.CTIDGen(this.IGID);
 				rsBI.AddNew();
 				rsBI('RootID') = this.ID;
 				rsBI('ParentID') = this.ParentID;
@@ -1134,6 +1170,22 @@ var ebx = {
 				case 'cbRSDirectPy'://字符串转拼音头码，回填数据库的SearchCode1字段
 					Paramet.rsBI('SearchCode1').value = ebx.strToPinYin.toPinYin(v);
 					return v;
+					break;
+				case 'cbRSDate'://日期格式化函数
+					v = new Date(v).Format('yyyy-MM-dd');
+					if(isNaN(v)){
+						return null;
+					}else{
+						return v
+					}
+					break;
+				case 'cbRSDateTime'://日期时间格式化函数
+					v = new Date(v).Format('yyyy-MM-dd hh:mm:ss');
+					if(isNaN(v)){
+						return null;
+					}else{
+						return v
+					}
 					break;
 				default:
 					return v;
