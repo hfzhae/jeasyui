@@ -769,7 +769,7 @@ ebx.bd = {
 												iconCls: 'icon-arrow-down',
 												disable:true,
 												onclick:function(){
-													window.open(window.location.protocol +'//'+ window.location.host + ':' + window.location.port + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + rowData.filename);
+													window.open(window.location.protocol +'//'+ window.location.host + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + rowData.filename);
 												}
 											}).menu('appendItem', {
 												text: '删除',
@@ -905,7 +905,7 @@ ebx.bd = {
 												});									
 												return;
 											}
-											window.open(window.location.protocol +'//'+ window.location.host + ':' + window.location.port + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + filegrid.datagrid('getSelected').filename);
+											window.open(window.location.protocol +'//'+ window.location.host + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + filegrid.datagrid('getSelected').filename);
 										}
 									});
 								}
