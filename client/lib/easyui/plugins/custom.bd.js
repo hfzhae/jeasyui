@@ -717,8 +717,8 @@ ebx.bd = {
 									
 									win.window({
 										title: '附件',
-										width:640,    
-										height:480, 
+										width:480,    
+										height:640, 
 										maxWidth:'90%',
 										maxHeight:'90%',
 										modal:true,

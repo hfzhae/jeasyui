@@ -40,8 +40,8 @@ ebx.productserial = {
 		
 		win.window({
 			title: title + ' 的串号，长度：' + seriallengthtext,
-			width:640,    
-			height:480, 
+			width:480,    
+			height:640, 
 			maxWidth:'90%',
 			maxHeight:'90%',
 			modal:true,
@@ -130,6 +130,7 @@ ebx.productserial = {
 			height:'100%',
 			columns:columnsData,
 			toolbar: toolbar,
+			fitColumns:true,
 			onLoadSuccess: function(data){
 				productserial.datagrid('resize');
 			}
@@ -256,6 +257,7 @@ ebx.productserial = {
 				
 				ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
 				ebx.importExcel.fileinput.change(function(){
+					$.messager.progress({title:'正在导入...',text:''}); 
 					ExportBtn.linkbutton('disable');
 					ebx.importExcel.datagridObj = productserial;
 					//ebx.importExcel.tabObj = [];
@@ -299,6 +301,8 @@ ebx.productserial = {
 						}
 						if(dataData.length > ebx.productseriallength){
 							$.messager.alert('错误','串号导入数量上限为：' + ebx.productseriallength +'，当前导入数量为：' + dataData.length,'error');
+							ebx.importExcel.btnObj.linkbutton('enable');
+							$.messager.progress('close');
 							return;
 						}
 						datagrid.datagrid('loadData', {total: dataData.length, rows: dataData}); 
@@ -311,7 +315,7 @@ ebx.productserial = {
 							showType: 'slide'
 						});	
 						ebx.importExcel.btnObj.linkbutton('enable');
-						
+						$.messager.progress('close');
 						ebx.importExcel.fileinput.remove();
 						ebx.importExcel.datagridObj = null;
 						ebx.importExcel.tabObj = null;
@@ -471,8 +475,8 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 						
 						win.window({
 							title: _title + ' 的颜色尺码，色码组：' + _group.title,
-							width:800,    
-							height:600, 
+							width:640,    
+							height:480, 
 							maxWidth:'90%',
 							maxHeight:'90%',
 							modal:true,
