@@ -22,6 +22,7 @@ var ebx = {
 		aquantity: 0, //辅助数量
 		relation: 0,//核算关系
 	},
+	productseriallength: 5000,//串号数量上限
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -477,7 +478,7 @@ var ebx = {
 		tabObj: null,//回调用修改标记的tabs对象
 		fileinput: null,//上传用的file类型input控件
 		btnObj: null,//导出按钮控件，用于解除禁用
-		getFile: function (obj) {//读取excel文件函数，使用了xlsx.full.min.js（异步加载），参数：obj：file的input对象，fnback回掉函数，回掉函数参数data，返回excel内容，空内容无字段 2018-5-17 zz
+		getFile: function (obj, fnback) {//读取excel文件函数，使用了xlsx.full.min.js（异步加载），参数：obj：file的input对象，fnback回掉函数，回掉函数参数data，返回excel内容，空内容无字段 2018-5-17 zz
 			easyloader.load(['xlsx'], function(){//异步加载xlsx.full.min.js
 				if(!obj.files) {
 					return;
@@ -515,7 +516,11 @@ var ebx = {
 					//wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
 					//wb.Sheets[Sheet名]获取第一个Sheet的数据
 					//document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(ebx.wb.Sheets[ebx.wb.SheetNames[0]]) );
-					ebx.importExcel.backcall(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
+					if(fnback){
+						fnback(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]))
+					}else{
+						ebx.importExcel.backcall(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
+					}
 					//return xlsData;
 				};
 				if(rABS) {

@@ -1,0 +1,53 @@
+eB3000POS通用版
+1、	文件：register.box	
+	行号：14行 
+	错误：ActiveX控件不能创建对象"Netbox.file"
+	修改：Set f = CreateObject("NetBOX.File")	改为：Set f = NetBox.CreateObject("NetBOX.File")
+2、	文件：main.box
+	行号：28行
+	错误：ActiveX控件不能创建对象"EBO.config"
+	修改：set o =CreateObject("EBO.Config")	改为：set o =NetBox.CreateObject("EBO.Config")
+3、	文件：eBconfig.wsc
+	行号：31行、48行
+	错误：ActiveX控件不能创建对象:"NetBox.dictinary"
+	修改： Set oDict = CreateObject("NetBox.Dictionary")	改为：Set oDict = NetBox.CreateObject("NetBox.Dictionary")
+	行号：75行、88行
+	错误：ActiveX控件不能创建对象:"NetBox.dictinary"
+	修改：Set ofile = CreateObject("NetBOX.File") 	改为：Set ofile = NetBox.CreateObject("NetBOX.File")
+5、	文件：check.wsc
+	行号：184行
+	错误：ActiveX控件不能创建对象:"NetBox.dictinary"
+	修改：set sDic = CreateObject("NetBOX.Dictionary")	改为：set sDic = NetBOX.CreateObject("NetBOX.Dictionary")
+
+	行号：43行、63行,53行
+	错误：
+	修改：set sLink = CreateObject("eB2003Pos.Serverlink")	改为：set sLink = NetBox.CreateObject("eB2003Pos.Serverlink")
+
+	行号：195
+	修改：set fso = CreateObject("NetBox.FileSystemObject")	改为：set fso = CreateObject("Scripting.FileSystemObject")
+	行号：150 
+	Set hash = CreateObject("NetBox.Hash")改为：Set hash = NetBox.CreateObject("NetBox.Hash")
+8、netbox/sync.wsc
+	行号：54、93、124
+	修改：set slink = CreateObject("eB2003Pos.Serverlink")改为	set slink = NetBox.CreateObject("eB2003Pos.Serverlink")
+	行号：126、135、164，231
+	修改：set sDic = CreateObject("NetBOX.Dictionary")改为set sDic = NetBox.CreateObject("NetBOX.Dictionary")
+	行号：88 
+						修改：Set dbx = CreateObject("NetPOWER.DBX")改为:Set dbx = NetBox.CreateObject("NetPOWER.DBX")
+							receive函数不用netpower.dbx 
+							Set dbx = NetBox.CreateObject("NetPOWER.DBX")
+							dbx.Connect CStr(Parameter("oDBX"))
+							Set conn = dbx.connection
+							改为
+								Set Conn = CreateObject("adodb.connection")
+								Conn.Open CStr(Parameter("oDBX"))
+						行号：106 
+						修改：set sDic = SaveReturnMsg(rDic, dbx, bSaveMsg)改为set sDic = SaveReturnMsg(rDic, Conn, bSaveMsg)
+						修改：SaveReturnMsg函数 rs,rsinstock,rsoutstock 不用dbx.open 改为rs.open sql,conn,3,3
+9、netbox/netpower.wsc
+行号：60、61、77、79、172
+修改：Set mapDict = CreateObject("NetBox.Dictionary")改为：Set mapDict = NetBox.CreateObject("NetBox.Dictionary")
+行号：62
+修改：Set LogQueue = CreateObject("NetBox.Queue")改为Set LogQueue = NetBox.CreateObject("NetBox.Queue")
+行号：63
+修改：Set dbx = CreateObject("NetPOWER.dbx")改为：Set dbx = NetBox.CreateObject("NetPOWER.dbx")

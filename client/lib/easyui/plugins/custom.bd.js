@@ -7,6 +7,7 @@ dev by zz on 2018/7/16
 
 ebx.bd = {
 	ID: 0,
+	billtype: 0,
 	ParentID: 0,
 	tabs: [],
 	tab: [],
@@ -199,7 +200,7 @@ ebx.bd = {
 			}
 		});
 	},
-	_save:function(asSave, _layout, _Paramet, _tab, callback){
+	_save:function(asSave, _layout, _Paramet, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Paramet：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：单据全局对象，callback回到函数
 		var listgrid = _layout.layout('panel', 'center').find('.datagrid-f'),
 			bdlistdata = listgrid.datagrid('getRows'),
 			by = function(name){
@@ -265,10 +266,10 @@ ebx.bd = {
 						showType: 'slide'
 					});	
 					ebx.setEditstatus(_tab, false);
-					var id = result.id;
+					bdx.ID = result.id;
 					
-					_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
-					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
+					_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:bdx.ID, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
+					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:bdx.ID, _:(new Date()).getTime()});
 					
 				}else{
 					$.messager.alert('错误', savetext + '失败！<br>' + JSON.stringify(result.msg), 'error');	
@@ -350,7 +351,7 @@ ebx.bd = {
 								onClick: function(){
 									$.messager.confirm('提示', '是否需要另存？', function(r){
 										if (r){
-											_save(1, _layout, _Paramet, _tab, function(){ });
+											_save(1, _layout, _Paramet, _tab, bd, function(){ });
 										}
 									});
 								}
@@ -366,7 +367,7 @@ ebx.bd = {
 								}
 								var saveBtn = $(this);
 								saveBtn.linkbutton('disable');
-								_save(0, _layout, _Paramet, _tab, function(){
+								_save(0, _layout, _Paramet, _tab, bd, function(){
 									if(lockbtn && _showLock == 1){
 										lockbtn.find('.l-btn-icon').removeClass('icon-unLock-large').addClass('icon-Lock-large');
 										lockbtn.linkbutton('unselect');
@@ -684,6 +685,229 @@ ebx.bd = {
 									}else{
 										_layout.layout('expand', 'east');
 									}
+								}
+							}]
+						}]
+					},{
+						tools:[{
+							type:'toolbar',
+							dir:'v',
+							tools:[{
+								text:'附件',
+								iconCls:'icon-AttachFile-large',
+								iconAlign:'top',
+								size:'large',
+								onClick: function(){
+									if(ebx.validInt(bd.ID) == 0){
+										$.messager.show({
+											title: '提示',
+											msg: '请先保存单据！',
+											timeout: 3000,
+											showType: 'slide'
+										});
+										return;
+									}
+									var win = $('<div>').appendTo('body'),
+										filegrid = $('<div>').appendTo(win),
+										toolbar = $('<div>'),
+										uploadform = $('<form enctype="multipart/form-data" method="post">').appendTo(toolbar),
+										fileupload = $('<input name="file">').appendTo(uploadform),
+										delbtn = $('<div>').appendTo(uploadform),
+										downbtn = $('<div>').appendTo(uploadform);
+									
+									win.window({
+										title: '附件',
+										width:640,    
+										height:480, 
+										maxWidth:'90%',
+										maxHeight:'90%',
+										modal:true,
+										collapsible:false,
+										minimizable:false,
+										maximizable:false,
+										resizable:false,
+										border:'thin',
+										shadow:false,
+									});
+									$('body').find('.window-mask').on('click', function(){
+										win.window('close');
+									}); 
+									filegrid.datagrid({
+										//view:scrollview,
+										//pageSize:ebx.pagesize,
+										url:'/server/SimpChinese/attaches/list/',
+										queryParams:{
+											id:bd.ID,
+											billtype:bd.billtype,
+											_:(new Date()).getTime()
+										},
+										columns:[[    
+											{field:'filename',title:'文件名',width:300}
+										]],
+										toolbar: toolbar,
+										border: false,
+										height:'100%',
+										width:'100%',
+										rownumbers:true,
+										singleSelect:true,
+										striped:true,
+										//ctrlSelect:true,
+										fitColumns:true,
+										onDblClickRow: function(index, row){
+											window.open(window.location.protocol +'//'+ window.location.host + ':' + window.location.port + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + row.filename);
+										},
+										onRowContextMenu: function(e, rowIndex, rowData){
+											if(rowIndex < 0)return;
+											d = $(this);
+											d.datagrid('selectRow', rowIndex)
+											e.preventDefault();
+											var RowContextMenu = $('<div>');
+											RowContextMenu.menu({
+												width:100
+											}).menu('appendItem', {
+												text: '下载',
+												iconCls: 'icon-arrow-down',
+												disable:true,
+												onclick:function(){
+													window.open(window.location.protocol +'//'+ window.location.host + ':' + window.location.port + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + rowData.filename);
+												}
+											}).menu('appendItem', {
+												text: '删除',
+												iconCls: 'icon-Delete',
+												disabled:rowData.auditid?true:(rowData.isdeleted?true:false),
+												onclick: function(){
+													$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+														if (r){
+															$.messager.progress({title:'正在删除...',text:''}); 
+															$.ajax({
+																type: 'GET', 
+																url: 'server/SimpChinese/Attaches/del/',
+																data: {
+																	filename: escape(rowData.filename),
+																	id:bd.ID,
+																	billtype:bd.billtype,
+																	_:(new Date()).getTime()
+																},//style名称必须和mode相吻合
+																dataType: "json",
+																success: function(result){
+																	$.messager.progress('close');
+																	if(result){
+																	$.messager.show({
+																		title: '成功',
+																		msg: '文件：' + rowData.filename + '删除成功！',
+																		timeout: 3000,
+																		showType: 'slide'
+																	});
+																	filegrid.datagrid('load');
+																	}
+																}
+															});
+														}
+													});
+												}
+											}).menu('show', {
+												left: e.pageX,
+												top: e.pageY
+											});
+										}
+									})
+									fileupload.filebox({    
+										buttonText: '选择文件',
+										width: 77,
+										buttonIcon:'tree-folder-open',
+										//accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
+										onChange: function(newValue, oldValue){
+											$.messager.progress({title:'正在上传...',text:''}); 
+											uploadform.form('submit', {
+												url:'/server/SimpChinese/Attaches/upload/',
+												queryParams: {
+													filename: escape(newValue),
+													id:bd.ID,
+													billtype:bd.billtype,
+													_:(new Date()).getTime()
+												},
+												success:function(data){
+													data = eval('('+data+')');
+													$(this).form('reset');
+													if(data.result){
+														$.messager.show({
+															title: '成功',
+															msg: '文件：' + newValue + '上传成功！',
+															timeout: 3000,
+															showType: 'slide'
+														});
+														filegrid.datagrid('load');
+													}else{
+														$.messager.alert('错误', '文件：' + newValue + '上传失败！<br>' + data.msg, 'error');
+													}
+													$.messager.progress('close');
+												}
+											});
+										}
+									});
+									delbtn.linkbutton({
+										text:'删除',
+										iconCls: 'icon-Delete',
+										plain:true,
+										onClick: function(){
+											var index = filegrid.datagrid('getRowIndex', filegrid.datagrid('getSelected'));
+											if(index < 0){
+												$.messager.show({
+													title: '提示',
+													msg: '请先选中一行。',
+													timeout: 3000,
+													showType: 'slide'
+												});									
+												return;
+											}
+											$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+												if (r){
+													$.messager.progress({title:'正在删除...',text:''}); 
+													$.ajax({
+														type: 'GET', 
+														url: 'server/SimpChinese/Attaches/del/',
+														data: {
+															filename: escape(filegrid.datagrid('getSelected').filename),
+															id:bd.ID,
+															billtype:bd.billtype,
+															_:(new Date()).getTime()
+														},//style名称必须和mode相吻合
+														dataType: "json",
+														success: function(result){
+															$.messager.progress('close');
+															if(result){
+															$.messager.show({
+																title: '成功',
+																msg: '文件：' + filegrid.datagrid('getSelected').filename + '删除成功！',
+																timeout: 3000,
+																showType: 'slide'
+															});
+															filegrid.datagrid('load');
+															}
+														}
+													});
+												}
+											});
+										}
+									});
+									downbtn.linkbutton({
+										text:'下载',
+										iconCls: 'icon-arrow-down',
+										plain:true,
+										onClick: function(){
+											var index = filegrid.datagrid('getRowIndex', filegrid.datagrid('getSelected'));
+											if(index < 0){
+												$.messager.show({
+													title: '提示',
+													msg: '请先选中一行。',
+													timeout: 3000,
+													showType: 'slide'
+												});									
+												return;
+											}
+											window.open(window.location.protocol +'//'+ window.location.host + ':' + window.location.port + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + filegrid.datagrid('getSelected').filename);
+										}
+									});
 								}
 							}]
 						}]

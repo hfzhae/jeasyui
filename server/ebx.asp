@@ -418,8 +418,8 @@ var ebx = {
 	},
 	CleanData: function(){//清除对象函数
 		ebx.conn.Close;
-		stdin = null;
-		stdout = null;
+		ebx.stdin = null;
+		ebx.stdout = null;
 	},
 	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');

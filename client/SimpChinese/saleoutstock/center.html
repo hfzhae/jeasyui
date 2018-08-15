@@ -119,6 +119,7 @@
 					case 'productserial':
 						var productserialopen = ebx.cloneObj(ebx.productserial),//复制产品串号编辑对象
 							row = s.datagrid('getRows')[index];
+						//productserialopen.open(row.productname, row.lengthserial, s, index);
 						productserialopen.open(row.productname, row.lengthserial, s, index);
 						break;
 					case 'colorsize':

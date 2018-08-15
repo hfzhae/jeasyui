@@ -468,6 +468,13 @@
 .icon-BarcodeInsert-large{
 	background:url('icon32/BarcodeInsert.png') no-repeat center center;
 }
+.icon-AttachFile{
+	background:url('icon32/AttachFile.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-AttachFile-large{
+	background:url('icon32/AttachFile.png') no-repeat center center;
+}
 
 
 

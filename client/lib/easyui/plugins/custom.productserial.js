@@ -57,6 +57,12 @@ ebx.productserial = {
 					data2 = [],
 					reserialcount = 0,
 					reserial = '';
+					
+				if(data.length > ebx.productseriallength){
+					$.messager.alert('错误','单行产品串号的数量上限为：' + ebx.productseriallength +'，当前数量为：' + data.length,'error');
+					return false;
+				}
+
 				for(var i in data){
 					reserialcount = 0
 					if(data[i].productserial != '' && data[i].productserial != undefined){
@@ -70,8 +76,13 @@ ebx.productserial = {
 								showType: 'slide'
 							});
 							//productserial.datagrid('scrollTo', i);
-							productserial.datagrid('editkeyboard', {index: i, field:'productserial'});
-							productserial.datagrid('selectRow', i);
+							if(i > ebx.pagesize){
+								productserial.datagrid('gotoPage', (ebx.validInt(i/ebx.pagesize) + 1));
+							}
+							setTimeout(function(){
+								productserial.datagrid('editkeyboard', {index: i, field:'productserial'});
+								productserial.datagrid('selectRow', i);
+							}, 0);
 							return false;
 						}
 					}
@@ -118,7 +129,10 @@ ebx.productserial = {
 			width:'100%',
 			height:'100%',
 			columns:columnsData,
-			toolbar: toolbar
+			toolbar: toolbar,
+			onLoadSuccess: function(data){
+				productserial.datagrid('resize');
+			}
 		});
 		searchtext.textbox({    
 			buttonText:'搜索',
@@ -136,6 +150,7 @@ ebx.productserial = {
 							setTimeout(function(){
 								//productserial.datagrid('scrollTo', i + i%ebx.pagesize);
 								productserial.datagrid('selectRow', i);
+								
 							},0);
 							return;
 						}
@@ -221,7 +236,7 @@ ebx.productserial = {
 			iconCls: 'icon-ImportExcel',
 			plain:true,
 			onClick: function(){
-				var data = productserial.datagrid('getRows')
+				var data = productserial.datagrid('getData').firstRows;
 				ebx.clipboardData(columnsData, {total: data.length, rows: data} );
 			}
 		});
@@ -245,7 +260,63 @@ ebx.productserial = {
 					ebx.importExcel.datagridObj = productserial;
 					//ebx.importExcel.tabObj = [];
 					ebx.importExcel.btnObj = ExportBtn;
-					ebx.importExcel.getFile(this);
+					ebx.importExcel.getFile(this, function(d){
+						if(!ebx.importExcel.datagridObj) return;
+
+						var datagrid = ebx.importExcel.datagridObj,
+							tab = ebx.importExcel.tabObj,
+							data = datagrid.datagrid('getData'),
+							columns = datagrid.datagrid('options').columns,
+							importData = [],
+							dataData = [];
+						
+						for(var i in d){
+							var f = {};
+							for(var j in d[i]){
+								for(var k in columns[0]){
+									if(columns[0][k].title == j){
+										f[columns[0][k].field] = d[i][j]
+									}
+								}
+							}
+							importData.push(f);
+						}
+						
+						if(data.firstRows){
+							for(var i in data.firstRows){
+								dataData.push(data.firstRows[i])
+							}
+						}else if(data.rows){
+							for(var i in data.rows){
+								dataData.push(data.rows[i])
+							}
+						}
+						
+						if(importData){
+							for(var i in importData){
+								dataData.push(importData[i]);
+							}
+						}
+						if(dataData.length > ebx.productseriallength){
+							$.messager.alert('错误','串号导入数量上限为：' + ebx.productseriallength +'，当前导入数量为：' + dataData.length,'error');
+							return;
+						}
+						datagrid.datagrid('loadData', {total: dataData.length, rows: dataData}); 
+						
+						if(tab) ebx.setEditstatus(tab, true);
+						$.messager.show({
+							title: '提示',
+							msg: '成功导入了：' + importData.length + ' 行数据。',
+							timeout: 3000,
+							showType: 'slide'
+						});	
+						ebx.importExcel.btnObj.linkbutton('enable');
+						
+						ebx.importExcel.fileinput.remove();
+						ebx.importExcel.datagridObj = null;
+						ebx.importExcel.tabObj = null;
+						ebx.importExcel.btnObj = null;
+					});
 				});
 				ebx.importExcel.fileinput.trigger("click");
 			},
