@@ -7,7 +7,7 @@
 				{"id":1307,"text":"销售出库单","href":"public.html"}
 			]},
 			{"text":"打开","children":[
-				{"id":1306,"text":"销售出库单","mode":"saleoutstock","style":"saleoutstock","edit":"saleoutstock","template":384,"datestyle":1,"IsAuditStyle":1,"print":1,"lock":0,"searchserial":1}
+				{"id":1306,"text":"销售出库单","mode":"saleoutstock","style":"saleoutstock","edit":"saleoutstock","template":384,"lock":0}
 			]},
 			{"text":"查询","children":[
 				{"id":1308,"text":"销售出库查询","href":"public.html"},

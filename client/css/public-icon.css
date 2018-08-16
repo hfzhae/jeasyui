@@ -475,6 +475,13 @@
 .icon-AttachFile-large{
 	background:url('icon32/AttachFile.png') no-repeat center center;
 }
+.icon-TableDrawTable{
+	background:url('icon32/TableDrawTable.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-TableDrawTable-large{
+	background:url('icon32/TableDrawTable.png') no-repeat center center;
+}
 
 
 

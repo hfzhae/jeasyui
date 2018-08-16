@@ -1,6 +1,7 @@
 <script type="text/javascript">
 	easyloader.load(['productserial'], function(){		
 		var bd = ebx.cloneObj(ebx.bd);
+		bd.showSearchserial = 1;
 		bd.init('center', function(c, s){
 			ebx.setDatagridEditor.editorType(c[0], 'productname', 'combogrid', {//用来选择菜单组的combogrid
 				style:'product',
@@ -30,6 +31,7 @@
 					r.rows[s.datagrid('options').editIndex].price = ebx.validFloat(rowData.detailprice);
 					r.rows[s.datagrid('options').editIndex].amount = ebx.validFloat(rowData.detailprice);
 					r.rows[s.datagrid('options').editIndex].taxrate = ebx.validFloat(rowData.taxrate);
+					r.rows[s.datagrid('options').editIndex].productserial = rowData.productserial;
 					r.rows[s.datagrid('options').editIndex].lengthserial = rowData.lengthserial;
 				}
 			});

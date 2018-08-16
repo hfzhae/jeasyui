@@ -22,26 +22,14 @@ ebx.bd = {
 	showAudit: 0,//是否显示审核bombobox
 	showPrint: 0,//是否显示打印group
 	showLock: 0,//是否显示安全group
-	showdate: 0,//是否显示查询日期控件，0为不显示，默认0
+	showSearchserial: 0,//是否显示串号扫描框
 	init: function(layoutName, callback, callback1){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Paramet = ebx.getMenuParameter(this.tabs);
 		this.ID = ebx.validInt(this.Paramet.id);
-		if(ebx.validInt(this.Paramet.IsAuditStyle) == 1){
-			this.showAudit = 1;
-		}
-
-		if(ebx.validInt(this.Paramet.print) == 1){
-			this.showPrint = 1;
-		}
-
 		if(ebx.validInt(this.Paramet.lock) == 1){
 			this.showLock = 1;
-		}
-		
-		if(ebx.validInt(this.Paramet.DateStyle) == 1){
-			this.showdate = 1;
 		}
 		
 		switch(layoutName.toLowerCase()){
@@ -49,7 +37,7 @@ ebx.bd = {
 				this.layout = this.tabs.find('.layout');
 				this.northPanel = this.layout.layout('panel', 'north');
 				this.biribbon = $('<div>').appendTo(this.northPanel);
-				this._north();
+				this._north(callback);
 				break;
 			case 'east':
 				this.layout = this.tabs.find('.layout');
@@ -137,7 +125,8 @@ ebx.bd = {
 			_centerstorage = this.centerstorage,
 			_Paramet = this.Paramet,
 			toolbar = $('<div>'),
-			serialScan = $('<div>').appendTo(toolbar);
+			serialScan = $('<div>').appendTo(toolbar),
+			_showSearchserial = this.showSearchserial;
 			
 		$.ajax({
 			type: 'post', 
@@ -173,12 +162,9 @@ ebx.bd = {
 						showHeader:result.bd[0].header,
 						toolbar: toolbar
 					}).datagrid('renderformatterstyler');//启用显示式样回调函数
-					serialScan.textbox({
+					serialScan.searchbox({
 						prompt:'搜索串号添加产品',
-						buttonText:'搜索',
-						//iconCls:'icon-BarcodeInsert', 
-						//iconAlign:'right',
-						onClickButton: function(index){
+						searcher: function(index){
 							var textbox = $(this),
 								v = textbox.textbox('getValue');
 							if(v.length == 0)return;
@@ -187,14 +173,7 @@ ebx.bd = {
 						}
 					});
 					
-					serialScan.textbox('textbox').bind('keydown', function(e) {  
-						if (e.keyCode == 13) { 
-							var v = serialScan.textbox('getValue');
-							if(v.length == 0)return;
-							ebx.productserial.SerialtoProduct(serialScan, _centerstorage, bd.tab)
-						}  
-					});
-					if(ebx.validInt(_Paramet.searchserial) == 0 || ebx.listview.productserial == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
+					if(ebx.validInt(_showSearchserial) == 0 || ebx.listview.productserial == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
 				}
 				if(callback1)callback1(_centerstorage);
 			}
@@ -319,7 +298,7 @@ ebx.bd = {
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 	},
-	_north: function (){//单据表头按钮对象 2018-7-9 zz
+	_north: function (callback){//单据表头按钮对象 2018-7-9 zz
 		var bd = this,
 			_layout = this.layout,
 			_eastPanel = this.eastPanel,
@@ -492,7 +471,6 @@ ebx.bd = {
 						type:'toolbar',
 						title:'行操作',
 						tools:[{
-							name:'copy',
 							text:'新行',
 							iconCls:'icon-CellsInsertDialog-large',
 							iconAlign:'top',
@@ -689,13 +667,14 @@ ebx.bd = {
 							}]
 						}]
 					},{
+						title:'附件',
 						tools:[{
 							type:'toolbar',
 							dir:'v',
 							tools:[{
-								text:'附件',
+								//text:'',
 								iconCls:'icon-AttachFile-large',
-								iconAlign:'top',
+								//iconAlign:'top',
 								size:'large',
 								onClick: function(){
 									if(ebx.validInt(bd.ID) == 0){
@@ -717,8 +696,8 @@ ebx.bd = {
 									
 									win.window({
 										title: '附件',
-										width:480,    
-										height:640, 
+										width:640,    
+										height:480, 
 										maxWidth:'90%',
 										maxHeight:'90%',
 										modal:true,
@@ -742,7 +721,13 @@ ebx.bd = {
 											_:(new Date()).getTime()
 										},
 										columns:[[    
-											{field:'filename',title:'文件名',width:300}
+											{field:'filename',title:'文件名',width:300},
+											{field:'uploaddate',title:'上传时间',width:150},
+											{field:'size',title:'大小',width:100,
+												styler: function(value,row,index){
+													return 'text-align:right;';
+												}
+											}
 										]],
 										toolbar: toolbar,
 										border: false,
@@ -794,7 +779,7 @@ ebx.bd = {
 																	if(result){
 																	$.messager.show({
 																		title: '成功',
-																		msg: '文件：' + rowData.filename + '删除成功！',
+																		msg: '文件：' + rowData.filename + ' 删除成功！',
 																		timeout: 3000,
 																		showType: 'slide'
 																	});
@@ -813,11 +798,11 @@ ebx.bd = {
 									})
 									fileupload.filebox({    
 										buttonText: '选择文件',
-										width: 77,
+										width: 78,
 										buttonIcon:'tree-folder-open',
 										//accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
 										onChange: function(newValue, oldValue){
-											$.messager.progress({title:'正在上传...',text:''}); 
+											$.messager.progress({title:'正在上传...',text:''});
 											uploadform.form('submit', {
 												url:'/server/SimpChinese/Attaches/upload/',
 												queryParams: {
@@ -878,7 +863,7 @@ ebx.bd = {
 															if(result){
 															$.messager.show({
 																title: '成功',
-																msg: '文件：' + filegrid.datagrid('getSelected').filename + '删除成功！',
+																msg: '文件：' + filegrid.datagrid('getSelected').filename + ' 删除成功！',
 																timeout: 3000,
 																showType: 'slide'
 															});
@@ -914,6 +899,8 @@ ebx.bd = {
 					}]
 				}]
 			};
+			
+		if(callback)callback(data);//回掉函数处理功能按钮的添加删除；
 		
 		_biribbon.ribbon({
 			data:data,
@@ -942,6 +929,13 @@ ebx.bd = {
 			if(lockgroup){
 				lockgroup.next().hide();
 				lockgroup.hide();
+			}
+		}
+		if(this.billtype == 0){
+			var Attach = ebx.browser._getbiribbonobj(_biribbon, '附件', 'toolbar');
+			if(Attach){
+				Attach.next().hide();
+				Attach.hide();
 			}
 		}
 		

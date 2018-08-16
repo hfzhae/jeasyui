@@ -11,6 +11,7 @@ var upload = {
 	id: 0,
 	billtype: 0,
 	filepath: '',
+	Folder: '',
 	Initialize:function(){
 		this.conn = Server.CreateObject('ADODB.Connection');
 		this.conn.open(Application('DateBase.ConnectString'));
@@ -46,7 +47,11 @@ var upload = {
 		}
 		this.fso = Server.CreateObject('Scripting.FileSystemObject');
 		this.file = Server.CreateObject('NetBOX.File');
-		this.filepath = NetBox.MapPath('\\jeasyui\\attaches\\') + this.billtype + '\\' + this.id + '\\' + this.filename;
+		this.Folder = NetBox.MapPath('\\jeasyui\\attaches\\') + this.billtype + '\\' + this.id + '\\';
+		if(!this.fso.FolderExists(this.Folder)){
+			this.fso.CreateFolder(this.Folder);
+		}
+		this.filepath = this.Folder + this.filename;
 	},
 	del: function(){
 		this.conn.BeginTrans;
@@ -83,11 +88,17 @@ var upload = {
 						}
 					}
 					s = s.substr(0, s.length - 1);
-					rs('filename') = s;
+					if(s.length == 0){
+						this.conn.execute('delete NPAttaches where BillID=' + this.id + ' and billtype=' + this.billtype);
+						//this.fso.DeleteFOLDER(this.Folder);
+					}else{
+						rs('filename') = s;
+						rs.Update();
+					}
 				}
 			}
+			rs = null;
 		}
-		rs.Update();
 	},
 	save:function(){
 		this.conn.BeginTrans;
@@ -99,7 +110,13 @@ var upload = {
 			this.stdout = '{"result":true}';
 		}catch(e){
 			this.conn.RollbackTrans;
-			this.stdout = '{"result":false, "msg":"'+e+'"}';
+			var message = ''
+			if(e.message == undefined){
+				message = e;
+			}else{
+				message = e.message;
+			}
+			this.stdout = '{"result":false, "msg":"'+message+'"}';
 		}
 	},
 	savefile:function(){
@@ -116,7 +133,7 @@ var upload = {
 		if(rs.eof){
 			rs.AddNew();
 			rs('billtype') = this.billtype;
-			rs('billid') = this.billid;
+			rs('billid') = this.id;
 			rs('filename') = this.filename;
 		}else{
 			var filename = rs('filename').value;
@@ -125,6 +142,7 @@ var upload = {
 			}
 		}
 		rs.Update();
+		rs = null;
 	},
 	validInt: function (i, def){//整形格式化
 		var n = parseInt(i);
@@ -154,6 +172,8 @@ var upload = {
 	},
 	CleanData: function(){//清除对象函数
 		this.conn = null;
+		this.fso = null;
+		this.file = null;
 	}
 }
 upload.Initialize()

@@ -132,7 +132,9 @@ ebx.productserial = {
 			toolbar: toolbar,
 			fitColumns:true,
 			onLoadSuccess: function(data){
-				productserial.datagrid('resize');
+				if(data.total > 128){
+					productserial.datagrid('resize');
+				}
 			}
 		});
 		searchtext.textbox({    
@@ -217,7 +219,6 @@ ebx.productserial = {
 						}
 					}
 				});
-					
 			}
 		});
 		removebtn.linkbutton({
