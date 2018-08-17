@@ -53,6 +53,10 @@ var upload = {
 			this.fso.CreateFolder(this.Folder);
 		}
 		
+		if(!this.fso.FolderExists(this.Folder + this.billtype + '\\')){
+			this.fso.CreateFolder(this.Folder + this.billtype + '\\');
+		}
+		
 		this.Folder = NetBox.MapPath('\\jeasyui\\attaches\\') + this.billtype + '\\' + this.id + '\\';
 		
 		if(!this.fso.FolderExists(this.Folder)){
