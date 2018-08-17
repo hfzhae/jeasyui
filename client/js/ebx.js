@@ -594,11 +594,11 @@ var ebx = {
 		}
 	},
 	bytesToSize: function (bytes) {  //字节数转换文本函数
-	　　if (bytes === 0) return '0 B';
-	　　var k = 1024;
-	　　sizes = ['B','KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-	　　i = Math.floor(Math.log(bytes) / Math.log(k))　　
-	　　return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+		if (bytes === 0) return '0 B';
+		var k = 1024;
+		sizes = ['B','KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+		i = Math.floor(Math.log(bytes) / Math.log(k))
+		return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 	},
 	checkedBDvalidatebox: function (datagrid){ //校验表格的validatebox，参数：datagrid：需要校验的datagrid控件对象 2018-5-21 zz
 		var checked = [],
