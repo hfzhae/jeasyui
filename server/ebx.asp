@@ -331,10 +331,10 @@ var ebx = {
 	},
 	unescapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
 		if(str == null) return('');
-		
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
-			return unescape(decodeURI(str));
+			//return unescape(decodeURI(str));//decodeURI效率太低，停用，改位字符客户端escapge加密处理
+			return unescape(str);
 			//return str;
 		}else{
 			return(str);

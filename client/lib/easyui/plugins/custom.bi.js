@@ -46,13 +46,14 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			callback();
 			return;
 		}
-		
+		$.messager.progress({title:'正在保存...',text:''}); 
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
 			data: parameter,
 			dataType: "json",
 			success: function(result){
+				$.messager.progress('close');
 				if(result.result){
 					$.messager.show({
 						title: '提示',

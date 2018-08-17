@@ -54,7 +54,6 @@
 			VIPCustomname = rs('VIPCustomname').value;
 			VIPCustomID = ebx.validInt(rs('VIPCustomID').value);
 			UUID = rs('UUID').value;
-			Payment = getPayment(id);
 			Currencyname = rs('Currencyname').value;
 			Currency = ebx.validInt(rs('Currency').value);
 			Relation = ebx.validFloat(rs('Relation').value);
@@ -198,23 +197,6 @@
 		{"name":"备注","value":billmemo,"group":"其他","editor":"text","field":"billmemo"},
 
 	]};
-	for(var i in Payment){
-		data.rows.push(Payment[i])
-	}
 	ebx.stdout = data;
-	
-	function getPayment(id){
-		var sql = 'select Payment,Amount from bdOutStockPayment where id=' + id,
-			rs = ebx.dbx.open(sql),
-			data = [];
-		
-		if(!rs.eof){
-			while(!rs.eof){
-				data.push({"name":rs('Payment').value,"value":rs('Amount').value,"group":"收款方式","render":"currencyRender"});
-			rs.MoveNext();
-			}
-		}
-		return data;
-	}
 })();
 %>

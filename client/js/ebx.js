@@ -22,7 +22,7 @@ var ebx = {
 		aquantity: 0, //辅助数量
 		relation: 0,//核算关系
 	},
-	productseriallength: 5000,//串号数量上限
+	productseriallength: 500000,//串号数量上限
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -250,8 +250,8 @@ var ebx = {
 				arrtype = 0;//设置json数组类型，1=[],0={}
 				switch(typeof(d[i])){
 					case 'string':
-						//s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
-						s += '"'+ i +'":"' + d[i] +'",';
+						s += '"'+ i +'":"' + ebx.escapeEx(d[i]) +'",';
+						//s += '"'+ i +'":"' + d[i] +'",';
 						break;
 					case 'object':
 						if(d[i].RecordCount == undefined){

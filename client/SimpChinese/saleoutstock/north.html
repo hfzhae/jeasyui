@@ -15,13 +15,13 @@
 
 		bd.init('north',function(data){
 			data.tabs[0].groups.push({
-				//title:'收款方式',
+				title:'收款方式',
 				tools:[{
 					type:'toolbar',
 					dir:'v',
 					tools:[{
-						text:'收款方式',
-						iconAlign:'top',
+						//text:'收款方式',
+						//iconAlign:'top',
 						size:'large',
 						iconCls:'icon-TableDrawTable-large',
 						onClick: function(){
@@ -154,7 +154,8 @@
 													msg: '收款方式保存成功！',
 													timeout: 3000,
 													showType: 'slide'
-												});									
+												});
+												grid.datagrid('load');
 											}else{
 												$.messager.alert({
 													title: '错误',

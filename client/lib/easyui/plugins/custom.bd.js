@@ -230,13 +230,14 @@ ebx.bd = {
 			//saveBtn.linkbutton('enable');
 			return;
 		}
-		
+		$.messager.progress({title:'正在保存...',text:''}); 
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
 			data: parameter,
 			dataType: "json",
 			success: function(result){
+				$.messager.progress('close');
 				if(result.result){
 					$.messager.show({
 						title: '提示',
@@ -449,23 +450,16 @@ ebx.bd = {
 						name:'printgroup',
 						dir:'v',
 						tools:[{
-							text:'打印',
 							name:'print',
-							iconCls:'icon-PrintDialogAccess',
-							//iconAlign:'top',
-							//size:'large',
-						},{
-							text:'预览',
-							name:'printview',
-							iconCls:'icon-ViewsAdpDiagramPrintPreview',
-							//iconAlign:'top',
-							//size:'large',
-						},{
-							text:'设置',
-							name:'printsetup',
-							iconCls:'icon-PrintOptionsMenu',
-							//iconAlign:'top',
-							//size:'large',
+							iconCls:'icon-PrintDialogAccess-large',
+							size:'large',
+							onClick:function(){
+								bd.print.init(_tabs.find('.layout').layout('panel', 'east').find('.datagrid-f').datagrid('getRows'), 
+									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('options').columns, 
+									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows'), _tabs
+								);
+								bd.print.print();
+							}
 						}]
 					},{
 						type:'toolbar',
