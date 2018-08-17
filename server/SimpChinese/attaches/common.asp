@@ -53,7 +53,7 @@ var upload = {
 			this.fso.CreateFolder(this.Folder);
 		}
 		
-		this.Folder += NetBox.MapPath('\\jeasyui\\attaches\\') + this.billtype + '\\' + this.id + '\\';
+		this.Folder = NetBox.MapPath('\\jeasyui\\attaches\\') + this.billtype + '\\' + this.id + '\\';
 		
 		if(!this.fso.FolderExists(this.Folder)){
 			this.fso.CreateFolder(this.Folder);
