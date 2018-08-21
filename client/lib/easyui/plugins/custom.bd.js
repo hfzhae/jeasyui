@@ -454,8 +454,8 @@ ebx.bd = {
 							iconCls:'icon-PrintDialogAccess-large',
 							size:'large',
 							onClick:function(){
-								bd.print.init(_tabs.find('.layout').layout('panel', 'east').find('.datagrid-f').datagrid('getRows'), 
-									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('options').columns, 
+								bd.print.init(bd.ID,
+									_Paramet.mode,
 									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows'), _tabs
 								);
 								bd.print.print();

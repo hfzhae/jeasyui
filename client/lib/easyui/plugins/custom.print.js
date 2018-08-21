@@ -6,31 +6,220 @@ dev by zz on 2018/8/17
 *****************************************************************/
 
 ebx.bd.print = {
-	bd:[],
-	columns:[],
-	bdlist:[],
+	id:[],
 	tab: [],
+	mode: '',
 	title: '',
-	printbody : $('<div>'),
-	init:function(bd, columns, bdlist, tab){
-		this.bd = bd;
-		this.columns = columns;
-		this.bdlist = bdlist;
+	init:function(id, mode, tab){
+		this.id = id;
+		this.mode = mode;
 		this.tab = tab;
 	},
 	print: function(){
-		var bdstr = $('<div>'),
-			columnsstr = '',
-			bdliststr = '';
-			
-		bdstr.append('<table><tbody></tbody></table>');
-		
-		for(var i in this.bd){
-			if(!this.bd[i].hidden){
-				bdstr.find('tbody').append('<tr><td>' + this.bd[i].name + '</td><td>' + this.bd[i].value + '</td></tr>');
-			}
+		if(ebx.validInt(this.id) == 0){
+			$.messager.alert('错误', '请先保存单据！', 'error');	
 		}
+		$.messager.progress({title:'正在打印...',text:''});
+		$.ajax({
+			type: 'post', 
+			url: 'server/SimpChinese/' + this.mode + '/print/',
+			data: {id: this.id, _:(new Date()).getTime()},
+			dataType: "json",
+			success: function(result){
+				$.messager.progress('close');
+				if(result.result){
+					var titlestr = '<div class="headtitle">' + result.title + '</div>',
+						printbody = $('<div>'),
+						head = result.head,
+						foot = result.foot,
+						bdhead= '',
+						headtext = result.headtext.length==0?'<div class="headtext"></div>':'<div class="headtext">' + result.headtext + '</div>',
+						bdfoot = '',
+						foottext = result.foottext.length==0?'':'<div class="foottext">' + result.foottext + '</div>',
+						list = result.bdlist.rows,
+						liststyle = result.liststyle,
+						listbody = '',
+						pagelistbody = [],
+						listhead = ''
+						listfoot = {},
+						pagefoot = {},
+						pagesize = 0,
+						listcount = '',
+						pagecount = '',
+						listbodycount = 0,
+						color = result.color.rows,
+						size = result.size.rows,
+						productserial = '';
 
-		this.printbody.html('<table align="center"><tbody><tr><td>' + this.title + '</td></tr></tbody></table><br>' + bdstr.html()).print({iframe:true});		
+					if(ebx.validInt(liststyle.length) == 0 || ebx.validInt(head.length) == 0 || ebx.validInt(foot.length) == 0){
+						$.messager.alert('错误', '没有设置打印“'+result.title+'”的显示式样！', 'error');	
+					}else{
+						bdhead = '<table class="bdheadtable">'
+						var j = 0
+						for(var i in head){
+							if(j == 0)bdhead += '<tr>';
+							bdhead += '<td class="bdhead" style="'+head[i].style+';">' + head[i].name +'：' + ebx.Render.getRender((head[i].value?head[i].value:''), head[i].render) + '</td>';
+							if(j == 2)bdhead += '</tr>';
+							j++;
+							if(j>2)j=0;
+						}
+						if(j<2)bdhead += '</tr>';
+						bdhead += '</table>'
+						
+						bdfoot = '<table class="bdfoottable">'
+						var j = 0
+						for(var i in foot){
+							if(j == 0)bdfoot += '<tr>';
+							bdfoot += '<td class="bdfoot" style="'+foot[i].style+';">' + foot[i].name +'：' +  ebx.Render.getRender((foot[i].value?foot[i].value:''), foot[i].render)  + '</td>';
+							if(j == 2)bdfoot += '</tr>';
+							j++;
+							if(j>2)j=0;
+						}
+						if(j<2)bdfoot += '</tr>';
+						bdfoot += '</table>'
+						
+						
+						listhead = '<tr><td class="listhead">No.</td>'
+						for(var i in liststyle){
+							listhead += '<td class="listhead" style="width:'+liststyle[i].width+';">' + liststyle[i].name + '</td>';
+						}
+						listhead += '</tr>'
+						
+						var j = 0, page = 0;
+						for(var i in list){
+							listbodycount++;
+							page++;
+							listbody += '<tr><td class="listbody">'+listbodycount+'</td>';
+							for(var j in liststyle){
+								var v = list[i][liststyle[j].field.toLowerCase()]===''?'　':list[i][liststyle[j].field.toLowerCase()];
+								listbody += '<td class="listbody" style="'+liststyle[j].style+';">' + ebx.Render.getRender(v, liststyle[j].render) + '</td>';
+								if(liststyle[j].foot){
+									listfoot[liststyle[j].field.toLowerCase()] = ebx.validFloat(listfoot[liststyle[j].field.toLowerCase()]) + ebx.validFloat(list[i][liststyle[j].field.toLowerCase()]);
+									pagefoot[liststyle[j].field.toLowerCase()] = ebx.validFloat(pagefoot[liststyle[j].field.toLowerCase()]) + ebx.validFloat(list[i][liststyle[j].field.toLowerCase()]);
+								}else{
+									listfoot[liststyle[j].field.toLowerCase()] = '';
+									pagefoot[liststyle[j].field.toLowerCase()] = '';
+								}
+							}
+							listbody += '</tr>';
+
+							if(list[i].productserial){
+								if(list[i].productserial.total > 0){
+									if(list[i].productserial.total>10){
+										productserial += '<div style="page-break-after: always;"><h3>附件：No.'+listbodycount+'的串号：</h3>';
+										for(var j in list[i].productserial.rows){
+											productserial += list[i].productserial.rows[j].productserial + ' ';
+										}
+										productserial += '</div>'
+										listbody += '<tr><td class="listbody"></td>';
+										listbody += '<td class="listbody" colspan="'+liststyle.length+'">串号：详见附件（串号数量大于10个的在附件中打印）';
+										listbody += '</td>';
+										listbody += '</tr>';
+									}else{
+										listbody += '<tr><td class="listbody"></td>';
+										listbody += '<td class="listbody" colspan="'+liststyle.length+'">串号：';
+										for(var j in list[i].productserial.rows){
+											listbody += list[i].productserial.rows[j].productserial + ' ';
+										}
+										listbody += '</td>';
+										listbody += '</tr>';
+									}
+								}
+							}
+							if(list[i].colorsize){
+								if(list[i].colorsize.total > 0){
+									var colortext = '',
+										sizetext = '';
+									listbody += '<tr><td class="listbody"></td>';
+									listbody += '<td class="listbody" colspan="'+liststyle.length+'">色码：';
+									for(var j in list[i].colorsize.rows){
+										for(var k in color){
+											if(ebx.validInt(color[k].id) == ebx.validInt(list[i].colorsize.rows[j].colorid)){
+												colortext = color[k].title;
+											}
+										}
+										for(var k in size){
+											if(ebx.validInt(size[k].id) == ebx.validInt(list[i].colorsize.rows[j].sizeid)){
+												sizetext = size[k].title;
+											}
+										}
+										listbody += colortext + '(' + sizetext + '):' + list[i].colorsize.rows[j].quantity + ' ';
+										colortext = '';
+										sizetext = '';
+									}
+									listbody += '</td>';
+									listbody += '</tr>';
+								}
+							}
+							if(page >= ebx.printpagesize){
+								pagesize++;
+								pagecount += '<tr>';
+								for(var i in liststyle){
+									if(i == 0){
+										pagecount += '<td class="listhead" colspan="2" style="width:'+liststyle[i].width+';">本页合计</td>';
+									}else{
+										pagecount += '<td class="listbody" style="width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+									}
+								}
+								pagecount += '</tr>';
+								
+								pagelistbody.push({titlestr:titlestr, headtext:headtext, bdhead:bdhead, listhead:listhead, listbody: listbody, bdfoot: bdfoot, foottext:foottext, pagecount: pagecount});
+								pagecount = '';
+								pagefoot = {};
+								listbody = '';
+								page = 0;
+							}
+						}
+
+						if(page <= ebx.printpagesize && page > 0){
+							pagesize++;
+							pagecount += '<tr>';
+							for(var i in liststyle){
+								if(i == 0){
+									pagecount += '<td class="listhead" colspan="2" style="width:'+liststyle[i].width+';">本页合计</td>';
+								}else{
+									pagecount += '<td class="listbody" style="width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+								}
+							}
+							pagecount += '</tr>';
+							pagelistbody.push({titlestr:titlestr, headtext:headtext, bdhead:bdhead, listhead:listhead, listbody: listbody, bdfoot: bdfoot, foottext:foottext, pagecount: pagecount});
+						}
+						
+						listcount += '<tr>';
+						for(var i in liststyle){
+							if(i == 0){
+								listcount += '<td class="listhead" colspan="2" style="width:'+liststyle[i].width+';">总计</td>';
+							}else{
+								listcount += '<td class="listbody" style="width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(listfoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+							}
+						}
+						listcount += '</tr>';
+
+						var s = '';
+						for(var i in pagelistbody){
+							s += '<div style="page-break-after: always;">'
+							s += pagelistbody[i].titlestr;
+							s += pagelistbody[i].headtext;
+							s += pagelistbody[i].bdhead;
+							s += '<table class="listheadtable">' 
+							s += pagelistbody[i].listhead;
+							s += pagelistbody[i].listbody;
+							s += pagelistbody[i].pagecount;
+							s += listcount;
+							s += '</table>';
+							s += pagelistbody[i].bdfoot;
+							s += pagelistbody[i].foottext;
+							s += '<div class="pagesize">打印时间：' + new Date().Format("yyyy-MM-dd hh:mm:ss") + '</div>';
+							s += '<div class="pagesize">共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页</div>';
+							s += '</div>';
+						}
+						if(productserial.length > 0){
+							s += productserial;
+						}
+						printbody.html(s).print({iframe:true,stylesheet:'/client/css/print.css'});
+					}
+				}
+			}
+		});
 	}
 }

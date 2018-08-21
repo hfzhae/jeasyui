@@ -300,8 +300,7 @@ var ebx = {
 				return(ebx.validFloat(v)); //"小数"
 				break;
 			case 135:
-				return('"' + ebx.sqlstrTtodate(v) + '"'); //"日期/时间"
-				//return '"' + v + '"'; //"日期/时间"
+				return('"' + new Date(v).Format('yyyy-MM-dd hh:mm:ss') + '"'); //"日期/时间"
 				break;
 			case 6:
 				return(ebx.validFloat(v)); //"货币"
@@ -1641,6 +1640,125 @@ var ebx = {
 			sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
 			i = Math.floor(Math.log(bytes) / Math.log(k));
 	    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+	},
+	print: {//打印服务器端对象 2018-8-20 zz
+		id:0,
+		init: function(id){
+			this.id = id;
+		},
+		headerStyle: '',
+		footerStyle: '',
+		bd: function(rsBD, printstyle){
+			if(printstyle.length === 0)return([]);
+			if(typeof(rsBD) != 'object')return([]);
+			if(rsBD.eof)return([]);
+			
+			var sql = "select bd.HeaderStyle,bd.FooterStyle,l.Field,l.Width,l.fieldStyle,l.SetHeaderText,Render from bdStyle bd, bdStylelist l where bd.id=l.id and bd.title='"+printstyle+"' order by l.Serial",
+				rs = ebx.dbx.open(sql, 1, 1),
+				fields = rsBD.Fields,
+				data = [];
+			
+			if(rs.eof)return([]);
+			while(!rs.eof){
+				this.headerStyle = rs('HeaderStyle').value
+				this.footerStyle = rs('FooterStyle').value
+				var t = {}
+				for(var i = 0; i < fields.Count; i++){
+					t['name'] = rs('SetHeaderText').value;
+					if(rs('Field').value.toLowerCase() === fields(i).name.toLowerCase()){
+						t['value'] = this.getType(rsBD(fields(i).name));
+					}
+					t['width'] = rs('Width').value + '%';
+					t['style'] = rs('fieldStyle').value;
+					t['render'] = rs('Render').value;
+				}
+				data.push(t);
+				rs.MoveNext();
+			}
+			
+			return data;
+		},
+		liststyle: function(printstyle){
+			if(printstyle.length === 0)return([]);
+			var sql = "select bd.HeaderStyle,bd.FooterStyle,l.Field,l.Width,l.fieldStyle,l.SetHeaderText,l.Render,l.SetFooterText from bdStyle bd, bdStylelist l where bd.id=l.id and bd.title='"+printstyle+"' order by l.Serial",
+				rs = ebx.dbx.open(sql, 1, 1),
+				data = [];
+			
+			if(rs.eof)return([]);
+			while(!rs.eof){
+				var t = {};
+				t['field'] = rs('Field').value;
+				t['name'] = rs('SetHeaderText').value;
+				t['width'] = rs('Width').value + '%';
+				t['style'] = rs('fieldStyle').value;
+				t['render'] = rs('Render').value;
+				t['foot'] = ebx.validInt(rs('SetFooterText').value);
+				data.push(t);
+				rs.MoveNext();
+			}
+			return data;
+		},
+		getColor:function(){
+			return rs = ebx.dbx.open("select id,title from biColor where accountid="+ebx.accountid,1,1);
+		},
+		getSize:function(){
+			return rs = ebx.dbx.open("select id,title from biSize where accountid="+ebx.accountid,1,1);
+		},
+		getType: function(Fields){ //数据类型判断函数，Fields：字段rs.Fields对象，返回针对类型处理后的值
+			var v = ebx.escapeEx(Fields.value)
+			switch(Fields.type){
+				case 200:
+					return v; //"文本"
+				case 202:
+					return v; //"文本"
+					break;
+				case 203:
+					return(ebx.validstring(v)); //"备注"
+					break;
+				case 3:
+					return(ebx.validInt(v)); //"长整型"
+					break;
+				case 2:
+					return(ebx.validInt(v)); //"整型"
+					break;
+				case 17:
+					return(ebx.validInt(v)); //"字节"
+					break;
+				case 3:
+					return(ebx.validInt(v)); //"长整型"
+					break;
+				case 4:
+					return(ebx.validFloat(v)); //"单精浮点"
+					break;
+				case 5:
+					return(ebx.validFloat(v)); //"双精浮点"
+					break;
+				case 3:
+					return(ebx.validInt(v)); //"长整型"
+					break;
+				case 72:
+					return(ebx.validInt(v)); //"同步复制ID"
+					break;
+				case 131:
+					return(ebx.validFloat(v)); //"小数"
+					break;
+				case 135:
+					return(new Date(v).Format('yyyy-MM-dd hh:mm:ss')); //"日期/时间"
+					break;
+				case 6:
+					return(ebx.validFloat(v)); //"货币"
+					break;
+				case 11:
+					return(v); //"是/否"
+					break;
+				case 205:
+					//return(ebx.convertRsToJson(ebx.convertBinToRs(v))); //"OLE对象" 处理数据库里嵌套的rs对象二级制存储数据
+					break;
+				default:
+					return(v); //"其他"
+					break;
+			}
+		}
 	}
 }
 ebx.init();

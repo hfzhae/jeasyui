@@ -6,6 +6,7 @@ var ebx = {
 	multitabs:0,//同一菜单链接多tabs打开支持，1为支持
 	decimal:2,//小数位数，默认2
 	pagesize: 128,//datagrid分页行数
+	printpagesize: 10,
 	importFileMaxSize: 1024*5,//导入文件大小控制，单位K
 	listview:{ //显示列数组
 		productserial:1, //串号
@@ -829,6 +830,13 @@ var ebx = {
 			}
 			if(!f){
 				return value;
+			}
+		},
+		getRender: function(v, render){
+			for(var i in ebx.Render.render){
+				if(ebx.Render.render[i].value.toLowerCase() === render.toLowerCase()){
+					return ebx.Render.render[i].render(v);
+				}
 			}
 		}
 	},
