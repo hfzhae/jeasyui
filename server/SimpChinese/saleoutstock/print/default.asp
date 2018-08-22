@@ -31,7 +31,7 @@
 	ebx.stdout['title'] = ebx.print.headerStyle.length==0?EventName:ebx.print.headerStyle;//获取单据标题，如果为空则使用common.asp中的EventName
 	ebx.stdout['headtext'] = ebx.print.footerStyle;//获取显示式样里的表头（表尾式样）
 	ebx.stdout['foot'] = ebx.print.bd(rsBD, 'SaleOutStockPrintfoot');//获取表尾对象，利用显示式样格式化内容
-	ebx.stdout['foottext'] = ebx.print.headerStyle + ebx.print.footerStyle;//获取显示式样里的表尾（表头式样 + 表尾式样）
+	ebx.stdout['foottext'] = ebx.print.headerStyle + '<br>' + ebx.print.footerStyle;//获取显示式样里的表尾（表头式样 + 表尾式样）
 	ebx.stdout['liststyle'] = ebx.print.liststyle('SaleOutStockPrintList');//获取list的显示式样
 	ebx.stdout['bdlist'] = rsBDlist;//list对象
 	ebx.stdout['color'] = ebx.print.getColor();

@@ -20,13 +20,15 @@ ebx.bd.print = {
 			$.messager.alert('错误', '请先保存单据！', 'error');	
 		}
 		$.messager.progress({title:'正在打印...',text:''});
+		var _id = this.id,
+			_PrefixInteger = this.PrefixInteger;
+			
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/' + this.mode + '/print/',
 			data: {id: this.id, _:(new Date()).getTime()},
 			dataType: "json",
 			success: function(result){
-				$.messager.progress('close');
 				if(result.result){
 					var titlestr = '<div class="headtitle">' + result.title + '</div>',
 						printbody = $('<div>'),
@@ -35,7 +37,7 @@ ebx.bd.print = {
 						bdhead= '',
 						headtext = result.headtext.length==0?'<div class="headtext"></div>':'<div class="headtext">' + result.headtext + '</div>',
 						bdfoot = '',
-						foottext = result.foottext.length==0?'':'<div class="foottext">' + result.foottext + '</div>',
+						foottext = (result.foottext.length==0?'':'<div class="foottext">' + result.foottext + '</div>'),
 						list = result.bdlist.rows,
 						liststyle = result.liststyle,
 						listbody = '',
@@ -106,7 +108,7 @@ ebx.bd.print = {
 							if(list[i].productserial){
 								if(list[i].productserial.total > 0){
 									if(list[i].productserial.total>10){
-										productserial += '<div style="page-break-after: always;"><h3>附件：No.'+listbodycount+'的串号：</h3>';
+										productserial += '<div style="page-break-after:always;font-size:12px;"><h3>附件：No.'+listbodycount+'的串号：</h3>';
 										for(var j in list[i].productserial.rows){
 											productserial += list[i].productserial.rows[j].productserial + ' ';
 										}
@@ -195,31 +197,56 @@ ebx.bd.print = {
 						}
 						listcount += '</tr>';
 
-						var s = '';
-						for(var i in pagelistbody){
-							s += '<div style="page-break-after: always;">'
-							s += pagelistbody[i].titlestr;
-							s += pagelistbody[i].headtext;
-							s += pagelistbody[i].bdhead;
-							s += '<table class="listheadtable">' 
-							s += pagelistbody[i].listhead;
-							s += pagelistbody[i].listbody;
-							s += pagelistbody[i].pagecount;
-							s += listcount;
-							s += '</table>';
-							s += pagelistbody[i].bdfoot;
-							s += pagelistbody[i].foottext;
-							s += '<div class="pagesize">打印时间：' + new Date().Format("yyyy-MM-dd hh:mm:ss") + '</div>';
-							s += '<div class="pagesize">- 共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页 -</div>';
-							s += '</div>';
-						}
-						if(productserial.length > 0){
-							s += productserial;
-						}
-						printbody.html(s).print({iframe:true,stylesheet:'/client/css/print.css'});
+						var s = '',
+							qrcodediv = $('<div id="qrcode">').appendTo('body'),
+							barcord = $('<svg id="barcode"></svg>').appendTo('body');
+						
+						JsBarcode("#barcode", _PrefixInteger(_id, 10), {
+							displayValue: false,
+							height:50,
+							fontSize:15,
+							lineColor: "#000"
+						});
+						
+						var qrcode = new QRCode(document.getElementById("qrcode"), {
+							width: 100, //设置宽高
+							height: 100
+						});
+						qrcode.makeCode('https://www.zydsoft.com');
+						//debugger;
+						setTimeout(function(){
+							for(var i in pagelistbody){
+								s += '<div style="page-break-after:always;">'
+								s += '<svg class="barcord">' + $(barcord[0]).html() + '</svg>';
+								s += '<div class="qrcode">' + $(qrcode._el).html() + '</div>';
+								s += pagelistbody[i].titlestr;
+								s += pagelistbody[i].headtext;
+								s += pagelistbody[i].bdhead;
+								s += '<table class="listheadtable">' 
+								s += pagelistbody[i].listhead;
+								s += pagelistbody[i].listbody;
+								s += pagelistbody[i].pagecount;
+								s += listcount;
+								s += '</table>';
+								s += pagelistbody[i].bdfoot;
+								s += pagelistbody[i].foottext;
+								s += '<div class="pagesize">共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页，打印时间：' + new Date().Format("yyyy-MM-dd hh:mm:ss") + '</div>';
+								s += '</div>';
+								$('#qrcode').remove();
+								$('#barcode').remove();
+							}
+							if(productserial.length > 0){
+								s += productserial;
+							}
+							printbody.html(s).print({iframe:true,stylesheet:'/client/css/print.css'});
+						},0);
 					}
 				}
+				$.messager.progress('close');
 			}
 		});
+	},
+	PrefixInteger: function(num, length) {
+		return (Array(length).join('0') + num).slice(-length);
 	}
 }
