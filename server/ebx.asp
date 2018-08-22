@@ -579,6 +579,7 @@ var ebx = {
 		s = s.replaceAll('@@owner', this.owner);//用户
 
 		var find = ebx.sqlStringEncode(ebx.stdin['find']),//获取搜索字段
+			findid = ebx.validInt(ebx.stdin['findid']),
 			datefrom = ebx.sqlStringEncode(ebx.stdin['datefrom']),
 			dateto = ebx.sqlStringEncode(ebx.stdin['dateto']),
 			isdeleted = ebx.validInt(ebx.stdin['isdeleted']),
@@ -622,6 +623,17 @@ var ebx = {
 				break;
 		}
 		
+		if(findid > 0){//支持id搜索查询设计（自定义打印等用到），参数为：findid 2018-8-22 zz
+			s = s.replaceAll('@@findidbegin', '');//搜索开始
+			s = s.replaceAll('@@findidend', '');//搜搜结束
+			s = s.replaceAll('@@findid', findid);//搜索文字替换
+		}else{
+			var FINDBEGIN = s.indexOf('@@findidbegin'),
+				FINDEND = s.indexOf('@@findidend');
+			if(FINDBEGIN >= 0 || FINDEND >= 0){
+				s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 11, s.length - 1);
+			}
+		}
 		if(typeof(find) == 'string'){
 			if(find.length > 0){
 				s = s.replaceAll('@@findbegin', '');//搜索开始
@@ -630,12 +642,16 @@ var ebx = {
 			}else{
 				var FINDBEGIN = s.indexOf('@@findbegin'),
 					FINDEND = s.indexOf('@@findend');
-				s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
+				if(FINDBEGIN >= 0 || FINDEND >= 0){
+					s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
+				}
 			}
 		}else{
 			var FINDBEGIN = s.indexOf('@@findbegin'),
 				FINDEND = s.indexOf('@@findend');
-			s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
+			if(FINDBEGIN >= 0 || FINDEND >= 0){
+				s = s.substr(0, FINDBEGIN) + s.substr(FINDEND + 9, s.length - 1);
+			}
 		}
 		
 		if(GroupBy){//聚合group by合成
@@ -1648,12 +1664,19 @@ var ebx = {
 		},
 		headerStyle: '',
 		footerStyle: '',
+		border: 1,
+		header:1,
+		footer:1,
+		listwidth:100,
+		headwidth:100,
+		footwidth:100,
+		headheight: 0,
 		bd: function(rsBD, printstyle){
 			if(printstyle.length === 0)return([]);
 			if(typeof(rsBD) != 'object')return([]);
 			if(rsBD.eof)return([]);
 			
-			var sql = "select bd.HeaderStyle,bd.FooterStyle,l.Field,l.Width,l.fieldStyle,l.SetHeaderText,Render from bdStyle bd, bdStylelist l where bd.id=l.id and bd.title='"+printstyle+"' order by l.Serial",
+			var sql = "select bd.HeaderStyle,bd.FooterStyle,l.Field,l.Width,l.fieldStyle,l.SetHeaderText,Render,bd.width as bdwidth,bd.height as headheight from bdStyle bd, bdStylelist l where bd.id=l.id and bd.title='"+printstyle+"' order by l.Serial",
 				rs = ebx.dbx.open(sql, 1, 1),
 				fields = rsBD.Fields,
 				data = [];
@@ -1662,6 +1685,9 @@ var ebx = {
 			while(!rs.eof){
 				this.headerStyle = rs('HeaderStyle').value
 				this.footerStyle = rs('FooterStyle').value
+				this.headwidth = rs('bdwidth').value
+				this.footwidth = rs('bdwidth').value
+				this.headheight = rs('headheight').value
 				var t = {}
 				for(var i = 0; i < fields.Count; i++){
 					t['name'] = rs('SetHeaderText').value;
@@ -1680,12 +1706,16 @@ var ebx = {
 		},
 		liststyle: function(printstyle){
 			if(printstyle.length === 0)return([]);
-			var sql = "select bd.HeaderStyle,bd.FooterStyle,l.Field,l.Width,l.fieldStyle,l.SetHeaderText,l.Render,l.SetFooterText from bdStyle bd, bdStylelist l where bd.id=l.id and bd.title='"+printstyle+"' order by l.Serial",
+			var sql = "select bd.HeaderStyle,bd.FooterStyle,l.Field,l.Width,l.fieldStyle,l.SetHeaderText,l.Render,l.SetFooterText,bd.border,bd.header,bd.footer,bd.Width as listWidth from bdStyle bd, bdStylelist l where bd.id=l.id and bd.title='"+printstyle+"' order by l.Serial",
 				rs = ebx.dbx.open(sql, 1, 1),
 				data = [];
 			
 			if(rs.eof)return([]);
 			while(!rs.eof){
+				this.border = rs('border').value
+				this.header = rs('header').value
+				this.footer = rs('footer').value
+				this.listwidth = rs('listwidth').value
 				var t = {};
 				t['field'] = rs('Field').value;
 				t['name'] = rs('SetHeaderText').value;

@@ -451,14 +451,30 @@ ebx.bd = {
 						dir:'v',
 						tools:[{
 							name:'print',
-							iconCls:'icon-PrintDialogAccess-large',
-							size:'large',
+							text:'快速打印',
+							iconCls:'icon-PrintDialogAccess',
 							onClick:function(){
 								bd.print.init(bd.ID,
 									_Paramet.mode,
-									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows'), _tabs
+									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows')
 								);
 								bd.print.print();
+							}
+						},{
+							text:'预览',
+							iconCls:'icon-ViewsAdpDiagramPrintPreview',
+							onClick: function(){
+								bd.print.init(bd.ID,
+									_Paramet.mode,
+									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows')
+								);
+								bd.print.preview();
+							}
+						},{
+							text:'打印设置',
+							iconCls:'icon-PrintOptionsMenu',
+							onClick: function(){
+
 							}
 						}]
 					},{

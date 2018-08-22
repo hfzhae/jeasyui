@@ -5,12 +5,12 @@ td{
 .headtitle{
 	text-align:center;
 	font-size:22px;
-	margin-top:30px;
+	margin-top:0px;
 }
 .headtext{
 	text-align:center;
 	font-size:16px;
-	margin-bottom:50px;
+	margin-bottom:40px;
 }
 .foottext{
 	text-align:center;
@@ -66,10 +66,19 @@ td{
 .qrcode{
 	position:absolute;
 	top:0px;
-	right:10px;
+	right:0px;
 }
 .barcord{
 	position:absolute;
 	top:0px;
-	left:10px;
+	left:0px;
+}
+.pagediv{
+	page-break-after:always;
+	position:relative;
+	font-size:12px;
+	margin:50px;
+	background-color:#fff;
+	border:50px solid #fff;
+	box-shadow: 5px 5px 10px #999;
 }

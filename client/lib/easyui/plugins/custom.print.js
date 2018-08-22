@@ -6,16 +6,71 @@ dev by zz on 2018/8/17
 *****************************************************************/
 
 ebx.bd.print = {
-	id:[],
-	tab: [],
+	id: 0,
 	mode: '',
 	title: '',
-	init:function(id, mode, tab){
+	init:function(id, mode){
 		this.id = id;
 		this.mode = mode;
-		this.tab = tab;
+	},
+	preview:function(){
+		this.printdata(function(d){
+			if(d){
+				var win = $('<div style="background-color:#eee;">').appendTo('body');
+				// 动态加载css文件                                              
+				function loadStyles(url) {                                     
+					 var link = document.createElement("link");                 
+					 link.type = "text/css";                                    
+					 link.rel = "stylesheet";                                   
+					 link.href = url;                                           
+					 document.getElementsByTagName("head")[0].appendChild(link);
+				}                                                              
+				// 测试
+				loadStyles("/client/css/print.css");
+				
+				d.appendTo(win);
+				win.window({
+					title: '打印预览',
+					width:'60%',    
+					height:'90%', 
+					maxWidth:'90%',
+					maxHeight:'90%',
+					modal:true,
+					collapsible:false,
+					minimizable:false,
+					maximizable:false,
+					resizable:false,
+					border:'thin',
+					shadow:false,
+					tools:[{
+						iconCls:'icon-PrintDialogAccess',
+						handler:function(){
+							win.window('close');
+							var printbody = $('<div>');
+							d.find('.pagediv').css({'margin':0,'border':0,'box-shadow':'0px 0px 0px #fff'});
+							printbody.html(d.html()).print({iframe:true,stylesheet:'/client/css/print.css'});
+						}
+					}],
+					onBeforeClose: function(){
+						win.remove();
+					}
+				});
+				$('body').find('.window-mask').on('click', function(){
+					win.window('close');
+				}); 
+			}
+		});
 	},
 	print: function(){
+		this.printdata(function(d){
+			if(d){
+				var printbody = $('<div>');
+				d.find('.pagediv').css({'margin':0,'border':0,'box-shadow':'0px 0px 0px #fff'});
+				printbody.html(d.html()).print({iframe:true,stylesheet:'/client/css/print.css'});
+			}
+		});
+	},
+	printdata:function(callback){
 		if(ebx.validInt(this.id) == 0){
 			$.messager.alert('错误', '请先保存单据！', 'error');	
 		}
@@ -26,12 +81,11 @@ ebx.bd.print = {
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/' + this.mode + '/print/',
-			data: {id: this.id, _:(new Date()).getTime()},
+			data: {findid: this.id, _:(new Date()).getTime()},
 			dataType: "json",
 			success: function(result){
 				if(result.result){
 					var titlestr = '<div class="headtitle">' + result.title + '</div>',
-						printbody = $('<div>'),
 						head = result.head,
 						foot = result.foot,
 						bdhead= '',
@@ -51,12 +105,19 @@ ebx.bd.print = {
 						listbodycount = 0,
 						color = result.color.rows,
 						size = result.size.rows,
-						productserial = '';
+						productserial = '',
+						border = ebx.validInt(result.border, 1),
+						header = ebx.validInt(result.header, 1),
+						footer = ebx.validInt(result.footer, 1),
+						listwidth = ebx.validInt(result.listwidth, 100),
+						headwidth = ebx.validInt(result.headwidth, 100),
+						footwidth = ebx.validInt(result.footwidth, 100),
+						headheight = ebx.validInt(result.headheight, 0);
 
 					if(ebx.validInt(liststyle.length) == 0 || ebx.validInt(head.length) == 0 || ebx.validInt(foot.length) == 0){
 						$.messager.alert('错误', '没有设置打印“'+result.title+'”的显示式样！', 'error');	
 					}else{
-						bdhead = '<table class="bdheadtable">'
+						bdhead = '<table style="width:'+headwidth+'%;margin-top:'+headheight+'px;" align="center" class="bdheadtable">'
 						var j = 0
 						for(var i in head){
 							if(j == 0)bdhead += '<tr>';
@@ -68,7 +129,7 @@ ebx.bd.print = {
 						if(j<2)bdhead += '</tr>';
 						bdhead += '</table>'
 						
-						bdfoot = '<table class="bdfoottable">'
+						bdfoot = '<table style="width:'+footwidth+'%;" align="center" class="bdfoottable">'
 						var j = 0
 						for(var i in foot){
 							if(j == 0)bdfoot += '<tr>';
@@ -80,12 +141,13 @@ ebx.bd.print = {
 						if(j<2)bdfoot += '</tr>';
 						bdfoot += '</table>'
 						
-						
-						listhead = '<tr><td class="listhead" style="border-right:2px solid #000;">No.</td>'
-						for(var i in liststyle){
-							listhead += '<td class="listhead" style="width:'+liststyle[i].width+';">' + liststyle[i].name + '</td>';
+						if(header){
+							listhead = '<tr><td class="listhead" style="border-right:2px solid #000;">No.</td>'
+							for(var i in liststyle){
+								listhead += '<td class="listhead" style="width:'+liststyle[i].width+';">' + liststyle[i].name + '</td>';
+							}
+							listhead += '</tr>'
 						}
-						listhead += '</tr>'
 						
 						var j = 0, page = 0;
 						for(var i in list){
@@ -108,7 +170,7 @@ ebx.bd.print = {
 							if(list[i].productserial){
 								if(list[i].productserial.total > 0){
 									if(list[i].productserial.total>10){
-										productserial += '<div style="page-break-after:always;font-size:12px;"><h3>附件：No.'+listbodycount+'的串号：</h3>';
+										productserial += '<div class="pagediv"><h3>附件：No.'+listbodycount+'的串号：</h3>';
 										for(var j in list[i].productserial.rows){
 											productserial += list[i].productserial.rows[j].productserial + ' ';
 										}
@@ -155,16 +217,17 @@ ebx.bd.print = {
 							}
 							if(page >= ebx.printpagesize){
 								pagesize++;
-								pagecount += '<tr>';
-								for(var i in liststyle){
-									if(i == 0){
-										pagecount += '<td class="listbody" colspan="2" style="text-align:center;border-top:2px solid #000;width:'+liststyle[i].width+';">本页合计</td>';
-									}else{
-										pagecount += '<td class="listbody" style="border-top:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+								if(footer){
+									pagecount += '<tr>';
+									for(var i in liststyle){
+										if(i == 0){
+											pagecount += '<td class="listbody" colspan="2" style="text-align:center;border-top:2px solid #000;width:'+liststyle[i].width+';">本页合计</td>';
+										}else{
+											pagecount += '<td class="listbody" style="border-top:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+										}
 									}
+									pagecount += '</tr>';
 								}
-								pagecount += '</tr>';
-								
 								pagelistbody.push({titlestr:titlestr, headtext:headtext, bdhead:bdhead, listhead:listhead, listbody: listbody, bdfoot: bdfoot, foottext:foottext, pagecount: pagecount});
 								pagecount = '';
 								pagefoot = {};
@@ -175,28 +238,31 @@ ebx.bd.print = {
 
 						if(page <= ebx.printpagesize && page > 0){
 							pagesize++;
-							pagecount += '<tr>';
-							for(var i in liststyle){
-								if(i == 0){
-									pagecount += '<td class="listbody" colspan="2" style="text-align:center;border-top:2px solid #000;width:'+liststyle[i].width+';">本页合计</td>';
-								}else{
-									pagecount += '<td class="listbody" style="border-top:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+							if(footer){
+								pagecount += '<tr>';
+								for(var i in liststyle){
+									if(i == 0){
+										pagecount += '<td class="listbody" colspan="2" style="text-align:center;border-top:2px solid #000;width:'+liststyle[i].width+';">本页合计</td>';
+									}else{
+										pagecount += '<td class="listbody" style="border-top:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+									}
 								}
+								pagecount += '</tr>';
 							}
-							pagecount += '</tr>';
 							pagelistbody.push({titlestr:titlestr, headtext:headtext, bdhead:bdhead, listhead:listhead, listbody: listbody, bdfoot: bdfoot, foottext:foottext, pagecount: pagecount});
 						}
 						
-						listcount += '<tr>';
-						for(var i in liststyle){
-							if(i == 0){
-								listcount += '<td class="listbody" colspan="2" style="text-align:center;border-bottom:2px solid #000;width:'+liststyle[i].width+';">总计</td>';
-							}else{
-								listcount += '<td class="listbody" style="border-bottom:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(listfoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+						if(footer){
+							listcount += '<tr>';
+							for(var i in liststyle){
+								if(i == 0){
+									listcount += '<td class="listbody" colspan="2" style="text-align:center;border-bottom:2px solid #000;width:'+liststyle[i].width+';">总计</td>';
+								}else{
+									listcount += '<td class="listbody" style="border-bottom:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(listfoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+								}
 							}
+							listcount += '</tr>';
 						}
-						listcount += '</tr>';
-
 						var s = '',
 							qrcodediv = $('<div id="qrcode">').appendTo('body'),
 							barcord = $('<svg id="barcode"></svg>').appendTo('body');
@@ -213,16 +279,19 @@ ebx.bd.print = {
 							height: 100
 						});
 						qrcode.makeCode('https://www.zydsoft.com');
-						//debugger;
+						var codeview = 0;
 						setTimeout(function(){
 							for(var i in pagelistbody){
-								s += '<div style="page-break-after:always;">'
-								s += '<svg class="barcord">' + $(barcord[0]).html() + '</svg>';
-								s += '<div class="qrcode">' + $(qrcode._el).html() + '</div>';
+								s += '<div class="pagediv">'
+								if(codeview==0){
+									s += '<svg class="barcord">' + $(barcord[0]).html() + '</svg>';
+									s += '<div class="qrcode">' + $(qrcode._el).html() + '</div>';
+									codeview++;
+								}
 								s += pagelistbody[i].titlestr;
 								s += pagelistbody[i].headtext;
 								s += pagelistbody[i].bdhead;
-								s += '<table class="listheadtable">' 
+								s += '<table style="width:'+listwidth+'%;" align="center" class="listheadtable">' 
 								s += pagelistbody[i].listhead;
 								s += pagelistbody[i].listbody;
 								s += pagelistbody[i].pagecount;
@@ -238,7 +307,12 @@ ebx.bd.print = {
 							if(productserial.length > 0){
 								s += productserial;
 							}
-							printbody.html(s).print({iframe:true,stylesheet:'/client/css/print.css'});
+							var printdata = $('<div>').html(s);
+							if(border == 0){
+								printdata.find('td').css({'border':0});
+								printdata.find('table').css({'border':0});
+							}
+							if(callback)callback(printdata);
 						},0);
 					}
 				}
