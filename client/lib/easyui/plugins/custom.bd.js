@@ -181,7 +181,7 @@ ebx.bd = {
 	},
 	_save:function(asSave, _layout, _Paramet, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Paramet：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：单据全局对象，callback回到函数
 		var listgrid = _layout.layout('panel', 'center').find('.datagrid-f'),
-			bdlistdata = listgrid.datagrid('getRows'),
+			bdlistdata = listgrid.datagrid('getData').firstRows,
 			by = function(name){
 				return function(o, p){
 					var a, b;

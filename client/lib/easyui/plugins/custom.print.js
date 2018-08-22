@@ -79,7 +79,7 @@ ebx.bd.print = {
 						bdfoot += '</table>'
 						
 						
-						listhead = '<tr><td class="listhead">No.</td>'
+						listhead = '<tr><td class="listhead" style="border-right:2px solid #000;">No.</td>'
 						for(var i in liststyle){
 							listhead += '<td class="listhead" style="width:'+liststyle[i].width+';">' + liststyle[i].name + '</td>';
 						}
@@ -89,7 +89,7 @@ ebx.bd.print = {
 						for(var i in list){
 							listbodycount++;
 							page++;
-							listbody += '<tr><td class="listbody">'+listbodycount+'</td>';
+							listbody += '<tr><td class="listbody" style="border-right:2px solid #000;">'+listbodycount+'</td>';
 							for(var j in liststyle){
 								var v = list[i][liststyle[j].field.toLowerCase()]===''?'　':list[i][liststyle[j].field.toLowerCase()];
 								listbody += '<td class="listbody" style="'+liststyle[j].style+';">' + ebx.Render.getRender(v, liststyle[j].render) + '</td>';
@@ -111,12 +111,12 @@ ebx.bd.print = {
 											productserial += list[i].productserial.rows[j].productserial + ' ';
 										}
 										productserial += '</div>'
-										listbody += '<tr><td class="listbody"></td>';
+										listbody += '<tr><td class="listbody" style="border-right:2px solid #000;"></td>';
 										listbody += '<td class="listbody" colspan="'+liststyle.length+'">串号：详见附件（串号数量大于10个的在附件中打印）';
 										listbody += '</td>';
 										listbody += '</tr>';
 									}else{
-										listbody += '<tr><td class="listbody"></td>';
+										listbody += '<tr><td class="listbody" style="border-right:2px solid #000;"></td>';
 										listbody += '<td class="listbody" colspan="'+liststyle.length+'">串号：';
 										for(var j in list[i].productserial.rows){
 											listbody += list[i].productserial.rows[j].productserial + ' ';
@@ -130,7 +130,7 @@ ebx.bd.print = {
 								if(list[i].colorsize.total > 0){
 									var colortext = '',
 										sizetext = '';
-									listbody += '<tr><td class="listbody"></td>';
+									listbody += '<tr><td class="listbody" style="border-right:2px solid #000;"></td>';
 									listbody += '<td class="listbody" colspan="'+liststyle.length+'">色码：';
 									for(var j in list[i].colorsize.rows){
 										for(var k in color){
@@ -156,9 +156,9 @@ ebx.bd.print = {
 								pagecount += '<tr>';
 								for(var i in liststyle){
 									if(i == 0){
-										pagecount += '<td class="listhead" colspan="2" style="width:'+liststyle[i].width+';">本页合计</td>';
+										pagecount += '<td class="listbody" colspan="2" style="text-align:center;border-top:2px solid #000;width:'+liststyle[i].width+';">本页合计</td>';
 									}else{
-										pagecount += '<td class="listbody" style="width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+										pagecount += '<td class="listbody" style="border-top:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
 									}
 								}
 								pagecount += '</tr>';
@@ -176,9 +176,9 @@ ebx.bd.print = {
 							pagecount += '<tr>';
 							for(var i in liststyle){
 								if(i == 0){
-									pagecount += '<td class="listhead" colspan="2" style="width:'+liststyle[i].width+';">本页合计</td>';
+									pagecount += '<td class="listbody" colspan="2" style="text-align:center;border-top:2px solid #000;width:'+liststyle[i].width+';">本页合计</td>';
 								}else{
-									pagecount += '<td class="listbody" style="width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+									pagecount += '<td class="listbody" style="border-top:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(pagefoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
 								}
 							}
 							pagecount += '</tr>';
@@ -188,9 +188,9 @@ ebx.bd.print = {
 						listcount += '<tr>';
 						for(var i in liststyle){
 							if(i == 0){
-								listcount += '<td class="listhead" colspan="2" style="width:'+liststyle[i].width+';">总计</td>';
+								listcount += '<td class="listbody" colspan="2" style="text-align:center;border-bottom:2px solid #000;width:'+liststyle[i].width+';">总计</td>';
 							}else{
-								listcount += '<td class="listbody" style="width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(listfoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
+								listcount += '<td class="listbody" style="border-bottom:2px solid #000;width:'+liststyle[i].width+';'+liststyle[i].style+';">' + ebx.Render.getRender(listfoot[liststyle[i].field.toLowerCase()], liststyle[i].render) + '</td>';
 							}
 						}
 						listcount += '</tr>';
@@ -210,7 +210,7 @@ ebx.bd.print = {
 							s += pagelistbody[i].bdfoot;
 							s += pagelistbody[i].foottext;
 							s += '<div class="pagesize">打印时间：' + new Date().Format("yyyy-MM-dd hh:mm:ss") + '</div>';
-							s += '<div class="pagesize">共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页</div>';
+							s += '<div class="pagesize">- 共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页 -</div>';
 							s += '</div>';
 						}
 						if(productserial.length > 0){

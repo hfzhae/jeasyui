@@ -7,7 +7,7 @@ dev by zz on 2018/8/5
 
 ebx.productserial = {
 	open: function(title, seriallength, d, index){//打开串号编辑界面，参数：title：产品名称，seriallength：串号长度，d：单据明细datagrid对象，index：单据明细datagrid得index
-		var v = d.datagrid('getRows')[index].productserial,
+		var v = d.datagrid('getData').firstRows[index].productserial,
 			win = $('<div>').appendTo($('body')),
 			productserial = $('<div>').appendTo(win),
 			toolbar = $('<div>'),
@@ -35,8 +35,8 @@ ebx.productserial = {
 		if(!v){
 			v = {total:0, rows: []};
 		}
-		if(d.datagrid('getRows')[index].colorsize){
-			if(ebx.validInt(d.datagrid('getRows')[index].colorsize.total) > 0){
+		if(d.datagrid('getData').firstRows[index].colorsize){
+			if(ebx.validInt(d.datagrid('getData').firstRows[index].colorsize.total) > 0){
 				$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
 				return;
 			}
@@ -105,7 +105,7 @@ ebx.productserial = {
 					$.messager.alert('错误','串号：' + reserial.substr(0, reserial.length - 1) + ' 存在重复','error');
 					return false;
 				}
-				var oldquantity = d.datagrid('getRows')[index].quantity;
+				var oldquantity = d.datagrid('getData').firstRows[index].quantity;
 				d.datagrid('updateRow', {
 					index: index,
 					row:{
@@ -341,7 +341,7 @@ ebx.productserial = {
 			success: function(result){
 				if(result){
 					if(result.total == 1){
-						var data = d.datagrid('getRows'),
+						var data = d.datagrid('getData').firstRows,
 							addflag = 0,
 							index = 0,
 							serialText = '';
@@ -441,7 +441,7 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 		this.title = title;
 		this.index = index;
 		this.d = d;
-		this.row = d.datagrid('getRows')[index];
+		this.row = d.datagrid('getData').firstRows[index];
 		this.productid = ebx.validInt(this.row.productid);
 		this.tab = tab
 	},
@@ -455,10 +455,10 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 			_d = this.d,
 			_index = this.index,
 			_tab = this.tab,
-			oldquantity = _d.datagrid('getRows')[_index].quantity;
+			oldquantity = _d.datagrid('getData').firstRows[_index].quantity;
 			
-		if(_d.datagrid('getRows')[_index].productserial){
-			if(ebx.validInt(_d.datagrid('getRows')[_index].productserial.total) > 0){
+		if(_d.datagrid('getData').firstRows[_index].productserial){
+			if(ebx.validInt(_d.datagrid('getData').firstRows[_index].productserial.total) > 0){
 				$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
 				return;
 			}
