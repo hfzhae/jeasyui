@@ -713,6 +713,15 @@ var ebx = {
 						}
 					}
 					break;
+				case 'textbox':
+					for(var i in o){
+						switch(i){
+							case 'onClickButton':
+								c['editor'].options.onClickButton = o[i];
+								break;
+						}
+					}
+					break;
 			}
 		},
 		setColumnsFunc:function(c, f, func){//写入明细列表字段的服务器端回调函数，参数：c：datagrid的列对象，f：字段名称，func：回掉函数名

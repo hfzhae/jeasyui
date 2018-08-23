@@ -294,38 +294,36 @@ ebx.bd.print = {
 						});
 						qrcode.makeCode('https://www.zydsoft.com');
 						var codeview = 0;
-						setTimeout(function(){
-							for(var i in pagelistbody){
-								s += '<div class="pagediv">'
-								s += pagelistbody[i].titlestr;
-								s += pagelistbody[i].headtext;
-								s += pagelistbody[i].bdhead;
-								s += '<table style="width:'+listwidth+'%;" align="center" class="listheadtable">' 
-								s += pagelistbody[i].listhead;
-								s += pagelistbody[i].listbody;
-								s += pagelistbody[i].pagecount;
-								s += listcount;
-								s += '</table>';
-								s += pagelistbody[i].bdfoot;
-								s += pagelistbody[i].foottext;
-								s += '<div class="pagesize">共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页，打印时间：' + new Date().Format("yyyy-MM-dd hh:mm:ss") + '</div>';
-								s += '</div>';
-								$('#qrcode').remove();
-								$('#barcode').remove();
-							}
-							if(productserial.length > 0){
-								s += productserial;
-							}
-							var printdata = $('<div>').html(s);
-							if(border == 0){
-								printdata.find('td').css({'border':0});
-								printdata.find('table').css({'border':0});
-							}
-							printdata.find('.pagediv:first').append(barcord).append(qrcodediv);
-							barcord.show();
-							qrcodediv.show();
-							if(callback)callback(printdata);
-						},0);
+						for(var i in pagelistbody){
+							s += '<div class="pagediv">'
+							s += pagelistbody[i].titlestr;
+							s += pagelistbody[i].headtext;
+							s += pagelistbody[i].bdhead;
+							s += '<table style="width:'+listwidth+'%;" align="center" class="listheadtable">' 
+							s += pagelistbody[i].listhead;
+							s += pagelistbody[i].listbody;
+							s += pagelistbody[i].pagecount;
+							s += listcount;
+							s += '</table>';
+							s += pagelistbody[i].bdfoot;
+							s += pagelistbody[i].foottext;
+							s += '<div class="pagesize">共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页，打印时间：' + new Date().Format("yyyy-MM-dd hh:mm:ss") + '</div>';
+							s += '</div>';
+							$('#qrcode').remove();
+							$('#barcode').remove();
+						}
+						if(productserial.length > 0){
+							s += productserial;
+						}
+						var printdata = $('<div>').html(s);
+						if(border == 0){
+							printdata.find('td').css({'border':0});
+							printdata.find('table').css({'border':0});
+						}
+						printdata.find('.pagediv:first').append(barcord).append(qrcodediv);
+						barcord.show();
+						qrcodediv.show();
+						if(callback)callback(printdata);
 					}
 				}
 				$.messager.progress('close');
