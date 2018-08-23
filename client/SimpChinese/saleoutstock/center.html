@@ -3,7 +3,7 @@
 		var bd = ebx.cloneObj(ebx.bd);
 		bd.showSearchserial = 1;
 		bd.init('center', function(c, s){
-			ebx.setDatagridEditor.editorType(c[0], 'productname', 'combogrid', {//ç”¨æ¥é€‰æ‹©èœå•ç»„çš„combogrid
+			ebx.setDatagridEditor.editorType(c[0], 'productname', 'combogrid', {//ÓÃÀ´Ñ¡Ôñ²Ëµ¥×éµÄcombogrid
 				style:'product',
 				//validType:'LetterInteger',
 				remoteSort:false,
@@ -14,9 +14,9 @@
 				panelWidth:400,
 				panelHeight:300,
 				droplisturl:'server/SimpChinese/product/open/',
-				hasDownArrow:false,//éšè—å³è¾¹å¾—ä¸‹ç®­å¤´
+				hasDownArrow:false,//Òş²ØÓÒ±ßµÃÏÂ¼ıÍ·
 				//template:147,
-				onCheck: function(rowIndex,rowData){//é€‰ä¸­åæ›´æ–°å½“å‰è¡Œçš„å†…å®¹ä¸ºé€‰ä¸­å†…å®¹
+				onCheck: function(rowIndex,rowData){//Ñ¡ÖĞºó¸üĞÂµ±Ç°ĞĞµÄÄÚÈİÎªÑ¡ÖĞÄÚÈİ
 					var r = s.datagrid('getData');
 					r.firstRows[s.datagrid('options').editIndex].serial = r.firstRows.length;
 					r.firstRows[s.datagrid('options').editIndex].productid = ebx.validInt(rowData.productid);
@@ -36,7 +36,7 @@
 				}
 			});
 			
-			ebx.setDatagridEditor.editorType(c[0], 'Quantity', 'textbox', {//å¤„ç†ç¼–è¾‘æ•°é‡æ—¶çš„è¿ç®—
+			ebx.setDatagridEditor.editorType(c[0], 'Quantity', 'textbox', {//´¦Àí±à¼­ÊıÁ¿Ê±µÄÔËËã
 				onChange: function(newValue, oldValue){
 					if(newValue != oldValue){
 						var data = s.datagrid('getData'),
@@ -59,7 +59,7 @@
 				}
 			});
 			
-			ebx.setDatagridEditor.editorType(c[0], 'price', 'textbox', {//å¤„ç†ç¼–è¾‘æ•°é‡æ—¶çš„è¿ç®—
+			ebx.setDatagridEditor.editorType(c[0], 'price', 'textbox', {//´¦Àí±à¼­ÊıÁ¿Ê±µÄÔËËã
 				onChange: function(newValue, oldValue){
 					if(newValue != oldValue){
 						var data = s.datagrid('getData'),
@@ -81,7 +81,7 @@
 				}
 			});
 			
-			ebx.setDatagridEditor.editorType(c[0], 'amount', 'textbox', {//å¤„ç†ç¼–è¾‘é‡‘é¢æ—¶çš„è¿ç®—
+			ebx.setDatagridEditor.editorType(c[0], 'amount', 'textbox', {//´¦Àí±à¼­½ğ¶îÊ±µÄÔËËã
 				onChange: function(newValue, oldValue){
 					if(newValue != oldValue){
 						var data = s.datagrid('getData'),
@@ -108,24 +108,24 @@
 				}
 			});
 			
-			ebx.setDatagridEditor.editorType(c[0], 'expire', 'datebox', {});//å¤„ç†è´¨ä¿æœŸ
+			ebx.setDatagridEditor.editorType(c[0], 'expire', 'datebox', {});//´¦ÀíÖÊ±£ÆÚ
 
-			ebx.setDatagridEditor.editorType(c[0], 'ProductSerial', '', {});//æ¸…é™¤ä¸²å·ç¼–è¾‘åŠŸèƒ½
-			ebx.setDatagridEditor.editorType(c[0], 'ColorSize', '', {});//æ¸…é™¤è‰²ç ç¼–è¾‘åŠŸèƒ½
-			ebx.setDatagridEditor.editorType(c[0], 'ProductCode', '', {});//æ¸…é™¤ä¸²å·ç¼–è¾‘åŠŸèƒ½
+			ebx.setDatagridEditor.editorType(c[0], 'ProductSerial', '', {});//Çå³ı´®ºÅ±à¼­¹¦ÄÜ
+			ebx.setDatagridEditor.editorType(c[0], 'ColorSize', '', {});//Çå³ıÉ«Âë±à¼­¹¦ÄÜ
+			ebx.setDatagridEditor.editorType(c[0], 'ProductCode', '', {});//Çå³ı´®ºÅ±à¼­¹¦ÄÜ
 			
-			ebx.setDatagridEditor.setColumnsFunc(c[0], 'expire', 'cbRSDate');//å†™å…¥æœåŠ¡å™¨ç«¯ç”¨å›æ‰å‡½æ•°
+			ebx.setDatagridEditor.setColumnsFunc(c[0], 'expire', 'cbRSDate');//Ğ´Èë·şÎñÆ÷¶ËÓÃ»Øµôº¯Êı
 		}, function(s){
 			s.datagrid('options').onClickCell = function(index, field, value){
-				switch(field.toLowerCase()){//å¤„ç†ä¸²å·ç¼–è¾‘
+				switch(field.toLowerCase()){//´¦Àí´®ºÅ±à¼­
 					case 'productserial':
-						var productserialopen = ebx.cloneObj(ebx.productserial),//å¤åˆ¶äº§å“ä¸²å·ç¼–è¾‘å¯¹è±¡
+						var productserialopen = ebx.cloneObj(ebx.productserial),//¸´ÖÆ²úÆ·´®ºÅ±à¼­¶ÔÏó
 							row = s.datagrid('getData').firstRows[index];
 						//productserialopen.open(row.productname, row.lengthserial, s, index);
 						productserialopen.open(row.productname, row.lengthserial, s, index);
 						break;
 					case 'colorsize':
-						var colorsizeopen = ebx.cloneObj(ebx.colorsize),//å¤åˆ¶äº§å“è‰²ç ç¼–è¾‘å¯¹è±¡
+						var colorsizeopen = ebx.cloneObj(ebx.colorsize),//¸´ÖÆ²úÆ·É«Âë±à¼­¶ÔÏó
 							row = s.datagrid('getData').firstRows[index];
 						colorsizeopen.init(row.productname, s, index, bd.tab);
 						colorsizeopen.open();
@@ -140,7 +140,7 @@
 						break;
 				}
 			}
-			s.datagrid('options').onRowContextMenu = function(e, rowIndex, rowData){//é¼ æ ‡å³é”®å¤„ç†æ–¹æ³•
+			s.datagrid('options').onRowContextMenu = function(e, rowIndex, rowData){//Êó±êÓÒ¼ü´¦Àí·½·¨
 				if(rowIndex < 0)return;
 				d = $(this);
 				d.datagrid('selectRow', rowIndex)
@@ -149,14 +149,14 @@
 				RowContextMenu.menu({
 					width:100
 				}).menu('appendItem', {
-					text: 'æŸ¥çœ‹åº“å­˜',
+					text: '²é¿´¿â´æ',
 					iconCls: 'icon-ChartTypePieInsertGallery',
 					disable:true,
 					onclick:function(){
 						if(ebx.validInt(rowData.productid) == 0){
 							$.messager.show({
-								title: 'é”™è¯¯',
-								msg: 'è¯·é€‰æ‹©äº§å“ã€‚',
+								title: '´íÎó',
+								msg: 'ÇëÑ¡Ôñ²úÆ·¡£',
 								timeout: 3000,
 								showType: 'slide'
 							});
@@ -165,7 +165,7 @@
 						var win = $('<div>').appendTo($('body')),
 							stockquery = $('<div>').appendTo(win);
 						win.window({
-							title: rowData.productname + ' çš„åº“å­˜',
+							title: rowData.productname + ' µÄ¿â´æ',
 							width:800,    
 							height:600, 
 							maxWidth:'90%',
@@ -184,7 +184,7 @@
 						$.ajax({
 							type: 'post', 
 							url: 'server/SimpChinese/DataProvider/style/',
-							data: {style:'ItemBatch',_:(new Date()).getTime()},//styleåç§°å¿…é¡»å’Œmodeç›¸å»åˆ
+							data: {style:'ItemBatch',_:(new Date()).getTime()},//styleÃû³Æ±ØĞëºÍmodeÏàÎÇºÏ
 							dataType: "json",
 							success: function(result){
 								if(result){
@@ -203,7 +203,7 @@
 										striped:true,
 										data:{total:0,rows:[]},
 										url:'server/SimpChinese/product/stock/',
-										nowrap:true,//ç¦ç”¨è‡ªåŠ¨æ¢è¡Œ
+										nowrap:true,//½ûÓÃ×Ô¶¯»»ĞĞ
 										method:'post',
 										queryParams:{_:(new Date()).getTime(),id:rowData.productid,listview:ebx.convertDicToJson(ebx.listview)},
 										multiSort:false,
@@ -213,17 +213,17 @@
 										border:result.bd[0].border,
 										showFooter:result.bd[0].footer,
 										showHeader:result.bd[0].header
-									}).datagrid('renderformatterstyler');//å¯ç”¨æ˜¾ç¤ºå¼æ ·å›è°ƒå‡½æ•°
+									}).datagrid('renderformatterstyler');//ÆôÓÃÏÔÊ¾Ê½Ñù»Øµ÷º¯Êı
 								}
 							}
 						});
 					}
 				}).menu('appendItem', {
-					text: 'åˆ é™¤',
+					text: 'É¾³ı',
 					iconCls: 'icon-Delete',
 					disabled:rowData.auditid?true:(rowData.isdeleted?true:false),
 					onclick: function(){
-						$.messager.confirm('ç¡®è®¤å¯¹è¯æ¡†', 'æ‚¨æƒ³è¦åˆ é™¤å—ï¼Ÿåˆ é™¤æ“ä½œåæ•°æ®å°†æ— æ³•æ¢å¤ã€‚', function(r){
+						$.messager.confirm('È·ÈÏ¶Ô»°¿ò', 'ÄúÏëÒªÉ¾³ıÂğ£¿É¾³ı²Ù×÷ºóÊı¾İ½«ÎŞ·¨»Ö¸´¡£', function(r){
 							if (r){
 								d.datagrid('deleteRow', rowIndex);						
 								ebx.setEditstatus(bd.tab, true);

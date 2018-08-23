@@ -1,37 +1,24 @@
 /****************************************************************
 Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/8/17
-单据打印对象，依赖于jquery.print.js
+单据打印对象，依赖组件：'print','barcode','qrcode','switchbutton','numberspinner'
 
 *****************************************************************/
 
 ebx.bd.print = {
 	id: 0,
 	mode: '',
-	title: '',
-	init:function(id, mode){
+	init:function(id, mode){//初始化
 		this.id = id;
 		this.mode = mode;
 	},
-	preview:function(){
+	preview:function(){//预览
 		this.printdata(function(d){
 			if(d){
-				var win = $('<div style="background-color:#525659;">').appendTo('body');
-				// 动态加载css文件                                              
-				function loadStyles(url) {                                     
-					 var link = document.createElement("link");                 
-					 link.type = "text/css";                                    
-					 link.rel = "stylesheet";                                   
-					 link.href = url;                                           
-					 document.getElementsByTagName("head")[0].appendChild(link);
-				}                                                              
-				// 测试
-				loadStyles("/client/css/print.css");
-				
+				var win = $('<div style="background-color:#ccc;">').appendTo('body');
+				ebx.loadStyles("/client/css/print.css");
 				d.appendTo(win);
-				
 				var pringbtn = $('<div>').appendTo(win);
-				
 				pringbtn.linkbutton({
 					text:'打印',
 					iconCls:'icon-PrintDialogAccess-large',
@@ -49,8 +36,6 @@ ebx.bd.print = {
 					'left':5,
 					'width':60
 				});
-
-				
 				win.window({
 					title: '打印预览',
 					width:'60%',    
@@ -68,14 +53,13 @@ ebx.bd.print = {
 						win.remove();
 					}
 				});
-				
 				$('body').find('.window-mask').on('click', function(){
 					win.window('close');
 				}); 
 			}
 		});
 	},
-	print: function(){
+	print: function(){//打印
 		this.printdata(function(d){
 			if(d){
 				var printbody = $('<div>');
@@ -84,14 +68,12 @@ ebx.bd.print = {
 			}
 		});
 	},
-	printdata:function(callback){
+	printdata:function(callback){//打印数据渲染
 		if(ebx.validInt(this.id) == 0){
 			$.messager.alert('错误', '请先保存单据！', 'error');	
 		}
 		$.messager.progress({title:'正在打印...',text:''});
-		var _id = this.id,
-			_PrefixInteger = this.PrefixInteger;
-			
+		var _id = this.id;
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/' + this.mode + '/print/',
@@ -281,9 +263,10 @@ ebx.bd.print = {
 							qrcodediv = $('<div id="qrcode" class="qrcode">').appendTo('body'),
 							barcord = $('<svg id="barcode" class="barcord"></svg>').appendTo('body');
 						
-						JsBarcode("#barcode", _PrefixInteger(_id, 10), {
+						JsBarcode("#barcode", ebx.PrefixInteger(_id, 11), {
 							displayValue: false,
 							height:50,
+							width:1.5,//每条竖线间隔距离
 							fontSize:15,
 							lineColor: "#000"
 						});
@@ -293,47 +276,45 @@ ebx.bd.print = {
 							height: 100
 						});
 						qrcode.makeCode('https://www.zydsoft.com');
-						var codeview = 0;
-						for(var i in pagelistbody){
-							s += '<div class="pagediv">'
-							s += pagelistbody[i].titlestr;
-							s += pagelistbody[i].headtext;
-							s += pagelistbody[i].bdhead;
-							s += '<table style="width:'+listwidth+'%;" align="center" class="listheadtable">' 
-							s += pagelistbody[i].listhead;
-							s += pagelistbody[i].listbody;
-							s += pagelistbody[i].pagecount;
-							s += listcount;
-							s += '</table>';
-							s += pagelistbody[i].bdfoot;
-							s += pagelistbody[i].foottext;
-							s += '<div class="pagesize">共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页，打印时间：' + new Date().Format("yyyy-MM-dd hh:mm:ss") + '</div>';
-							s += '</div>';
-							$('#qrcode').remove();
-							$('#barcode').remove();
-						}
-						if(productserial.length > 0){
-							s += productserial;
-						}
-						var printdata = $('<div>').html(s);
-						if(border == 0){
-							printdata.find('td').css({'border':0});
-							printdata.find('table').css({'border':0});
-						}
-						printdata.find('.pagediv:first').append(barcord).append(qrcodediv);
-						barcord.show();
-						qrcodediv.show();
-						if(callback)callback(printdata);
+						setTimeout(function(){
+							for(var i in pagelistbody){
+								s += '<div class="pagediv">'
+								s += pagelistbody[i].titlestr;
+								s += pagelistbody[i].headtext;
+								s += pagelistbody[i].bdhead;
+								s += '<table style="width:'+listwidth+'%;" align="center" class="listheadtable">' 
+								s += pagelistbody[i].listhead;
+								s += pagelistbody[i].listbody;
+								s += pagelistbody[i].pagecount;
+								s += listcount;
+								s += '</table>';
+								s += pagelistbody[i].bdfoot;
+								s += pagelistbody[i].foottext;
+								s += '<div class="pagesize">共 ' + pagesize + ' 页，第 ' + (ebx.validInt(i) + 1) + ' 页，打印时间：' + new Date().Format("yyyy-MM-dd hh:mm:ss") + '</div>';
+								s += '</div>';
+								$('#qrcode').remove();
+								$('#barcode').remove();
+							}
+							if(productserial.length > 0){
+								s += productserial;
+							}
+							var printdata = $('<div>').html(s);
+							if(border == 0){
+								printdata.find('td').css({'border':0});
+								printdata.find('table').css({'border':0});
+							}
+							printdata.find('.pagediv:first').append(barcord).append(qrcodediv);
+							barcord.show();
+							qrcodediv.show();
+							if(callback)callback(printdata);
+						},0)
 					}
 				}
 				$.messager.progress('close');
 			}
 		});
 	},
-	PrefixInteger: function(num, length) {
-		return (Array(length).join('0') + num).slice(-length);
-	},
-	setup: function(){
+	setup: function(){//打印设置
 		var win = $('<div>').appendTo('body'),
 			pagesize = $('<div>').appendTo(win),
 			printtype = $('<div>').appendTo(win),

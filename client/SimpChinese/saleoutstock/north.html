@@ -1,10 +1,10 @@
 <script type="text/javascript">
 	easyloader.load([], function(){		
 		var bd = ebx.cloneObj(ebx.bd);
-		bd._export = function(){//é‡é€ å¯¼å…¥æ–¹æ³•
+		bd._export = function(){//ÖØÔìµ¼Èë·½·¨
 			$.messager.alert({
-				title: 'é”™è¯¯',
-				msg: 'ä¸æ”¯æŒå¯¼å…¥ã€‚',
+				title: '´íÎó',
+				msg: '²»Ö§³Öµ¼Èë¡£',
 				timeout: 3000,
 				showType: 'slide'
 			});
@@ -15,20 +15,20 @@
 
 		bd.init('north',function(data){
 			data.tabs[0].groups.push({
-				title:'æ”¶æ¬¾æ–¹å¼',
+				title:'ÊÕ¿î·½Ê½',
 				tools:[{
 					type:'toolbar',
 					dir:'v',
 					tools:[{
-						//text:'æ”¶æ¬¾æ–¹å¼',
+						//text:'ÊÕ¿î·½Ê½',
 						//iconAlign:'top',
 						size:'large',
 						iconCls:'icon-TableDrawTable-large',
 						onClick: function(){
 							if(ebx.validInt(bd.ID) == 0){
 								$.messager.show({
-									title: 'æç¤º',
-									msg: 'è¯·å…ˆä¿å­˜å•æ®ï¼',
+									title: 'ÌáÊ¾',
+									msg: 'ÇëÏÈ±£´æµ¥¾İ£¡',
 									timeout: 3000,
 									showType: 'slide'
 								});
@@ -43,7 +43,7 @@
 								grid = $('<div>').appendTo(win);
 							
 							win.window({
-								title: 'æ”¶æ¬¾æ–¹å¼',
+								title: 'ÊÕ¿î·½Ê½',
 								width:300,    
 								height:400, 
 								maxWidth:'90%',
@@ -68,8 +68,8 @@
 									_:(new Date()).getTime()
 								},
 								columns:[[    
-									{field:'payment',title:'æ”¶æ¬¾æ–¹å¼',editor:'text',width:100},
-									{field:'amount',title:'é‡‘é¢',editor:'text',width:100,fieldstyle:'text-align:right;',render:'currencyRender'}
+									{field:'payment',title:'ÊÕ¿î·½Ê½',editor:'text',width:100},
+									{field:'amount',title:'½ğ¶î',editor:'text',width:100,fieldstyle:'text-align:right;',render:'currencyRender'}
 								]],
 								toolbar: toolbar,
 								border: false,
@@ -83,7 +83,7 @@
 							}).datagrid('renderformatterstyler');
 							
 							newbtn.linkbutton({
-								text:'æ–°è¡Œ',
+								text:'ĞÂĞĞ',
 								iconCls:'icon-CellsInsertDialog',
 								plain:true,
 								onClick: function(){
@@ -93,21 +93,21 @@
 								}
 							});
 							delbtn.linkbutton({
-								text:'åˆ è¡Œ',
+								text:'É¾ĞĞ',
 								iconCls:'icon-CellsDelete',
 								plain:true,
 								onClick: function(){
 									var index = grid.datagrid('getRowIndex', grid.datagrid('getSelected'));
 									if(index < 0){
 										$.messager.show({
-											title: 'æç¤º',
-											msg: 'è¯·å…ˆé€‰ä¸­ä¸€è¡Œã€‚',
+											title: 'ÌáÊ¾',
+											msg: 'ÇëÏÈÑ¡ÖĞÒ»ĞĞ¡£',
 											timeout: 3000,
 											showType: 'slide'
 										});									
 										return;
 									}
-									$.messager.confirm('ç¡®è®¤å¯¹è¯æ¡†', 'æ‚¨æƒ³è¦åˆ é™¤å—ï¼Ÿåˆ é™¤æ“ä½œåæ•°æ®å°†æ— æ³•æ¢å¤ã€‚', function(r){
+									$.messager.confirm('È·ÈÏ¶Ô»°¿ò', 'ÄúÏëÒªÉ¾³ıÂğ£¿É¾³ı²Ù×÷ºóÊı¾İ½«ÎŞ·¨»Ö¸´¡£', function(r){
 										if (r){
 											grid.datagrid('deleteRow', index);
 											if(index >= grid.datagrid('getData').total && index > 0) index--;
@@ -121,11 +121,11 @@
 								}
 							});
 							clearbtn.linkbutton({
-								text:'æ¸…ç©º',
+								text:'Çå¿Õ',
 								iconCls:'icon-TableDelete',
 								plain:true,
 								onClick: function(){
-									$.messager.confirm('ç¡®è®¤å¯¹è¯æ¡†', 'æ‚¨æƒ³è¦æ¸…ç©ºå—ï¼Ÿæ¸…ç©ºæ“ä½œåæ•°æ®å°†æ— æ³•æ¢å¤ã€‚', function(r){
+									$.messager.confirm('È·ÈÏ¶Ô»°¿ò', 'ÄúÏëÒªÇå¿ÕÂğ£¿Çå¿Õ²Ù×÷ºóÊı¾İ½«ÎŞ·¨»Ö¸´¡£', function(r){
 										if (r){
 											grid.datagrid('loadData', { total: 0, rows: [] }); 
 										}
@@ -133,11 +133,11 @@
 								}
 							});
 							savebtn.linkbutton({
-								text:'ä¿å­˜',
+								text:'±£´æ',
 								iconCls:'icon-FileSave',
 								plain:true,
 								onClick:function(){
-									$.messager.progress({title:'æ­£åœ¨ä¿å­˜...',text:''}); 
+									$.messager.progress({title:'ÕıÔÚ±£´æ...',text:''}); 
 									var data = grid.datagrid('getData'),
 										datastr = ebx.convertDicToJson(data);
 										
@@ -150,15 +150,15 @@
 											$.messager.progress('close');
 											if(result.result){
 												$.messager.show({
-													title: 'æç¤º',
-													msg: 'æ”¶æ¬¾æ–¹å¼ä¿å­˜æˆåŠŸï¼',
+													title: 'ÌáÊ¾',
+													msg: 'ÊÕ¿î·½Ê½±£´æ³É¹¦£¡',
 													timeout: 3000,
 													showType: 'slide'
 												});
 												grid.datagrid('load');
 											}else{
 												$.messager.alert({
-													title: 'é”™è¯¯',
+													title: '´íÎó',
 													msg: result.msg,
 													timeout: 3000,
 													showType: 'slide'

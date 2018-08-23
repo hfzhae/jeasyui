@@ -1,4 +1,4 @@
-<script type="text/javascript">
+﻿<script type="text/javascript">
 	easyloader.load([], function(){		
 		var bd = ebx.cloneObj(ebx.bd);
 		bd.init('east', function(c, s){
@@ -119,7 +119,7 @@
 					$.ajax({
 						type: 'post', 
 						url: 'server/SimpChinese/saleoutstock/saveInvoiceNum/',
-						data: {id: bd.ID, invoicenum: InvoiceNum,invoicetype: escape(InvoiceType), invoicememo: escape(InvoiceMemo), _:(new Date()).getTime()},
+						data: {id: bd.ID, invoicenum: escape(InvoiceNum),invoicetype: InvoiceType, invoicememo: escape(InvoiceMemo), _:(new Date()).getTime()},
 						dataType: "json",
 						success: function(result){
 							$.messager.progress('close');
@@ -177,7 +177,7 @@
 					$.ajax({
 						type: 'post', 
 						url: 'server/SimpChinese/saleoutstock/saveInvoiceNum/',
-						data: {id: bd.ID, invoicenum: InvoiceNum,invoicetype: escape(InvoiceType), invoicememo: escape(InvoiceMemo), _:(new Date()).getTime()},
+						data: {id: bd.ID, invoicenum: escape(InvoiceNum),invoicetype: InvoiceType, invoicememo: escape(InvoiceMemo), _:(new Date()).getTime()},
 						dataType: "json",
 						success: function(result){
 							$.messager.progress('close');

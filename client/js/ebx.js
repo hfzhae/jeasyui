@@ -1,4 +1,4 @@
-/****************************************************************
+﻿/****************************************************************
 Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/2/16
 *****************************************************************/
@@ -710,6 +710,9 @@ var ebx = {
 							case 'onSelect':
 								c['editor'].options.onSelect = o[i];
 								break;
+							case 'onHidePanel':
+								c['editor'].options.onSelect = o[i];
+								break;
 						}
 					}
 					break;
@@ -872,7 +875,7 @@ var ebx = {
 			}
 		}
 	},
-	storage: {
+	storage: {//localStorage重定义方法
 		get: function (name) {
 			return JSON.parse(localStorage.getItem(name));
 		},
@@ -884,7 +887,17 @@ var ebx = {
 			let newVal = oldVal.concat(addVal);
 			storage.set(name, newVal);
 		}
-	}
+	},
+	loadStyles:	function (url) {// 动态加载css文件
+		 var link = document.createElement("link");                 
+		 link.type = "text/css";                                    
+		 link.rel = "stylesheet";                                   
+		 link.href = url;                                           
+		 document.getElementsByTagName("head")[0].appendChild(link);
+	},
+	PrefixInteger: function(num, length) {//数字位数补齐
+		return (Array(length).join('0') + num).slice(-length);
+	}	
 };
 
 ebx.init();

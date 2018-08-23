@@ -1,15 +1,14 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-	//debugger;
-	if(!ebx.stdin['id'] || !ebx.stdin['invoicetype'] || !ebx.stdin['invoicememo'] || !ebx.stdin['invoicenum']){
+	if(!ebx.stdin['id'] || !ebx.stdin['invoicetype']){
 		ebx.stdout = {result:0, msg: '参数不足'};
 		return;
 	}
 	var id = ebx.validInt(ebx.stdin['id']),
 		invoicetype = ebx.validInt(ebx.stdin['invoicetype']),
-		invoicememo = ebx.sqlStringEncode(unescape(ebx.stdin['invoicememo'])),
-		invoicenum = ebx.sqlStringEncode(unescape(ebx.stdin['invoicenum']));
+		invoicememo = ebx.sqlStringEncode(ebx.stdin['invoicememo']),
+		invoicenum = ebx.sqlStringEncode(ebx.stdin['invoicenum']);
 	
 	if(id == 0){
 		ebx.stdout = {result:0, msg: '参数不足'};

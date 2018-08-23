@@ -66,6 +66,7 @@ var ebx = {
 	},
 	sqlStringEncode: function (s){
 		if(s == undefined) return('');
+		//s = unescape(decodeURI(s));
 		return(s.replaceAll("'", "''"));
 	},
 	sqlstrTtodate: function (num) {//sql的日期文本格式化
