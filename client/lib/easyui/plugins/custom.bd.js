@@ -461,7 +461,7 @@ ebx.bd = {
 								bd.print.print();
 							}
 						},{
-							text:'预览',
+							text:'打印预览',
 							iconCls:'icon-ViewsAdpDiagramPrintPreview',
 							onClick: function(){
 								bd.print.init(bd.ID,
@@ -474,7 +474,7 @@ ebx.bd = {
 							text:'打印设置',
 							iconCls:'icon-PrintOptionsMenu',
 							onClick: function(){
-
+								bd.print.setup();
 							}
 						}]
 					},{

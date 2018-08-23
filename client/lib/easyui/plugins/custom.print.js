@@ -16,7 +16,7 @@ ebx.bd.print = {
 	preview:function(){
 		this.printdata(function(d){
 			if(d){
-				var win = $('<div style="background-color:#eee;">').appendTo('body');
+				var win = $('<div style="background-color:#525659;">').appendTo('body');
 				// 动态加载css文件                                              
 				function loadStyles(url) {                                     
 					 var link = document.createElement("link");                 
@@ -29,6 +29,28 @@ ebx.bd.print = {
 				loadStyles("/client/css/print.css");
 				
 				d.appendTo(win);
+				
+				var pringbtn = $('<div>').appendTo(win);
+				
+				pringbtn.linkbutton({
+					text:'打印',
+					iconCls:'icon-PrintDialogAccess-large',
+					iconAlign:'top',
+					size:'large',
+					onClick: function(){
+						win.window('close');
+						var printbody = $('<div>');
+						d.find('.pagediv').css({'margin':0,'border':0,'box-shadow':'0px 0px 0px #fff'});
+						printbody.html(d.html()).print({globalStyles:false,iframe:true,stylesheet:'/client/css/print.css'});
+					}
+				}).css({
+					'position':'absolute',
+					'top':33,
+					'left':5,
+					'width':60
+				});
+
+				
 				win.window({
 					title: '打印预览',
 					width:'60%',    
@@ -42,19 +64,11 @@ ebx.bd.print = {
 					resizable:false,
 					border:'thin',
 					shadow:false,
-					tools:[{
-						iconCls:'icon-PrintDialogAccess',
-						handler:function(){
-							win.window('close');
-							var printbody = $('<div>');
-							d.find('.pagediv').css({'margin':0,'border':0,'box-shadow':'0px 0px 0px #fff'});
-							printbody.html(d.html()).print({iframe:true,stylesheet:'/client/css/print.css'});
-						}
-					}],
 					onBeforeClose: function(){
 						win.remove();
 					}
 				});
+				
 				$('body').find('.window-mask').on('click', function(){
 					win.window('close');
 				}); 
@@ -66,7 +80,7 @@ ebx.bd.print = {
 			if(d){
 				var printbody = $('<div>');
 				d.find('.pagediv').css({'margin':0,'border':0,'box-shadow':'0px 0px 0px #fff'});
-				printbody.html(d.html()).print({iframe:true,stylesheet:'/client/css/print.css'});
+				printbody.html(d.html()).print({globalStyles:false,iframe:true,stylesheet:'/client/css/print.css'});
 			}
 		});
 	},
@@ -264,8 +278,8 @@ ebx.bd.print = {
 							listcount += '</tr>';
 						}
 						var s = '',
-							qrcodediv = $('<div id="qrcode">').appendTo('body'),
-							barcord = $('<svg id="barcode"></svg>').appendTo('body');
+							qrcodediv = $('<div id="qrcode" class="qrcode">').appendTo('body'),
+							barcord = $('<svg id="barcode" class="barcord"></svg>').appendTo('body');
 						
 						JsBarcode("#barcode", _PrefixInteger(_id, 10), {
 							displayValue: false,
@@ -283,11 +297,6 @@ ebx.bd.print = {
 						setTimeout(function(){
 							for(var i in pagelistbody){
 								s += '<div class="pagediv">'
-								if(codeview==0){
-									s += '<svg class="barcord">' + $(barcord[0]).html() + '</svg>';
-									s += '<div class="qrcode">' + $(qrcode._el).html() + '</div>';
-									codeview++;
-								}
 								s += pagelistbody[i].titlestr;
 								s += pagelistbody[i].headtext;
 								s += pagelistbody[i].bdhead;
@@ -312,6 +321,9 @@ ebx.bd.print = {
 								printdata.find('td').css({'border':0});
 								printdata.find('table').css({'border':0});
 							}
+							printdata.find('.pagediv:first').append(barcord).append(qrcodediv);
+							barcord.show();
+							qrcodediv.show();
 							if(callback)callback(printdata);
 						},0);
 					}
@@ -322,5 +334,82 @@ ebx.bd.print = {
 	},
 	PrefixInteger: function(num, length) {
 		return (Array(length).join('0') + num).slice(-length);
+	},
+	setup: function(){
+		var win = $('<div>').appendTo('body'),
+			pagesize = $('<div>').appendTo(win),
+			printtype = $('<div>').appendTo(win),
+			defaultbtn = $('<div>').appendTo(win);
+		
+		win.window({
+			title: '打印设置',
+			width:200,    
+			height:120, 
+			maxWidth:'90%',
+			maxHeight:'90%',
+			modal:true,
+			collapsible:false,
+			minimizable:false,
+			maximizable:false,
+			resizable:false,
+			border:'thin',
+			shadow:false,
+			onBeforeClose: function(){
+				win.remove();
+			}
+		}).css({'padding':10});
+		
+		$('body').find('.window-mask').on('click', function(){
+			win.window('close');
+		}); 
+
+		pagesize.numberspinner({    
+			min: 1,    
+			max: 100,    
+			editable: false,
+			label:'每页打印行数',
+			value: ebx.printpagesize,
+			onSpinUp:function(){
+				ebx.printpagesize = pagesize.numberspinner('getValue');
+				ebx.storage.set('printpagesize', ebx.printpagesize);
+			},
+			onSpinDown:function(){
+				ebx.printpagesize = pagesize.numberspinner('getValue');
+				ebx.storage.set('printpagesize', ebx.printpagesize);
+			}
+		}).css({'margin':'5px'}); 
+
+		printtype.combobox({
+			label:'打印样式',
+			data:[{
+				text: '宽行',
+				id: '0'
+			},{
+				text: '窄行',
+				id: '1'
+			}],    
+			valueField:'id',    
+			textField:'text',
+			value:ebx.printtype,
+			panelHeight: 'auto',
+			disabled:true,
+			onChange:function(){
+				ebx.printtype = printtype.combobox('getValue');
+				ebx.storage.set('printtype', ebx.printtype);
+			}
+		}).css({'margin':'5px'}); 
+
+		defaultbtn.linkbutton({
+			text:'恢复默认值',
+			onClick:function(){
+				pagesize.numberspinner('setValue', 10);
+				ebx.printpagesize = 10;
+				ebx.storage.set('printpagesize', ebx.printpagesize);
+				printtype.combobox('setValue', 0);
+				ebx.printtype = 0;
+				ebx.storage.set('printtype', ebx.printtype);
+			}
+		}).css({'margin-top':'10px'});
+
 	}
 }

@@ -7,6 +7,7 @@ var ebx = {
 	decimal:2,//小数位数，默认2
 	pagesize: 128,//datagrid分页行数
 	printpagesize: 10,
+	printtype:0,//打印样式，0为宽行打印，1为窄行打印
 	importFileMaxSize: 1024*5,//导入文件大小控制，单位K
 	listview:{ //显示列数组
 		productserial:1, //串号
@@ -113,6 +114,9 @@ var ebx = {
 					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			return fmt;
 		}
+		if(ebx.storage.get('printpagesize'))ebx.printpagesize=ebx.storage.get('printpagesize');//读取浏览器缓存。设置打印行数
+		if(ebx.storage.get('printtype'))ebx.printtype=ebx.storage.get('printtype');//读取浏览器缓存。设置打印类型
+		
  	},
 	getThemes: function(){//获取主题函数
 		var Storage = window.localStorage;
@@ -857,6 +861,19 @@ var ebx = {
 					}
 				}
 			}
+		}
+	},
+	storage: {
+		get: function (name) {
+			return JSON.parse(localStorage.getItem(name));
+		},
+		set: function (name, val) {
+			localStorage.setItem(name, JSON.stringify(val));
+		},
+		add: function (name, addVal) {
+			let oldVal = storage.get(name);
+			let newVal = oldVal.concat(addVal);
+			storage.set(name, newVal);
 		}
 	}
 };
