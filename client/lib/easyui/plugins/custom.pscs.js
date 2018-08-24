@@ -449,7 +449,6 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 		var _group = this.group,
 			_productid = this.productid,
 			_title = this.title,
-			_getColorSize = this._getColorSize,
 			_title = this.title,
 			_row = this.row,
 			_d = this.d,
@@ -541,7 +540,7 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 											for(var k in _row.colorsize.rows){
 												if(ebx.validInt(_row.colorsize.rows[k].colorid) == ebx.validInt(result.rows[i].colorid)){
 													for(var j in result.rows[i]){
-														if(ebx.validInt(j.substr(5, j.length)) == ebx.validInt(_row.colorsize.rows[k].sizeid)){
+														if(ebx.validInt(j.substr(5, j.length), -1) == ebx.validInt(_row.colorsize.rows[k].sizeid)){
 															result.rows[i][j] = ebx.validInt(_row.colorsize.rows[k].quantity);
 														}
 													}
@@ -562,6 +561,7 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 										width:'100%',
 										height:'100%',
 										columns: [result.style.rows],
+										lastinsertRow:false,
 										toolbar: toolbar
 									}).datagrid('renderformatterstyler');
 									
@@ -603,8 +603,5 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 				}
 			}
 		});
-	},
-	_getColorSize: function(id){//获取色码组的recordset结构，参数：id：色码组ID
-		
 	}
 }

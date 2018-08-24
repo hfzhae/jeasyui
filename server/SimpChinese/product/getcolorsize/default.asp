@@ -35,6 +35,7 @@
 		];
 		rsSize1.Fields.Append('colorid', 203, -1);
 		rsSize1.Fields.Append('color', 203, -1);
+		rsSize1.Fields.Append('size_0', 203, -1);
 		stylerows.push({editor:'text',field:'size_0',fieldstyle:'text-align:right;',title:'ЭЈТы',width:60});
 		rsSize1.open();
 	}

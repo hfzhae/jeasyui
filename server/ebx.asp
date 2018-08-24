@@ -420,6 +420,7 @@ var ebx = {
 		ebx.conn.Close;
 		ebx.stdin = null;
 		ebx.stdout = null;
+		ebx = null;
 	},
 	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
@@ -1659,9 +1660,39 @@ var ebx = {
 	    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 	},
 	print: {//打印服务器端对象 2018-8-20 zz
-		id:0,
-		init: function(id){
-			this.id = id;
+		rsBDTemplate:0,
+		rsBDListTemplate:0,
+		rsBDHeadStyle:'',
+		rsBDFootStyle:'',
+		rsBDListStyle:'',
+		printing: function(options){//入口函数，参数：options：打印参数字典（区分大小写）
+		/*
+		参数字典：
+		rsBDTemplate：表头查询模板
+		rsBDListTemplate：明细查询模板
+		rsBDHeadStyle：表头显示式样
+		rsBDFootStyle：表尾显示式样
+		rsBDListStyle：明细显示式样
+		*/
+			try{
+				if(!ebx.stdin['findid']){ //为了配合查询模板必须使用findid作为单据id的参数名
+					ebx.stdout = {result:0};
+					return;
+				}
+				if(ebx.validInt(ebx.stdin['findid']) == 0){
+					ebx.stdout = {result:0};
+					return;
+				}
+				this.rsBDTemplate = ebx.validInt(options.rsBDTemplate);//表头查询模板
+				this.rsBDListTemplate = ebx.validInt(options.rsBDListTemplate);//明细查询模板
+				this.rsBDHeadStyle = ebx.sqlStringEncode(options.rsBDHeadStyle);//表头显示式样
+				this.rsBDFootStyle = ebx.sqlStringEncode(options.rsBDFootStyle);//表尾显示式样
+				this.rsBDListStyle = ebx.sqlStringEncode(options.rsBDListStyle);//明细显示式样
+				return this.printdata();
+			}catch(e){
+				ebx.stdout = {result:0, msg: e.message};
+			}
+			
 		},
 		headerStyle: '',
 		footerStyle: '',
@@ -1672,6 +1703,38 @@ var ebx = {
 		headwidth:100,
 		footwidth:100,
 		headheight: 0,
+		printdata: function(){//获取打印数据
+			var	sql = ebx.getTemplateSQL(this.rsBDTemplate),
+				rsBD = ebx.dbx.open(sql, 1, 1),
+				sqllist = ebx.getTemplateSQL(this.rsBDListTemplate ),
+				rsBDlist = ebx.dbx.open(sqllist, 1, 1),
+				data = {};
+				
+			if(rsBD.eof || rsBDlist.eof){
+				ebx.stdout = {result:0};
+				return;
+			}	
+	
+			data['result'] = 1;//成功标记
+			data['head'] = this.bd(rsBD, this.rsBDHeadStyle);//获取表头对象，利用显示式样格式化内容
+			data['title'] = this.headerStyle;//获取单据标题，必须在ebx.print.bd后获取
+			data['headtext'] = this.footerStyle;//获取显示式样里的表头（表尾式样），必须在ebx.print.bd后获取
+			data['headwidth'] = ebx.validInt(this.headwidth, 100);//表头宽度，数字会在客户端被转换成百分数，默认100%，必须在ebx.print.bd
+			data['headheight'] = ebx.validInt(this.headheight, 0);//表头距离上边距的距离像素值，默认0，必须在ebx.print.bd
+			data['foot'] = this.bd(rsBD, this.rsBDFootStyle);//获取表尾对象，利用显示式样格式化内容
+			data['foottext'] = this.headerStyle + '<br>' + this.footerStyle;//获取显示式样里的表尾（表头式样 + 表尾式样）
+			data['footwidth'] = ebx.validInt(this.footwidth, 100);//表尾宽度，数字会在客户端被转换成百分数，默认100%，必须在ebx.print.bd
+			data['liststyle'] = this.liststyle(this.rsBDListStyle);//获取list的显示式样
+			data['border'] = ebx.validInt(this.border, 1);//list边框，必须在ebx.print.liststyle后获取
+			data['header'] = ebx.validInt(this.header, 1);//是否显示list表头，必须在ebx.print.liststyle后获取
+			data['footer'] = ebx.validInt(this.footer, 1);//是否显示合计表尾，必须在ebx.print.liststyle后获取
+			data['listwidth'] = ebx.validInt(this.listwidth, 100);//表格宽度，数字会在客户端被转换成百分数，默认100%，必须在ebx.print.liststyle后获取
+			data['bdlist'] = rsBDlist;//list对象
+			data['color'] = this.getColor();//获取颜色列表
+			data['size'] = this.getSize();//获取尺码列表
+			ebx.stdout = data;
+	
+		},
 		bd: function(rsBD, printstyle){
 			if(printstyle.length === 0)return([]);
 			if(typeof(rsBD) != 'object')return([]);

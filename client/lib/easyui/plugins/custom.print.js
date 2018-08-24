@@ -203,7 +203,7 @@ ebx.bd.print = {
 												sizetext = size[k].title;
 											}
 										}
-										listbody += colortext + '(' + sizetext + '):' + list[i].colorsize.rows[j].quantity + ' ';
+										listbody += colortext + (sizetext.length==0?'':'(' + sizetext + ')') + ':' + list[i].colorsize.rows[j].quantity + ' ';
 										colortext = '';
 										sizetext = '';
 									}
@@ -309,6 +309,8 @@ ebx.bd.print = {
 							if(callback)callback(printdata);
 						},0)
 					}
+				}else{
+					$.messager.alert('错误', '打印失败！<br>' + result.msg, 'error');	
 				}
 				$.messager.progress('close');
 			}
