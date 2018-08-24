@@ -59,7 +59,7 @@ ebx.bd.print = {
 			}
 		});
 	},
-	print: function(){//打印
+	print: function(){//快速打印
 		this.printdata(function(d){
 			if(d){
 				var printbody = $('<div>');

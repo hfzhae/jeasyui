@@ -31,11 +31,12 @@
 		var rsSize1 = ebx.dbx.getRs();
 		var stylerows = [
 			{field:'colorid',fieldstyle:'',title:'colorid',hidden:true},
-			{field:'color',fieldstyle:'',title:'C/S'}
+			{field:'color',fieldstyle:'',title:'ÑÕÉ«/³ßÂë'}
 		];
 		rsSize1.Fields.Append('colorid', 203, -1);
-		rsSize.Fields.Append(0, 203, -1);
+		rsSize1.Fields.Append('color', 203, -1);
 		stylerows.push({editor:'text',field:'size_0',fieldstyle:'text-align:right;',title:'Í¨Âë',width:60});
+		rsSize1.open();
 	}
 	
 	var style = {"total":stylerows.length,"rows":stylerows}

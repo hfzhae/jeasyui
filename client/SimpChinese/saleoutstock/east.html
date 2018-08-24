@@ -83,7 +83,7 @@
 				}
 			});
 			
-			ebx.setDatagridEditor.editorMethods(c.rows, 'InvoiceNum', 'textbox', {//用来重造发票好嘛的onClickButton的方法
+			ebx.setDatagridEditor.editorMethods(c.rows, 'InvoiceNum', 'textbox', {//用来重造发票号码的onClickButton的方法
 				onClickButton: function(){//选中后更新当前行的内容为选中内容
 					var InvoiceNum = this.value,
 						rows = bd.eaststorage.datagrid('getRows'),
@@ -131,7 +131,7 @@
 									showType: 'slide'
 								});
 								bd.eaststorage.datagrid('load');
-								ebx.setEditstatus(bd.tab, true)
+								ebx.setEditstatus(bd.tab, false);
 							}else{
 								$.messager.alert('错误', '保存失败！' + result.msg, 'error');	
 							}
@@ -189,7 +189,7 @@
 									showType: 'slide'
 								});
 								bd.eaststorage.datagrid('load');
-								ebx.setEditstatus(bd.tab, true)
+								ebx.setEditstatus(bd.tab, false);
 							}else{
 								$.messager.alert('错误', '保存失败！' + result.msg, 'error');	
 							}

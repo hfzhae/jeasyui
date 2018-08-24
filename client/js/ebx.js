@@ -24,7 +24,7 @@ var ebx = {
 		aquantity: 0, //辅助数量
 		relation: 0,//核算关系
 	},
-	productseriallength: 500000,//串号数量上限
+	productseriallength: 5000,//串号数量上限
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -116,7 +116,6 @@ var ebx = {
 		}
 		if(ebx.storage.get('printpagesize'))ebx.printpagesize=ebx.storage.get('printpagesize');//读取浏览器缓存。设置打印行数
 		if(ebx.storage.get('printtype'))ebx.printtype=ebx.storage.get('printtype');//读取浏览器缓存。设置打印类型
-		
  	},
 	getThemes: function(){//获取主题函数
 		var Storage = window.localStorage;
