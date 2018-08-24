@@ -149,7 +149,7 @@ ebx.bd.print = {
 						for(var i in list){
 							listbodycount++;
 							page++;
-							listbody += '<tr><td class="listbody" style="border-right:2px solid #000;">'+listbodycount+'</td>';
+							listbody += '<tr><td class="listbody" style="border-right:2px solid #000;text-align:center;">'+listbodycount+'</td>';
 							for(var j in liststyle){
 								var v = list[i][liststyle[j].field.toLowerCase()]===''?'　':list[i][liststyle[j].field.toLowerCase()];
 								listbody += '<td class="listbody" style="'+liststyle[j].style+';">' + ebx.Render.getRender(v, liststyle[j].render) + '</td>';
