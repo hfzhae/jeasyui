@@ -47,7 +47,7 @@ var upload = {
 		}
 		this.fso = Server.CreateObject('Scripting.FileSystemObject');
 		this.file = Server.CreateObject('NetBOX.File');
-		this.Folder = NetBox.MapPath('\\jeasyui\\attaches\\');
+		this.Folder = NetBox.MapPath('\\wwwroot\\attaches\\');
 		
 		if(!this.fso.FolderExists(this.Folder)){
 			this.fso.CreateFolder(this.Folder);
@@ -57,7 +57,7 @@ var upload = {
 			this.fso.CreateFolder(this.Folder + this.billtype + '\\');
 		}
 		
-		this.Folder = NetBox.MapPath('\\jeasyui\\attaches\\') + this.billtype + '\\' + this.id + '\\';
+		this.Folder = NetBox.MapPath('\\wwwroot\\attaches\\') + this.billtype + '\\' + this.id + '\\';
 		
 		if(!this.fso.FolderExists(this.Folder)){
 			this.fso.CreateFolder(this.Folder);

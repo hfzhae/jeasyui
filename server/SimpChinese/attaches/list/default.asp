@@ -20,7 +20,7 @@
 			rows = [],
 			filesize = 0,
 			fso = Server.CreateObject('Scripting.FileSystemObject'),
-			path = NetBox.MapPath('\\jeasyui\\attaches\\');
+			path = NetBox.MapPath('\\wwwroot\\attaches\\');
 			
 		path += rs('billtype').value +'\\'+ rs('billid').value +'\\';
 		for(var i in data){
