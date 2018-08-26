@@ -16,8 +16,7 @@
 			themesmenuDiv = $('<div>').appendTo($('#north')),
 			deltabs = $('<div>').appendTo($('#north'));
 			
-		var Storage = window.localStorage,
-			themes = Storage.getItem("themes");	
+		var theme = ebx.storage.get("themes").theme;	
 		
 		deltabs.linkbutton({
 			plain:true,
@@ -113,95 +112,93 @@
 		setupmenu.menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'default',
-			iconCls:(themes=='default'?'icon-ok':''),
+			iconCls:(theme=='default'?'icon-ok':''),
 			onclick: function(){setThemes('default', '#334455')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'black',
-			iconCls:(themes=='black'?'icon-ok':''),
+			iconCls:(theme=='black'?'icon-ok':''),
 			onclick: function(){setThemes('black', '#333333')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'bootstrap',
-			iconCls:(themes=='bootstrap'?'icon-ok':''),
+			iconCls:(theme=='bootstrap'?'icon-ok':''),
 			onclick: function(){setThemes('bootstrap', '#334455')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'gray',
-			iconCls:(themes=='gray'?'icon-ok':''),
+			iconCls:(theme=='gray'?'icon-ok':''),
 			onclick: function(){setThemes('gray', '#666666')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'material',
-			iconCls:(themes=='material'?'icon-ok':''),
+			iconCls:(theme=='material'?'icon-ok':''),
 			onclick: function(){setThemes('material', '#666666')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro',
-			iconCls:(themes=='metro'?'icon-ok':''),
+			iconCls:(theme=='metro'?'icon-ok':''),
 			onclick: function(){setThemes('metro', '#666666')}
 		})
 		.menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-blue',
-			iconCls:(themes=='metro-blue'?'icon-ok':''),
+			iconCls:(theme=='metro-blue'?'icon-ok':''),
 			onclick: function(){setThemes('metro-blue', '#123')}
 		})
 		.menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-gray',
-			iconCls:(themes=='metro-gray'?'icon-ok':''),
+			iconCls:(theme=='metro-gray'?'icon-ok':''),
 			onclick: function(){setThemes('metro-gray', '#345')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-green',
-			iconCls:(themes=='metro-green'?'icon-ok':''),
+			iconCls:(theme=='metro-green'?'icon-ok':''),
 			onclick: function(){setThemes('metro-green', '#96a36a')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-orange',
-			iconCls:(themes=='metro-orange'?'icon-ok':''),
+			iconCls:(theme=='metro-orange'?'icon-ok':''),
 			onclick: function(){setThemes('metro-orange', '#D4A375')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-red',
-			iconCls:(themes=='metro-red'?'icon-ok':''),
+			iconCls:(theme=='metro-red'?'icon-ok':''),
 			onclick: function(){setThemes('metro-red', '#F09090')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'ui-cupertino',
-			iconCls:(themes=='ui-cupertino'?'icon-ok':''),
+			iconCls:(theme=='ui-cupertino'?'icon-ok':''),
 			onclick: function(){setThemes('ui-cupertino', '#123')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'ui-dark-hive',
-			iconCls:(themes=='ui-dark-hive'?'icon-ok':''),
+			iconCls:(theme=='ui-dark-hive'?'icon-ok':''),
 			onclick: function(){setThemes('ui-dark-hive', '#111111')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'ui-pepper-grinder',
-			iconCls:(themes=='ui-pepper-grinder'?'icon-ok':''),
+			iconCls:(theme=='ui-pepper-grinder'?'icon-ok':''),
 			onclick: function(){setThemes('ui-pepper-grinder', '#681818')}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'ui-sunny',
-			iconCls:(themes=='ui-sunny'?'icon-ok':''),
+			iconCls:(theme=='ui-sunny'?'icon-ok':''),
 			onclick: function(){setThemes('ui-sunny', '#655E4E')}
 		});
 
 		function setThemes(t, c){
-			Storage.setItem('themes', t);
-			Storage.setItem('getTitleColor', c);
+			ebx.storage.set('themes', {theme: t,getTitleColor: c});
 			location.reload();
 
 		}
 		
 		function getTitleColor(){
-			var Storage = window.localStorage;
-			if(Storage.getItem("getTitleColor") === null){
-				Storage.setItem('getTitleColor', '#334455');
+			if(ebx.storage.get('themes') === null){
+				ebx.storage.set('themes', {theme:'default',getTitleColor:'#334455'});
 			}
-			return Storage.getItem("getTitleColor")
+			return ebx.storage.get("themes").getTitleColor;
 		}
 	});
 </script>

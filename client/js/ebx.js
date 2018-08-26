@@ -25,6 +25,8 @@ var ebx = {
 		relation: 0,//核算关系
 	},
 	productseriallength: 5000,//串号数量上限
+	productserialquantitycheck:1,//串号数量校验
+	colorsizequantitycheck:1,//色码数量校验
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
@@ -114,15 +116,17 @@ var ebx = {
 					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			return fmt;
 		}
-		if(ebx.storage.get('printpagesize'))ebx.printpagesize=ebx.storage.get('printpagesize');//读取浏览器缓存。设置打印行数
-		if(ebx.storage.get('printtype'))ebx.printtype=ebx.storage.get('printtype');//读取浏览器缓存。设置打印类型
+		if(ebx.storage.get('print'))ebx.printpagesize=ebx.storage.get('print').printpagesize;//读取浏览器缓存。设置打印行数
+		if(ebx.storage.get('print'))ebx.printtype=ebx.storage.get('print').printtype;//读取浏览器缓存。设置打印类型
+		if(ebx.storage.get('productserialquantitycheck')!=undefined)ebx.productserialquantitycheck = ebx.storage.get('productserialquantitycheck');//串号数量校验
+		if(ebx.storage.get('colorsizequantitycheck')!=undefined)ebx.colorsizequantitycheck = ebx.storage.get('colorsizequantitycheck');//色码数量校验
  	},
 	getThemes: function(){//获取主题函数
-		var Storage = window.localStorage;
-		if(Storage.getItem("themes") === null){
-			Storage.setItem('themes', 'default');
+		//var Storage = window.localStorage;
+		if(ebx.storage.get("themes") === null){
+			ebx.storage.set('themes', {theme:'default',getTitleColor:'#334455'});
 		}
-		return Storage.getItem("themes")
+		return ebx.storage.get("themes").theme;
 	},
 	getMenuParameter: function(t){//获取菜单传递到主窗口的参数 2018-4-20 zz, 参数：t：当前被激活的tabs对象
 		var p = t.panel('options').href.split('?')[1], 

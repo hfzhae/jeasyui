@@ -18,6 +18,8 @@ ebx.productserial = {
 			outbtn = $('<div>').appendTo(toolbar),
 			inputbtn = $('<div>').appendTo(toolbar),
 			seriallengthtext = ebx.validInt(seriallength)==0?'不限制':ebx.validInt(seriallength)+'位',
+			checktext = $('<table style="border-collapse:collapse;border-spacing:0px;border:0px" align="right"><tr><td>数量校验：</td><td></td></tr></table>').appendTo(toolbar),
+			check = $('<div>').appendTo(checktext.find('td:last')),
 			columnsData = [[    
 				{field:'productserial',title:'串号',width:300,sortable:true,
 					editor:{
@@ -44,7 +46,7 @@ ebx.productserial = {
 		
 		win.window({
 			title: title + ' 的串号，长度：' + seriallengthtext,
-			width:480,    
+			width:580,    
 			height:640, 
 			maxWidth:'90%',
 			maxHeight:'90%',
@@ -106,6 +108,12 @@ ebx.productserial = {
 					return false;
 				}
 				var oldquantity = d.datagrid('getData').firstRows[index].quantity;
+				if(ebx.productserialquantitycheck){
+					if(oldquantity != data1.length){
+						$.messager.alert('错误','串号数量有误，数量应该为：' + oldquantity + '，当前数量：' + data1.length,'error');
+						return false;
+					}
+				}
 				d.datagrid('updateRow', {
 					index: index,
 					row:{
@@ -331,6 +339,25 @@ ebx.productserial = {
 			},
 			menu:inputbtntemplate
 		});
+		
+		check.switchbutton({
+			onText:'开',
+			offText:'关',
+			checked:ebx.productserialquantitycheck?true:false,
+			width:50,
+			height:24,
+			onChange:function(checked){
+				if(checked){
+					ebx.productserialquantitycheck = 1
+					ebx.storage.set('productserialquantitycheck', ebx.productserialquantitycheck);
+				}else{
+					ebx.productserialquantitycheck = 0
+					ebx.storage.set('productserialquantitycheck', ebx.productserialquantitycheck);
+				}
+			}
+			//handleText:'数量',
+			//handleWidth:12
+		});
 	},
 	SerialtoProduct: function(t, d, tab){//搜索串号添加产品，参数：t：搜索文本框的textbox对象，d：datagrid表格对象，tab：bd的tab属性（用于标记单据修改状态） 2018-8-9 zz
 		$.ajax({
@@ -480,8 +507,10 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 							toolbar = $('<div>'),
 							outbtn = $('<div>').appendTo(toolbar),
 							delall = $('<div>').appendTo(toolbar),
-							colorsizedata = $('<div>').appendTo(win);
-						
+							colorsizedata = $('<div>').appendTo(win),
+							checktext = $('<table style="border-collapse:collapse;border-spacing:0px;border:0px" align="right"><tr><td>数量校验：</td><td></td></tr></table>').appendTo(toolbar),
+							check = $('<div>').appendTo(checktext.find('td:last'));
+
 						win.window({
 							title: _title + ' 的颜色尺码，色码组：' + _group.title,
 							width:640,    
@@ -511,6 +540,13 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 										}
 									}
 								}
+								var oldquantity = _d.datagrid('getData').firstRows[_index].quantity;
+								if(ebx.colorsizequantitycheck){
+									if(oldquantity != qty){
+										$.messager.alert('错误','色码数量有误，数量应该为：' + oldquantity + ' ，当前数量：' + qty,'error');
+										return false;
+									}
+								}
 								_d.datagrid('updateRow', {
 									index: _index,
 									row:{
@@ -527,7 +563,26 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 						$('body').find('.window-mask').on('click', function(){
 							win.window('close');
 						});
-
+						
+						check.switchbutton({
+							onText:'开',
+							offText:'关',
+							checked:ebx.colorsizequantitycheck?true:false,
+							width:50,
+							height:24,
+							onChange:function(checked){
+								if(checked){
+									ebx.colorsizequantitycheck = 1
+									ebx.storage.set('colorsizequantitycheck', ebx.colorsizequantitycheck);
+								}else{
+									ebx.colorsizequantitycheck = 0
+									ebx.storage.set('colorsizequantitycheck', ebx.colorsizequantitycheck);
+								}
+							}
+							//handleText:'数量',
+							//handleWidth:12
+						});
+						
 						$.ajax({
 							type: 'post', 
 							url: 'server/SimpChinese/product/getcolorsize/',

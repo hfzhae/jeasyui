@@ -352,11 +352,11 @@ ebx.bd.print = {
 			value: ebx.printpagesize,
 			onSpinUp:function(){
 				ebx.printpagesize = pagesize.numberspinner('getValue');
-				ebx.storage.set('printpagesize', ebx.printpagesize);
+				setPrintToStorage();
 			},
 			onSpinDown:function(){
 				ebx.printpagesize = pagesize.numberspinner('getValue');
-				ebx.storage.set('printpagesize', ebx.printpagesize);
+				setPrintToStorage();
 			}
 		}).css({'margin':'5px'}); 
 
@@ -376,7 +376,7 @@ ebx.bd.print = {
 			disabled:true,
 			onChange:function(){
 				ebx.printtype = printtype.combobox('getValue');
-				ebx.storage.set('printtype', ebx.printtype);
+				setPrintToStorage();
 			}
 		}).css({'margin':'5px'}); 
 
@@ -385,12 +385,14 @@ ebx.bd.print = {
 			onClick:function(){
 				pagesize.numberspinner('setValue', 10);
 				ebx.printpagesize = 10;
-				ebx.storage.set('printpagesize', ebx.printpagesize);
 				printtype.combobox('setValue', 0);
 				ebx.printtype = 0;
-				ebx.storage.set('printtype', ebx.printtype);
+				setPrintToStorage();
 			}
 		}).css({'margin-top':'10px'});
-
+		
+		function setPrintToStorage(){
+			ebx.storage.set('print', {printtype:ebx.printtype, printpagesize: ebx.printpagesize});
+		}
 	}
 }
