@@ -482,6 +482,20 @@
 .icon-TableDrawTable-large{
 	background:url('icon32/TableDrawTable.png') no-repeat center center;
 }
+.icon-ViewsAdpDiagramSqlView{
+	background:url('icon32/ViewsAdpDiagramSqlView.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-ViewsAdpDiagramSqlView-large{
+	background:url('icon32/ViewsAdpDiagramSqlView.png') no-repeat center center;
+}
+.icon-AdpStoredProcedureEditSql{
+	background:url('icon32/AdpStoredProcedureEditSql.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-AdpStoredProcedureEditSql-large{
+	background:url('icon32/AdpStoredProcedureEditSql.png') no-repeat center center;
+}
 
 
 
