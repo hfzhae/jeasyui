@@ -159,7 +159,7 @@ ebx.qw = {
 						height: 150,
 						maxHeight: '50%',
 						minHeight: 150,
-						title: '筛选条件', 
+						title: '条件', 
 						collapsible:false,
 						border:false,
 						split: true
