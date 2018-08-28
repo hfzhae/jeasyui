@@ -113,85 +113,124 @@
 			parent:setup_menu_04,
 			text: 'default',
 			iconCls:(theme=='default'?'icon-ok':''),
-			onclick: function(){setThemes('default', '#334455')}
+			onclick: function(){setThemes('default', '#334455', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'black',
 			iconCls:(theme=='black'?'icon-ok':''),
-			onclick: function(){setThemes('black', '#333333')}
+			onclick: function(){setThemes('black', '#333333', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'bootstrap',
 			iconCls:(theme=='bootstrap'?'icon-ok':''),
-			onclick: function(){setThemes('bootstrap', '#334455')}
+			onclick: function(){setThemes('bootstrap', '#334455', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'gray',
 			iconCls:(theme=='gray'?'icon-ok':''),
-			onclick: function(){setThemes('gray', '#666666')}
+			onclick: function(){setThemes('gray', '#666666', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'material',
 			iconCls:(theme=='material'?'icon-ok':''),
-			onclick: function(){setThemes('material', '#666666')}
+			onclick: function(){setThemes('material', '#666666', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro',
 			iconCls:(theme=='metro'?'icon-ok':''),
-			onclick: function(){setThemes('metro', '#666666')}
+			onclick: function(){setThemes('metro', '#666666', this)}
 		})
 		.menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-blue',
 			iconCls:(theme=='metro-blue'?'icon-ok':''),
-			onclick: function(){setThemes('metro-blue', '#123')}
+			onclick: function(){setThemes('metro-blue', '#123', this)}
 		})
 		.menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-gray',
 			iconCls:(theme=='metro-gray'?'icon-ok':''),
-			onclick: function(){setThemes('metro-gray', '#345')}
+			onclick: function(){setThemes('metro-gray', '#345', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-green',
 			iconCls:(theme=='metro-green'?'icon-ok':''),
-			onclick: function(){setThemes('metro-green', '#96a36a')}
+			onclick: function(){setThemes('metro-green', '#96a36a', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-orange',
 			iconCls:(theme=='metro-orange'?'icon-ok':''),
-			onclick: function(){setThemes('metro-orange', '#D4A375')}
+			onclick: function(){setThemes('metro-orange', '#D4A375', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'metro-red',
 			iconCls:(theme=='metro-red'?'icon-ok':''),
-			onclick: function(){setThemes('metro-red', '#F09090')}
+			onclick: function(){setThemes('metro-red', '#F09090', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'ui-cupertino',
 			iconCls:(theme=='ui-cupertino'?'icon-ok':''),
-			onclick: function(){setThemes('ui-cupertino', '#123')}
+			onclick: function(){setThemes('ui-cupertino', '#123', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'ui-dark-hive',
 			iconCls:(theme=='ui-dark-hive'?'icon-ok':''),
-			onclick: function(){setThemes('ui-dark-hive', '#111111')}
+			onclick: function(){setThemes('ui-dark-hive', '#111111', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'ui-pepper-grinder',
 			iconCls:(theme=='ui-pepper-grinder'?'icon-ok':''),
-			onclick: function(){setThemes('ui-pepper-grinder', '#681818')}
+			onclick: function(){setThemes('ui-pepper-grinder', '#681818', this)}
 		}).menu('appendItem', {
 			parent:setup_menu_04,
 			text: 'ui-sunny',
 			iconCls:(theme=='ui-sunny'?'icon-ok':''),
-			onclick: function(){setThemes('ui-sunny', '#655E4E')}
+			onclick: function(){setThemes('ui-sunny', '#655E4E', this)}
 		});
 
-		function setThemes(t, c){
-			ebx.storage.set('themes', {theme: t,getTitleColor: c});
-			location.reload();
+		function setThemes(t, c, o){
+			var oldthemes = ebx.getThemes(),
+				linkobj = document.getElementsByTagName("link"),
+				loaddiv = $('<div style="display:none;">').appendTo('body');
+			
+			$.messager.progress({title:'主题切换中...',interval:100, msg: '正在下载主题文件'}); 
+			
+			for(var i in linkobj){
+				if(typeof(linkobj[i].href) == 'string'){
+					var url = linkobj[i].href;
+					if(url.indexOf(oldthemes) >= 0){
+						var arr = url.split(oldthemes);
+						loaddiv.load(arr[0] + t + arr[1]);
+					}
+				}
+			}
+			
+			setTimeout(function(){
+				ebx.storage.set('themes', {theme: t,getTitleColor: c});
+				for(var i in linkobj){
+					if(typeof(linkobj[i].href) == 'string'){
+						var url = linkobj[i].href;
+						if(url.indexOf(oldthemes) >= 0){
+							var arr = url.split(oldthemes);
+							linkobj[i].setAttribute("href", arr[0] + t + arr[1]);
+						}
+					}
+				}
+				$('#north').css({
+					'background-color': c
+				})
+				easyloader.theme = ebx.getThemes();
+				$('body').find('.menu').find('.icon-ok').remove();
+				$(o).append('<div class="menu-icon icon-ok"></div>');
+				$.messager.progress('close');
+				$.messager.show({
+					title: '提示',
+					msg: '主题已切换为：' + t,
+					timeout: 3000,
+					showType: 'slide'
+				});	
 
+			}, 1000);
 		}
 		
 		function getTitleColor(){

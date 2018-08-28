@@ -117,37 +117,49 @@ ebx.qw = {
 		var bd = this,
 			_layout = this.layout,
 			_centerPanel = this.centerPanel,
-			_Paramet = this.Paramet;
+			_Paramet = this.Paramet,
+			_tab = this.tab;
 			
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/'+_Paramet.mode+'/center/',
-			data: {id:_Paramet.id+'list',_:(new Date()).getTime()},//style名称必须和mode相吻合
+			data: {id:_Paramet.id+'list',_:(new Date()).getTime()},
 			dataType: "json",
 			success: function(result){
 				if(result){
 					var qwlayout = $('<div>').appendTo(_centerPanel),
 						tables = $('<div>'),
+						tablestoolbar = $('<div>'),
+						tablesadd = $('<div>').appendTo(tablestoolbar),
+						tablesdel = $('<div>').appendTo(tablestoolbar),
+						tablesclear = $('<div>').appendTo(tablestoolbar),
 						columns = $('<div>'),
+						columnstoolbar = $('<div>'),
+						columnsadd = $('<div>').appendTo(columnstoolbar),
+						columnsdel = $('<div>').appendTo(columnstoolbar),
+						columnsclear = $('<div>').appendTo(columnstoolbar),
 						relates = $('<div>'),
-						filter = $('<div>'),
+						relatestoolbar = $('<div>'),
+						relatesadd = $('<div>').appendTo(relatestoolbar),
+						relatesdel = $('<div>').appendTo(relatestoolbar),
+						relatesclear = $('<div>').appendTo(relatestoolbar),
+						filter = $('<textarea spellcheck="false">'),
 						tabs = $('<div>');
 					
 					qwlayout.layout({
 						width:'100%',
 						height:'100%'
 					});    
-					// collapse the west panel    
 
 					qwlayout.layout('add',{    
 						region: 'center',
-						border:false,
+						border:false
 					}).layout('add',{    
 						region: 'south',    
 						height: 150,
 						maxHeight: '50%',
-						minHeight: 100,
-						title: '筛选条件设置', 
+						minHeight: 150,
+						title: '筛选条件', 
 						collapsible:false,
 						border:false,
 						split: true
@@ -155,9 +167,10 @@ ebx.qw = {
 						region: 'west',    
 						width: 250,
 						maxWidth: '50%',
-						minWidth: 200,
-						//title: 'tables', 
-						border:false,
+						minWidth: 250,
+						//title: '数据库表', 
+						border:false, 
+						collapsible:false,
 						split: true
 					}); 
 					
@@ -165,8 +178,8 @@ ebx.qw = {
 					
 					tables.datagrid({
 						columns:[[    
-							{field:'id',title:'表',width:200},    
-							{field:'alias',title:'别名',width:100}  
+							{field:'id',title:'表名',width:200,editor:'text'},    
+							{field:'alias',title:'别名',width:100,editor:'text'}  
 						]],
 						data: result.tables,
 						width:'100%',
@@ -174,9 +187,89 @@ ebx.qw = {
 						rownumbers:true,
 						singleSelect:true,
 						fitColumns:true,
-						border:false
-					})
+						striped:true,
+						border:false,
+						lastinsertRow:false,
+						toolbar:tablestoolbar,
+						onLoadSuccess:function(data){
+							var d = $(this);
+							setTimeout(function(){
+								d.datagrid('resize');
+							}, 0);
+						}
+					});
 					
+					tablesadd.combogrid({
+						style:"QueryWizardTablesBrowse",
+						idField:"id",
+						textField:"id",
+						//rownumbers:true,
+						panelWidth:250,
+						fitColumns:true,
+						droplisturl:'server/SimpChinese/querywizard/table/',
+						prompt:'选择数据库表',
+						width:100,
+						inputEvents:{},//为了避免键盘操作影响onChange事件，禁用了键盘操作
+						onChange:function(newValue,oldValue){
+							var tc = $(this);
+							if(newValue != ''){
+								tables.datagrid('appendRow',{
+									id:newValue,
+									alias:newValue,
+								});
+								tables.datagrid('selectRow', tables.datagrid('getData').total-1);
+								tables.datagrid('editkeyboard', {index:tables.datagrid('getData').total-1, field: 'alias'});
+								setTimeout(function(){
+									tc.combogrid('clear');
+								}, 0)
+							}
+						}
+					});
+					tablesdel.linkbutton({
+						text:'删除表',
+						iconCls:'icon-CellsDelete',
+						plain:true,
+						onClick:function(){
+							var index = tables.datagrid('getRowIndex', tables.datagrid('getSelected'));
+							if(index < 0){
+								$.messager.show({
+									title: '提示',
+									msg: '请先选中一行。',
+									timeout: 3000,
+									showType: 'slide'
+								});									
+								return;
+							}
+							$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+								if (r){
+									tables.datagrid('deleteRow', index);
+
+									if(index >= tables.datagrid('getData').total && index > 0) index--;
+									
+									if(tables.datagrid('getData').total == 0 || index < 0){
+										tables.datagrid('load', {total: 0, rows: []}); 
+									}else{
+										tables.datagrid('selectRow', index);
+									}
+									
+									ebx.setEditstatus(_tab, true);
+								}
+							});
+						}
+					});
+					tablesclear.linkbutton({
+						text:'清空',
+						iconCls:'icon-TableDelete',
+						plain:true,
+						onClick:function(){
+							$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
+								if (r){
+									tables.datagrid('loadData', {total: 0, rows: []});
+									ebx.setEditstatus(_tab, true);
+								}
+							});
+						}
+					});
 					qwlayout.layout('panel', 'center').append(tabs);
 					
 					tabs.tabs({  
@@ -190,23 +283,23 @@ ebx.qw = {
 						}    
 					});
 					tabs.tabs('add', {
-						title:'列设置',    
+						title:'列',    
 						content:columns,    
 						closable:false
 					}).tabs('add', {
-						title:'关系设置',    
+						title:'关系',    
 						content:relates,    
 						closable:false
 					}).tabs('select', 0);
 					
 					columns.datagrid({
 						columns:[[
-							{field:'datatype',title:'类型',width:80},    
-							{field:'alias',title:'别名',width:100},    
-							{field:'column',title:'字段',width:300},    
-							{field:'statistic',title:'统计',width:50}, 
-							{field:'datasource',title:'可选的数据源',width:150}, 
-							{field:'memo',title:'备注',width:150}
+							{field:'datatype',title:'类型',width:80,editor:'text'},    
+							{field:'alias',title:'别名',width:100,editor:'text'},    
+							{field:'column',title:'字段',width:300,editor:'text'},    
+							{field:'statistic',title:'统计',width:50,editor:'text'}, 
+							{field:'datasource',title:'可选的数据源',width:150,editor:'text'}, 
+							{field:'memo',title:'备注',width:150,editor:'text'}
 						]],
 						data: result.columns,
 						width:'100%',
@@ -214,16 +307,74 @@ ebx.qw = {
 						rownumbers:true,
 						singleSelect:true,
 						fitColumns:false,
-						border:false
-					})
+						striped:true,
+						border:false,
+						toolbar:columnstoolbar,
+						onLoadSuccess:function(data){
+							var d = $(this);
+							setTimeout(function(){
+								d.datagrid('resize');
+							}, 0);
+						}
+					});
 					
+					columnsadd.linkbutton({
+						text:'添加列',
+						iconCls:'icon-SourceControlAddObjects',
+						plain:true
+					});
+					columnsdel.linkbutton({
+						text:'删除列',
+						iconCls:'icon-CellsDelete',
+						plain:true,
+						onClick:function(){
+							var index = columns.datagrid('getRowIndex', columns.datagrid('getSelected'));
+							if(index < 0){
+								$.messager.show({
+									title: '提示',
+									msg: '请先选中一行。',
+									timeout: 3000,
+									showType: 'slide'
+								});									
+								return;
+							}
+							$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+								if (r){
+									columns.datagrid('deleteRow', index);
+
+									if(index >= columns.datagrid('getData').total && index > 0) index--;
+									
+									if(columns.datagrid('getData').total == 0 || index < 0){
+										columns.datagrid('load', { total: 0, rows: [] }); 
+									}else{
+										columns.datagrid('selectRow', index);
+									}
+									
+									ebx.setEditstatus(_tab, true);
+								}
+							});
+						}
+					});
+					columnsclear.linkbutton({
+						text:'清空',
+						iconCls:'icon-TableDelete',
+						plain:true,
+						onClick:function(){
+							$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
+								if (r){
+									columns.datagrid('loadData', {total: 0, rows: []});
+									ebx.setEditstatus(_tab, true);
+								}
+							});
+						}
+					});
 					relates.datagrid({
 						columns:[[    
-							{field:'table',title:'表',width:100},    
-							{field:'column',title:'字段',width:100},    
+							{field:'table',title:'表',width:100,editor:'text'},    
+							{field:'column',title:'字段',width:100,editor:'text'},    
 							{field:'relate',title:'',width:20},    
-							{field:'relatetable',title:'表',width:100},    
-							{field:'relatecolumn',title:'字段',width:100}  
+							{field:'relatetable',title:'表',width:100,editor:'text'},    
+							{field:'relatecolumn',title:'字段',width:100,editor:'text'}  
 						]],
 						data: result.relates,
 						width:'100%',
@@ -231,11 +382,87 @@ ebx.qw = {
 						rownumbers:true,
 						singleSelect:true,
 						fitColumns:false,
-						border:false
+						striped:true,
+						border:false,
+						toolbar:relatestoolbar,
+						onLoadSuccess:function(data){
+							var d = $(this);
+							setTimeout(function(){
+								d.datagrid('resize');
+							}, 0);
+						}
 					});
+					relatesadd.linkbutton({
+						text:'添加关系',
+						iconCls:'icon-CellsInsertDialog',
+						plain:true
+					});
+					relatesdel.linkbutton({
+						text:'删除关系',
+						iconCls:'icon-CellsDelete',
+						plain:true,
+						onClick:function(){
+							var index = relates.datagrid('getRowIndex', relates.datagrid('getSelected'));
+							if(index < 0){
+								$.messager.show({
+									title: '提示',
+									msg: '请先选中一行。',
+									timeout: 3000,
+									showType: 'slide'
+								});									
+								return;
+							}
+							$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+								if (r){
+									relates.datagrid('deleteRow', index);
+
+									if(index >= relates.datagrid('getData').total && index > 0) index--;
+									
+									if(relates.datagrid('getData').total == 0 || index < 0){
+										relates.datagrid('load', { total: 0, rows: [] }); 
+									}else{
+										relates.datagrid('selectRow', index);
+									}
+									
+									ebx.setEditstatus(_tab, true);
+								}
+							});
+						}
+					});
+					relatesclear.linkbutton({
+						text:'清空',
+						iconCls:'icon-TableDelete',
+						plain:true,
+						onClick:function(){
+							$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
+								if (r){
+									relates.datagrid('loadData', {total: 0, rows: []});
+									ebx.setEditstatus(_tab, true);
+								}
+							});
+						}
+					});
+					var southpanel = qwlayout.layout('panel', 'south'),
+						southopt = southpanel.panel('options');
 					
-					qwlayout.layout('panel', 'south').append(filter);
-					filter.text(result.filter).css({'padding':5});
+					southpanel.append(filter);
+					filter.val(result.filter).css({
+						'padding':5,
+						'width':'98%',
+						//'border':0,
+						'overflow-y':'visible',
+						'height':'88%',
+						'font-family':'微软雅黑',
+						'font-size':'12px',
+						'overflow':'auto',
+						'resize':'none',
+						'background':'transparent',
+						'border-style':'none' 
+					}).blur(function(){
+						if($(this).val() != result.filter){
+							ebx.setEditstatus(_tab, true);
+						}
+					});
 				}
 				if(callback1)callback1(_centerstorage);
 			}

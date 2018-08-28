@@ -496,6 +496,13 @@
 .icon-AdpStoredProcedureEditSql-large{
 	background:url('icon32/AdpStoredProcedureEditSql.png') no-repeat center center;
 }
+.icon-SourceControlAddObjects{
+	background:url('icon32/SourceControlAddObjects.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-SourceControlAddObjects-large{
+	background:url('icon32/SourceControlAddObjects.png') no-repeat center center;
+}
 
 
 

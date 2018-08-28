@@ -187,7 +187,7 @@ ebx.browser = {
 			browser.liststorage.datagrid('load', {
 				template: browser.Paramet.template,
 				_:(new Date()).getTime(),
-				find: browser.Paramet.find,
+				find: escape(browser.Paramet.find),
 				datefrom: browser.Paramet.datefrom,
 				dateto: browser.Paramet.dateto,
 				isdeleted: browser.Paramet.isdeleted,

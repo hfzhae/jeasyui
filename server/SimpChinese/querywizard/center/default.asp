@@ -2,7 +2,12 @@
 <%
 (function(){
 	if(!ebx.stdin['id']){ 
-		ebx.stdout = {total:0, rows:[]};
+		ebx.stdout = {
+			tables:{total:0, rows:[]},
+			columns:{total:0, rows:[]},
+			relates:{total:0, rows:[]},
+			filter:''
+		};
 		return;
 	}
 	var id = ebx.validInt(ebx.stdin['id']),

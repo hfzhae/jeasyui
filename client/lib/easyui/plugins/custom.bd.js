@@ -535,7 +535,7 @@ ebx.bd = {
 											if(index >= listdatagrid.datagrid('getData').total && index > 0) index--;
 											
 											if(listdatagrid.datagrid('getData').total == 0 || index < 0){
-												listdatagrid.datagrid('load', { total: 0, rows: [] }); 
+												listdatagrid.datagrid('loadData', { total: 0, rows: [] }); 
 											}else{
 												listdatagrid.datagrid('selectRow', index);
 											}
@@ -553,7 +553,7 @@ ebx.bd = {
 										if (r){
 											var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f'),
 												total = listdatagrid.datagrid('getData').total;
-											listdatagrid.datagrid('load', { total: 0, rows: [] }); 
+											listdatagrid.datagrid('loadData', { total: 0, rows: [] }); 
 											ebx.setEditstatus(_tab, true)
 										}
 									});
