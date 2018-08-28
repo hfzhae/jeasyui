@@ -193,7 +193,7 @@
 				linkobj = document.getElementsByTagName("link"),
 				loaddiv = $('<div style="display:none;">').appendTo('body');
 			
-			$.messager.progress({title:'主题切换中...',interval:100, msg: '正在下载主题文件'}); 
+			$.messager.progress({title:'主题切换中...',interval:200, msg: '正在下载主题文件'}); 
 			
 			for(var i in linkobj){
 				if(typeof(linkobj[i].href) == 'string'){
@@ -230,7 +230,7 @@
 					showType: 'slide'
 				});	
 
-			}, 1000);
+			}, 2000);
 		}
 		
 		function getTitleColor(){
