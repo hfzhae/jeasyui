@@ -1,3 +1,7 @@
+.customTitle{
+	background-color:#404040;
+	color:#ffffff;
+}
 .layout {
   position: relative;
   overflow: hidden;

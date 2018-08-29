@@ -79,6 +79,15 @@ var ebx = {
 						$('#homeDiv').portal('resize');
 					}
 				});
+				
+				bl.layout('panel', 'west').addClass('customTree');
+				bl.layout('panel', 'north').addClass('customTitle');
+				/*
+				.css({
+					'background-color':ebx.getTreeColor(),
+					'color':'#fff'
+				});
+				*/
 				setTimeout(function(){
 					bl.layout('resize')
 				}, 300);
@@ -124,7 +133,7 @@ var ebx = {
 	getThemes: function(){//获取主题函数
 		//var Storage = window.localStorage;
 		if(ebx.storage.get("themes") === null){
-			ebx.storage.set('themes', {theme:'default',getTitleColor:'#334455'});
+			ebx.storage.set('themes', {theme:'metro-blue'});
 		}
 		return ebx.storage.get("themes").theme;
 	},

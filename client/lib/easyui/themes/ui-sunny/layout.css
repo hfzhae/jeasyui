@@ -1,3 +1,7 @@
+.customTitle{
+	background-color:#000000;
+	color:#ffffff;
+}
 .layout {
   position: relative;
   overflow: hidden;
@@ -140,7 +144,7 @@
   border-left: 1px solid #FECE2F;
 }
 .layout-split-west {
-  border-right: 1px solid #FECE2F;
+  border-right: 1px solid #494437;
 }
 .layout-expand {
   background-color: #817865;

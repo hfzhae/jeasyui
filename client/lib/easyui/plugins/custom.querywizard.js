@@ -135,6 +135,8 @@ ebx.qw = {
 						tablesclear = $('<div>').appendTo(tablestoolbar),
 						columns = $('<div>'),
 						columnstoolbar = $('<div>'),
+						coltable = $('<div>').appendTo(columnstoolbar),
+						colcolumns = $('<div>').appendTo(columnstoolbar),
 						columnsadd = $('<div>').appendTo(columnstoolbar),
 						columnsdel = $('<div>').appendTo(columnstoolbar),
 						columnsclear = $('<div>').appendTo(columnstoolbar),
@@ -153,27 +155,58 @@ ebx.qw = {
 
 					qwlayout.layout('add',{    
 						region: 'center',
+						//title:'列和关系',
 						border:false
 					}).layout('add',{    
 						region: 'south',    
 						height: 150,
 						maxHeight: '50%',
 						minHeight: 150,
-						title: '条件', 
-						collapsible:false,
+						title: '条件',
+						iconCls:'icon-GroupSortFilter',
+						hideExpandTool:false,
+						hideCollapsedContent:false,
+						//collapsible:false,
+						collapsedContent: function(title){
+							var region = $(this).panel('options').region;
+							if (region == 'north' || region == 'west'){
+								return title;
+							} else {
+								return '<div class="panel-title layout-expand-title-down">条件</ div>';
+							}
+						},
 						border:false,
-						split: true
+						split: true,
+						onCollapse:function(){
+							qwlayout.find('.layout-expand-south').find('.panel-header').css({'border-bottom':0,'border-right':0,'border-left':0});
+							qwlayout.find('.layout-expand-south').find('.panel-body').css({'border-bottom':0,'border-left':0,'border-right':0});
+						}
 					}).layout('add',{    
 						region: 'west',    
 						width: 250,
 						maxWidth: '50%',
 						minWidth: 250,
-						//title: '数据库表', 
+						title: '数据库表',
+						iconCls:'icon-GroupImport',
+						hideExpandTool:false,
+						hideCollapsedContent:false,
+						collapsedContent: function(title){
+							var region = $(this).panel('options').region;
+							if (region == 'north' || region == 'south'){
+								return title;
+							} else {
+								return '<div class="panel-title layout-expand-title layout-expand-title-down">数据库表</ div>';
+							}
+						},
 						border:false, 
-						collapsible:false,
-						split: true
+						//collapsible:false,
+						split: true,
+						onCollapse:function(){
+							qwlayout.find('.layout-expand-west').find('.panel-header').css({'border-top':0,'border-left':0});
+							qwlayout.find('.layout-expand-west').find('.panel-body').css({'border-top':0,'border-left':0,'border-bottom':0});
+						}
 					}); 
-					
+					qwlayout.layout('panel', 'west').panel('header').css({'height':18});
 					qwlayout.layout('panel', 'west').append(tables);
 					
 					tables.datagrid({
@@ -221,7 +254,7 @@ ebx.qw = {
 								tables.datagrid('editkeyboard', {index:tables.datagrid('getData').total-1, field: 'alias'});
 								setTimeout(function(){
 									tc.combogrid('clear');
-								}, 0)
+								}, 0);
 							}
 						}
 					});
@@ -276,8 +309,8 @@ ebx.qw = {
 						border:false,
 						width:'100%',
 						height:'100%',
-						plain:true,
-						tabPosition:'bottom',
+						plain:false,
+						tabPosition:'top',
 						onSelect:function(title){    
 
 						}    
@@ -285,16 +318,33 @@ ebx.qw = {
 					tabs.tabs('add', {
 						title:'列',    
 						content:columns,    
-						closable:false
+						closable:false,
+						iconCls:'icon-PivotFieldList'
 					}).tabs('add', {
 						title:'关系',    
 						content:relates,    
-						closable:false
+						closable:false,
+						iconCls:'icon-AdpDiagramRelationships'
 					}).tabs('select', 0);
 					
 					columns.datagrid({
 						columns:[[
-							{field:'datatype',title:'类型',width:80,editor:'text'},    
+							{field:'datatype',title:'类型',width:80,editor:{type:'combobox', options:{
+								panelHeight:'auto',
+								valueField: 'label',
+								textField: 'value',
+								hasDownArrow:false,
+								data: [{
+									label: 'string',
+									value: 'string'
+								},{
+									label: 'numeric',
+									value: 'numeric'
+								},{
+									label: 'date',
+									value: 'date'
+								}]
+							}}},    
 							{field:'alias',title:'别名',width:100,editor:'text'},    
 							{field:'column',title:'字段',width:300,editor:'text'},    
 							{field:'statistic',title:'统计',width:50,editor:'text'}, 
@@ -321,8 +371,103 @@ ebx.qw = {
 					columnsadd.linkbutton({
 						text:'添加列',
 						iconCls:'icon-SourceControlAddObjects',
-						plain:true
+						plain:true,
+						onClick:function(){
+							var title = colcolumns.combogrid('getValue'),
+								column = '[' + coltable.combogrid('getText') + '].[' + title + ']',
+								datatype = '';
+								
+							for(var i in colcolumns.combogrid('grid').datagrid('getRows')){
+								if(colcolumns.combogrid('grid').datagrid('getRows')[i].title === title){
+									datatype = colcolumns.combogrid('grid').datagrid('getRows')[i].type;
+								}
+							}
+							
+							if(title != ''){
+								columns.datagrid('appendRow', {
+									datatype:datatype,
+									alias:title,
+									column:column
+								});
+								columns.datagrid('scrollTo', columns.datagrid('getData').total - 1);//滚动到新增的行
+								columns.datagrid('selectRow', columns.datagrid('getData').total - 1);
+								columns.datagrid('editkeyboard', {index: columns.datagrid('getData').total - 1, field: 'alias'}); //自动触发编辑第一个字段
+							}else{
+								columns.datagrid('appendRow', {
+									column: coltable.combogrid('getText')==''?'':'[' + coltable.combogrid('getText') + '].'
+								});
+								columns.datagrid('scrollTo', columns.datagrid('getData').total - 1);//滚动到新增的行
+								columns.datagrid('selectRow', columns.datagrid('getData').total - 1);
+								columns.datagrid('editkeyboard', {index: columns.datagrid('getData').total - 1, field: 'datatype'}); //自动触发编辑第一个字段
+							}
+							ebx.setEditstatus(_tab, true);
+						}
 					});
+					coltable.combogrid({
+						columns:[[    
+							{field:'id',title:'表名',width:200},    
+							{field:'alias',title:'别名',width:100}  
+						]],
+						idField:"id",
+						textField:"alias",
+						//rownumbers:true,
+						panelWidth:250,
+						fitColumns:true,
+						data:tables.datagrid('getData'),
+						prompt:'选择数据库表',
+						width:100,
+						onChange:function(newValue,oldValue){
+							$.ajax({
+								type: 'post', 
+								url: 'server/SimpChinese/querywizard/columns/',
+								data:{tblName:newValue,_:(new Date()).getTime()},
+								dataType: "json",
+								success: function(result){
+									if(result){
+										colcolumns.combogrid('setValue', {});
+										colcolumns.combogrid('grid').datagrid('loadData', result)
+									}
+								}
+							});
+						},
+						onShowPanel:function(){
+							$(this).combogrid('grid').datagrid('loadData', tables.datagrid('getData'));
+						}
+					});
+					colcolumns.combogrid({
+						columns:[[    
+							{field:'title',title:'列名',width:100},    
+							{field:'type',title:'类型',width:100}  
+						]],
+						idField:"title",
+						textField:"title",
+						panelWidth:250,
+						fitColumns:true,
+						prompt:'选择数据列',
+						width:100,
+						onChange:function(newValue,oldValue){
+							var title = colcolumns.combogrid('getValue'),
+								column = '[' + coltable.combogrid('getText') + '].[' + title + ']',
+								datatype = '';
+							if(title == '')return;
+							for(var i in colcolumns.combogrid('grid').datagrid('getRows')){
+								if(colcolumns.combogrid('grid').datagrid('getRows')[i].title === title){
+									datatype = colcolumns.combogrid('grid').datagrid('getRows')[i].type;
+								}
+							}
+							
+							columns.datagrid('appendRow', {
+								datatype:datatype,
+								alias:title,
+								column:column
+							});
+							columns.datagrid('scrollTo', columns.datagrid('getData').total - 1);//滚动到新增的行
+							columns.datagrid('selectRow', columns.datagrid('getData').total - 1);
+							columns.datagrid('editkeyboard', {index: columns.datagrid('getData').total - 1, field: 'alias'}); //自动触发编辑第一个字段
+							ebx.setEditstatus(_tab, true);
+						}
+					});
+
 					columnsdel.linkbutton({
 						text:'删除列',
 						iconCls:'icon-CellsDelete',

@@ -155,10 +155,11 @@ $.extend($.fn.combogrid.defaults, {
 		
 		if(g.datagrid('getRows').length == 0 || !ops.asyn){
 			var style = ops.style,//显示式样名称，获取地址server/DataProvider/style/?
+				columns = ops.columns,//自定义式样
 				template = ops.template,//查询模板ID，获取地址server/DataProvider/list/?
 				url = 'server/SimpChinese/DataProvider/list/',
 				queryParams = {_:(new Date()).getTime()};
-			if(!style)return;
+			
 			if(!template){
 				if(ops.droplisturl){
 					url = ops.droplisturl;//支持自定义url获取list数据
@@ -168,34 +169,52 @@ $.extend($.fn.combogrid.defaults, {
 			}else{
 				queryParams = {template:template,_:(new Date()).getTime()}
 			};
-			$.ajax({
-				type: 'post', 
-				url: 'server/SimpChinese/DataProvider/style/',
-				data:{style:style,_:(new Date()).getTime()},
-				dataType: "json",
-				success: function(result){
-					if(result){
-						var data = [result.data];
-						g.datagrid({
-							view:scrollview,
-							pageSize:pageSize,
-							url:url,
-							queryParams:queryParams,
-							method:'post',
-							loadMsg:$.fn.datagrid.defaults.loadMsg,
-							columns:data,
-							onLoadSuccess: function(data){
-								if(data.total == 1){//查询结果只有一条记录时，默认选中
-									g.datagrid('selectRow', 0);
+			if(typeof(style) === 'string'){
+				$.ajax({
+					type: 'post', 
+					url: 'server/SimpChinese/DataProvider/style/',
+					data:{style:style,_:(new Date()).getTime()},
+					dataType: "json",
+					success: function(result){
+						if(result){
+							var data = [result.data];
+							g.datagrid({
+								view:scrollview,
+								pageSize:pageSize,
+								url:url,
+								queryParams:queryParams,
+								method:'post',
+								loadMsg:$.fn.datagrid.defaults.loadMsg,
+								columns:data,
+								onLoadSuccess: function(data){
+									if(data.total == 1){//查询结果只有一条记录时，默认选中
+										g.datagrid('selectRow', 0);
+									}
+									ops.oRows = [];
+									ops.asyn = 1;
 								}
-								ops.oRows = [];
-								ops.asyn = 1;
-							}
-						}).datagrid('renderformatterstyler');
-						
+							}).datagrid('renderformatterstyler');
+						}
 					}
-				}
-			});
+				});
+			}else if(columns){
+				g.datagrid({
+					view:scrollview,
+					pageSize:pageSize,
+					url:url,
+					queryParams:queryParams,
+					method:'post',
+					loadMsg:$.fn.datagrid.defaults.loadMsg,
+					columns:columns,
+					onLoadSuccess: function(data){
+						if(data.total == 1){//查询结果只有一条记录时，默认选中
+							g.datagrid('selectRow', 0);
+						}
+						ops.oRows = [];
+						ops.asyn = 1;
+					}
+				}).datagrid('renderformatterstyler');
+			}
 		}
 	},
 	inputEvents: {//键盘事件重造

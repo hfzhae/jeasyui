@@ -503,6 +503,27 @@
 .icon-SourceControlAddObjects-large{
 	background:url('icon32/SourceControlAddObjects.png') no-repeat center center;
 }
+.icon-GroupImport{
+	background:url('icon32/GroupImport.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-GroupImport-large{
+	background:url('icon32/GroupImport.png') no-repeat center center;
+}
+.icon-PivotFieldList{
+	background:url('icon32/PivotFieldList.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-PivotFieldList-large{
+	background:url('icon32/PivotFieldList.png') no-repeat center center;
+}
+.icon-AdpDiagramRelationships{
+	background:url('icon32/AdpDiagramRelationships.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-AdpDiagramRelationships-large{
+	background:url('icon32/AdpDiagramRelationships.png') no-repeat center center;
+}
 
 
 
