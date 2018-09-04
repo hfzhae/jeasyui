@@ -9,6 +9,7 @@ ebx.qw = {
 	ID: 0,
 	billtype: 0,
 	ParentID: 0,
+	data:{},
 	tabs: [],
 	tab: [],
 	layout: [],
@@ -19,7 +20,6 @@ ebx.qw = {
 	biribbon: [],
 	centerstorage: [],
 	eaststorage: [],
-	showSearchserial: 0,//是否显示串号扫描框
 	init: function(layoutName, callback, callback1){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
@@ -128,6 +128,7 @@ ebx.qw = {
 			success: function(result){
 				if(result){
 					var qwlayout = $('<div>').appendTo(_centerPanel),
+						otp = _centerPanel.panel('options'),
 						tables = $('<div>'),
 						tablestoolbar = $('<div>'),
 						tablesadd = $('<div>').appendTo(tablestoolbar),
@@ -147,6 +148,8 @@ ebx.qw = {
 						relatesclear = $('<div>').appendTo(relatestoolbar),
 						filter = $('<textarea spellcheck="false">'),
 						tabs = $('<div>');
+						
+					otp.data = result;
 					
 					qwlayout.layout({
 						width:'100%',
@@ -214,7 +217,7 @@ ebx.qw = {
 							{field:'id',title:'表名',width:200,editor:'text'},    
 							{field:'alias',title:'别名',width:100,editor:'text'}  
 						]],
-						data: result.tables,
+						data: otp.data.tables.total==0?{total:0,rows:[]}:otp.data.tables,
 						width:'100%',
 						height:'100%',
 						rownumbers:true,
@@ -233,18 +236,22 @@ ebx.qw = {
 					});
 					
 					tablesadd.combogrid({
-						style:"QueryWizardTablesBrowse",
+					//tablesadd.droplist({
+						//style:"QueryWizardTablesBrowse",
+						columns:[[    
+							{field:'id',title:'表名',width:100}
+						]],
 						idField:"id",
 						textField:"id",
 						//rownumbers:true,
 						panelWidth:250,
 						fitColumns:true,
-						droplisturl:'server/SimpChinese/querywizard/table/',
+						url:'server/SimpChinese/querywizard/table/',
 						prompt:'选择数据库表',
 						width:100,
-						inputEvents:{},//为了避免键盘操作影响onChange事件，禁用了键盘操作
 						onChange:function(newValue,oldValue){
 							var tc = $(this);
+							tc.combogrid('hidePanel');
 							if(newValue != ''){
 								tables.datagrid('appendRow',{
 									id:newValue,
@@ -252,9 +259,7 @@ ebx.qw = {
 								});
 								tables.datagrid('selectRow', tables.datagrid('getData').total-1);
 								tables.datagrid('editkeyboard', {index:tables.datagrid('getData').total-1, field: 'alias'});
-								setTimeout(function(){
-									tc.combogrid('clear');
-								}, 0);
+								ebx.setEditstatus(_tab, true);
 							}
 						}
 					});
@@ -329,29 +334,33 @@ ebx.qw = {
 					
 					columns.datagrid({
 						columns:[[
-							{field:'datatype',title:'类型',width:80,editor:{type:'combobox', options:{
-								panelHeight:'auto',
-								valueField: 'label',
-								textField: 'value',
-								hasDownArrow:false,
-								data: [{
-									label: 'string',
-									value: 'string'
-								},{
-									label: 'numeric',
-									value: 'numeric'
-								},{
-									label: 'date',
-									value: 'date'
-								}]
-							}}},    
+							{field:'datatype',title:'类型',width:80,editor:{
+								"type":"combogrid",
+								"options":{
+									columns:[[    
+										{field:'datatype',title:'数据类型',width:200}
+									]],
+									hasDownArrow:false,//隐藏右边得下箭头
+									idField:"datatype",
+									textField:"datatype",
+									panelHeight:'auto',
+									showHeader:false,
+									data: [{
+										datatype: 'string'
+									},{
+										datatype: 'numeric'
+									},{
+										datatype: 'date'
+									}]
+								}
+							}},
 							{field:'alias',title:'别名',width:100,editor:'text'},    
 							{field:'column',title:'字段',width:300,editor:'text'},    
 							{field:'statistic',title:'统计',width:50,editor:'text'}, 
 							{field:'datasource',title:'可选的数据源',width:150,editor:'text'}, 
 							{field:'memo',title:'备注',width:150,editor:'text'}
 						]],
-						data: result.columns,
+						data: otp.data.columns.total==0?{total:0,rows:[]}:otp.data.columns,
 						width:'100%',
 						height:'100%',
 						rownumbers:true,
@@ -445,7 +454,7 @@ ebx.qw = {
 						fitColumns:true,
 						prompt:'选择数据列',
 						width:100,
-						onChange:function(newValue,oldValue){
+						onChange1:function(newValue,oldValue){
 							var title = colcolumns.combogrid('getValue'),
 								column = '[' + coltable.combogrid('getText') + '].[' + title + ']',
 								datatype = '';
@@ -515,13 +524,116 @@ ebx.qw = {
 					});
 					relates.datagrid({
 						columns:[[    
-							{field:'table',title:'表',width:100,editor:'text'},    
-							{field:'column',title:'字段',width:100,editor:'text'},    
+							{field:'table',title:'表',width:100,editor:{
+								"type":"combogrid",
+								"options":{
+									columns:[[    
+										{field:'id',title:'表名',width:200},    
+										{field:'alias',title:'别名',width:100}  
+									]],
+									hasDownArrow:false,//隐藏右边得下箭头
+									idField:"alias",
+									textField:"alias",
+									panelWidth:250,
+									fitColumns:true,
+									onShowPanel:function(){
+										$(this).combogrid('grid').datagrid('loadData', tables.datagrid('getData'));
+									}
+								}
+							}},    
+							{field:'column',title:'字段',width:100,editor:{
+								"type":"combogrid",
+								"options":{
+									columns:[[    
+										{field:'title',title:'列名',width:100},    
+										{field:'type',title:'类型',width:100}  
+									]],
+									hasDownArrow:false,//隐藏右边得下箭头
+									idField:"title",
+									textField:"title",
+									panelWidth:250,
+									fitColumns:true,
+									onShowPanel:function(){
+										var grid = $(this).combogrid('grid'),
+											row = relates.datagrid('getSelected'),
+											tablesrows = tables.datagrid('getData').rows,
+											table = '';
+
+										for(var i in tablesrows){
+											if(row.table == tablesrows[i].alias)table=tablesrows[i].id;
+										}
+										if(table != ''){
+											$.ajax({
+												type: 'post', 
+												url: 'server/SimpChinese/querywizard/columns/',
+												data:{tblName:table,_:(new Date()).getTime()},
+												dataType: "json",
+												success: function(result){
+													if(result){
+														grid.datagrid('loadData', result)
+													}
+												}
+											});
+										}
+									}
+								}
+							}},    
 							{field:'relate',title:'',width:20},    
-							{field:'relatetable',title:'表',width:100,editor:'text'},    
-							{field:'relatecolumn',title:'字段',width:100,editor:'text'}  
+							{field:'relatetable',title:'表',width:100,editor:{
+								"type":"combogrid",
+								"options":{
+									columns:[[    
+										{field:'id',title:'表名',width:200},    
+										{field:'alias',title:'别名',width:100}  
+									]],
+									hasDownArrow:false,//隐藏右边得下箭头
+									idField:"alias",
+									textField:"alias",
+									panelWidth:250,
+									fitColumns:true,
+									onShowPanel:function(){
+										$(this).combogrid('grid').datagrid('loadData', tables.datagrid('getData'));
+									}
+								}
+							}},    
+							{field:'relatecolumn',title:'字段',width:100,editor:{
+								"type":"combogrid",
+								"options":{
+									columns:[[    
+										{field:'title',title:'列名',width:100}
+									]],
+									hasDownArrow:false,//隐藏右边得下箭头
+									idField:"title",
+									textField:"title",
+									panelWidth:200,
+									fitColumns:true,
+									onShowPanel:function(){
+										var grid = $(this).combogrid('grid'),
+											row = relates.datagrid('getSelected'),
+											tablesrows = tables.datagrid('getData').rows,
+											table = '';
+
+										for(var i in tablesrows){
+											if(row.relatetable == tablesrows[i].alias)table=tablesrows[i].id;
+										}
+										if(table != ''){
+											$.ajax({
+												type: 'post', 
+												url: 'server/SimpChinese/querywizard/columns/',
+												data:{tblName:table,_:(new Date()).getTime()},
+												dataType: "json",
+												success: function(result){
+													if(result){
+														grid.datagrid('loadData', result)
+													}
+												}
+											});
+										}
+									}
+								}
+							}}  
 						]],
-						data: result.relates,
+						data: otp.data.relates.total==0?{total:0,rows:[]}:otp.data.relates,
 						width:'100%',
 						height:'100%',
 						rownumbers:true,
@@ -540,7 +652,14 @@ ebx.qw = {
 					relatesadd.linkbutton({
 						text:'添加关系',
 						iconCls:'icon-CellsInsertDialog',
-						plain:true
+						plain:true,
+						onClick:function(){
+							relates.datagrid('appendRow', {relate:'='});
+							relates.datagrid('scrollTo', relates.datagrid('getData').total - 1);//滚动到新增的行
+							relates.datagrid('selectRow', relates.datagrid('getData').total - 1);
+							relates.datagrid('editkeyboard', {index: relates.datagrid('getData').total - 1, field: 'table'}); //自动触发编辑第一个字段
+							ebx.setEditstatus(_tab, true);
+						}
 					});
 					relatesdel.linkbutton({
 						text:'删除关系',
@@ -591,7 +710,7 @@ ebx.qw = {
 						southopt = southpanel.panel('options');
 					
 					southpanel.append(filter);
-					filter.val(result.filter).css({
+					filter.val(otp.data.filter).css({
 						'padding':5,
 						'width':'98%',
 						//'border':0,
@@ -604,7 +723,8 @@ ebx.qw = {
 						'background':'transparent',
 						'border-style':'none' 
 					}).blur(function(){
-						if($(this).val() != result.filter){
+						if($(this).val() != otp.data.filter){
+							otp.data.filter = $(this).val();
 							ebx.setEditstatus(_tab, true);
 						}
 					});
@@ -613,49 +733,32 @@ ebx.qw = {
 			}
 		});
 	},
-	_save:function(asSave, _layout, _Paramet, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Paramet：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：单据全局对象，callback回到函数
-		var listgrid = _layout.layout('panel', 'center').find('.datagrid-f'),
-			bdlistdata = listgrid.datagrid('getData').firstRows,
-			by = function(name){
-				return function(o, p){
-					var a, b;
-					if (typeof o === "object" && typeof p === "object" && o && p) {
-						a = ebx.validInt(o[name]);
-						b = ebx.validInt(p[name]);
-						if (a === b) {
-							return 0;
-						}
-						if (typeof a === typeof b) {
-							return a < b ? -1 : 1;
-						}
-						return typeof a < typeof b ? -1 : 1;
-					}
-					else {
-						throw ("error");
-					}
-				}
-			};
-		bdlistdata.sort(by('serial'));//保存前按serial字段由小到大排序处理
-		
-		var bdlist = {total: bdlistdata.length, rows: bdlistdata},
-			bd = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
-			columns = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('options').columns,
-			bdliststr =  ebx.convertDicToJson(bdlist),
-			bdstr = ebx.convertDicToJson(bd),
-			columnsstr = ebx.convertDicToJson(columns),
+	_save:function(asSave, _layout, _Paramet, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Paramet：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：全局对象，callback回到函数
+		var data = _layout.layout('panel', 'center').panel('options').data,
+			bd = ebx.convertDicToJson(_layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData')),
 			ParentID = asSave?_Paramet.id:0,
 			savetext = asSave?'另存':'保存',
-			parameter = {bd: bdstr, bdlist: bdliststr, columns:columnsstr, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+			parameter = {tables: ebx.convertDicToJson(data.tables), columns: ebx.convertDicToJson(data.columns), relates: ebx.convertDicToJson(data.relates), filter: data.filter, bd: bd, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
 
-		if(bdlist.total == 0){
+		if(data.tables.total == 0){
 			$.messager.show({
 				title: '错误',
-				msg: savetext + '失败！表格不能为空。',
+				msg: savetext + '失败！数据库表不能为空。',
 				timeout: 3000,
 				showType: 'slide'
 			});	
 			callback();
-			//saveBtn.linkbutton('enable');
+			return;
+		}
+		
+		if(data.columns.total == 0){
+			$.messager.show({
+				title: '错误',
+				msg: savetext + '失败！列不能为空。',
+				timeout: 3000,
+				showType: 'slide'
+			});	
+			callback();
 			return;
 		}
 		
@@ -682,7 +785,8 @@ ebx.qw = {
 					ebx.setEditstatus(_tab, false);
 					bdx.ID = result.id;
 					
-					_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:bdx.ID, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
+					//_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:bdx.ID, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
+					//bdx.init('center');
 					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:bdx.ID, _:(new Date()).getTime()});
 					
 				}else{

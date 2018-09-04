@@ -425,7 +425,6 @@ var ebx = {
 	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
 		if(typeof(d) != 'object') return('{}');
 		var s = '', arrtype = 0;
-		
 		if(d.RecordCount == undefined){
 			for(var i in d){
 				var n = Number(i);//通过是否数字格式判断是否是数组，如果是数字，代表是数组，文本用[]包含，否则代表是字典，文本用{}包含
@@ -924,6 +923,7 @@ var ebx = {
 									TableName: this.TableName,
 									ModType: 'BillType=' + this.ModType
 								}
+								debugger;
 							rsBD(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Paramet);
 						}
 					}
@@ -1042,20 +1042,24 @@ var ebx = {
 				var rsBI = ebx.dbx.open('select * from ' + this.TableName + ' where id=' + this.ID),
 					rsBIFields = rsBI.Fields;
 			}
+			
 			this.bi.MoveFirst();
 			while(!this.bi.eof){
 				for(var i = 0; i < rsBIFields.Count; i++){
-					if(rsBIFields(i).name.toLowerCase() == this.bi("field").value.toLowerCase()){
-						var _Paramet = {//回调函数用参数对象
-								id: this.ID,
-								field: this.bi("field").value, 
-								rs: this.bi, 
-								rslist: {}, 
-								TableName: this.TableName,
-								ModType: 'Infotype=' + this.ModType,
-								rsBI: rsBI
-							}
-						rsBI(this.bi("field").value) = ebx.func.callback(this.bi("func").value, this.bi("value").value, _Paramet);
+				    if(this.bi("field").value!=undefined){
+					    if(rsBIFields(i).name.toLowerCase() == this.bi("field").value.toLowerCase()){
+						    var _Paramet = {//回调函数用参数对象
+								    id: this.ID,
+								    field: this.bi("field").value, 
+								    rs: this.bi, 
+								    rslist: {}, 
+								    TableName: this.TableName,
+								    ModType: 'Infotype=' + this.ModType,
+								    rsBI: rsBI
+							    }
+							    //debugger;
+						    rsBI(this.bi("field").value) = ebx.func.callback(this.bi("func").value, this.bi("value").value, _Paramet);
+					    }
 					}
 				}
 				//if(this.bi("field").value == 'id'){
@@ -1195,6 +1199,18 @@ var ebx = {
 						return v.Format('yyyy-MM-dd')
 					}
 					break;
+				case 'cbGetAreaIDByTitle':
+				    
+					if(v.length == 0) throw name + '不能为空！';
+					
+					var rs = ebx.dbx.open("select id from biarea where title='" + v +"'", 1, 1);
+					if(!rs.eof){
+						v=rs("id").value;
+					}else{v=0}
+					rs = null;
+					rsBI = null;
+					return v;
+				    break;
 				case 'cbRSDateTime'://日期时间格式化函数
 					v = new Date(v.replaceAll('-','/'));
 					if(isNaN(v)){

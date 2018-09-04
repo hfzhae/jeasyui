@@ -1832,11 +1832,11 @@ return _1bd[name](_1bc);
 return _1bd;
 }
 },destroy:function(_1be){
-if(isA(_1be,name)){
+if(isA(_1be,name)||name=='droplist'){//支持自定义droplist控件在datagrid的编辑器里的destroy 2018-9-4 zz
 $(_1be)[name]("destroy");
 }
 },getValue:function(_1bf){
-if(isA(_1bf,name)){
+if(isA(_1bf,name)||name=='droplist'){//支持自定义droplist控件在datagrid的编辑器里的getvalue 2018-9-4 zz
 var opts=$(_1bf)[name]("options");
 if(opts.multiple){
 return $(_1bf)[name]("getValues").join(opts.separator);
@@ -1847,7 +1847,7 @@ return $(_1bf)[name]("getValue");
 return $(_1bf).val();
 }
 },setValue:function(_1c0,_1c1){
-if(isA(_1c0,name)){
+if(isA(_1c0,name)||name=='droplist'){//支持自定义droplist控件在datagrid的编辑器里的setvalue 2018-9-4 zz
 var opts=$(_1c0)[name]("options");
 if(opts.multiple){
 if(_1c1){
@@ -1862,7 +1862,7 @@ $(_1c0)[name]("setValue",_1c1);
 $(_1c0).val(_1c1);
 }
 },resize:function(_1c2,_1c3){
-if(isA(_1c2,name)){
+if(isA(_1c2,name)||name=='droplist'){//支持自定义droplist控件在datagrid的编辑器里动态调整宽度 2018-9-4 zz
 $(_1c2)[name]("resize",_1c3);
 }else{
 $(_1c2)._size({width:_1c3,height:$.fn.datagrid.defaults.editorHeight});
@@ -1870,7 +1870,7 @@ $(_1c2)._size({width:_1c3,height:$.fn.datagrid.defaults.editorHeight});
 }};
 };
 };
-var _1c4=$.extend({},_1b6(["text","textbox","passwordbox","filebox","numberbox","numberspinner","combobox","combotree","combogrid","combotreegrid","datebox","datetimebox","timespinner","datetimespinner"]),{textarea:{init:function(_1c5,_1c6){
+var _1c4=$.extend({},_1b6(["text","textbox","passwordbox","filebox","numberbox","numberspinner","combobox","combotree","combogrid","combotreegrid","datebox","datetimebox","timespinner","datetimespinner","droplist"]),{textarea:{init:function(_1c5,_1c6){
 var _1c7=$("<textarea class=\"datagrid-editable-input\"></textarea>").appendTo(_1c5);
 _1c7.css("vertical-align","middle")._outerHeight(_1c6.height);
 return _1c7;
