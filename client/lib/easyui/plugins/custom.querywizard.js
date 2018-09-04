@@ -972,7 +972,46 @@ ebx.qw = {
 							text:'导出',
 							iconCls:'icon-AdpStoredProcedureEditSql-large',
 							iconAlign:'top',
-							size:'large'
+							size:'large',
+							onClick:function(){
+								var data = _layout.layout('panel', 'center').panel('options').data,
+									tables = data.tables.rows,
+									columns = data.columns.rows,
+									relates = data.relates.rows,
+									filter = data.filter,
+									sql = 'select \n',
+									group  = '',
+									groupcount = 0;
+									
+								
+								for(var i in columns){
+									sql += columns[i].column + ' as ' + columns[i].alias + ',\n';
+									if(ebx.validInt(columns[i].statistic) == 0){
+										group += columns[i].column + ',\n';
+									}else{
+										groupcount++;
+									}
+								}
+								sql = sql.substr(0, sql.length - 2);
+								sql += ' \nfrom \n';
+								
+								if(group != ''){
+									group = ' \ngroup by \n' + group.substr(0, group.length - 2);
+								}
+								
+								for(var i in tables){
+									sql += tables[i].id + ' ' + tables[i].alias + ',\n';
+								}
+								sql = sql.substr(0, sql.length - 2);
+								sql += ' \nwhere \n';
+								
+								for(var i in relates){
+									sql += relates[i].table + '.' + relates[i].column + relates[i].relate + relates[i].relatetable + '.' + relates[i].relatecolumn + ' and \n'
+								}
+								sql += filter;
+								if(groupcount > 0)sql += group;
+								ebx.clipboardString(sql);
+							}
 						}]
 					},{
 						title:'安全',

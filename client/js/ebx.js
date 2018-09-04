@@ -303,7 +303,70 @@ var ebx = {
 	importTemplate:function(columns, title){//导入模板的导出函数 2018-5-17 zz
 		ebx.clipboardData(columns, {total:1, rows:[eval('({' + columns[0][0].field +':"这是导入“' + title + '”的模板，请按以上格式编辑数据。（本行为说明文字，编辑前请删除）"})')]});
 	},
-	clipboardData: function (columns, data){//导出函数，复制到剪贴板方法用到了clipboard.js插件，参数：columns：表头对象，data：数据内容，包含total和rows 2018-5-15 zz
+	clipboardString: function(s){
+		easyloader.load(['clipboard'], function(){//异步加载clipboard.min.js
+			var	centererpanelwindow = $('<div style="text-align:center;padding:5px;"><p>正在读取...</p></div>').appendTo($('body')),
+				copybtn = $('<div id="copybtndiv" data-clipboard-target="#bar">').appendTo(centererpanelwindow),
+				copyInput = $('<textarea id="bar" style="position:absolute;top:-500px;">').appendTo(centererpanelwindow);
+			
+			copybtn.linkbutton({
+				text:'复制到剪贴板',
+				iconCls: 'icon-CopyToPersonalTaskList-large',
+				disabled: true
+			})
+			.addClass('l-btn-large')
+			.addClass('l-btn-plain')
+			.find('.l-btn-left')
+			.removeClass('l-btn-icon-left')
+			.addClass('l-btn-icon-top');
+			
+			centererpanelwindow.window({
+				width:250,
+				height:160,
+				iconCls:'icon-ImportExcel',
+				modal:true,
+				collapsible:false,
+				minimizable:false,
+				maximizable:false,
+				closable:true,
+				title:'导出',
+				draggable:true,
+				resizable:false,
+				shadow:false
+			});
+			
+			var clipboard = new Clipboard('#copybtndiv');
+			
+			clipboard.on('success', function(e) {  
+				centererpanelwindow.window('close');
+				centererpanelwindow.remove();
+				clipboard.destroy();
+				allData = null;
+				$.messager.show({
+					title: '复制成功',
+					msg: '内容已经复制到剪贴板。',
+					timeout: 5000,
+					height:120,
+					showType: 'slide'
+				});
+			});  
+		  
+			clipboard.on('error', function(e) {
+				console.log(clipboard);
+				centererpanelwindow.window('close');
+				centererpanelwindow.remove();
+				clipboard.destroy();
+				allData = null;
+			});
+			
+			setTimeout(function(){
+				copyInput.val(s);
+				centererpanelwindow.find('p').text('成功粘贴数据。');
+				copybtn.linkbutton('enable');
+			},0);
+		});
+	},
+	clipboardData: function (columns, data){//导出grid函数，复制到剪贴板方法用到了clipboard.js插件，参数：columns：表头对象，data：数据内容，包含total和rows 2018-5-15 zz
 		easyloader.load(['clipboard'], function(){//异步加载clipboard.min.js
 			if(typeof(columns) != 'object')return;
 			if(typeof(data) != 'object')return;

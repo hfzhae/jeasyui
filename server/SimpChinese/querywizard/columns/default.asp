@@ -6,7 +6,7 @@
 		return;
 	}
 	var rs = ebx.dbx.getRs(),
-		sql = 'select title ',
+		sql = '',
 		ocat = Server.CreateObject('ADOX.Catalog'),
 		tblName = ebx.sqlStringEncode(ebx.stdin['tblName']);
 		
@@ -14,13 +14,14 @@
 	rs.Fields.Append('type', 203, -1);
 	rs.open();
 	
-	ocat.ActiveConnection = ebx.conn;
-	for(var i = 0; i < ocat.Tables(tblName).Columns.count; i++){
-		rs.AddNew()
-		rs(0) = ocat.Tables(tblName).Columns(i).Name;
-		rs(1) = GetDataType(ocat.Tables(tblName).Columns(i).Type);
+	if(tblName.indexOf('select') < 0){
+		ocat.ActiveConnection = ebx.conn;
+		for(var i = 0; i < ocat.Tables(tblName).Columns.count; i++){
+			rs.AddNew()
+			rs(0) = ocat.Tables(tblName).Columns(i).Name;
+			rs(1) = GetDataType(ocat.Tables(tblName).Columns(i).Type);
+		}
 	}
-	
 	ebx.stdout = rs;
 	
 	function GetDataType(n){
