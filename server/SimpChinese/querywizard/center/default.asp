@@ -12,9 +12,9 @@
 	}
 	var id = ebx.validInt(ebx.stdin['id']),
 		data = {
-			tables:{total:0, rows:[]},
-			columns:{total:0, rows:[]},
-			relates:{total:0, rows:[]},
+			tables: ebx.dbx.open('select null where 0 is null',1,1),
+			columns: ebx.dbx.open('select null where 0 is null',1,1),
+			relates: ebx.dbx.open('select null where 0 is null',1,1),
 			filter:''
 		};
 		sql = 'select [Tables],[Relates],[Columns],[Filter] from ' + TableName + ' where id=' + id,
@@ -26,9 +26,6 @@
 		data.relates = ebx.convertBinToRs(rs('Relates').value);
 		data.filter = rs('Filter').value;
 	}
-	//data["total"] = rs.recordcount;
-	//data["rows"] = eval('('+ebx.convertRsToJson(rs, 1)+')');
-	//data["footer"] = [{}]
 	ebx.stdout = data;
 })();
 %>

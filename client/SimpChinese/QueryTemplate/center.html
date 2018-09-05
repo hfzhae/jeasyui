@@ -1,26 +1,6 @@
 <script type="text/javascript">
 	easyloader.load([], function(){		
-		var bd = ebx.cloneObj(ebx.bd);
-		bd.init('center', function(c, s){
-			//重造字段的editor的validatebox校验
-			ebx.setDatagridEditor.validatebox(c[0], 'Serial', 'Integer', true);
-			//ebx.setDatagridEditor.validatebox(c[0], 'MenuGroupTitle', 'String', true);
-			ebx.setDatagridEditor.editorType(c[0], 'MenuGroupName', 'combogrid', {//用来选择菜单组的combogrid
-				style:'StyleMenuGroup',
-				//validType:'LetterInteger',
-				required:true,
-				idField:'ID',
-				idField:'MenuGroupName',
-				rownumbers:true,
-				panelWidth:400,
-				template:183,
-				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
-					var r = s.datagrid('getData').rows[s.datagrid('options').editIndex];
-					r.MenuGroupID = rowData.ID;
-					r.MenuGroupName = rowData.MenuGroupName;
-					r.MenuGroupTitle = ebx.unescapeEx(rowData.MenuGroupTitle);
-				}
-			});
-		});
+		var qt = ebx.cloneObj(ebx.qt);
+		qt.init('center');
 	});
 </script>

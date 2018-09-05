@@ -1,6 +1,18 @@
 <script type="text/javascript">
-	easyloader.load(['propertygrid', 'datagridkeyboard', 'datagridrenderstyler', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'ribbon', 'bd', 'combogrid', 'droplist'], function(){
-		var bd = ebx.cloneObj(ebx.bd);
-		bd.init('default');
+	easyloader.load([
+		'propertygrid', 
+		'datagridkeyboard', 
+		'datagridrenderstyler', 
+		'splitbutton', 
+		'datetimebox', 
+		'datagridkeyboard', 
+		'combobox', 
+		'ribbon', 
+		'querytemplate', 
+		'combogrid', 
+		'droplist'], 
+	function(){
+		var qt = ebx.cloneObj(ebx.qt);
+		qt.init('default');
 	});
 </script>

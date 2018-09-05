@@ -1,7 +1,7 @@
 /****************************************************************
 Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/8/27
-查询设计客户都安对象，包括单据的表头、表体，功能按钮模块的加载，支持保存、编辑、删除等功能
+查询设计客户端对象，包括单据的表头、表体，功能按钮模块的加载，支持保存、编辑、删除等功能
 
 *****************************************************************/
 
@@ -149,8 +149,6 @@ ebx.qw = {
 						filter = $('<textarea spellcheck="false">'),
 						tabs = $('<div>');
 						
-					otp.data = result;
-					
 					qwlayout.layout({
 						width:'100%',
 						height:'100%'
@@ -217,7 +215,7 @@ ebx.qw = {
 							{field:'id',title:'表名',width:200,editor:'text'},    
 							{field:'alias',title:'别名',width:100,editor:'text'}  
 						]],
-						data: otp.data.tables.total==0?{total:0,rows:[]}:otp.data.tables,
+						data: result.tables,
 						width:'100%',
 						height:'100%',
 						rownumbers:true,
@@ -356,11 +354,11 @@ ebx.qw = {
 							}},
 							{field:'alias',title:'别名',width:100,editor:'text'},    
 							{field:'column',title:'字段',width:300,editor:'text'},    
-							{field:'statistic',title:'统计',width:50,editor:'text'}, 
-							{field:'datasource',title:'可选的数据源',width:150,editor:'text'}, 
+							{field:'statistic',title:'统计',width:50,editor:'text',hidden:true}, 
+							{field:'datasource',title:'可选的数据源',width:150,editor:'text',hidden:true}, 
 							{field:'memo',title:'备注',width:150,editor:'text'}
 						]],
-						data: otp.data.columns.total==0?{total:0,rows:[]}:otp.data.columns,
+						data: result.columns,
 						width:'100%',
 						height:'100%',
 						rownumbers:true,
@@ -633,7 +631,7 @@ ebx.qw = {
 								}
 							}}  
 						]],
-						data: otp.data.relates.total==0?{total:0,rows:[]}:otp.data.relates,
+						data: result.relates,
 						width:'100%',
 						height:'100%',
 						rownumbers:true,
@@ -710,7 +708,7 @@ ebx.qw = {
 						southopt = southpanel.panel('options');
 					
 					southpanel.append(filter);
-					filter.val(otp.data.filter).css({
+					filter.val(result.filter).css({
 						'padding':5,
 						'width':'98%',
 						//'border':0,
@@ -723,8 +721,7 @@ ebx.qw = {
 						'background':'transparent',
 						'border-style':'none' 
 					}).blur(function(){
-						if($(this).val() != otp.data.filter){
-							otp.data.filter = $(this).val();
+						if($(this).val() != result.filter){
 							ebx.setEditstatus(_tab, true);
 						}
 					});
@@ -734,30 +731,23 @@ ebx.qw = {
 		});
 	},
 	_save:function(asSave, _layout, _Paramet, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Paramet：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：全局对象，callback回到函数
-		var data = _layout.layout('panel', 'center').panel('options').data,
+		var tables = _layout.layout('panel', 'center').find('.layout').layout('panel', 'west').find('.datagrid-f').datagrid('getData'),
+			columns = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 0).find('.datagrid-f').datagrid('getData'),
+			relates = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 1).find('.datagrid-f').datagrid('getData'),
+			filter = _layout.layout('panel', 'center').find('.layout').layout('panel', 'south').find('textarea').val(),
 			bd = ebx.convertDicToJson(_layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData')),
 			ParentID = asSave?_Paramet.id:0,
 			savetext = asSave?'另存':'保存',
-			parameter = {tables: ebx.convertDicToJson(data.tables), columns: ebx.convertDicToJson(data.columns), relates: ebx.convertDicToJson(data.relates), filter: data.filter, bd: bd, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+			parameter = {tables: ebx.convertDicToJson(tables), columns: ebx.convertDicToJson(columns), relates: ebx.convertDicToJson(relates), filter: filter, bd: bd, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
 
-		if(data.tables.total == 0){
-			$.messager.show({
-				title: '错误',
-				msg: savetext + '失败！数据库表不能为空。',
-				timeout: 3000,
-				showType: 'slide'
-			});	
+		if(tables.total == 0){
+			$.messager.alert('错误', savetext + '失败！数据库表不能为空。', 'error');
 			callback();
 			return;
 		}
 		
-		if(data.columns.total == 0){
-			$.messager.show({
-				title: '错误',
-				msg: savetext + '失败！列不能为空。',
-				timeout: 3000,
-				showType: 'slide'
-			});	
+		if(columns.total == 0){
+			$.messager.alert('错误', savetext + '失败！列不能为空。', 'error');
 			callback();
 			return;
 		}
@@ -974,11 +964,10 @@ ebx.qw = {
 							iconAlign:'top',
 							size:'large',
 							onClick:function(){
-								var data = _layout.layout('panel', 'center').panel('options').data,
-									tables = data.tables.rows,
-									columns = data.columns.rows,
-									relates = data.relates.rows,
-									filter = data.filter,
+								var tables = _layout.layout('panel', 'center').find('.layout').layout('panel', 'west').find('.datagrid-f').datagrid('getRows'),
+									columns = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 0).find('.datagrid-f').datagrid('getRows'),
+									relates = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 1).find('.datagrid-f').datagrid('getRows'),
+									filter = _layout.layout('panel', 'center').find('.layout').layout('panel', 'south').find('textarea').val(),
 									sql = 'select \n',
 									group  = '',
 									groupcount = 0;
@@ -993,21 +982,25 @@ ebx.qw = {
 									}
 								}
 								sql = sql.substr(0, sql.length - 2);
-								sql += ' \nfrom \n';
+								sql += ' \n\nfrom \n';
 								
 								if(group != ''){
-									group = ' \ngroup by \n' + group.substr(0, group.length - 2);
+									group = ' \n\ngroup by \n' + group.substr(0, group.length - 2);
 								}
 								
 								for(var i in tables){
 									sql += tables[i].id + ' ' + tables[i].alias + ',\n';
 								}
 								sql = sql.substr(0, sql.length - 2);
-								sql += ' \nwhere \n';
+								
+								if(filter != '' || relates.length >0){
+									sql += ' \n\nwhere \n';
+								}
 								
 								for(var i in relates){
 									sql += relates[i].table + '.' + relates[i].column + relates[i].relate + relates[i].relatetable + '.' + relates[i].relatecolumn + ' and \n'
 								}
+								if(filter == '')sql = sql.substr(0, sql.length - 5);
 								sql += filter;
 								if(groupcount > 0)sql += group;
 								ebx.clipboardString(sql);

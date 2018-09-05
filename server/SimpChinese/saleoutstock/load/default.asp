@@ -86,7 +86,7 @@
 					"validType":"combogridValue",
 					"hasDownArrow":false,//Òş²ØÓÒ±ßµÃÏÂ¼ıÍ·
 					"required":true,
-					"idField":"id",
+					//"idField":"id",
 					"idField":"title",
 					"rownumbers":true,
 					"panelWidth":250,

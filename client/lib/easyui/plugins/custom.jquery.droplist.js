@@ -218,7 +218,7 @@ options.validType增加：combogridValue类型，校验值不能为空，require
 							co.combogrid('grid').datagrid('load', {//服务器端搜索
 								template:template,
 								_:(new Date()).getTime(),
-								find: t
+								find: escape(t)
 							});
 						//}else{
 							/*

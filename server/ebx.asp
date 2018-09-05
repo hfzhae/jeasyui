@@ -164,12 +164,17 @@ var ebx = {
 	convertRsToJson: function(rs, type){//将rs对象转化成json文本，参数：rs：RecodeSet对象，type：输出类型，0为带total和rows属性格式，1为仅有rows内容的格式 2018-5-4 zz
 		if(typeof(rs) != 'object')return('[]');
 		if(rs.RecordCount == undefined)return('[]');
-		if(rs.RecordCount == 0)return('[]');
+		if(rs.RecordCount == 0){
+			if(ebx.validInt(type) == 1){
+				return('[]');
+			}else{
+				return('{"total":0,"rows":[]}');
+			}
+		}
 		var s = '';
 		rs.MoveFirst();
 		if(!rs.eof){ 
 			var fields = rs.Fields;
-				
 			rs.MoveFirst();
 			while(!rs.eof){
 				s += '{';
@@ -923,7 +928,6 @@ var ebx = {
 									TableName: this.TableName,
 									ModType: 'BillType=' + this.ModType
 								}
-								debugger;
 							rsBD(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Paramet);
 						}
 					}

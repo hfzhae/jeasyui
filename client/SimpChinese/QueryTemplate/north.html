@@ -1,14 +1,6 @@
 <script type="text/javascript">
 	easyloader.load([], function(){		
-		var bd = ebx.cloneObj(ebx.bd);
-		bd._export = function(){//重造导入方法
-			$.messager.alert({
-				title: '错误',
-				msg: '不支持导入。',
-				timeout: 3000,
-				showType: 'slide'
-			});
-		}
-		bd.init('north');
+		var qt = ebx.cloneObj(ebx.qt);
+		qt.init('north');
 	});
 </script>

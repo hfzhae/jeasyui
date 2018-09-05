@@ -1,0 +1,140 @@
+.ribbon-tab{
+	background:-webkit-gradient(linear, 0 0, 0 bottom, from(#ffffff), to(#eaedf1));
+	padding:4px;
+	border-bottom:1px solid #DDD;
+}
+.ribbon-group{
+	position:relative;
+	height:92px;
+	float:left;
+	border-style:solid;
+	border-width:1px;
+	border-color:transparent;
+	padding:4px;
+	-moz-box-sizing:content-box;
+	-webkit-box-sizing:content-box;
+	box-sizing:content-box;
+}
+.ribbon-group-title{
+	position:absolute;
+	left:0;
+	bottom:0;
+	text-align:center;
+	width:100%;
+	height:14px;
+	line-height:14px;
+	color:#15428b;
+}
+.ribbon-toolbar{
+	position:relative;
+	float:left;
+}
+.ribbon-group .l-btn{
+	float:left;
+}
+.ribbon-group-sep{
+	float:left;
+	width:0;
+	height:102px;
+	font-size:0;
+	margin:0 2px;
+	border-left:1px solid #ddd;
+	/*border-right:1px solid #fff;*/
+}
+.icon-copy{
+	background:url('images/16/copy.png') no-repeat center center;
+}
+.icon-paste{
+	background:url('images/16/paste.png') no-repeat center center;
+}
+.icon-format{
+	background:url('images/16/format.png') no-repeat center center;
+}
+.icon-bold{
+	background:url('images/16/bold.png') no-repeat center center;
+}
+.icon-italic{
+	background:url('images/16/italic.png') no-repeat center center;
+}
+.icon-strikethrough{
+	background:url('images/16/strikethrough.png') no-repeat center center;
+}
+.icon-subscript{
+	background:url('images/16/subscript.png') no-repeat center center;
+}
+.icon-superscript{
+	background:url('images/16/superscript.png') no-repeat center center;
+}
+.icon-underline{
+	background:url('images/16/underline.png') no-repeat center center;
+}
+.icon-increase-font{
+	background:url('images/16/increase-font.png') no-repeat center center;
+}
+.icon-decrease-font{
+	background:url('images/16/decrease-font.png') no-repeat center center;
+}
+.icon-case-font{
+	background:url('images/16/case-font.png') no-repeat center center;
+}
+.icon-grow-font{
+	background:url('images/16/grow-font.png') no-repeat center center;
+}
+.icon-shrink-font{
+	background:url('images/16/shrink-font.png') no-repeat center center;
+}
+.icon-align-left{
+	background:url('images/16/align-left.png') no-repeat center center;
+}
+.icon-align-center{
+	background:url('images/16/align-center.png') no-repeat center center;
+}
+.icon-align-right{
+	background:url('images/16/align-right.png') no-repeat center center;
+}
+.icon-align-justify{
+	background:url('images/16/align-justify.png') no-repeat center center;
+}
+.icon-bullets{
+	background:url('images/16/bullets.png') no-repeat center center;
+}
+.icon-numbers{
+	background:url('images/16/numbers.png') no-repeat center center;
+}
+.icon-find{
+	background:url('images/16/find.png') no-repeat center center;
+}
+.icon-replace{
+	background:url('images/16/replace.png') no-repeat center center;
+}
+.icon-select{
+	background:url('images/16/select.png') no-repeat center center;
+}
+.icon-selectall{
+	background:url('images/16/selectall.png') no-repeat center center;
+}
+.icon-go{
+	background:url('images/16/go.png') no-repeat center center;
+}
+
+.icon-paste-large{
+	background:url('images/32/paste.png') no-repeat center center;
+}
+.icon-table-large{
+	background:url('images/32/table.png') no-repeat center center;
+}
+.icon-picture-large{
+	background:url('images/32/picture.png') no-repeat center center;
+}
+.icon-clipart-large{
+	background:url('images/32/clipart.png') no-repeat center center;
+}
+.icon-shapes-large{
+	background:url('images/32/shapes.png') no-repeat center center;
+}
+.icon-smartart-large{
+	background:url('images/32/smartart.png') no-repeat center center;
+}
+.icon-chart-large{
+	background:url('images/32/chart.png') no-repeat center center;
+}

@@ -31,7 +31,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 				}
 				this.biribbon = $('<div>').appendTo(this.eastPanel);
 				this.mapitem = $('<div>').appendTo(this.eastPanel),
-				this._east();
+				this._east(callback);
 				break;
 		}
 	},
@@ -75,7 +75,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			}
 		});
 	},
-	_east: function(){//编辑对象
+	_east: function(callback){//编辑对象
 		var _layout = this.layout,
 			_tabs = this.tabs,
 			_tab = this.tab,
@@ -344,6 +344,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 						}
 					}
 				}
+				if(callback)callback(data, _eaststorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 

@@ -1870,7 +1870,7 @@ $(_1c2)._size({width:_1c3,height:$.fn.datagrid.defaults.editorHeight});
 }};
 };
 };
-var _1c4=$.extend({},_1b6(["text","textbox","passwordbox","filebox","numberbox","numberspinner","combobox","combotree","combogrid","combotreegrid","datebox","datetimebox","timespinner","datetimespinner","droplist"]),{textarea:{init:function(_1c5,_1c6){
+var _1c4=$.extend({},_1b6(["text","textbox","passwordbox","filebox","numberbox","numberspinner","combobox","combotree","combogrid","combotreegrid","datebox","datetimebox","timespinner","datetimespinner","droplist"]),{textarea:{init:function(_1c5,_1c6){ //新增editor编辑器的droplist组建 2018-9-5 zz
 var _1c7=$("<textarea class=\"datagrid-editable-input\"></textarea>").appendTo(_1c5);
 _1c7.css("vertical-align","middle")._outerHeight(_1c6.height);
 return _1c7;

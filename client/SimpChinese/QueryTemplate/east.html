@@ -1,6 +1,17 @@
 <script type="text/javascript">
 	easyloader.load([], function(){		
-		var bd = ebx.cloneObj(ebx.bd);
-		bd.init('east');
+		var qt = ebx.cloneObj(ebx.qt);
+		qt.init('east',function(c, s){
+			ebx.setDatagridEditor.editorMethods(c.rows, 'wizard', 'combogrid', {//用来重造仓库的combogrid的方法
+				onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+					var r = s.datagrid('getData').rows;
+					for(var i in r){
+						if(r[i].field == 'wizardid'){
+							r[i].value = rowData.id;
+						}
+					}
+				}
+			});
+		});
 	});
 </script>

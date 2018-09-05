@@ -303,7 +303,7 @@ var ebx = {
 	importTemplate:function(columns, title){//导入模板的导出函数 2018-5-17 zz
 		ebx.clipboardData(columns, {total:1, rows:[eval('({' + columns[0][0].field +':"这是导入“' + title + '”的模板，请按以上格式编辑数据。（本行为说明文字，编辑前请删除）"})')]});
 	},
-	clipboardString: function(s){
+	clipboardString: function(s){//将文本复制到剪贴板，参数：s：文本内容 2018-9-4 zz
 		easyloader.load(['clipboard'], function(){//异步加载clipboard.min.js
 			var	centererpanelwindow = $('<div style="text-align:center;padding:5px;"><p>正在读取...</p></div>').appendTo($('body')),
 				copybtn = $('<div id="copybtndiv" data-clipboard-target="#bar">').appendTo(centererpanelwindow),
@@ -344,7 +344,7 @@ var ebx = {
 				allData = null;
 				$.messager.show({
 					title: '复制成功',
-					msg: '内容已经复制到剪贴板。',
+					msg: '文本内容已经复制到剪贴板。',
 					timeout: 5000,
 					height:120,
 					showType: 'slide'
@@ -361,7 +361,7 @@ var ebx = {
 			
 			setTimeout(function(){
 				copyInput.val(s);
-				centererpanelwindow.find('p').text('成功粘贴数据。');
+				centererpanelwindow.find('p').text('已经成功复制文本内容。');
 				copybtn.linkbutton('enable');
 			},0);
 		});

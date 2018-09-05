@@ -5,7 +5,12 @@
 		sql = 'select a.title,a.isdeleted,a.updatedate,a.createdate,u.title as owner from ' + TableName + ' a,biuser u where a.owner=u.id and a.id=' + id,
 		rs,
 		data = [],
-		title = '', isdeleted = 0, updatedate = new Date(), createdate = new Date(), owner = '';
+		title = '', 
+		isdeleted = 0, 
+		updatedate = new Date(), 
+		createdate = new Date(), 
+		owner = '';
+		
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1)
 		if(!rs.eof){
@@ -16,6 +21,7 @@
 			owner = rs('owner').value
 		}
 	}
+	
 	data = {total:6,rows:[
 		{name:"ID",value:id,group:"系统生成",field:"",render:"",func:"",rowstyle:'color:#999',fieldstyle:''},
 		{name:"删除",value:isdeleted,group:"系统生成",field:"_isdeleted",render:"boolRender",func:"",rowstyle:'color:#999;',fieldstyle:'color:#f00;'},
