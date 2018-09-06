@@ -786,7 +786,13 @@ var ebx = {
 								c['editor'].options.onSelect = o[i];
 								break;
 							case 'onHidePanel':
-								c['editor'].options.onSelect = o[i];
+								c['editor'].options.onHidePanel = o[i];
+								break;
+							case 'onChange':
+								c['editor'].options.onChange = o[i];
+								break;
+							case 'onShowPanel':
+								c['editor'].options.onShowPanel = o[i];
 								break;
 						}
 					}

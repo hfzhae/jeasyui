@@ -143,40 +143,25 @@ ebx.qt = {
 						prompt:'选择列',
 						width:100,
 						onShowPanel:function(newValue,oldValue){
-							var d = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getRows');
-								WizardID = 0;
-
-							for(var i in d){
-								if(d[i].field == 'wizardid'){
-									WizardID = ebx.validInt(d[i].value);
-								}
-							}
-							
-							if(WizardID == 0){
-								$.messager.alert('错误', '请先选择查询设计。', 'error');
-								return;
-							}
-							var grid = $(this).combogrid('grid');
-							$.ajax({
-								type: 'post', 
-								url: 'server/SimpChinese/querytemplate/columns/',
-								data:{id:WizardID,_:(new Date()).getTime()},
-								dataType: "json",
-								success: function(result){
-									if(result){
-										grid.datagrid('loadData', result)
-									}
-								}
-							});
-							
+							var d = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('options').WizardData,
+								grid = $(this).combogrid('grid');
+								
+							grid.datagrid('loadData', d);
 						},
 						onChange: function(newValue, oldValue){
 							var row = _centerstorage.datagrid('getSelected');
-							
-							row.alias = (row.alias=='')||(row.id!=newValue)?newValue:row.alias;
-							row.id = newValue;
-							row.output = row.source!=newValue?1:row.output;
-							row.width = row.source!=newValue?80:row.width;
+							if(newValue == ''){
+								for(var i in row){
+									if(i != 'order'){
+										row[i] = '';
+									}
+								}
+							}else{
+								row.alias = (row.alias=='')||(row.source!=newValue)?newValue:row.alias;
+								row.id = ((row.alias!='')&&(row.id!=''))&&((row.id==row.source&&row.id!=''))?newValue:row.id;
+								row.output = row.source!=newValue?1:row.output;
+								row.width = row.source!=newValue?80:row.width;
+							}
 						}
 					});
 					ebx.setDatagridEditor.editorType(columnsData[0], 'id', 'combogrid', {
@@ -192,32 +177,10 @@ ebx.qt = {
 						prompt:'选择列',
 						width:100,
 						onShowPanel:function(newValue,oldValue){
-							var d = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getRows');
-								WizardID = 0;
-
-							for(var i in d){
-								if(d[i].field == 'wizardid'){
-									WizardID = ebx.validInt(d[i].value);
-								}
-							}
-							
-							if(WizardID == 0){
-								$.messager.alert('错误', '请先选择查询设计。', 'error');
-								return;
-							}
-							var grid = $(this).combogrid('grid');
-							$.ajax({
-								type: 'post', 
-								url: 'server/SimpChinese/querytemplate/columns/',
-								data:{id:WizardID,_:(new Date()).getTime()},
-								dataType: "json",
-								success: function(result){
-									if(result){
-										grid.datagrid('loadData', result)
-									}
-								}
-							});
-							
+							var d = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('options').WizardData,
+								grid = $(this).combogrid('grid');
+								
+							grid.datagrid('loadData', d);
 						},
 						onChange: function(newValue, oldValue){
 							if(newValue == '') return;
@@ -374,7 +337,9 @@ ebx.qt = {
 	},
 	_east: function(callback){//单据属性对象
 		var _eaststorage = this.eaststorage,
-			_tabs = this.tabs;
+			_tabs = this.tabs,
+			_layout = this.layout,
+			_WizardData = this.WizardData;
 		
 		_eaststorage.propertygrid({
 			url: 'server/SimpChinese/'+this.Paramet.mode+'/load/',
@@ -409,8 +374,62 @@ ebx.qt = {
 						}
 					}
 				}
-				
 				if(callback)callback(data, _eaststorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
+				 
+				_eaststorage.datagrid('options').WizardData = {total:0, rows: []}//初始化查询设计字段数据
+				 
+				var WizardID = 0;
+				
+				for(var i in data.rows){
+					if(data.rows[i].field == 'wizardid'){
+						WizardID = data.rows[i].value;
+					}
+				}
+				
+				if(WizardID > 0){//装载查询设计字段数据
+					$.ajax({
+						type: 'post', 
+						url: 'server/SimpChinese/querytemplate/columns/',
+						data:{id:WizardID,_:(new Date()).getTime()},
+						dataType: "json",
+						success: function(result){
+							if(result){
+								_eaststorage.datagrid('options').WizardData = result;
+							}
+						}
+					});
+				}
+				ebx.setDatagridEditor.editorMethods(data.rows, 'wizard', 'combogrid', {//查询设计编辑器选择事件重造
+					onSelect: function(rowIndex, rowData){
+						var r = _eaststorage.datagrid('getData').rows,
+							otp = _eaststorage.datagrid('options');
+							
+						for(var i in r){
+							if(r[i].field == 'wizardid'){
+								r[i].value = rowData.id;
+							}
+						}
+						$.ajax({
+							type: 'post', 
+							url: 'server/SimpChinese/querytemplate/columns/',
+							data:{id:rowData.id,_:(new Date()).getTime()},
+							dataType: "json",
+							success: function(result){
+								if(result){
+									otp.WizardData = result;
+								}
+							}
+						});
+					}
+				});
+				ebx.setDatagridEditor.editorMethods(data.rows, 'wizard', 'combogrid', {//查询设计编辑器更新事件重造
+					onChange: function(newValue, oldValue){
+						if(oldValue != ''){
+							_layout.layout('panel', 'center').find('.datagrid-f').datagrid('loadData', {total:0, rows:[]});
+						}
+					}
+				});
+
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 	},
@@ -552,6 +571,19 @@ ebx.qt = {
 							iconAlign:'top',
 							size:'large',
 							onClick:function(){
+								var rows = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getRows'),
+									WizardID = 0;
+									
+								for(var i in rows){
+									if(rows[i].field == 'wizardid'){
+										WizardID = ebx.validInt(rows[i].value);
+									}
+								}
+								
+								if(WizardID == 0){
+									$.messager.alert('错误', '请先选择查询设计。', 'error');
+									return;
+								}
 								var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f'),
 									opts = listdatagrid.datagrid('options'),
 									fields = listdatagrid.datagrid('options').columns[0],
@@ -636,46 +668,37 @@ ebx.qt = {
 							iconAlign:'top',
 							size:'large',
 							onClick:function(){
-								var tables = _layout.layout('panel', 'center').find('.layout').layout('panel', 'west').find('.datagrid-f').datagrid('getRows'),
-									columns = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 0).find('.datagrid-f').datagrid('getRows'),
-									relates = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 1).find('.datagrid-f').datagrid('getRows'),
-									filter = _layout.layout('panel', 'center').find('.layout').layout('panel', 'south').find('textarea').val(),
-									sql = 'select \n',
-									group  = '',
-									groupcount = 0;
-									
-								
-								for(var i in columns){
-									sql += columns[i].column + ' as ' + columns[i].alias + ',\n';
-									if(ebx.validInt(columns[i].statistic) == 0){
-										group += columns[i].column + ',\n';
-									}else{
-										groupcount++;
+								var id = ebx.validInt(_Paramet.id);
+
+								if(id == 0){
+									$.messager.alert('错误', '请先保存查询模板。', 'error');
+									return;
+								}
+								$.messager.progress({title:'正在保存...',text:''}); 
+								$.ajax({
+									type: 'post', 
+									url: 'server/SimpChinese/' + _Paramet.mode + '/sql/',
+									data: {id: id, isdeleted: -1, _: (new Date()).getTime()},
+									dataType: "json",
+									success: function(result){
+										$.messager.progress('close');
+										if(result.result){
+											var sql = unescape(result.sql);
+											
+											sql = sql.replaceAll('select ', 'select \n');
+											sql = sql.replaceAll('],', '],\n');
+											sql = sql.replaceAll('and ', 'and \n');
+											sql = sql.replaceAll('or ', 'or \n');
+											sql = sql.replaceAll('from ', '\n\nfrom \n');
+											sql = sql.replaceAll('where ', '\n\nwhere \n');
+											sql = sql.replaceAll('group by ', '\n\ngroup by \n');
+											sql = sql.replaceAll('order by ', '\n\norder by \n');
+											sql = sql.replaceAll('union all ', '\n\nunion all \n\n');
+											
+											ebx.clipboardString(sql);
+										}
 									}
-								}
-								sql = sql.substr(0, sql.length - 2);
-								sql += ' \n\nfrom \n';
-								
-								if(group != ''){
-									group = ' \n\ngroup by \n' + group.substr(0, group.length - 2);
-								}
-								
-								for(var i in tables){
-									sql += tables[i].id + ' ' + tables[i].alias + ',\n';
-								}
-								sql = sql.substr(0, sql.length - 2);
-								
-								if(filter != '' || relates.length >0){
-									sql += ' \n\nwhere \n';
-								}
-								
-								for(var i in relates){
-									sql += relates[i].table + '.' + relates[i].column + relates[i].relate + relates[i].relatetable + '.' + relates[i].relatecolumn + ' and \n'
-								}
-								if(filter == '')sql = sql.substr(0, sql.length - 5);
-								sql += filter;
-								if(groupcount > 0)sql += group;
-								ebx.clipboardString(sql);
+								});
 							}
 						}]
 					},{

@@ -146,7 +146,7 @@ ebx.qw = {
 						relatesadd = $('<div>').appendTo(relatestoolbar),
 						relatesdel = $('<div>').appendTo(relatestoolbar),
 						relatesclear = $('<div>').appendTo(relatestoolbar),
-						filter = $('<textarea spellcheck="false">'),
+						filter = $('<div>'),
 						tabs = $('<div>');
 						
 					qwlayout.layout({
@@ -212,8 +212,8 @@ ebx.qw = {
 					
 					tables.datagrid({
 						columns:[[    
-							{field:'id',title:'表名',width:200,editor:'text'},    
-							{field:'alias',title:'别名',width:100,editor:'text'}  
+							{field:'id',title:'表名',width:200,editor:{'type':'validatebox', 'options':{'required':true,'validType':'SQLCheck'}}},    
+							{field:'alias',title:'别名',width:100,editor:{'type':'validatebox', 'options':{'required':true,'validType':'SQLCheck'}}}  
 						]],
 						data: result.tables,
 						width:'100%',
@@ -262,7 +262,7 @@ ebx.qw = {
 						}
 					});
 					tablesdel.linkbutton({
-						text:'删除表',
+						text:'删除',
 						iconCls:'icon-CellsDelete',
 						plain:true,
 						onClick:function(){
@@ -352,10 +352,10 @@ ebx.qw = {
 									}]
 								}
 							}},
-							{field:'alias',title:'别名',width:100,editor:'text'},    
-							{field:'column',title:'字段',width:300,editor:'text'},    
-							{field:'statistic',title:'统计',width:50,editor:'text',hidden:true}, 
-							{field:'datasource',title:'可选的数据源',width:150,editor:'text',hidden:true}, 
+							{field:'alias',title:'别名',width:100,editor:{'type':'validatebox', 'options':{'required':true,'validType':'SQLCheck'}}},    
+							{field:'column',title:'字段',width:300,editor:{'type':'validatebox', 'options':{'required':true,'validType':'SQLCheck'}}},    
+							{field:'statistic',title:'统计',width:50,editor:{'type':'validatebox', 'options':{'validType':'SQLCheck'}},hidden:false}, 
+							{field:'datasource',title:'可选的数据源',width:150,editor:{'type':'validatebox', 'options':{'validType':'SQLCheck'}},hidden:false}, 
 							{field:'memo',title:'备注',width:150,editor:'text'}
 						]],
 						data: result.columns,
@@ -376,7 +376,7 @@ ebx.qw = {
 					});
 					
 					columnsadd.linkbutton({
-						text:'添加列',
+						text:'添加',
 						iconCls:'icon-SourceControlAddObjects',
 						plain:true,
 						onClick:function(){
@@ -476,7 +476,7 @@ ebx.qw = {
 					});
 
 					columnsdel.linkbutton({
-						text:'删除列',
+						text:'删除',
 						iconCls:'icon-CellsDelete',
 						plain:true,
 						onClick:function(){
@@ -648,7 +648,7 @@ ebx.qw = {
 						}
 					});
 					relatesadd.linkbutton({
-						text:'添加关系',
+						text:'添加',
 						iconCls:'icon-CellsInsertDialog',
 						plain:true,
 						onClick:function(){
@@ -660,7 +660,7 @@ ebx.qw = {
 						}
 					});
 					relatesdel.linkbutton({
-						text:'删除关系',
+						text:'删除',
 						iconCls:'icon-CellsDelete',
 						plain:true,
 						onClick:function(){
@@ -708,23 +708,27 @@ ebx.qw = {
 						southopt = southpanel.panel('options');
 					
 					southpanel.append(filter);
-					filter.val(result.filter).css({
-						'padding':5,
-						'width':'98%',
-						//'border':0,
-						'overflow-y':'visible',
-						'height':'88%',
-						'font-family':'微软雅黑',
-						'font-size':'12px',
-						'overflow':'auto',
-						'resize':'none',
-						'background':'transparent',
-						'border-style':'none' 
-					}).blur(function(){
-						if($(this).val() != result.filter){
+					
+					filter.textbox({
+						width: '100%',
+						height: '100%',
+						value: result.filter,
+						multiline:true,
+						cls:'querywizardfilter',
+						validType:'SQLCheck',
+						onChange: function(newValue, oldValue){
 							ebx.setEditstatus(_tab, true);
 						}
 					});
+					filter.parent().find('span').css({
+						'background':'transparent',
+						'border-style':'none',
+						'border-radius':0
+					});
+					filter.parent().find('textarea').css({
+						'font-family':'微软雅黑',
+						'background':'transparent'
+					}).attr('spellcheck',false);
 				}
 				if(callback1)callback1(_centerstorage);
 			}
@@ -734,27 +738,34 @@ ebx.qw = {
 		var tables = _layout.layout('panel', 'center').find('.layout').layout('panel', 'west').find('.datagrid-f').datagrid('getData'),
 			columns = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 0).find('.datagrid-f').datagrid('getData'),
 			relates = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 1).find('.datagrid-f').datagrid('getData'),
-			filter = _layout.layout('panel', 'center').find('.layout').layout('panel', 'south').find('textarea').val(),
+			filter = _layout.layout('panel', 'center').find('.querywizardfilter').parent().parent().find('.textbox-f'),
 			bd = ebx.convertDicToJson(_layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData')),
 			ParentID = asSave?_Paramet.id:0,
 			savetext = asSave?'另存':'保存',
-			parameter = {tables: ebx.convertDicToJson(tables), columns: ebx.convertDicToJson(columns), relates: ebx.convertDicToJson(relates), filter: filter, bd: bd, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+			parameter = {tables: ebx.convertDicToJson(tables), columns: ebx.convertDicToJson(columns), relates: ebx.convertDicToJson(relates), filter: filter.val(), bd: bd, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
 
 		if(tables.total == 0){
 			$.messager.alert('错误', savetext + '失败！数据库表不能为空。', 'error');
-			callback();
+			callback(false);
 			return;
 		}
 		
 		if(columns.total == 0){
 			$.messager.alert('错误', savetext + '失败！列不能为空。', 'error');
-			callback();
+			callback(false);
 			return;
 		}
 		
 		if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
-			callback();
-			//saveBtn.linkbutton('enable');
+			callback(false);
+			return;
+		}
+
+		if(!filter.textbox('isValid')){//校验条件输入框的sql语法是否符合规定
+			$.messager.alert('错误', savetext + '失败！<br>“条件”中录入的SQL语法有误。', 'error', function(){
+				filter.textbox('textbox').focus();
+			});
+			callback(false);
 			return;
 		}
 		$.messager.progress({title:'正在保存...',text:''}); 
@@ -782,7 +793,7 @@ ebx.qw = {
 				}else{
 					$.messager.alert('错误', savetext + '失败！<br>' + JSON.stringify(result.msg), 'error');	
 				}
-				callback()
+				callback(true)
 			}
 		});
 	},
@@ -874,10 +885,12 @@ ebx.qw = {
 								}
 								var saveBtn = $(this);
 								saveBtn.linkbutton('disable');
-								_save(0, _layout, _Paramet, _tab, bd, function(){
-									if(lockbtn){
-										lockbtn.find('.l-btn-icon').removeClass('icon-unLock-large').addClass('icon-Lock-large');
-										lockbtn.linkbutton('unselect');
+								_save(0, _layout, _Paramet, _tab, bd, function(result){
+									if(result){
+										if(lockbtn){
+											lockbtn.find('.l-btn-icon').removeClass('icon-unLock-large').addClass('icon-Lock-large');
+											lockbtn.linkbutton('unselect');
+										}
 									}
 									saveBtn.linkbutton('enable');
 								});

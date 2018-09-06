@@ -528,12 +528,12 @@ var ebx = {
 				if(ebx.validInt(Columns('Sort').value) == 2){
 					Sort.Addnew();
 					Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
-					Sort('Sort') = '[' + Columns('Source').value + '] DESC';
+					Sort('Sort') = '[' + Columns('Alias').value + '] DESC';
 				}
 				if(ebx.validInt(Columns('Sort').value) == 1){
 					Sort.Addnew();
 					Sort('SortOrder') = ebx.validInt(Columns('SortOrder').value,0);
-					Sort('Sort') = '[' + Columns('Source').value + ']';
+					Sort('Sort') = '[' + Columns('Alias').value + ']';
 				}
 				Columns.MoveNext();
 			}
@@ -545,11 +545,11 @@ var ebx = {
 			while(!Columns.eof){
 				if(Columns('Source').value == Wizard['Columns']('Alias').value){
 					if(Columns('GroupBy').value == '' || Columns('GroupBy').value == null){
-						GroupByStr += '[' + Columns('Alias').value + '] ,';
-						s +=  Wizard['Columns']('Column').value + ' AS [' + Columns('Alias').value + '] ,';
+						GroupByStr += Wizard['Columns']('Column').value + ',';
+						s +=  Wizard['Columns']('Column').value + ' AS [' + Columns('Alias').value + '],';
 					}else{
 						GroupBy = 1;
-						s +=  Columns('GroupBy').value + '(' +Wizard['Columns']('Column').value + ') AS [' + Columns('Alias').value + '] ,';
+						s +=  Columns('GroupBy').value + '(' +Wizard['Columns']('Column').value + ') AS [' + Columns('Alias').value + '],';
 					}
 				}
 				Columns.MoveNext();
@@ -561,7 +561,7 @@ var ebx = {
 		s += 'FROM ';
 		
 		while(!Wizard['Tables'].eof){//表
-			s +=  Wizard['Tables']('id') + ' [' + Wizard['Tables']('Alias') + '] ,';
+			s +=  Wizard['Tables']('id') + ' [' + Wizard['Tables']('Alias') + '],';
 			Wizard['Tables'].MoveNext;
 		}
 		s = s.substr(0, s.length - 1);
@@ -662,19 +662,25 @@ var ebx = {
 		
 		if(GroupBy){//聚合group by合成
 			GroupByStr = GroupByStr.substr(0, GroupByStr.length - 1);
-			s += 'group by ' + GroupByStr;
+			s += ' group by ' + GroupByStr;
 		}
 
 		if(Sort.recordcount > 0){//排序合成
-			s += 'order by ';
-			Sort.Sort = 'SortOrder desc';
+			s += ' order by ';
+			Sort.Sort = ' SortOrder desc';
 			while(!Sort.eof){
 				s += Sort('Sort') + ','
 				Sort.MoveNext();
 			}
 			s = s.substr(0, s.length - 1);
 		}
-
+		s = s.toLowerCase();
+		s = s.replaceAll('@@datedelimeter', '\'');//时间类型字符替换
+		s = s.replaceAll('@@cintbegin ', 'convert(int,');//cint函数开始
+		s = s.replaceAll(' @@cintend', ')');//cint函数结束
+		s = s.replaceAll('@@now', 'getdate()');//cint函数结束
+		
+		
 		return(s);
 	},
 	getWizard: function(id){//获取查询设计对象，参数id：查询设计ID，返回查询设计字典

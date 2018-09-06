@@ -43,6 +43,7 @@
 				//textField:'title',
 				//rownumbers:true,
 				panelWidth:300,
+				hasDownArrow:false,
 				template:395
 			}
 		},field:'wizard'},//validatebox校验录入值合法性的支持方法

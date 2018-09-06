@@ -90,5 +90,16 @@ $.extend($.fn.validatebox.defaults.rules, {//validatebox自定义校验
 			return reg.test(value);  
 		},  
 		message: ''  
-	}	 
+	},
+	SQLCheck:{//查询设计用，校验SQL语句不支持：INSERT、UPDATE、DELETE 或 MERGE 语法
+		validator: function (value) {
+			var check = 0;
+			if(value.toLowerCase().indexOf('insert ') >= 0)check = 1
+			if(value.toLowerCase().indexOf('update ') >= 0)check = 1
+			if(value.toLowerCase().indexOf('delete ') >= 0)check = 1
+			if(value.toLowerCase().indexOf('merge ') >= 0)check = 1
+			return (check==0);  
+		},  
+		message: '不支持：INSERT、UPDATE、DELETE 或 MERGE 语法，<br>你可以试试：SELECT、UNION ALL 或 LEFT JOIN等其他语法。'  
+	}
 });
