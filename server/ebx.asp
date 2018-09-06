@@ -4,6 +4,11 @@ Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/5/6
 *****************************************************************/
 var ebx = {
+	conn: [],
+	accountid: 1,
+	owner: 1,
+	stdin: new Array(),
+	stdout: new Array(),
 	init: function(){
 		Date.prototype.Format = function (fmt) { //author: meizz 
 			var o = {
@@ -30,11 +35,38 @@ var ebx = {
 		this.accountid = 1;//读取账套ID，待处理。。。
 		this.owner = 1;//读取登陆用户ID，待处理。。。
 	},
-	conn: [],
-	accountid: 1,
-	owner: 1,
-	stdin: new Array(),
-	stdout: new Array(),
+	Initialize: function (){
+		var ParametStr, FormSize, FormData, Paramet
+		if(Request.ServerVariables('Request_Method') == 'POST' ){ //post
+			FormSize = Request.TotalBytes;
+			FormData = Request.BinaryRead(FormSize);
+			ParametStr = ebx.stream_binarytostring(FormData, '');
+			ParametStr = ParametStr.replaceAll('\\+', ' ');//把jquery的ajax传递时空格转换成的加号替换成空格
+			if(typeof(ParametStr) == 'string'){
+				if(ParametStr.length > 0){
+					try{
+						var Paramet = ebx.parseToJson(ParametStr);
+						ebx.convertObjToDic(ebx.stdin, ebx.UnescapeJson(Paramet));
+						//ebx.convertObjToDic(ebx.stdin, unescape(decodeURI(Paramet)));
+						
+					}catch(e){
+						if(e.name == 'SyntaxError'){
+							ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
+							//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
+						}
+					}
+				}
+			}
+		}else{ //get
+			ParametStr = Request.ServerVariables("QUERY_STRING")(1);
+			if(typeof(ParametStr) == 'string'){
+				ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
+				//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
+			}
+		}
+		ebx.conn = Server.CreateObject('ADODB.Connection');
+		ebx.conn.open(Application('DateBase.ConnectString'));
+	},
 	parseToJson: function (json_data){//Json格式转对象
 		eval("var o=" + json_data);
 		return(o);
@@ -99,38 +131,6 @@ var ebx = {
         date=date+month[str[1]]+"-"+str[2]+" "+str[3];
         //date=date+" 周"+week[str[0]];
         return(date);
-	},
-	Initialize: function (){
-		var ParametStr, FormSize, FormData, Paramet
-		if(Request.ServerVariables('Request_Method') == 'POST' ){ //post
-			FormSize = Request.TotalBytes;
-			FormData = Request.BinaryRead(FormSize);
-			ParametStr = ebx.stream_binarytostring(FormData, '');
-			ParametStr = ParametStr.replaceAll('\\+', ' ');//把jquery的ajax传递时空格转换成的加号替换成空格
-			if(typeof(ParametStr) == 'string'){
-				if(ParametStr.length > 0){
-					try{
-						var Paramet = ebx.parseToJson(ParametStr);
-						ebx.convertObjToDic(ebx.stdin, ebx.UnescapeJson(Paramet));
-						//ebx.convertObjToDic(ebx.stdin, unescape(decodeURI(Paramet)));
-						
-					}catch(e){
-						if(e.name == 'SyntaxError'){
-							ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
-							//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
-						}
-					}
-				}
-			}
-		}else{ //get
-			ParametStr = Request.ServerVariables("QUERY_STRING")(1);
-			if(typeof(ParametStr) == 'string'){
-				ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
-				//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
-			}
-		}
-		ebx.conn = Server.CreateObject('ADODB.Connection');
-		ebx.conn.open(Application('DateBase.ConnectString'));
 	},
 	stream_binarytostring: function (binary, charset){//用adodb.stream获取requet内容 2018-5-4 zz
 		var binarystream = Server.CreateObject('adodb.stream');
@@ -575,10 +575,13 @@ var ebx = {
 			}
 		}
 		
-		if(Wizard['Filter']){//筛选文本
-			s += Wizard['Filter'];
+		if(Wizard['Filter'] == ''){
+			s = s.substr(0, s.length - 4);
+		}else{
+			if(Wizard['Filter']){//筛选文本
+				s += Wizard['Filter'];
+			}
 		}
-		
 		s = s.toLowerCase();
 		
 		s = s.replaceAll('@@accountid', this.accountid);//账套

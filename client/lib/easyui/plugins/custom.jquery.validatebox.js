@@ -91,7 +91,7 @@ $.extend($.fn.validatebox.defaults.rules, {//validatebox自定义校验
 		},  
 		message: ''  
 	},
-	SQLCheck:{//查询设计用，校验SQL语句不支持：INSERT、UPDATE、DELETE 或 MERGE 语法
+	SQLCheck:{//查询设计用，校验SQL语句不支持：INSERT、UPDATE、DELETE 或 MERGE 语句
 		validator: function (value) {
 			var check = 0;
 			if(value.toLowerCase().indexOf('insert ') >= 0)check = 1
@@ -100,6 +100,6 @@ $.extend($.fn.validatebox.defaults.rules, {//validatebox自定义校验
 			if(value.toLowerCase().indexOf('merge ') >= 0)check = 1
 			return (check==0);  
 		},  
-		message: '不支持：INSERT、UPDATE、DELETE 或 MERGE 语法，<br>你可以试试：SELECT、UNION ALL 或 LEFT JOIN等其他语法。'  
+		message: '此输入框不支持：INSERT、UPDATE、DELETE 或 MERGE 关键字，<br>你可以试试：SELECT、UNION ALL 或 LEFT JOIN等其他语法。'  
 	}
 });

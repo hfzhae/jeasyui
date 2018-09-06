@@ -1,3 +1,20 @@
+@font-face {
+    font-family: Staccato;
+    src: url("/client/css/font/Staccato.ttf")
+}
+.homeversion{
+    position:absolute;
+	left:55px;
+	bottom:0px;
+	font-size:12px;
+	font-family:Staccato;
+}
+.homeversionIE{
+    position:absolute;
+	left:55px;
+	bottom:0px;
+	font-size:12px;
+}
 div{
 	font-family:微软雅黑;
 }
@@ -9,17 +26,19 @@ div{
 	filter:alpha(opacity=0);
 	-webkit-filter:opacity(0);
 }
+.hometitleX
+{
+    position:absolute;
+	font-size:55px;
+	margin-top:-16px;
+	margin-left:35px;
+	font-family:Staccato;
+    }
 .hometitle{
     position:absolute;
-	left:10px;
-	bottom:1px;
+	left:13px;
+	bottom:0px;
 	font-size:16px;
-}
-.homeversion{
-    position:absolute;
-	left:50px;
-	bottom:2px;
-	font-size:10px;
 }
 .hometitlethemesbtn{
     position:absolute;

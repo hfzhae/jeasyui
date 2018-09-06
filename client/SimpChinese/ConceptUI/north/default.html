@@ -1,9 +1,15 @@
 <div id="north"></div>
 <script type="text/javascript">
 	easyloader.load('menubutton', function(){
-		$('#north')
-		.append('<div class="hometitle">e商x</div>')
-		.append('<div class="homeversion">v0.1 Design by zydsoft™</div>');
+	    if(/webkit/.test(navigator.userAgent.toLowerCase())){
+		    $('#north')
+		    .append('<span class="hometitle">e商</span><span class="hometitleX">X</span>')
+		    .append('<div class="homeversion">V0.1 DESIGN BY ZYDSOFT™</div>');
+        }else{
+		    $('#north')
+		    .append('<div class="hometitle">e商x</div>')
+		    .append('<div class="homeversionIE">v0.1 Design by zydsoft™</div>');
+        }
 		
 		var setupbtn = $('<div>').appendTo($('#north')),
 			setupmenu = $('<div>').appendTo($('#north')),

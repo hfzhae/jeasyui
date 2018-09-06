@@ -762,7 +762,7 @@ ebx.qw = {
 		}
 
 		if(!filter.textbox('isValid')){//校验条件输入框的sql语法是否符合规定
-			$.messager.alert('错误', savetext + '失败！<br>“条件”中录入的SQL语法有误。', 'error', function(){
+			$.messager.alert('错误', savetext + '失败！<br>“条件”中录入的SQL语句有误。', 'error', function(){
 				filter.textbox('textbox').focus();
 			});
 			callback(false);

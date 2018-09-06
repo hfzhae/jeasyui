@@ -164,6 +164,7 @@ ebx.qt = {
 							}
 						}
 					});
+					/*
 					ebx.setDatagridEditor.editorType(columnsData[0], 'id', 'combogrid', {
 						columns:[[    
 							{field:'alias',title:'列',width:100},
@@ -191,6 +192,7 @@ ebx.qt = {
 							row.width = row.id!=newValue?80:row.width;
 						}
 					});
+					*/
 					ebx.setDatagridEditor.editorType(columnsData[0], 'groupby', 'combobox', {
 						idField:'value',
 						textField:'title',
@@ -232,7 +234,7 @@ ebx.qt = {
 								value: '1'
 							},{
 								title: '倒序',
-								value: '0'
+								value: '2'
 							},{
 								title: '无',
 								value: ''
