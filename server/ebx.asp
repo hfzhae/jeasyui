@@ -1212,18 +1212,6 @@ var ebx = {
 						return v.Format('yyyy-MM-dd')
 					}
 					break;
-				case 'cbGetAreaIDByTitle':
-				    
-					if(v.length == 0) throw name + '不能为空！';
-					
-					var rs = ebx.dbx.open("select id from biarea where title='" + v +"'", 1, 1);
-					if(!rs.eof){
-						v=rs("id").value;
-					}else{v=0}
-					rs = null;
-					rsBI = null;
-					return v;
-				    break;
 				case 'cbRSDateTime'://日期时间格式化函数
 					v = new Date(v.replaceAll('-','/'));
 					if(isNaN(v)){

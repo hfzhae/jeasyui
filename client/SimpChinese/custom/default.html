@@ -1,6 +1,30 @@
 <script type="text/javascript">
-	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler', 'combogrid', 'droplist', 'bi'], function(){		
-		var bi = ebx.cloneObj(ebx.bi);
-		bi.init('east');
-	});
+    easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler', 'combogrid', 'droplist', 'bi'], function() {
+        var bi = ebx.cloneObj(ebx.bi);
+        bi.init('east', function(data, obj) {
+            ebx.setDatagridEditor.editorMethods(data.rows, 'areatitle', 'combogrid', {//用来重造区域的combogrid的方法
+                onSelect: function(rowIndex, rowData) {//选中后更新当前行的内容为选中内容
+                    //debugger;
+                    var r = obj.datagrid('getData').rows;
+                    for (var i in r) {
+                        if (r[i].field == 'areaid') {
+                            r[i].value = rowData.id;
+                        }
+                    }
+                }
+            });
+            ebx.setDatagridEditor.editorMethods(data.rows, 'saletypetext', 'combogrid', {//用来重造仓库的combogrid的方法
+                onSelect: function(rowData) {//选中后更新当前行的内容为选中内容
+                    //debugger;
+                    var r = obj.datagrid('getData').rows;
+                    for (var i in r) {
+                        if (r[i].field == 'type') {
+                            r[i].value = rowData.id;
+                        }
+                    }
+                }
+            });
+
+        });
+    });
 </script>

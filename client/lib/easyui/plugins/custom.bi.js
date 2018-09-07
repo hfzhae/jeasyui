@@ -63,7 +63,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 					});	
 					ebx.setEditstatus(_tab, false);
 					var id = result.id;
-					
+					_Paramet.id = result.id;
 					_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
 					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 					
@@ -205,7 +205,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								}
 							}]
 						}]
-					},{
+					},
+					/*{
 						title:'内容',
 						tools:[{
 							name:'paste',
@@ -220,7 +221,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 							iconAlign:'top',
 							size:'large'
 						}]
-					},{
+					},*/
+					{
 						title:'安全',
 						tools:[{
 							type:'toolbar',

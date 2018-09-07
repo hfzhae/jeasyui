@@ -341,6 +341,7 @@ ebx.qt = {
 		var _eaststorage = this.eaststorage,
 			_tabs = this.tabs,
 			_layout = this.layout,
+			_tab = this.tab,
 			_WizardData = this.WizardData;
 		
 		_eaststorage.propertygrid({
@@ -431,7 +432,320 @@ ebx.qt = {
 						}
 					}
 				});
+				ebx.setDatagridEditor.editorType(data.rows, 'privilege', 'textbox', {
+					buttonText:'分配权限',
+					onClickButton:function(){
+						var value = $(this).val();
+						
+						$.messager.progress({title:'正在读取...',text:''}); 
+						$.ajax({
+							type: 'post', 
+							url: 'server/SimpChinese/privilege/getall/',
+							data:{_:(new Date()).getTime()},
+							dataType: "json",
+							success: function(result){
+								$.messager.progress('close');
+								if(result){
+									var win = $('<div>').appendTo($('body')),
+										privilegelayout = $('<div>').appendTo(win),
+										privilege1 = $('<div>'),
+										toolbar1 = $('<div>'),
+										search1 = $('<div>').appendTo(toolbar1),
+										setprv = $('<div>').appendTo(toolbar1),
+										setprvall = $('<div>').appendTo(toolbar1),
+										privilege2 = $('<div>'),
+										toolbar2 = $('<div>'),
+										search2 = $('<div>').appendTo(toolbar2),
+										delprv = $('<div>').appendTo(toolbar2),
+										delprvall = $('<div>').appendTo(toolbar2),
+										data1 = {totle: 0, rows:[]},
+										data2 = {totle: 0, rows:[]},
+										valueArr = value.split(',');
+									
+									for(var i in result.rows){
+										var x = 0;
+										for(var j in valueArr){
+											if(ebx.validInt(result.rows[i].id) === ebx.validInt(valueArr[j])){
+												x = 1;
+												data2.rows.push(result.rows[i]);
+											}
+										}
+										if(x === 0){
+											data1.rows.push(result.rows[i])
+										}
+									}
+										
+									win.window({
+										title: '权限',
+										width:800,    
+										height:600, 
+										maxWidth:'90%',
+										maxHeight:'90%',
+										modal:true,
+										collapsible:false,
+										minimizable:false,
+										maximizable:false,
+										resizable:false,
+										border:'thin',
+										shadow:false,
+										onBeforeClose: function(){
+											search2.searchbox('setValue', '');//退出前清空已分配搜索框
+											search2.searchbox('options').searcher('');//退出前重置已分配列表
 
+											var data = privilege2.datagrid('getRows'),
+												v = '',
+												oldv = _eaststorage.datagrid('getRows')[_eaststorage.datagrid('getRowIndex', _eaststorage.datagrid('getSelected'))].value;
+											
+											for(var i in data){
+												v += data[i].id + ',';
+											}
+											v = v.substr(0, v.length - 1);
+
+											_eaststorage.datagrid('updateRow', {
+												index:_eaststorage.datagrid('getRowIndex', _eaststorage.datagrid('getSelected')),
+												row:{
+													value: v
+												}
+											});
+											if(oldv != v)ebx.setEditstatus(_tab, true);
+											win.remove();
+										}
+									});
+									$('body').find('.window-mask').on('click', function(){
+										win.window('close');
+									}); 
+									
+									privilegelayout.layout({
+										fit: true
+									}).layout('add',{    
+										region: 'west',    
+										width: '50%',    
+										title: '未分配',    
+										split: true,
+										border:false,
+										collapsible:false,
+										maxWidth:'50%',
+										minWidth:'50%'
+									}).layout('add',{    
+										region: 'center',    
+										width: '50%',    
+										title: '已分配',
+										border:false
+									});
+									
+									privilegelayout.layout('panel', 'west').append(privilege1);
+									privilegelayout.layout('panel', 'center').append(privilege2);
+									
+									search1.searchbox({    
+										prompt:'搜索权限',
+										searcher:function(value, name){
+											var filterdata = [],
+												data = privilege2.datagrid('getRows');
+												
+											for(var i in result.rows){
+												var x = 0
+												for(var j in data){
+													if(result.rows[i].id === data[j].id){
+														x = 1;
+													}
+												}
+												if(x === 0){
+													filterdata.push(result.rows[i]);
+												}
+											}
+											privilege1.datagrid('loadData', {total: filterdata.length, rows: filterdata});
+											//}else{
+											if(value != ''){
+												var data = privilege1.datagrid('getRows');
+												filterdata = data.filter(function(e){
+													return (e.title.toLowerCase().indexOf(value.toLowerCase())>=0)||(e.memo.toLowerCase().indexOf(value.toLowerCase())>=0);
+												});
+												privilege1.datagrid('loadData', {total: filterdata.length, rows: filterdata});
+											}
+										}
+									});
+									search1.searchbox('textbox').focus(function(){//未分配搜索框焦点激活时处理已分配的内容
+										var v = search2.searchbox('getValue');
+										if(v != ''){
+											search2.searchbox('setValue', '');//清空已分配搜索框
+											search2.searchbox('options').searcher('');//重置已分配列表
+										}
+									})
+									setprv.linkbutton({
+										text:'分配',
+										plain:true,
+										iconCls:'icon-TableInsertColumnsRightprv',
+										onClick:function(){
+											var row = privilege1.datagrid('getSelected');
+											if(!row){
+												$.messager.show({
+													title: '提示',
+													msg: '请先选择一行未分配权限。',
+													timeout: 3000,
+													showType: 'slide'
+												});	
+												return;
+											}
+											var index = privilege1.datagrid('getRowIndex',row);
+											privilege2.datagrid('appendRow', row);
+											privilege1.datagrid('deleteRow', index);
+											
+											if(index >= privilege1.datagrid('getRows').length && index > 0) index--;
+											if(privilege1.datagrid('getRows').length == 0 || index < 0){
+												privilege1.datagrid('loadData', { total: 0, rows: [] }); 
+											}else{
+												privilege1.datagrid('selectRow', index);
+											}
+										}
+									});
+									setprvall.linkbutton({
+										text:'全部分配',
+										plain:true,
+										iconCls:'icon-TableInsertColumnsRightprvall',
+										onClick: function(){
+											var data1 = privilege1.datagrid('getRows'),
+												data2 = privilege2.datagrid('getRows'),
+												data = [];
+											if(data1.length <= 0) return;
+											for(var i in data2){
+												data.push(data2[i]);
+											}
+											for(var i in data1){
+												data.push(data1[i])
+											}
+											privilege1.datagrid('loadData', {total: 1, rows: []});
+											privilege2.datagrid('loadData', {total: data.length, rows: data});
+										}
+									});
+									
+									search2.searchbox({    
+										prompt:'搜索权限',
+										searcher:function(value, name){
+											var filterdata = [],
+												data = privilege1.datagrid('getRows');
+												
+											for(var i in result.rows){
+												var x = 0
+												for(var j in data){
+													if(result.rows[i].id === data[j].id){
+														x = 1;
+													}
+												}
+												if(x === 0){
+													filterdata.push(result.rows[i]);
+												}
+											}
+											privilege2.datagrid('loadData', {total: filterdata.length, rows: filterdata});
+											if(value != ''){
+												var data = privilege2.datagrid('getRows');
+												filterdata = data.filter(function(e){
+													return (e.title.toLowerCase().indexOf(value.toLowerCase())>=0)||(e.memo.toLowerCase().indexOf(value.toLowerCase())>=0);
+												});
+												privilege2.datagrid('loadData', {total: filterdata.length, rows: filterdata});
+											}
+										}   
+									});
+									search2.searchbox('textbox').focus(function(){//已分配搜索框焦点激活时处理未分配的内容
+										var v = search1.searchbox('getValue');
+										if(v != ''){
+											search1.searchbox('setValue', '');//清空未分配搜索框
+											search1.searchbox('options').searcher('');//重置未分配列表
+										}
+									})
+									delprv.linkbutton({
+										text:'删除',
+										plain:true,
+										iconCls:'icon-CellsDelete',
+										onClick:function(){
+											var row = privilege2.datagrid('getSelected');
+											if(!row){
+												$.messager.show({
+													title: '提示',
+													msg: '请先选择一行已分配权限。',
+													timeout: 3000,
+													showType: 'slide'
+												});	
+												return;
+											}
+											var index = privilege2.datagrid('getRowIndex',row);
+											privilege1.datagrid('appendRow', row);
+											privilege2.datagrid('deleteRow', index);
+											
+											if(index >= privilege2.datagrid('getRows').length && index > 0) index--;
+											if(privilege2.datagrid('getRows').length == 0 || index < 0){
+												privilege2.datagrid('loadData', { total: 0, rows: [] }); 
+											}else{
+												privilege2.datagrid('selectRow', index);
+											}
+										}
+									});
+									delprvall.linkbutton({
+										text:'全部删除',
+										plain:true,
+										iconCls:'icon-TableDelete',
+										onClick: function(){
+											var data1 = privilege1.datagrid('getRows'),
+												data2 = privilege2.datagrid('getRows'),
+												data = [];
+											if(data2.length <= 0) return;
+											for(var i in data1){
+												data.push(data1[i]);
+											}
+											for(var i in data2){
+												data.push(data2[i])
+											}
+											privilege2.datagrid('loadData', {total: 1, rows: []});
+											privilege1.datagrid('loadData', {total: data.length, rows: data});
+										}
+									});
+									privilege1.datagrid({
+										columns:[[    
+											{field:'id',title:'ID',width:30},
+											{field:'title',title:'权限',width:100},
+											{field:'memo',title:'说明',width:100}
+										]],
+										fitColumns:true,
+										height:'100%',
+										rownumbers:true,
+										striped:true,
+										border:false,
+										singleSelect:true,
+										toolbar:toolbar1,
+										data:data1,
+										onClickCell:function(){},//阻止自定义keyboar控件影响双击事件
+										onDblClickRow: function(index, row){
+											privilege2.datagrid('appendRow', row);
+											privilege1.datagrid('deleteRow', index);
+										}
+									});
+									privilege2.datagrid({
+										columns:[[    
+											{field:'id',title:'ID',width:30},
+											{field:'title',title:'权限',width:100},
+											{field:'memo',title:'说明',width:100}
+										]],
+										fitColumns:true,
+										height:'100%',
+										rownumbers:true,
+										striped:true,
+										singleSelect:true,
+										border:false,
+										toolbar:toolbar2,
+										data:data2,
+										onClickCell:function(){},//阻止自定义keyboar控件影响双击事件
+										onDblClickRow: function(index, row){
+											privilege1.datagrid('appendRow', row);
+											privilege2.datagrid('deleteRow', index);
+										}
+									});
+
+								}
+							}
+						});
+
+						
+					}
+				});
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 	},

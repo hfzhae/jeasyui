@@ -101,5 +101,12 @@ $.extend($.fn.validatebox.defaults.rules, {//validatebox自定义校验
 			return (check==0);  
 		},  
 		message: '此输入框不支持：INSERT、UPDATE、DELETE 或 MERGE 关键字，<br>你可以试试：SELECT、UNION ALL 或 LEFT JOIN等其他语法。'  
+	},
+	Email:{
+	    validator: function(value){
+	        var reg=/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+	        return reg.test(value);
+	    },
+	    message:'请输入正确的邮箱地址'
 	}
 });

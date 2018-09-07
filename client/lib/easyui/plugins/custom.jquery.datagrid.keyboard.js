@@ -168,7 +168,7 @@ $.extend($.fn.datagrid.methods, {
 				inputObj.keyup(function(event){//全键盘操作
 					switch(event.keyCode){
 						case 40://down
-							if(obj.type == 'combogrid' || obj.type == 'droplist'){//combogrid控件不支持下键自动跳转下一个编辑框
+							if(obj.type == 'combogrid' || obj.type == 'droplist' || obj.type == 'combobox'){//combogrid控件不支持下键自动跳转下一个编辑框
 								
 							}else{
 								thisGrid.datagrid('endEdit', param.index);
@@ -179,7 +179,7 @@ $.extend($.fn.datagrid.methods, {
 							}
 							break;
 						case 38://up
-							if(obj.type == 'combogrid' || obj.type == 'droplist'){//combogrid控件不支持上键自动跳转上一个编辑框
+							if(obj.type == 'combogrid' || obj.type == 'droplist' || obj.type == 'combobox'){//combogrid控件不支持上键自动跳转上一个编辑框
 								
 							}else{
 								thisGrid.datagrid('endEdit', param.index);
@@ -190,7 +190,7 @@ $.extend($.fn.datagrid.methods, {
 							}
 							break;
 						case 37://left
-							if(obj.type == 'combogrid' || obj.type == 'droplist'){//combogrid控件不支持上键自动跳转上一个编辑框
+							if(obj.type == 'combogrid' || obj.type == 'droplist' || obj.type == 'combobox'){//combogrid控件不支持上键自动跳转上一个编辑框
 								
 							}else{
 								thisGrid.datagrid('endEdit', param.index);
@@ -208,7 +208,7 @@ $.extend($.fn.datagrid.methods, {
 							}
 							break;
 						case 39://right
-							if(obj.type == 'combogrid' || obj.type == 'droplist'){//combogrid控件不支持上键自动跳转上一个编辑框
+							if(obj.type == 'combogrid' || obj.type == 'droplist' || obj.type == 'combobox'){//combogrid控件不支持上键自动跳转上一个编辑框
 								
 							}else{
 								thisGrid.datagrid('endEdit', param.index);
@@ -227,7 +227,7 @@ $.extend($.fn.datagrid.methods, {
 							}
 							break;
 						case 13://enter
-							if(obj.type == 'combogrid' || obj.type == 'droplist'){//combogrid控件支持搜索快捷键，当panel显示时，不跳转下一个编辑对象
+							if(obj.type == 'combogrid' || obj.type == 'droplist' || obj.type == 'combobox'){//combogrid控件支持搜索快捷键，当panel显示时，不跳转下一个编辑对象
 								if(!$(obj.target).combogrid('panel').is(":hidden")){
 									return;
 								}

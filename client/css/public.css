@@ -5,7 +5,7 @@
 .homeversion{
     position:absolute;
 	left:55px;
-	bottom:0px;
+	bottom:-1px;
 	font-size:12px;
 	font-family:Staccato;
 }
@@ -37,7 +37,7 @@ div{
 .hometitle{
     position:absolute;
 	left:13px;
-	bottom:0px;
+	bottom:-1px;
 	font-size:16px;
 }
 .hometitlethemesbtn{

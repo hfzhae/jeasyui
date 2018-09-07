@@ -532,9 +532,9 @@ ebx.bd = {
 										if (r){
 											listdatagrid.datagrid('deleteRow', index);
 
-											if(index >= listdatagrid.datagrid('getData').total && index > 0) index--;
+											if(index >= listdatagrid.datagrid('getRows').length && index > 0) index--;
 											
-											if(listdatagrid.datagrid('getData').total == 0 || index < 0){
+											if(listdatagrid.datagrid('getRows').length == 0 || index < 0){
 												listdatagrid.datagrid('loadData', { total: 0, rows: [] }); 
 											}else{
 												listdatagrid.datagrid('selectRow', index);
@@ -748,6 +748,7 @@ ebx.bd = {
 										striped:true,
 										//ctrlSelect:true,
 										fitColumns:true,
+										onClickCell:function(){},//阻止自定义keyboar控件影响双击事件
 										onDblClickRow: function(index, row){
 											window.open(window.location.protocol +'//'+ window.location.host + ':' + window.location.port + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + row.filename);
 										},

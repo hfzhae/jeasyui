@@ -17,10 +17,10 @@
 		{"id":16,"text":"基本资料","children":[
 			{"id":1700,"text":"区域","mode":"area","style":"area","edit":"area","template":241},
 			{"id":1701,"text":"产品类型","mode":"productclass","style":"productclass","template":84},
-			{"id":1702,"text":"产品目录","mode":"product","style":"product","edit":"product","template":80,"lock":1},
-			{"id":1703,"text":"仓库","mode":"stock","style":"stock","template":86,"lock":1},
-			{"id":1704,"text":"客户","mode":"custom","style":"custom","template":90,"lock":1},
-			{"id":1705,"text":"供应商","mode":"vender","style":"vender","template":89,"lock":1}
+			{"id":1702,"text":"产品目录","mode":"product","style":"product","edit":"product","template":80,"lock":0},
+			{"id":1703,"text":"仓库","mode":"stock","style":"stock","template":86,"lock":0},
+			{"id":1704,"text":"客户","mode":"custom","style":"custom","template":90,"lock":0},
+			{"id":1705,"text":"供应商","mode":"vender","style":"vender","template":89,"lock":0}
 		]},
 		{"text":"用户和权限","state":"closed","children":[
 			{"id":1804,"text":"用户设置","mode":"User","style":"User","edit":"User","template":83,"lock":1},

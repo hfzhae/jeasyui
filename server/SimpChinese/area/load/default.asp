@@ -21,7 +21,7 @@
 	}
 
 	data = {"total":6,"rows":[
-		{"name":"删除","value":isdeleted,"group":"系统生成","field":"","render":"boolRender",'rowstyle':'color:#999;','fieldstyle':'color:#f00;','func':''},
+		{"name":"删除","value":isdeleted,"group":"系统生成","field":"_isdeleted","render":"boolRender",'rowstyle':'color:#999;','fieldstyle':'color:#f00;','func':''},
 		{"name":"创建时间","value": new Date(createdate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成",'rowstyle':'color:#999;'},
 		{"name":"更新时间","value": new Date(updatedate).Format('yyyy-MM-dd hh:mm:ss'),"group":"系统生成",'rowstyle':'color:#999;'},
 		{"name":"操作员","value":owner,"group":"系统生成",'rowstyle':'color:#999;'},

@@ -524,6 +524,21 @@
 .icon-AdpDiagramRelationships-large{
 	background:url('icon32/AdpDiagramRelationships.png') no-repeat center center;
 }
+.icon-TableInsertColumnsRightprv{
+	background:url('icon32/TableInsertColumnsRightprv.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-TableInsertColumnsRightprv-large{
+	background:url('icon32/TableInsertColumnsRightprv.png') no-repeat center center;
+}
+
+.icon-TableInsertColumnsRightprvall{
+	background:url('icon32/TableInsertColumnsRightprvall.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-TableInsertColumnsRightprvall-large{
+	background:url('icon32/TableInsertColumnsRightprvall.png') no-repeat center center;
+}
 
 
 

@@ -899,6 +899,34 @@ var ebx = {
 					return new Date(v).Format("yyyy-MM-dd hh:mm:ss");
 				}
 			},{
+				label: '价格类型',
+				value: 'priceTypeRender',
+				render: function(v, rowIndex){
+					v = ebx.validFloat(v, 0);
+					switch(v)
+                    {
+                        case 1:
+                          v="代理价"
+                          break;
+                        case 2:
+                          v="批发价1"
+                          break;
+                        case 3:
+                          v="批发价2"
+                          break;
+                        case 4:
+                          v="vip价"
+                          break;
+                        case 5:
+                          v="优惠价"
+                          break;
+                        case 6:
+                          v="零售价"
+                          break;
+                    }
+					return v;
+				}
+			},{
 				label: '无',
 				value: '',
 				render: function(v, rowIndex){
