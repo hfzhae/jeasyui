@@ -254,8 +254,8 @@ ebx.qt = {
 
 					if(callback)callback(columnsData, _centerstorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 					_centerstorage.datagrid({
-						view:scrollview,
-						pageSize:ebx.pagesize,
+						//view:scrollview,
+						//pageSize:ebx.pagesize,
 						remoteSort:false,
 						rownumbers:true,
 						singleSelect:true,
@@ -458,8 +458,8 @@ ebx.qt = {
 										search2 = $('<div>').appendTo(toolbar2),
 										delprv = $('<div>').appendTo(toolbar2),
 										delprvall = $('<div>').appendTo(toolbar2),
-										data1 = {totle: 0, rows:[]},
-										data2 = {totle: 0, rows:[]},
+										data1 = {total: 0, rows:[]},
+										data2 = {total: 0, rows:[]},
 										valueArr = value.split(',');
 									
 									for(var i in result.rows){
@@ -468,13 +468,15 @@ ebx.qt = {
 											if(ebx.validInt(result.rows[i].id) === ebx.validInt(valueArr[j])){
 												x = 1;
 												data2.rows.push(result.rows[i]);
+												data2.total++;
 											}
 										}
 										if(x === 0){
 											data1.rows.push(result.rows[i])
+											data1.total++;
 										}
 									}
-										
+									
 									win.window({
 										title: '权限',
 										width:800,    
@@ -489,10 +491,16 @@ ebx.qt = {
 										border:'thin',
 										shadow:false,
 										onBeforeClose: function(){
-											search2.searchbox('setValue', '');//退出前清空已分配搜索框
-											search2.searchbox('options').searcher('');//退出前重置已分配列表
+											if(search1.searchbox('getValue') != ''){
+												search1.searchbox('setValue', '');//退出前清空未分配搜索框
+												search1.searchbox('options').searcher('');//退出前重置未分配列表
+											}
+											if(search2.searchbox('getValue') != ''){
+												search2.searchbox('setValue', '');//退出前清空已分配搜索框
+												search2.searchbox('options').searcher('');//退出前重置已分配列表
+											}
 
-											var data = privilege2.datagrid('getRows'),
+											var data = privilege2.datagrid('getData').firstRows,
 												v = '',
 												oldv = _eaststorage.datagrid('getRows')[_eaststorage.datagrid('getRowIndex', _eaststorage.datagrid('getSelected'))].value;
 											
@@ -540,7 +548,7 @@ ebx.qt = {
 										prompt:'搜索权限',
 										searcher:function(value, name){
 											var filterdata = [],
-												data = privilege2.datagrid('getRows');
+												data = privilege2.datagrid('getData').firstRows;
 												
 											for(var i in result.rows){
 												var x = 0
@@ -556,7 +564,7 @@ ebx.qt = {
 											privilege1.datagrid('loadData', {total: filterdata.length, rows: filterdata});
 											//}else{
 											if(value != ''){
-												var data = privilege1.datagrid('getRows');
+												var data = privilege1.datagrid('getData').firstRows;
 												filterdata = data.filter(function(e){
 													return (e.title.toLowerCase().indexOf(value.toLowerCase())>=0)||(e.memo.toLowerCase().indexOf(value.toLowerCase())>=0);
 												});
@@ -590,8 +598,8 @@ ebx.qt = {
 											privilege2.datagrid('appendRow', row);
 											privilege1.datagrid('deleteRow', index);
 											
-											if(index >= privilege1.datagrid('getRows').length && index > 0) index--;
-											if(privilege1.datagrid('getRows').length == 0 || index < 0){
+											if(index >= privilege1.datagrid('getData').firstRows.length && index > 0) index--;
+											if(privilege1.datagrid('getData').firstRows.length == 0 || index < 0){
 												privilege1.datagrid('loadData', { total: 0, rows: [] }); 
 											}else{
 												privilege1.datagrid('selectRow', index);
@@ -603,8 +611,8 @@ ebx.qt = {
 										plain:true,
 										iconCls:'icon-TableInsertColumnsRightprvall',
 										onClick: function(){
-											var data1 = privilege1.datagrid('getRows'),
-												data2 = privilege2.datagrid('getRows'),
+											var data1 = privilege1.datagrid('getData').firstRows,
+												data2 = privilege2.datagrid('getData').firstRows,
 												data = [];
 											if(data1.length <= 0) return;
 											for(var i in data2){
@@ -622,7 +630,7 @@ ebx.qt = {
 										prompt:'搜索权限',
 										searcher:function(value, name){
 											var filterdata = [],
-												data = privilege1.datagrid('getRows');
+												data = privilege1.datagrid('getData').firstRows;
 												
 											for(var i in result.rows){
 												var x = 0
@@ -637,7 +645,7 @@ ebx.qt = {
 											}
 											privilege2.datagrid('loadData', {total: filterdata.length, rows: filterdata});
 											if(value != ''){
-												var data = privilege2.datagrid('getRows');
+												var data = privilege2.datagrid('getData').firstRows;
 												filterdata = data.filter(function(e){
 													return (e.title.toLowerCase().indexOf(value.toLowerCase())>=0)||(e.memo.toLowerCase().indexOf(value.toLowerCase())>=0);
 												});
@@ -671,8 +679,8 @@ ebx.qt = {
 											privilege1.datagrid('appendRow', row);
 											privilege2.datagrid('deleteRow', index);
 											
-											if(index >= privilege2.datagrid('getRows').length && index > 0) index--;
-											if(privilege2.datagrid('getRows').length == 0 || index < 0){
+											if(index >= privilege2.datagrid('getData').firstRows.length && index > 0) index--;
+											if(privilege2.datagrid('getData').firstRows.length == 0 || index < 0){
 												privilege2.datagrid('loadData', { total: 0, rows: [] }); 
 											}else{
 												privilege2.datagrid('selectRow', index);
@@ -684,8 +692,8 @@ ebx.qt = {
 										plain:true,
 										iconCls:'icon-TableDelete',
 										onClick: function(){
-											var data1 = privilege1.datagrid('getRows'),
-												data2 = privilege2.datagrid('getRows'),
+											var data1 = privilege1.datagrid('getData').firstRows,
+												data2 = privilege2.datagrid('getData').firstRows,
 												data = [];
 											if(data2.length <= 0) return;
 											for(var i in data1){
@@ -699,6 +707,8 @@ ebx.qt = {
 										}
 									});
 									privilege1.datagrid({
+										view:scrollview,
+										pageSize:ebx.pagesize,
 										columns:[[    
 											{field:'id',title:'ID',width:30},
 											{field:'title',title:'权限',width:100},
@@ -719,6 +729,8 @@ ebx.qt = {
 										}
 									});
 									privilege2.datagrid({
+										view:scrollview,
+										pageSize:ebx.pagesize,
 										columns:[[    
 											{field:'id',title:'ID',width:30},
 											{field:'title',title:'权限',width:100},
@@ -738,7 +750,6 @@ ebx.qt = {
 											privilege2.datagrid('deleteRow', index);
 										}
 									});
-
 								}
 							}
 						});
