@@ -621,7 +621,7 @@ ebx.qt = {
 											for(var i in data1){
 												data.push(data1[i])
 											}
-											privilege1.datagrid('loadData', {total: 1, rows: []});
+											privilege1.datagrid('loadData', {total: 0, rows: []});
 											privilege2.datagrid('loadData', {total: data.length, rows: data});
 										}
 									});
@@ -702,7 +702,7 @@ ebx.qt = {
 											for(var i in data2){
 												data.push(data2[i])
 											}
-											privilege2.datagrid('loadData', {total: 1, rows: []});
+											privilege2.datagrid('loadData', {total: 0, rows: []});
 											privilege1.datagrid('loadData', {total: data.length, rows: data});
 										}
 									});
