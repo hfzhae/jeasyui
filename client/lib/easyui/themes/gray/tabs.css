@@ -411,3 +411,9 @@
   filter: none;
   border-color: #D3D3D3;
 }
+.tabs li a.tabs-inner {
+  border-color: transparent;
+  background: transparent;
+  filter: none;
+  color: #0088CC;
+}

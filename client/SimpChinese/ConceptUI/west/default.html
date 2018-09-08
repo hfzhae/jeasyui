@@ -54,7 +54,7 @@
 						}).css({paddingTop:5});
 						
 						west.tabs('add',{    
-							title:'<img src="' + result[i].img + '" style="position: absolute;padding-top:8px;padding-left:2px;"/><div style="margin-top:18px;text-align:center;">' + result[i].text + '</div>',    
+							title:'<img src="' + result[i].img + '" style="position: absolute;padding-top:8px;padding-left:2px;"/><div style="margin-top:18px;margin-left:-6px;text-align:center;">' + result[i].text + '</div>',    
 							content:westtree,    
 							closable:false,
 							selected:i==0?true:false
@@ -68,6 +68,7 @@
 						case 'metro-blue':
 						case 'metro':
 						case 'ui-pepper-grinder':
+						case 'gray':
 							break;
 						default:
 							$(west.find('.tabs-inner')).each(function(){
