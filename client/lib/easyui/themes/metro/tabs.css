@@ -375,3 +375,9 @@
   filter: none;
   border-color: #ddd;
 }
+.tabs li a.tabs-inner {
+  border-color: transparent;
+  background: transparent;
+  filter: none;
+  color: #0088CC;
+}

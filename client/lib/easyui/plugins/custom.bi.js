@@ -320,7 +320,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			width:'100%',
 			height:'100%',
 			border:false,
-			singleSelect: false,
+			singleSelect: true,
 			lastinsertRow:false,
 			columns: [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},

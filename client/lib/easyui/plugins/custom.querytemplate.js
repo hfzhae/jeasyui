@@ -282,30 +282,20 @@ ebx.qt = {
 		});
 	},
 	_save:function(asSave, _layout, _Paramet, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Paramet：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：全局对象，callback回到函数
-		var tables = _layout.layout('panel', 'center').find('.layout').layout('panel', 'west').find('.datagrid-f').datagrid('getData'),
-			columns = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 0).find('.datagrid-f').datagrid('getData'),
-			relates = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 1).find('.datagrid-f').datagrid('getData'),
-			filter = _layout.layout('panel', 'center').find('.layout').layout('panel', 'south').find('textarea').val(),
+		var bdlist = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('getData'),
 			bd = ebx.convertDicToJson(_layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData')),
 			ParentID = asSave?_Paramet.id:0,
 			savetext = asSave?'另存':'保存',
-			parameter = {tables: ebx.convertDicToJson(tables), columns: ebx.convertDicToJson(columns), relates: ebx.convertDicToJson(relates), filter: filter, bd: bd, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+			parameter = {bdlist: ebx.convertDicToJson(bdlist), bd: bd, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
 
-		if(tables.total == 0){
+		if(bdlist.total == 0){
 			$.messager.alert('错误', savetext + '失败！数据库表不能为空。', 'error');
-			callback();
-			return;
-		}
-		
-		if(columns.total == 0){
-			$.messager.alert('错误', savetext + '失败！列不能为空。', 'error');
 			callback();
 			return;
 		}
 		
 		if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
 			callback();
-			//saveBtn.linkbutton('enable');
 			return;
 		}
 		$.messager.progress({title:'正在保存...',text:''}); 
@@ -484,6 +474,7 @@ ebx.qt = {
 										maxWidth:'90%',
 										maxHeight:'90%',
 										modal:true,
+										noheader:true,
 										collapsible:false,
 										minimizable:false,
 										maximizable:false,
@@ -528,7 +519,7 @@ ebx.qt = {
 									}).layout('add',{    
 										region: 'west',    
 										width: '50%',    
-										title: '未分配',    
+										title: '未分配权限',    
 										split: true,
 										border:false,
 										collapsible:false,
@@ -537,7 +528,7 @@ ebx.qt = {
 									}).layout('add',{    
 										region: 'center',    
 										width: '50%',    
-										title: '已分配',
+										title: '已分配权限',
 										border:false
 									});
 									

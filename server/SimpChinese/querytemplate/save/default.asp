@@ -5,20 +5,13 @@
 		ID:0,
 		ParentID:0,
 		bd:[],
-		tables: [], 
-		columns: [], 
-		relates: [], 
-		filter: '',
-		columns:[],
+		bdlist: [], 
 		TableName:'',
 		ModType:'',
 		IGID:'',
 		init: function(TableName, ModType, IGID){
 			this.bd = ebx.convertJsonToRs(eval('(' + ebx.stdin['bd'] + ')'));
-			this.tables = ebx.convertJsonToRs(eval('(' + ebx.stdin['tables'] + ')'));
-			this.columns = ebx.convertJsonToRs(eval('(' + ebx.stdin['columns'] + ')'));
-			this.relates = ebx.convertJsonToRs(eval('(' + ebx.stdin['relates'] + ')'));
-			this.filter = ebx.sqlStringEncode(ebx.stdin['filter']);
+			this.bdlist = ebx.convertJsonToRs(eval('(' + ebx.stdin['bdlist'] + ')'));
 			this.ID = ebx.validInt(ebx.stdin['id']);
 			this.ParentID = ebx.validInt(ebx.stdin['parentid']);
 			this.TableName = ebx.sqlStringEncode(TableName);
@@ -80,10 +73,7 @@
 				this.bd.MoveNext();
 			}
 			rsBI('ID') = this.ID;
-			rsBI('tables') = ebx.convertRsToBin(this.tables);
-			rsBI('columns') = ebx.convertRsToBin(this.columns);
-			rsBI('relates') = ebx.convertRsToBin(this.relates);
-			rsBI('filter') = this.filter;
+			rsBI('Columns') = ebx.convertRsToBin(this.bdlist);
 			rsBI('UpdateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 			rsBI('UpdateCount') = ebx.validInt(rsBI('UpdateCount').value) + 1;
 			rsBI.Update();

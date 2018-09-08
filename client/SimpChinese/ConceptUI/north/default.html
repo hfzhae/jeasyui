@@ -204,6 +204,7 @@
 			//$.messager.progress({title:'主题切换中...',interval:50, msg: '正在下载主题文件'}); 
 			$.messager.progress({title:'主题切换中...',interval:50}); 
 			
+			
 			for(var i in linkobj){
 				if(typeof(linkobj[i].href) == 'string'){
 					var url = linkobj[i].href;
@@ -213,7 +214,7 @@
 					}
 				}
 			}
-			
+
 			setTimeout(function(){
 				ebx.storage.set('themes', {theme: t});
 				for(var i in linkobj){
@@ -224,6 +225,22 @@
 							linkobj[i].setAttribute("href", arr[0] + t + arr[1]);
 						}
 					}
+				}
+				switch(t){
+					case 'bootstrap':
+					case 'material':
+					case 'metro-blue':
+					case 'metro':
+					case 'ui-pepper-grinder':
+						$(ebx.bodylayout.layout('panel','west').find('.tabs-inner')).each(function(){
+							$(this).removeClass('tabs-Navigation');
+						});
+						break;
+					default:
+						$(ebx.bodylayout.layout('panel','west').find('.tabs-inner')).each(function(){
+							$(this).addClass('tabs-Navigation');
+						});
+						break;
 				}
 				easyloader.theme = ebx.getThemes();
 				$('body').find('.menu').find('.icon-ok').remove();

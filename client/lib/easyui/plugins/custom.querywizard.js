@@ -377,7 +377,7 @@ ebx.qw = {
 					
 					columnsadd.linkbutton({
 						text:'添加',
-						iconCls:'icon-SourceControlAddObjects',
+						iconCls:'icon-CellsInsertDialog',
 						plain:true,
 						onClick:function(){
 							var title = colcolumns.combogrid('getValue'),

@@ -93,7 +93,10 @@
 			this.ID = null;
 			this.ParentID = null;
 			this.bd = null;
-			this.bdlist = null;
+			this.tables = null;
+			this.columns = null;
+			this.relates = null;
+			this.filter = null;
 			this.TableName = null;
 			this.ModType = null;
 		}

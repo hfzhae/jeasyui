@@ -18,6 +18,12 @@
 div{
 	font-family:微软雅黑;
 }
+.tabs-Navigation {
+  border-color: transparent!important;
+  background: transparent!important;
+  filter: none!important;
+  color: #0088CC;
+}
 .homelogo{
 	width:60px;
     position:absolute;
