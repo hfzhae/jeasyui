@@ -44,15 +44,15 @@ var ebx = {
 					fit: true
 				}).layout('add',{
 					region: 'west',
-					width: 250,
+					width: 240,
 					maxWidth: '50%',
-					minWidth: 250,
+					minWidth: 240,
 					title: '',
 					href: 'client/SimpChinese/ConceptUI/west/',
 					hideExpandTool:false,
 					hideCollapsedContent:false,
 					border:false,
-					split: true,
+					split: false,
 					collapsedContent: function(title){
 						var region = $(this).panel('options').region;
 						if(region =='north'|| region =='south'){

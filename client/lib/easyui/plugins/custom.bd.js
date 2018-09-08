@@ -84,9 +84,9 @@ ebx.bd = {
 			split: true
 		}).layout('add',{
 			region: 'east',
-			width: 400,
+			width: '30%',
 			maxWidth: '50%',
-			minWidth: 400,
+			minWidth: 300,
 			//title: '基本信息',
 			href: 'client/SimpChinese/' + this.Paramet.mode + '/east.html',
 			hideExpandTool: false,

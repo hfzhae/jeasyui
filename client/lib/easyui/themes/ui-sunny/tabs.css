@@ -320,7 +320,7 @@
   background: url('images/tabs_icons.png') no-repeat -34px center;
 }
 .tabs li a.tabs-inner:hover {
-  background: #ffdd57;
+  /*background: #ffdd57;*/
   color: #000000;
   filter: none;
 }
@@ -410,4 +410,10 @@
   color: #0074c7;
   filter: none;
   border-color: #494437;
+}
+.tabs li a.tabs-inner {
+  border-color: transparent;
+  background: transparent;
+  filter: none;
+  color: #0088CC;
 }

@@ -226,23 +226,7 @@
 						}
 					}
 				}
-				switch(t){
-					case 'bootstrap':
-					case 'material':
-					case 'metro-blue':
-					case 'metro':
-					case 'ui-pepper-grinder':
-					case 'gray':
-						$(ebx.bodylayout.layout('panel','west').find('.tabs-inner')).each(function(){
-							$(this).removeClass('tabs-Navigation');
-						});
-						break;
-					default:
-						$(ebx.bodylayout.layout('panel','west').find('.tabs-inner')).each(function(){
-							$(this).addClass('tabs-Navigation');
-						});
-						break;
-				}
+
 				easyloader.theme = ebx.getThemes();
 				$('body').find('.menu').find('.icon-ok').remove();
 				$(o).append('<div class="menu-icon icon-ok"></div>');

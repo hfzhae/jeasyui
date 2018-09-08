@@ -1,6 +1,5 @@
 .customTree{
-	background-color:#F3F3F3;
-	color:#000000;
+	border-right: 1px solid #ddd;
 }
 .tree {
   margin: 0;

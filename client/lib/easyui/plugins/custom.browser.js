@@ -24,9 +24,6 @@ ebx.browser = {
 		if(ebx.validInt(this.Paramet.IsAuditStyle) == 1){
 			this.showAudit = 1;
 		}
-		if(ebx.validInt(this.Paramet.datestyle) == 1){
-			this.showdate = 1;
-		}
 		switch(layoutName.toLowerCase()){
 			case 'default':
 				this.layout = $('<div>').appendTo(this.tabs);

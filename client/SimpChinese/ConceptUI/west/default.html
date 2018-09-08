@@ -1,5 +1,5 @@
  <script type="text/javascript">
-	easyloader.load(['tree','navtabs'], function(){
+	easyloader.load(['tree'], function(){
 		var west = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west')),
 			closbtn = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west'));
 
@@ -15,10 +15,10 @@
 						border:false, 
 						tabPosition:'left',
 						height:'100%',
-						headerWidth:65,
-						tabHeight:65,
+						headerWidth:60,
+						tabHeight:70,
 						pill:false,
-						plain:true
+						plain:false
 					});  
 
 					for(var i in result){
@@ -54,61 +54,13 @@
 						}).css({paddingTop:5});
 						
 						west.tabs('add',{    
-							title:'<img src="' + result[i].img + '" style="position: absolute;padding-top:8px;padding-left:2px;"/><div style="margin-top:18px;margin-left:-6px;text-align:center;">' + result[i].text + '</div>',    
+							title:'<img src="' + result[i].img + '" style="position: absolute;padding-top:10px;padding-left:2px;"/><div style="position:absolute;width:100%;margin-top:19px;margin-left:-10px;text-align:center;">' + result[i].text + '</div>',    
 							content:westtree,    
 							closable:false,
 							selected:i==0?true:false
 						});  
 
 					}
-					
-					switch(ebx.getThemes()){
-						case 'bootstrap':
-						case 'material':
-						case 'metro-blue':
-						case 'metro':
-						case 'ui-pepper-grinder':
-						case 'gray':
-							break;
-						default:
-							$(west.find('.tabs-inner')).each(function(){
-								$(this).addClass('tabs-Navigation');
-							});
-							break;
-					}
-					
-					/*
-					var data = result;
-					west.tree({
-						data: data,
-						animate: true,
-						dnd: false,
-						onClick: function(node){
-							if(node.children) return;
-							var tabsid = '',
-								href = node.href?node.href:'client/SimpChinese/' + node.mode + '/browser/';
-							if(ebx.multitabs){
-								tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
-							}else{
-								tabsid= 'tabs_' + node.id;
-							}
-
-							if($('#'+tabsid).length > 0){
-								ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
-							}else{
-								ebx.center.tabs('add',{
-									id:tabsid,
-									title:node.text,
-									href:href + '?text='+node.text+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit+'&datestyle='+node.datestyle+'&lock='+node.lock,
-									iconCls:node.iconCls,
-									selected: true,
-									closable:true
-								});
-								$('#'+tabsid).css({padding:0});
-							}
-						}
-					}).css({paddingTop:5});
-					*/
 					
 					closbtn.linkbutton({
 						//iconCls: 'layout-button-left'//,
