@@ -31,7 +31,7 @@
 			{"id":1704,"text":"客户","mode":"custom","style":"custom","template":90,"lock":0},
 			{"id":1705,"text":"供应商","mode":"vender","style":"vender","template":89,"lock":0}
 		]},
-		{"text":"用户","img":"/attaches/1408/222/NewContact.png","state":"closed","children":[
+		{"text":"用户","img":"/client/images/NavigationICON/NewContact.png","state":"closed","children":[
 			{"id":1804,"text":"用户设置","mode":"User","style":"User","edit":"User","template":83,"lock":1},
 			{"id":1805,"text":"操作授权","href":"public.html"},
 			{"id":1806,"text":"仓库授权","href":"public.html"},
