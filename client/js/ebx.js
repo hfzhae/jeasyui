@@ -44,9 +44,9 @@ var ebx = {
 					fit: true
 				}).layout('add',{
 					region: 'west',
-					width: 200,
+					width: 250,
 					maxWidth: '50%',
-					minWidth: 200,
+					minWidth: 250,
 					title: '',
 					href: 'client/SimpChinese/ConceptUI/west/',
 					hideExpandTool:false,
@@ -992,8 +992,8 @@ var ebx = {
 			localStorage.setItem(name, JSON.stringify(val));
 		},
 		add: function (name, addVal) {
-			let oldVal = storage.get(name);
-			let newVal = oldVal.concat(addVal);
+			var oldVal = storage.get(name);
+			var newVal = oldVal.concat(addVal);
 			storage.set(name, newVal);
 		}
 	},
