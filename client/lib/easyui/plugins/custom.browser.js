@@ -46,7 +46,7 @@ ebx.browser = {
 		}).layout('add',{
 			region: 'center',
 			title: '',
-			href:'client/SimpChinese/' + this.Paramet.mode + '/browser/list.html',
+			href:'client/SimpChinese/' + this.Paramet.mode + '/list.html',
 			hideExpandTool:false,
 			hideCollapsedContent:false,
 			border:false

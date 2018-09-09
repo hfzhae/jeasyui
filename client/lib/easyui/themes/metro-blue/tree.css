@@ -156,15 +156,9 @@
   color: #404040;
 }
 .tree-node-selected {
-  background: #6caef5;
-  color: #fff;
+  /*background: #6caef5;
+  color: #fff;*/
 }
 .tree-node-hidden {
   display: none;
-}
-.tabs li a.tabs-inner {
-  border-color: transparent;
-  background: transparent;
-  filter: none;
-  color: #0088CC;
 }

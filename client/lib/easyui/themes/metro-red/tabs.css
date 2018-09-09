@@ -321,7 +321,7 @@
 }
 .tabs li a.tabs-inner:hover {
   background: #F6C1BC;
-  color: #404040;
+  color: #000000;
   filter: none;
 }
 .tabs li.tabs-selected a.tabs-inner {
@@ -379,5 +379,5 @@
   border-color: transparent;
   background: transparent;
   filter: none;
-  color: #0088CC;
+  color: #404040;
 }

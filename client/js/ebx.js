@@ -44,9 +44,9 @@ var ebx = {
 					fit: true
 				}).layout('add',{
 					region: 'west',
-					width: 240,
+					width: 250,
 					maxWidth: '50%',
-					minWidth: 240,
+					minWidth: 250,
 					title: '',
 					href: 'client/SimpChinese/ConceptUI/west/',
 					hideExpandTool:false,
@@ -60,6 +60,10 @@ var ebx = {
 						} else {
 							return '<div class="panel-title layout-expand-title layout-expand-title-down">菜单</ div>';
 						}
+					},
+					onCollapse: function(){
+					    bl.find('.layout-expand-west').find('.panel-header').css({'border-top':0,'border-left':0,'border-bottom':0})
+					    bl.find('.layout-expand-west').find('.panel-body').css({'border-top':0,'border-left':0,'border-bottom':0})
 					}
 				}).layout('add',{
 					region: 'north',
@@ -133,7 +137,7 @@ var ebx = {
 	getThemes: function(){//获取主题函数
 		//var Storage = window.localStorage;
 		if(ebx.storage.get("themes") === null){
-			ebx.storage.set('themes', {theme:'metro-blue'});
+			ebx.storage.set('themes', {theme:'default'});
 		}
 		return ebx.storage.get("themes").theme;
 	},

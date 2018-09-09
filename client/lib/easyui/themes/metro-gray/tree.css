@@ -156,8 +156,8 @@
   color: #404040;
 }
 .tree-node-selected {
-  background: #84909c;
-  color: #fff;
+  /*background: #84909c;
+  color: #fff;*/
 }
 .tree-node-hidden {
   display: none;
