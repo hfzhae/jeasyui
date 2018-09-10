@@ -320,10 +320,10 @@
   background: url('images/tabs_icons.png') no-repeat -34px center;
 }
 .tabs li a.tabs-inner:hover {
-  background: #555555;
-  border-color:#000000;
-  border-style:dashed;
-  color: #fff;
+  background: #666666;
+  /*border-color:#000000;
+  border-style:dashed;*/
+  color: #EEE;
   filter: none;
 }
 .tabs li.tabs-selected a.tabs-inner {

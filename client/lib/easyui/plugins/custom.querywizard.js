@@ -20,11 +20,15 @@ ebx.qw = {
 	biribbon: [],
 	centerstorage: [],
 	eaststorage: [],
+	showLock:0,
 	init: function(layoutName, callback, callback1){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Paramet = ebx.getMenuParameter(this.tabs);
 		this.ID = ebx.validInt(this.Paramet.id);
+		if(ebx.validInt(this.Paramet.lock) == 1){
+			this.showLock = 1;
+		}
 		
 		switch(layoutName.toLowerCase()){
 			case 'north':
@@ -71,7 +75,7 @@ ebx.qw = {
 		this.layout.layout('add',{
 			region: 'center',
 			title: '',
-			href: 'client/SimpChinese/' + this.Paramet.mode + '/center.html',
+			href: 'client/SimpChinese/' + this.Paramet.modedit + '/center.html',
 			//hideExpandTool: false,
 			//hideCollapsedContent: false,
 			border: false,
@@ -82,7 +86,7 @@ ebx.qw = {
 			maxWidth: '50%',
 			minWidth: 300,
 			//title: '基本信息',
-			href: 'client/SimpChinese/' + this.Paramet.mode + '/east.html',
+			href: 'client/SimpChinese/' + this.Paramet.modedit + '/east.html',
 			hideExpandTool: false,
 			hideCollapsedContent: false,
 			border: false,
@@ -99,7 +103,7 @@ ebx.qw = {
 			region: 'north',
 			//title:'功能',
 			height: 113,
-			href: 'client/SimpChinese/' + this.Paramet.mode + '/north.html',
+			href: 'client/SimpChinese/' + this.Paramet.modedit + '/north.html',
 			border: false,
 			split: false,
 			hideCollapsedContent: false,
@@ -122,7 +126,7 @@ ebx.qw = {
 			
 		$.ajax({
 			type: 'post', 
-			url: 'server/SimpChinese/'+_Paramet.mode+'/center/',
+			url: 'server/SimpChinese/'+_Paramet.modedit+'/center/',
 			data: {id:_Paramet.id+'list',_:(new Date()).getTime()},
 			dataType: "json",
 			success: function(result){
@@ -771,7 +775,7 @@ ebx.qw = {
 		$.messager.progress({title:'正在保存...',text:''}); 
 		$.ajax({
 			type: 'post', 
-			url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
+			url: 'server/SimpChinese/' + _Paramet.modedit + '/save/',
 			data: parameter,
 			dataType: "json",
 			success: function(result){
@@ -802,7 +806,7 @@ ebx.qw = {
 			_tabs = this.tabs;
 		
 		_eaststorage.propertygrid({
-			url: 'server/SimpChinese/'+this.Paramet.mode+'/load/',
+			url: 'server/SimpChinese/'+this.Paramet.modedit+'/load/',
 			method:'post',
 			queryParams:{_:(new Date()).getTime(),id:this.Paramet.id},
 			showGroup: true,
@@ -817,8 +821,8 @@ ebx.qw = {
 			showHeader: true,
 			onLoadSuccess: function(data){
 				var _biribbon = _tabs.find('.layout').layout('panel', 'north').find('.ribbon-tab'),
-					deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
-					undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
+					deleted = ebx.getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
+					undeleted = ebx.getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
 					
 				if(undeleted)undeleted.linkbutton('disable');
 				if(deleted)deleted.linkbutton('disable');
@@ -849,6 +853,7 @@ ebx.qw = {
 			_centerstorage = this.centerstorage,
 			_save = this._save,
 			_ID = this.ID,
+			_showLock = this.showLock,
 			data = {
 				selected:0,
 				tabs:[{
@@ -875,8 +880,8 @@ ebx.qw = {
 								}
 							}],
 							onClick: function(){
-								var lockbtn = ebx.browser._getbiribbonobj(_biribbon, 'lock', 'linkbutton');
-								if(lockbtn){
+								var lockbtn = ebx.getbiribbonobj(_biribbon, 'lock', 'linkbutton');
+								if(lockbtn && _showLock == 1){
 									if(lockbtn.find('.l-btn-icon').hasClass('icon-Lock-large')){
 										$.messager.alert('提醒', '编辑锁为锁定状态，请点击解锁后再保存。', 'warning');
 										lockbtn.linkbutton('select');
@@ -918,10 +923,10 @@ ebx.qw = {
 								disable:true,
 								onClick:function(){
 									var btn = $(this),
-										undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton'),
+										undeleted = ebx.getbiribbonobj(_biribbon, 'undeleted', 'linkbutton'),
 										_eaststorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
 										
-									ebx.browser._deleted(_ID, _Paramet.mode, function(result){
+									ebx.browser._deleted(_ID, _Paramet.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -946,10 +951,10 @@ ebx.qw = {
 								disable:true,
 								onClick:function(){
 									var btn = $(this),
-										deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
+										deleted = ebx.getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
 										_eaststorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
 										
-									ebx.browser._undeleted(_ID, _Paramet.mode, function(result){
+									ebx.browser._undeleted(_ID, _Paramet.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -1081,5 +1086,13 @@ ebx.qw = {
 			plain:true,
 			showHeader: false
 		});
+
+		if(this.showLock == 0){
+			var lockgroup = ebx.getbiribbonobj(_biribbon, '安全', 'toolbar');
+			if(lockgroup){
+				lockgroup.next().hide();
+				lockgroup.hide();
+			}
+		}
 	}
 }

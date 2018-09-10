@@ -539,6 +539,20 @@
 .icon-TableInsertColumnsRightprvall-large{
 	background:url('icon32/TableInsertColumnsRightprvall.png') no-repeat center center;
 }
+.icon-downarrow{
+	background:url('icon32/downarrow.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-downarrow-large{
+	background:url('icon32/downarrow.png') no-repeat center center;
+}
+.icon-uparrow{
+	background:url('icon32/uparrow.png') no-repeat center center;
+	background-size:16px 16px;
+}
+.icon-uparrow-large{
+	background:url('icon32/uparrow.png') no-repeat center center;
+}
 
 
 

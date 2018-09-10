@@ -32,28 +32,7 @@
 							animate: true,
 							dnd: false,
 							onClick: function(node){
-								if(node.children) return;
-								var tabsid = '',
-									href = '/client/SimpChinese/' + node.mode + '/';
-								if(ebx.multitabs){
-									tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
-								}else{
-									tabsid= 'tabs_' + node.id;
-								}
-
-								if($('#'+tabsid).length > 0){
-									ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
-								}else{
-									ebx.center.tabs('add',{
-										id:tabsid,
-										title:node.text,
-										href:href + '?text='+node.text+'&mode='+node.mode+'&template='+node.template+'&style='+node.style+'&edit='+node.edit+'&datestyle='+node.datestyle+'&lock='+node.lock,
-										iconCls:node.iconCls,
-										selected: true,
-										closable:true
-									});
-									$('#'+tabsid).css({padding:0});
-								}
+								ebx.tabs.newtab(node);
 							}
 						}).css({padding:5});
 						

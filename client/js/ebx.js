@@ -701,7 +701,7 @@ var ebx = {
 								datagrid.datagrid('endEdit', i);
 							}
 							break;
-						case 'combogrid': case 'datebox': 
+						case 'combogrid': case 'datebox': case 'droplist': 
 							if(!editors[j].target.combo('isValid')){
 								checked.push(data[i]);
 							}else{
@@ -1010,7 +1010,131 @@ var ebx = {
 	},
 	PrefixInteger: function(num, length) {//数字位数补齐
 		return (Array(length).join('0') + num).slice(-length);
-	}	
+	},
+	tabs:{//全局主区域操作对象 2018-9-10 zz
+		newtab: function(parameters){//新建主区域tab，参数：parameters：参数对象，必须包含：mode（模块名），menuid（唯一ID值文本），text（标签名称），iconCls（图标css式样，可为空） 2018-9-10 zz
+			if(parameters.children) return;//如果包含子项目，不执行打开操作
+			var tabsid = '',
+				href = '/client/SimpChinese/' + parameters.mode + '/';
+			//如果参数mode是browser，那么改变访问路径，参数edit必须存在值
+			if(parameters.mode.toLowerCase() === 'browser'){
+				if(parameters.modedit){
+					href = '/client/SimpChinese/' + parameters.modedit + '/' + parameters.mode + '/';
+				}
+			}else{
+				if(!parameters.modedit){
+					parameters.modedit = parameters.mode.toLowerCase();
+					href = '/client/SimpChinese/' + parameters.modedit + '/';
+				}
+			}
+			
+			if(ebx.multitabs){
+				tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
+			}else{
+				tabsid= 'tabs_' + parameters.menuid;
+			}
+
+			if($('#'+tabsid).length > 0){
+				ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
+			}else{
+				var paramet = '';
+				for(var i in parameters){
+					switch(typeof(parameters[i])){
+						case 'string':
+							paramet += i + '=' + parameters[i].toString().toLowerCase() + '&';
+							break;
+						case 'number':
+						paramet += i + '=' + parameters[i] + '&';
+							break;
+					}
+				}
+				paramet = paramet.substr(0, paramet.length - 1);
+				ebx.center.tabs('add',{
+					id:tabsid,
+					title:parameters.text,
+					href:href + '?' + paramet,
+					iconCls:parameters.iconCls,
+					selected: true,
+					closable:true
+				});
+				$('#'+tabsid).css({padding:0});
+			}
+		}
+	},
+	getbiribbonobj: function(biribbon, name, type){//获取biribbon指定对象，参数：biribbon：biribbon对象，name：name属性或按钮字符，type：空间类型 2018-7-17 zz
+		switch(type){
+			case 'textbox':
+				var o = biribbon.find('.textbox-f');
+				for(var i = 0;i < o.length; i++){
+					var _name = $(o[i]).textbox('options').name;
+					if(_name != undefined){
+						if(_name.toLowerCase() == name.toLowerCase()){
+							return $(o[i]);
+						}
+					}
+				}
+				break;
+			case 'linkbutton':
+				var o = biribbon.find('.l-btn');
+				for(var i = 0;i < o.length; i++){
+					var _name = $(o[i]).linkbutton('options').name;
+					if(_name != undefined){
+						if(_name.toLowerCase() == name.toLowerCase()){
+							return $(o[i]);
+						}
+					}
+				}
+				break;
+			case 'textbox-button':
+				var o = biribbon.find('.textbox-button');
+				for(var i = 0;i < o.length; i++){
+					var _name = $(o[i]).find('.l-btn-text').text();
+					if(_name != undefined){
+						if(_name.toLowerCase() == name.toLowerCase()){
+							return $(o[i]);
+						}
+					}
+				}
+				break;
+			case 'combobox':
+				var o = biribbon.find('.combobox-f');
+				for(var i = 0;i < o.length; i++){
+					var _name = $(o[i]).combobox('options').name;
+					if(_name != undefined){
+						if(_name.toLowerCase() == name.toLowerCase()){
+							return $(o[i]);
+						}
+					}
+				}
+				break;
+			case 'datetimebox':
+				var o = biribbon.find('.datetimebox-f');
+				for(var i = 0;i < o.length; i++){
+					var _name = $(o[i]).datetimebox('options').name;
+					if(_name != undefined){
+						if(_name.toLowerCase() == name.toLowerCase()){
+							return $(o[i]);
+						}
+					}
+				}
+				break;
+			case 'toolbar':
+				var o = biribbon.find('.ribbon-group');
+				for(var i = 0;i < o.length; i++){
+					var _name = $(o[i]).find('.ribbon-group-title').text();
+					if(_name != undefined){
+						if(_name.toLowerCase() == name.toLowerCase()){
+							return $(o[i]);
+						}
+					}
+				}
+				break;
+			default:
+				return null;
+				break;
+		}
+	},
+
 };
 
 ebx.init();

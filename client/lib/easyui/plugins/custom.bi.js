@@ -49,7 +49,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		$.messager.progress({title:'正在保存...',text:''}); 
 		$.ajax({
 			type: 'post', 
-			url: 'server/SimpChinese/' + _Paramet.mode + '/save/',
+			url: 'server/SimpChinese/' + _Paramet.modedit + '/save/',
 			data: parameter,
 			dataType: "json",
 			success: function(result){
@@ -103,7 +103,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 							iconAlign:'top',
 							size:'large',
 							onClick: function(){
-								var lockbtn = ebx.browser._getbiribbonobj(_biribbon, 'lock', 'linkbutton');
+								var lockbtn = ebx.getbiribbonobj(_biribbon, 'lock', 'linkbutton');
 								if(lockbtn && _showLock == 1){
 									if(lockbtn.find('.l-btn-icon').hasClass('icon-Lock-large')){
 										$.messager.alert('提醒', '编辑锁为锁定状态，请点击解锁后再保存。', 'warning');
@@ -158,8 +158,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								disable:true,
 								onClick:function(){
 									var btn = $(this),
-										undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
-									ebx.browser._deleted(_ID, _Paramet.mode, function(result){
+										undeleted = ebx.getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
+									ebx.browser._deleted(_ID, _Paramet.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -184,8 +184,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								disable:true,
 								onClick: function(){
 									var btn = $(this),
-										deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton');
-									ebx.browser._undeleted(_ID, _Paramet.mode, function(result){
+										deleted = ebx.getbiribbonobj(_biribbon, 'deleted', 'linkbutton');
+									ebx.browser._undeleted(_ID, _Paramet.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -278,7 +278,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		}).css({'padding':0});
 
 		if(_showLock == 0){
-			var lockgroup = ebx.browser._getbiribbonobj(_biribbon, '安全', 'toolbar');
+			var lockgroup = ebx.getbiribbonobj(_biribbon, '安全', 'toolbar');
 			if(lockgroup){
 				lockgroup.next().hide();
 				lockgroup.hide();
@@ -313,7 +313,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		}
 		
 		_eaststorage.propertygrid({
-			url: 'server/SimpChinese/' + _Paramet.mode + '/load/',
+			url: 'server/SimpChinese/' + _Paramet.modedit + '/load/',
 			method:'post',
 			queryParams:{_:(new Date()).getTime(),id:this.Paramet.id},
 			showGroup: true,
@@ -329,8 +329,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			showHeader: true,
 			onLoadSuccess: function(data){
 				var onLoadSuccessfn = _eaststorage.propertygrid('options').onLoadSuccess,
-					deleted = ebx.browser._getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
-					undeleted = ebx.browser._getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
+					deleted = ebx.getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
+					undeleted = ebx.getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
 					
 				if(undeleted)undeleted.linkbutton('disable');
 				if(deleted)deleted.linkbutton('disable');
