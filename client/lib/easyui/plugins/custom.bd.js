@@ -179,6 +179,28 @@ ebx.bd = {
 			}
 		});
 	},
+	_new: function(options){
+		var paramet = '';
+		for(var i in options._Paramet){
+			if(typeof(options._Paramet[i]) == 'string'){
+				if(i.toLowerCase() == 'id'){
+					paramet += 'id=0';
+				}else{
+					paramet += i + '=' + options._Paramet[i] + '&';
+				}
+			}
+		}
+		paramet = paramet.substr(0, paramet.length - 1);
+		var tabsid = 'tabs_'+ebx.RndNum(20)
+		ebx.center.tabs('add', {
+			id: tabsid,
+			title: '新建-' + options._Paramet.text,
+			href: 'client/SimpChinese/' + options._Paramet.modedit + '/?' + paramet,
+			//iconCls:node.iconCls,
+			selected: true,
+			closable:true
+		});
+	},
 	_save:function(asSave, _layout, _Paramet, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Paramet：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：单据全局对象，callback回到函数
 		var listgrid = _layout.layout('panel', 'center').find('.datagrid-f'),
 			bdlistdata = listgrid.datagrid('getData').firstRows,
@@ -310,6 +332,7 @@ ebx.bd = {
 			_centerstorage = this.centerstorage,
 			_save = this._save,
 			_ID = this.ID,
+			_new = this._new,
 			data = {
 				selected:0,
 				tabs:[{
@@ -383,7 +406,7 @@ ebx.bd = {
 										_tabs: _tabs,
 										_layout: _layout
 									}; 
-									ebx.browser._new(options);
+									_new(options);
 								}
 							},{
 								name:'deleted',
@@ -453,7 +476,8 @@ ebx.bd = {
 							text:'快速打印',
 							iconCls:'icon-PrintDialogAccess',
 							onClick:function(){
-								bd.print.init(bd.ID,
+								bd.print.init(
+								    bd.ID,
 									_Paramet.modedit,
 									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows')
 								);

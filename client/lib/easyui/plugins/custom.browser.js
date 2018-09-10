@@ -476,7 +476,7 @@ ebx.browser = {
 				var b = _layout.layout('panel', 'center').find('.ribbon');
 				if(b.height() < 100){
 					b.show();
-					b.animate({height:113}, 200, function(){
+					b.animate({height:113}, 300, function(){
 						_liststorage.datagrid('resize', {
 							height:_listPanel.height()-_listPanel.find('.ribbon').height()
 						});
@@ -484,7 +484,7 @@ ebx.browser = {
 					//functionbtn.find('.l-btn-text').text('隐藏');
 					functionbtn.find('.l-btn-icon').addClass('icon-uparrow').removeClass('icon-downarrow');
 				}else{
-					b.animate({height:0}, 200, function(){
+					b.animate({height:0}, 300, function(){
 						b.hide();
 						_liststorage.datagrid('resize', {
 							height:_listPanel.height()-_listPanel.find('.ribbon').height()

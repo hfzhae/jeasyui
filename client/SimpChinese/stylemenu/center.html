@@ -15,6 +15,7 @@
 				rownumbers:true,
 				panelWidth:400,
 				template:183,
+				"hasDownArrow":false,
 				onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
 					var r = s.datagrid('getData').rows[s.datagrid('options').editIndex];
 					r.menugroupid = rowData.id;

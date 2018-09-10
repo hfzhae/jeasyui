@@ -35,6 +35,35 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 				break;
 		}
 	},
+	_new: function(options){
+		var paramet = '';
+		for(var i in options._Paramet){
+			if(typeof(options._Paramet[i]) == 'string'){
+				if(i.toLowerCase() == 'id'){
+					paramet += 'id=0';
+				}else{
+					paramet += i + '=' + options._Paramet[i] + '&';
+				}
+			}
+		}
+		paramet = paramet.substr(0, paramet.length - 1);
+		ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Paramet.text,function(){
+			options._layout.layout('remove', 'east');//删除编辑layout
+			ebx.setEditstatus(options._tabs.panel('options'), false);
+			options._layout.layout('add',{//添加新的layout
+				region: 'east',
+				width: 400,
+				maxWidth: '50%',
+				minWidth: 400,
+				title: '',
+				href: 'client/SimpChinese/' + options._Paramet.modedit + '/?' + paramet,
+				hideExpandTool: false,
+				hideCollapsedContent: false,
+				border: false,
+				split: true
+			});
+		});
+	},
 	_save:function(asSave, _layout, _Paramet, _tab, callback){
 		var bi = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
 			bistr = ebx.convertDicToJson(bi),
@@ -86,7 +115,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			_eastPanel = this.eastPanel,
 			_ID = _Paramet.id,
 			_biribbon = this.biribbon,
-			_save = this._save;
+			_save = this._save,
+			_new = this._new;
 			
 		_biribbon.ribbon({
 			data:{
@@ -148,7 +178,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 										_layout: _layout
 									}; 
 									setTimeout(function(){
-										ebx.browser._new(options);
+										_new(options);
 									},0);
 								}
 							},{
