@@ -9,6 +9,8 @@
 			ebx.setDatagridEditor.validatebox(c[0], 'field', 'LetterInteger', true);
 			//重造字段的editor的类型
 			ebx.setDatagridEditor.editorType(c[0], 'Editable', 'checkbox', {on:'1',off:''});
+			ebx.setDatagridEditor.editorType(c[0], 'setfootertext', 'checkbox', {on:'1',off:''});
+
 			ebx.setDatagridEditor.editorType(c[0], 'Render', 'combobox', {
 				valueField:'value',    
 				textField:'label',

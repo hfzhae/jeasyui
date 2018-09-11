@@ -201,6 +201,7 @@ ebx.qt = {
 						idField:'value',
 						textField:'title',
 						panelHeight:'auto',
+						editable:false,
 						data:[
 							{
 								title: '合计',
@@ -232,6 +233,7 @@ ebx.qt = {
 						idField:'value',
 						textField:'title',
 						panelHeight:'auto',
+						editable:false,
 						data:[
 							{
 								title: '顺序',
@@ -253,6 +255,7 @@ ebx.qt = {
 						hasDownArrow:false,//隐藏右边得下箭头
 						panelHeight:'auto',
 						reversed:false,
+						editable:false,
 						data: ebx.Render.render  
 					});
 

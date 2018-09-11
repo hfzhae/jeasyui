@@ -161,7 +161,7 @@ var ebx = {
 			}
 		}
 	},
-	convertRsToJson: function(rs, type){//将rs对象转化成json文本，参数：rs：RecodeSet对象，type：输出类型，0为带total和rows属性格式，1为仅有rows内容的格式 2018-5-4 zz
+	convertRsToJson: function(rs, type, footer){//将rs对象转化成json文本，参数：rs：RecodeSet对象，type：输出类型，0为带total和rows属性格式，1为仅有rows内容的格式 2018-5-4 zz
 		if(typeof(rs) != 'object')return('[]');
 		if(rs.RecordCount == undefined)return('[]');
 		if(rs.RecordCount == 0){
@@ -189,10 +189,15 @@ var ebx = {
 			}
 			s = s.substr(0, s.length - 1);
 		}
+		if(footer){
+			footer = ',"footer":' + ebx.convertDicToJson(footer);
+		}else{
+			footer = '';
+		}
 		if(ebx.validInt(type) == 1){
 			return('[' + s + ']');
 		}else{
-			return('{"total":' + rs.RecordCount + ',"rows":[' + s + ']}');
+			return('{"total":' + rs.RecordCount + ',"rows":[' + s + ']' + footer + '}');
 		}
 	},
 	convertJsonToRs: function (d){//json对象转换成rs，number类型由于其他行不确定内容，所以用文本类型创建，参数：d：json对象 2018-5-16 zz

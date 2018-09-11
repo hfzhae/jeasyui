@@ -347,6 +347,7 @@ ebx.qw = {
 									textField:"datatype",
 									panelHeight:'auto',
 									showHeader:false,
+						            editable:false,
 									data: [{
 										datatype: 'string'
 									},{

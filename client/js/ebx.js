@@ -1134,7 +1134,30 @@ var ebx = {
 				break;
 		}
 	},
-
+	sumfooter:function(footer, target){//datagrid表尾统计函数，参数：footer：显示式样表尾样式，1为显示表尾，0为不显示，target：datagrid对象
+		setTimeout(function(){
+			target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').css({'height': '100%'});
+		},0)
+		if(!footer)return;
+		var footerrow = {},
+			columns = target.datagrid('options').columns,
+			data = target.datagrid('getData'),
+			d = data.firstRows?data.firstRows:data.rows;
+		target.datagrid('reloadFooter',[]);
+		for(var i in d){
+			for(var k in d[i]){
+				for(var j in columns[0]){
+					if(ebx.validInt(columns[0][j].foot) > 0){
+						if(k.toLowerCase() === columns[0][j].field.toLowerCase()){
+							footerrow[k] = ebx.validFloat(footerrow[k]) + ebx.validFloat(d[i][k]);
+						}
+					}
+				}
+			}
+		}
+		target.datagrid('reloadFooter',[footerrow]);
+		target.datagrid('getPanel').find('.datagrid-footer').find('.datagrid-td-rownumber').find('.datagrid-cell-rownumber').text('∑').css({'visibility':''});
+	}
 };
 
 ebx.init();

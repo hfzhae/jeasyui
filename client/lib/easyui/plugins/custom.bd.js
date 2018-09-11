@@ -146,7 +146,6 @@ ebx.bd = {
 						singleSelect:true,
 						pagination:false,
 						border:false,
-						fit:false,
 						fitColumns:false,
 						striped:true,
 						url:'server/SimpChinese/'+_Paramet.modedit+'/center/',
@@ -160,8 +159,15 @@ ebx.bd = {
 						border:result.bd[0].border,
 						showFooter:result.bd[0].footer?true:false,
 						showHeader:result.bd[0].header,
-						toolbar: toolbar
-					}).datagrid('renderformatterstyler');//启用显示式样回调函数
+						toolbar: toolbar,
+						onLoadSuccess:function(data){
+							ebx.sumfooter(result.bd[0].footer, _centerstorage);//渲染表尾合计
+						},
+						onEndEdit: function(index, row, changes){
+							ebx.sumfooter(result.bd[0].footer, _centerstorage);//编辑结束后渲染表尾合计
+						}
+					}).datagrid('renderformatterstyler')
+					if(callback1)callback1(_centerstorage);
 					serialScan.searchbox({
 						prompt:'搜索串号添加产品',
 						searcher: function(index){
@@ -172,10 +178,8 @@ ebx.bd = {
 							
 						}
 					});
-					
 					if(ebx.validInt(_showSearchserial) == 0 || ebx.listview.productserial == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
 				}
-				if(callback1)callback1(_centerstorage);
 			}
 		});
 	},

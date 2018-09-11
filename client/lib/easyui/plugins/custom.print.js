@@ -70,7 +70,12 @@ ebx.bd.print = {
 	},
 	printdata:function(callback){//打印数据渲染
 		if(ebx.validInt(this.id) == 0){
-			$.messager.alert('错误', '请先保存单据！', 'error');
+			$.messager.show({
+				title: '提示',
+				msg: '请先保存单据！',
+				timeout: 3000,
+				showType: 'slide'
+			});
 			return;	
 		}
 		$.messager.progress({title:'正在打印...',text:''});
