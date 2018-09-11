@@ -1,5 +1,5 @@
  <script type="text/javascript">
-	easyloader.load(['tree'], function(){
+	easyloader.load(['tree','tabs'], function(){
 		var west = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west')),
 			closbtn = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west'));
 
@@ -10,7 +10,6 @@
 			dataType: "json",
 			success: function(result){
 				if(result){
-					
 					west.tabs({
 						border:false,
 						fit:true,

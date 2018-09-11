@@ -141,7 +141,7 @@ var ebx = {
 		}
 		return ebx.storage.get("themes").theme;
 	},
-	getMenuParameter: function(t){//获取菜单传递到主窗口的参数 2018-4-20 zz, 参数：t：当前被激活的tabs对象
+	getMenuParamenter: function(t){//获取菜单传递到主窗口的参数 2018-4-20 zz, 参数：t：当前被激活的tabs对象
 		var p = t.panel('options').href.split('?')[1], 
 			a = {};
 		p = p.split('#')[0];
@@ -1012,48 +1012,48 @@ var ebx = {
 		return (Array(length).join('0') + num).slice(-length);
 	},
 	tabs:{//全局主区域操作对象 2018-9-10 zz
-		newtab: function(parameters){//新建主区域tab，参数：parameters：参数对象，必须包含：mode（模块名），menuid（唯一ID值文本），text（标签名称），iconCls（图标css式样，可为空） 2018-9-10 zz
-			if(parameters.children) return;//如果包含子项目，不执行打开操作
+		newtab: function(Paramenters){//新建主区域tab，参数：Paramenters：参数对象，必须包含：mode（模块名），menuid（唯一ID值文本），text（标签名称），iconCls（图标css式样，可为空） 2018-9-10 zz
+			if(Paramenters.children) return;//如果包含子项目，不执行打开操作
 			var tabsid = '',
-				href = '/client/SimpChinese/' + parameters.mode + '/';
+				href = '/client/SimpChinese/' + Paramenters.mode + '/';
 			//如果参数mode是browser，那么改变访问路径，参数edit必须存在值
-			if(parameters.mode.toLowerCase() === 'browser'){
-				if(parameters.modedit){
-					href = '/client/SimpChinese/' + parameters.modedit + '/' + parameters.mode + '/';
+			if(Paramenters.mode.toLowerCase() === 'browser'){
+				if(Paramenters.modedit){
+					href = '/client/SimpChinese/' + Paramenters.modedit + '/' + Paramenters.mode + '/';
 				}
 			}else{
-				if(!parameters.modedit){
-					parameters.modedit = parameters.mode.toLowerCase();
-					href = '/client/SimpChinese/' + parameters.modedit + '/';
+				if(!Paramenters.modedit){
+					Paramenters.modedit = Paramenters.mode.toLowerCase();
+					href = '/client/SimpChinese/' + Paramenters.modedit + '/';
 				}
 			}
 			
 			if(ebx.multitabs){
 				tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
 			}else{
-				tabsid= 'tabs_' + parameters.menuid;
+				tabsid= 'tabs_' + Paramenters.menuid;
 			}
 
 			if($('#'+tabsid).length > 0){
 				ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
 			}else{
-				var paramet = '';
-				for(var i in parameters){
-					switch(typeof(parameters[i])){
+				var Parament = '';
+				for(var i in Paramenters){
+					switch(typeof(Paramenters[i])){
 						case 'string':
-							paramet += i + '=' + parameters[i].toString().toLowerCase() + '&';
+							Parament += i + '=' + Paramenters[i].toString().toLowerCase() + '&';
 							break;
 						case 'number':
-						paramet += i + '=' + parameters[i] + '&';
+						Parament += i + '=' + Paramenters[i] + '&';
 							break;
 					}
 				}
-				paramet = paramet.substr(0, paramet.length - 1);
+				Parament = Parament.substr(0, Parament.length - 1);
 				ebx.center.tabs('add',{
 					id:tabsid,
-					title:parameters.text,
-					href:href + '?' + paramet,
-					iconCls:parameters.iconCls,
+					title:Paramenters.text,
+					href:href + '?' + Parament,
+					iconCls:Paramenters.iconCls,
 					selected: true,
 					closable:true
 				});

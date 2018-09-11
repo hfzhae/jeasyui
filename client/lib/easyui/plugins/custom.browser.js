@@ -18,13 +18,13 @@ ebx.browser = {
 	init: function(layoutName, browsertype, callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：list，default，browsertype：类型，包括：'bd','bi',callback：回掉函数
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
-		this.Paramet = ebx.getMenuParameter(this.tabs);
+		this.Parament = ebx.getMenuParamenter(this.tabs);
 		this.browsertype = browsertype;
 		
-		if(ebx.validInt(this.Paramet.isauditstyle) == 1){
+		if(ebx.validInt(this.Parament.isauditstyle) == 1){
 			this.showAudit = 1;
 		}
-		if(ebx.validInt(this.Paramet.datestyle) == 1){
+		if(ebx.validInt(this.Parament.datestyle) == 1){
 			this.showdate = 1;
 		}
 		
@@ -32,7 +32,7 @@ ebx.browser = {
 		switch(layoutName.toLowerCase()){
 			case 'default':
 				this.layout = $('<div>').appendTo(this.tabs);
-				this.Paramet = ebx.getMenuParameter(this.tabs);
+				this.Parament = ebx.getMenuParamenter(this.tabs);
 				this._default();
 				break;
 			case 'list':
@@ -40,7 +40,7 @@ ebx.browser = {
 				this.listPanel = this.layout.layout('panel', 'center');
 				this.biribbon = $('<div>').appendTo(this.listPanel);
 				this.liststorage = $('<div>').appendTo(this.listPanel);
-				this.Paramet = ebx.getMenuParameter(this.tabs);
+				this.Parament = ebx.getMenuParamenter(this.tabs);
 				this._list()
 				break;
 		}
@@ -51,7 +51,7 @@ ebx.browser = {
 		}).layout('add',{
 			region: 'center',
 			title: '',
-			href:'client/SimpChinese/' + this.Paramet.modedit + '/' + this.Paramet.mode + '/list.html',
+			href:'client/SimpChinese/' + this.Parament.modedit + '/' + this.Parament.mode + '/list.html',
 			hideExpandTool:false,
 			hideCollapsedContent:false,
 			border:false
@@ -64,36 +64,36 @@ ebx.browser = {
 		listPanel.css({overflow:'hidden'});//隐藏layout滚动条
 	},
 	_new: function(options){
-		var paramet = '';
-		for(var i in options._Paramet){
-			if(typeof(options._Paramet[i]) == 'string'){
-				paramet += i + '=' + options._Paramet[i] + '&';
+		var Parament = '';
+		for(var i in options._Parament){
+			if(typeof(options._Parament[i]) == 'string'){
+				Parament += i + '=' + options._Parament[i] + '&';
 			}
 		}
-		paramet = paramet.substr(0, paramet.length - 1);
+		Parament = Parament.substr(0, Parament.length - 1);
 		switch(options.browsertype){
 			case 'bd':
 				var tabsid = 'tabs_'+ebx.RndNum(20)
 				ebx.center.tabs('add', {
 					id: tabsid,
-					title: '新建-' + options._Paramet.text,
-					href: 'client/SimpChinese/' + options._Paramet.modedit + '/?' + paramet,
+					title: '新建-' + options._Parament.text,
+					href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
 					//iconCls:node.iconCls,
 					selected: true,
 					closable:true
 				});
 				break;
 			case 'bi':
-				ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Paramet.text,function(){
+				ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Parament.text,function(){
 					options._layout.layout('remove', 'east');//删除编辑layout
 					ebx.setEditstatus(options._tabs.panel('options'), false);
 					options._layout.layout('add',{//添加新的layout
 						region: 'east',
-						width: 400,
+						width: '30%',
 						maxWidth: '50%',
-						minWidth: 400,
+						minWidth: 300,
 						title: '',
-						href: 'client/SimpChinese/' + options._Paramet.modedit + '/?' + paramet,
+						href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
 						hideExpandTool: false,
 						hideCollapsedContent: false,
 						border: false,
@@ -134,14 +134,14 @@ ebx.browser = {
 		});
 	},
 	_edit: function(rowIndex, rowData, options){
-		options._Paramet.id = rowData?rowData.id:'';
-		var paramet = '';
-		for(var i in options._Paramet){
-			if(typeof(options._Paramet[i]) == 'string' || typeof(options._Paramet[i]) == 'number'){
-				paramet += i + '=' + options._Paramet[i] + '&';
+		options._Parament.id = rowData?rowData.id:'';
+		var Parament = '';
+		for(var i in options._Parament){
+			if(typeof(options._Parament[i]) == 'string' || typeof(options._Parament[i]) == 'number'){
+				Parament += i + '=' + options._Parament[i] + '&';
 			}
 		}
-		paramet = paramet.substr(0, paramet.length - 1);
+		Parament = Parament.substr(0, Parament.length - 1);
 		switch(options.browsertype){
 			case 'bd':
 				var index = rowIndex;
@@ -150,8 +150,8 @@ ebx.browser = {
 				
 				ebx.center.tabs('add', {
 					id: tabsid,
-					title: '打开-' + options._Paramet.text,
-					href: 'client/SimpChinese/' + options._Paramet.modedit + '/?' + paramet,
+					title: '打开-' + options._Parament.text,
+					href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
 					//iconCls:node.iconCls,
 					selected: true,
 					closable:true
@@ -161,7 +161,7 @@ ebx.browser = {
 			case 'bi':
 				var index = rowIndex;
 					
-				ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Paramet.text,function(){
+				ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Parament.text,function(){
 					options._layout.layout('remove', 'east');//删除编辑layout
 					ebx.setEditstatus(options._tabs.panel('options'), false);
 					options._layout.layout('add',{//添加新的layout
@@ -170,7 +170,7 @@ ebx.browser = {
 						maxWidth: '50%',
 						minWidth: 400,
 						title: '',
-						href: 'client/SimpChinese/' + options._Paramet.modedit + '/?' + paramet,
+						href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
 						hideExpandTool: false,
 						hideCollapsedContent: false,
 						border: false,
@@ -180,7 +180,7 @@ ebx.browser = {
 				break;
 		}
 	},
-	_getsearchParamet:function(browser, find, callback){//查询参数统一函数
+	_getsearchParament:function(browser, find, callback){//查询参数统一函数
 		var datefrom = ebx.getbiribbonobj(browser.biribbon, 'datefrom', 'datetimebox'),
 			dateto = ebx.getbiribbonobj(browser.biribbon, 'dateto', 'datetimebox'),
 			isdeleted = ebx.getbiribbonobj(browser.biribbon, 'isdeleted', 'combobox'),
@@ -190,23 +190,23 @@ ebx.browser = {
 			_isdeleted = isdeleted?isdeleted.combobox('getValue'):'',
 			_isaudit = isaudit?isaudit.combobox('getValue'):'';
 		
-		browser.Paramet.find = find;
-		browser.Paramet.datefrom = _datefrom;
-		browser.Paramet.dateto = _dateto;
-		browser.Paramet.isdeleted = _isdeleted;
-		browser.Paramet.isaudit = _isaudit;
+		browser.Parament.find = find;
+		browser.Parament.datefrom = _datefrom;
+		browser.Parament.dateto = _dateto;
+		browser.Parament.isdeleted = _isdeleted;
+		browser.Parament.isaudit = _isaudit;
 		callback();
 	},
 	_search: function(browser, find){//搜索函数	
-		browser._getsearchParamet(browser, find, function(){
+		browser._getsearchParament(browser, find, function(){
 			browser.liststorage.datagrid('load', {
-				template: browser.Paramet.template,
+				template: browser.Parament.template,
 				_:(new Date()).getTime(),
-				find: escape(browser.Paramet.find),
-				datefrom: browser.Paramet.datefrom,
-				dateto: browser.Paramet.dateto,
-				isdeleted: browser.Paramet.isdeleted,
-				isaudit: browser.Paramet.isaudit
+				find: escape(browser.Parament.find),
+				datefrom: browser.Parament.datefrom,
+				dateto: browser.Parament.dateto,
+				isdeleted: browser.Parament.isdeleted,
+				isaudit: browser.Parament.isaudit
 			});
 		});
 	},
@@ -216,14 +216,14 @@ ebx.browser = {
 			searchtext = $('<div>').appendTo(toolbar),
 			newbtn = $('<div>').appendTo(toolbar),
 			functionbtn = $('<div>').appendTo(toolbar),
-			_Paramet = this.Paramet,
+			_Parament = this.Parament,
 			_liststorage = this.liststorage,
 			_edit = this._edit,
 			_deleted = this._deleted,
 			_undeleted = this._undeleted,
 			_new = this._new,
 			_search = this._search,
-			_getsearchParamet = this._getsearchParamet,
+			_getsearchParament = this._getsearchParament,
 			_open = this._open,
 			_layout = this.layout,
 			_tabs = this.tabs,
@@ -249,7 +249,7 @@ ebx.browser = {
 							onClick: function(){
 								var id = ebx.validInt(_liststorage.datagrid('getSelected').id);
 								if(id <= 0)return;
-								_deleted(id, _Paramet.modedit, function(result){
+								_deleted(id, _Parament.modedit, function(result){
 									if(result.result){
 										$.messager.show({
 											title: '提示',
@@ -279,7 +279,7 @@ ebx.browser = {
 								onClick: function(){
 									var id = ebx.validInt(_liststorage.datagrid('getSelected').id);
 									if(id <= 0)return;
-									_undeleted(id, _Paramet.modedit, function(result){
+									_undeleted(id, _Parament.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -312,11 +312,11 @@ ebx.browser = {
 									
 									btn.linkbutton('disable');
 									
-									_getsearchParamet(browser, searchtext.textbox('getValue'), function(){
+									_getsearchParament(browser, searchtext.textbox('getValue'), function(){
 										$.ajax({
 											type: 'post', 
-											url: 'server/SimpChinese/'+ _Paramet.provider +'/list/',
-											data: browser.Paramet,
+											url: 'server/SimpChinese/'+ _Parament.provider +'/list/',
+											data: browser.Parament,
 											dataType: "json",
 											success: function(result){
 												if(result){
@@ -459,7 +459,7 @@ ebx.browser = {
 			plain:true,
 			onClick: function(){
 				var options = {
-					_Paramet: _Paramet,
+					_Parament: _Parament,
 					browsertype: _browsertype,
 					_tabs: _tabs,
 					_layout: _layout
@@ -507,8 +507,8 @@ ebx.browser = {
 		
 		$.ajax({
 			type: 'post', 
-			url: 'server/SimpChinese/'+ _Paramet.provider +'/style/',
-			data: {style:_Paramet.style,_:(new Date()).getTime()},
+			url: 'server/SimpChinese/'+ _Parament.provider +'/style/',
+			data: {style:_Parament.style,_:(new Date()).getTime()},
 			dataType: "json",
 			success: function(result){
 				if(result){
@@ -523,7 +523,7 @@ ebx.browser = {
 					
 					columnsData = [result.data];
 					
-					_getsearchParamet(browser, searchtext.textbox('getValue'), function(){
+					_getsearchParament(browser, searchtext.textbox('getValue'), function(){
 						_liststorage.datagrid({
 							view:scrollview,
 							pageSize:ebx.pagesize,
@@ -535,9 +535,9 @@ ebx.browser = {
 							fitColumns:false,
 							striped:true,
 							nowrap:true,//禁用自动换行
-							url:'server/SimpChinese/'+ _Paramet.provider +'/list/',
+							url:'server/SimpChinese/'+ _Parament.provider +'/list/',
 							method:'post',
-							queryParams: browser.Paramet,
+							queryParams: browser.Parament,
 							toolbar: toolbar,
 							multiSort:false,
 							checkOnSelect:false,
@@ -549,7 +549,7 @@ ebx.browser = {
 									disabled:false,
 									onClick: function(){
 										var options = {
-											_Paramet: _Paramet,
+											_Parament: _Parament,
 											browsertype: _browsertype,
 											_tabs: _tabs,
 											_layout: _layout
@@ -584,7 +584,7 @@ ebx.browser = {
 							onClickCell:function(){},//禁用单元格编辑功能，防止双击后onDblClickRow事件失效 2018-7-15 zz
 							onDblClickRow: function(rowIndex, rowData){
 								var options = {
-									_Paramet: _Paramet,
+									_Parament: _Parament,
 									browsertype: _browsertype,
 									_tabs: _tabs,
 									_layout: _layout
@@ -604,7 +604,7 @@ ebx.browser = {
 									disable:true,
 									onclick:function(){
 										var options = {
-											_Paramet: _Paramet,
+											_Parament: _Parament,
 											browsertype: _browsertype,
 											_tabs: _tabs,
 											_layout: _layout
@@ -618,7 +618,7 @@ ebx.browser = {
 									onclick: function(){
 										var id = ebx.validInt(rowData.id);
 										if(id <= 0)return;
-										_deleted(id, _Paramet.modedit, function(result){
+										_deleted(id, _Parament.modedit, function(result){
 											if(result.result){
 												$.messager.show({
 													title: '提示',
@@ -639,7 +639,7 @@ ebx.browser = {
 									onclick: function(){
 										var id = ebx.validInt(rowData.id);
 										if(id <= 0)return;
-										_undeleted(id, _Paramet.modedit, function(result){
+										_undeleted(id, _Parament.modedit, function(result){
 											if(result.result){
 												$.messager.show({
 													title: '提示',

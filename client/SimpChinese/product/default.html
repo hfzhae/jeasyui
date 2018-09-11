@@ -9,6 +9,7 @@
 			mapitem = $('<div>').appendTo(eastPanel),
 			eastParamet = ebx.getMenuParameter(eastPanel),
 			storage = $('<div>'),
+			Parament=ebx.getMenuParameter(eastPanel),
 			mycolumns = [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
@@ -114,7 +115,7 @@
 					}]
 				}]
 		};
-		
+		console.log(eastPanel);
 		biribbon.ribbon({
 			data:data,
 			width:'100%',
@@ -165,9 +166,11 @@
 			},200);
 		}
 
-
+        console.log("xxxxxxxxxxxxxxxxx"+Paramet.id);
 		storage.propertygrid({
-			url: 'server/SimpChinese/'+Paramet.edit+'/load/?v=' + (new Date()).getTime(),
+			url: 'server/SimpChinese/'+Parament.modedit+'/load/',
+			method:'post',
+			queryParams:{_:(new Date()).getTime(),id:Paramet.id},
 			showGroup: true,
 			width:'100%',
 			height:'100%',

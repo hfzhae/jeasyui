@@ -13,7 +13,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 	eastPanel: [],
 	listPanel: [],
 	mapitem: [],
-	Paramet: {},
+	Parament: {},
 	biribbon: [],
 	eaststorage: [],
 	showLock: 0,//是否显示安全group
@@ -24,30 +24,47 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			case 'east':
 				this.layout = this.tabs.find('.layout');
 				this.eastPanel = this.layout.layout('panel', 'east');
-				this.eaststorage = $('<div>').appendTo(this.eastPanel);
-				this.Paramet = ebx.getMenuParameter(this.eastPanel);
-				if(ebx.validInt(this.Paramet.lock) == 1){
+				
+				var eastlayout = $('<div>').appendTo(this.eastPanel);
+				eastlayout.layout({
+					width:'100%',
+					height:'100%'
+				}).layout('add',{
+					region: 'north',
+					width:'100%',
+					height: 114,    
+					split: false,
+					border:false
+  				}).layout('add',{
+					region: 'center',  
+					split: false,
+					border:false
+  				});
+				
+				this.eaststorage = $('<div>').appendTo(eastlayout.layout('panel', 'center'));
+				this.Parament = ebx.getMenuParamenter(this.eastPanel);
+				if(ebx.validInt(this.Parament.lock) == 1){
 					this.showLock = 1;
 				}
-				this.biribbon = $('<div>').appendTo(this.eastPanel);
-				this.mapitem = $('<div>').appendTo(this.eastPanel),
+				this.biribbon = $('<div>').appendTo(eastlayout.layout('panel', 'north'));
+				//this.mapitem = $('<div>').appendTo(eastlayout.layout('panel', 'center')),
 				this._east(callback);
 				break;
 		}
 	},
 	_new: function(options){
-		var paramet = '';
-		for(var i in options._Paramet){
-			if(typeof(options._Paramet[i]) == 'string'){
+		var Parament = '';
+		for(var i in options._Parament){
+			if(typeof(options._Parament[i]) == 'string'){
 				if(i.toLowerCase() == 'id'){
-					paramet += 'id=0';
+					Parament += 'id=0';
 				}else{
-					paramet += i + '=' + options._Paramet[i] + '&';
+					Parament += i + '=' + options._Parament[i] + '&';
 				}
 			}
 		}
-		paramet = paramet.substr(0, paramet.length - 1);
-		ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Paramet.text,function(){
+		Parament = Parament.substr(0, Parament.length - 1);
+		ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Parament.text,function(){
 			options._layout.layout('remove', 'east');//删除编辑layout
 			ebx.setEditstatus(options._tabs.panel('options'), false);
 			options._layout.layout('add',{//添加新的layout
@@ -56,7 +73,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 				maxWidth: '50%',
 				minWidth: 400,
 				title: '',
-				href: 'client/SimpChinese/' + options._Paramet.modedit + '/?' + paramet,
+				href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
 				hideExpandTool: false,
 				hideCollapsedContent: false,
 				border: false,
@@ -64,12 +81,12 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			});
 		});
 	},
-	_save:function(asSave, _layout, _Paramet, _tab, callback){
+	_save:function(asSave, _layout, _Parament, _tab, callback){
 		var bi = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData'),
 			bistr = ebx.convertDicToJson(bi),
-			ParentID = asSave?_Paramet.id:0,
+			ParentID = asSave?_Parament.id:0,
 			savetext = asSave?'另存':'保存',
-			parameter = {bi: bistr, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+			Paramenter = {bi: bistr, _: (new Date()).getTime(), id: _Parament.id, parentid: ParentID};
 
 		if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
 			callback();
@@ -78,8 +95,8 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		$.messager.progress({title:'正在保存...',text:''}); 
 		$.ajax({
 			type: 'post', 
-			url: 'server/SimpChinese/' + _Paramet.modedit + '/save/',
-			data: parameter,
+			url: 'server/SimpChinese/' + _Parament.modedit + '/save/',
+			data: Paramenter,
 			dataType: "json",
 			success: function(result){
 				$.messager.progress('close');
@@ -92,7 +109,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 					});	
 					ebx.setEditstatus(_tab, false);
 					var id = result.id;
-					_Paramet.id = result.id;
+					_Parament.id = result.id;
 					_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
 					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 					
@@ -108,12 +125,12 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 		var _layout = this.layout,
 			_tabs = this.tabs,
 			_tab = this.tab,
-			_Paramet = this.Paramet,
+			_Parament = this.Parament,
 			_showLock = this.showLock,
 			_mapitem = this.mapitem,
 			_eaststorage = this.eaststorage,
 			_eastPanel = this.eastPanel,
-			_ID = _Paramet.id,
+			_ID = _Parament.id,
 			_biribbon = this.biribbon,
 			_save = this._save,
 			_new = this._new;
@@ -143,7 +160,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								}
 								var saveBtn = $(this)
 								saveBtn.linkbutton('disable');
-								_save(0, _layout, _Paramet, _tab, function(){
+								_save(0, _layout, _Parament, _tab, function(){
 									if(lockbtn && _showLock == 1){
 										lockbtn.find('.l-btn-icon').removeClass('icon-unLock-large').addClass('icon-Lock-large');
 										lockbtn.linkbutton('unselect');
@@ -158,7 +175,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								onclick: function(){
 									$.messager.confirm('提示', '是否需要另存？', function(r){
 										if (r){
-											_save(1, _layout, _Paramet, _tab, function(){ });
+											_save(1, _layout, _Parament, _tab, function(){ });
 										}
 									});
 								}
@@ -172,7 +189,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								iconCls:'tree-file',
 								onClick: function(){
 									var options = {
-										_Paramet: _Paramet,
+										_Parament: _Parament,
 										browsertype: 'bi',
 										_tabs: _tabs,
 										_layout: _layout
@@ -189,7 +206,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								onClick:function(){
 									var btn = $(this),
 										undeleted = ebx.getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
-									ebx.browser._deleted(_ID, _Paramet.modedit, function(result){
+									ebx.browser._deleted(_ID, _Parament.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -215,7 +232,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 								onClick: function(){
 									var btn = $(this),
 										deleted = ebx.getbiribbonobj(_biribbon, 'deleted', 'linkbutton');
-									ebx.browser._undeleted(_ID, _Paramet.modedit, function(result){
+									ebx.browser._undeleted(_ID, _Parament.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -279,7 +296,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 						tools:[{
 							iconCls:'icon-DeclineInvitation',
 							onClick:function(){
-								ebx.EditStatusMessager(_tab.editstatus, _Paramet.text, function(){
+								ebx.EditStatusMessager(_tab.editstatus, _Parament.text, function(){
 									setTimeout(function(){
 										_layout.layout('remove', 'east');//删除编辑layout
 									},0);
@@ -297,7 +314,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 				{
 					iconCls:'icon-DeclineInvitation',
 					handler:function(){
-						ebx.EditStatusMessager(_tab.editstatus, _Paramet.text, function(){
+						ebx.EditStatusMessager(_tab.editstatus, _Parament.text, function(){
 							_layout.layout('remove', 'east');//删除编辑layout
 							ebx.setEditstatus(_tab, false)
 						});
@@ -315,9 +332,11 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			}
 		}
 		
+		/*
 		this.mapitem.tabs({
 			border:false,
 			width:'100%',
+			hiegth:'100%',
 			tabPosition:'bottom',
 			height:this.eastPanel.height()-this.eastPanel.find('.ribbon').height(),
 			plain:true,
@@ -329,25 +348,13 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			content: _eaststorage,
 			selected: true
 		});
-		
-		var onresize = window.onresize;
-		window.onresize = function() {//窗口高度发生变化时，自动调整tabs的高度 2018-4-22 zz
-			setTimeout(function(){
-				try{
-					_mapitem.tabs('resize', {
-						height:_eastPanel.height()-_eastPanel.find('.ribbon').height()
-					});
-				}catch(e){}
-			},200);
-			onresize();
-		}
-		
+		*/
 		_eaststorage.propertygrid({
-			url: 'server/SimpChinese/' + _Paramet.modedit + '/load/',
+			url: 'server/SimpChinese/' + _Parament.modedit + '/load/',
 			method:'post',
-			queryParams:{_:(new Date()).getTime(),id:this.Paramet.id},
+			queryParams:{_:(new Date()).getTime(),id:this.Parament.id},
 			showGroup: true,
-			width:'100%',
+			//width:'100%',
 			height:'100%',
 			border:false,
 			singleSelect: true,

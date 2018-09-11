@@ -36,32 +36,32 @@ var ebx = {
 		this.owner = 1;//读取登陆用户ID，待处理。。。
 	},
 	Initialize: function (){
-		var ParametStr, FormSize, FormData, Paramet
+		var ParamentStr, FormSize, FormData, Parament
 		if(Request.ServerVariables('Request_Method') == 'POST' ){ //post
 			FormSize = Request.TotalBytes;
 			FormData = Request.BinaryRead(FormSize);
-			ParametStr = ebx.stream_binarytostring(FormData, '');
-			ParametStr = ParametStr.replaceAll('\\+', ' ');//把jquery的ajax传递时空格转换成的加号替换成空格
-			if(typeof(ParametStr) == 'string'){
-				if(ParametStr.length > 0){
+			ParamentStr = ebx.stream_binarytostring(FormData, '');
+			ParamentStr = ParamentStr.replaceAll('\\+', ' ');//把jquery的ajax传递时空格转换成的加号替换成空格
+			if(typeof(ParamentStr) == 'string'){
+				if(ParamentStr.length > 0){
 					try{
-						var Paramet = ebx.parseToJson(ParametStr);
-						ebx.convertObjToDic(ebx.stdin, ebx.UnescapeJson(Paramet));
-						//ebx.convertObjToDic(ebx.stdin, unescape(decodeURI(Paramet)));
+						var Parament = ebx.parseToJson(ParamentStr);
+						ebx.convertObjToDic(ebx.stdin, ebx.UnescapeJson(Parament));
+						//ebx.convertObjToDic(ebx.stdin, unescape(decodeURI(Parament)));
 						
 					}catch(e){
 						if(e.name == 'SyntaxError'){
-							ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
-							//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
+							ebx.stdin = ebx.UnescapeJson(ebx.getRequestParament(ParamentStr));
+							//ebx.stdin = unescape(decodeURI(ebx.getRequestParament(ParamentStr)));
 						}
 					}
 				}
 			}
 		}else{ //get
-			ParametStr = Request.ServerVariables("QUERY_STRING")(1);
-			if(typeof(ParametStr) == 'string'){
-				ebx.stdin = ebx.UnescapeJson(ebx.getRequestParamet(ParametStr));
-				//ebx.stdin = unescape(decodeURI(ebx.getRequestParamet(ParametStr)));
+			ParamentStr = Request.ServerVariables("QUERY_STRING")(1);
+			if(typeof(ParamentStr) == 'string'){
+				ebx.stdin = ebx.UnescapeJson(ebx.getRequestParament(ParamentStr));
+				//ebx.stdin = unescape(decodeURI(ebx.getRequestParament(ParamentStr)));
 			}
 		}
 		ebx.conn = Server.CreateObject('ADODB.Connection');
@@ -71,7 +71,7 @@ var ebx = {
 		eval("var o=" + json_data);
 		return(o);
 	},
-	getRequestParamet: function(s){//get参数格式转对象
+	getRequestParament: function(s){//get参数格式转对象
 		var arr = s.split('&'),
 			d = new Array();
 		if(arr.length <= 0) return(d);
@@ -596,7 +596,7 @@ var ebx = {
 			findid = ebx.validInt(ebx.stdin['findid']),
 			datefrom = ebx.sqlStringEncode(ebx.stdin['datefrom']),
 			dateto = ebx.sqlStringEncode(ebx.stdin['dateto']),
-			isdeleted = ebx.validInt(ebx.stdin['isdeleted']),
+			isdeleted = ebx.validInt(ebx.stdin['isdeleted'], -1),
 			isaudit =  ebx.validInt(ebx.stdin['isaudit'], -1); 
 
 		if(datefrom.length > 0){
@@ -934,7 +934,7 @@ var ebx = {
 				if(this.bd("field").value){
 					for(var i = 0; i < rsBDFields.Count; i++){
 						if(rsBDFields(i).name.toLowerCase() == this.bd("field").value.toLowerCase()){
-							var _Paramet = {//回调函数用参数对象
+							var _Parament = {//回调函数用参数对象
 									id: this.ID,
 									field: this.bd("field").value, 
 									rs: this.bd, 
@@ -942,7 +942,7 @@ var ebx = {
 									TableName: this.TableName,
 									ModType: 'BillType=' + this.ModType
 								}
-							rsBD(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Paramet);
+							rsBD(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Parament);
 						}
 					}
 					//if(this.bd("field").value == 'id'){
@@ -973,14 +973,14 @@ var ebx = {
 								for(var k in this.columns[0]){
 									if(this.columns[0][k].field.toLowerCase() == fieldsName.toLowerCase()){
 										if(this.columns[0][k].func){
-											var _Paramet = {//回调函数用参数对象
+											var _Parament = {//回调函数用参数对象
 													id: this.ID,
 													field: fieldsName, 
 													rs: this.bd, 
 													rslist: this.bdlist, 
 													TableName: this.TableName + 'list'
 												}
-											rsBDList(fieldsName) = ebx.func.callback(this.columns[0][k].func, this.bdlist(fieldsName).value, _Paramet);
+											rsBDList(fieldsName) = ebx.func.callback(this.columns[0][k].func, this.bdlist(fieldsName).value, _Parament);
 											funcField = 1;
 										}
 									}
@@ -1066,7 +1066,7 @@ var ebx = {
 				for(var i = 0; i < rsBIFields.Count; i++){
 				    if(this.bi("field").value!=undefined){
 					    if(rsBIFields(i).name.toLowerCase() == this.bi("field").value.toLowerCase()){
-						    var _Paramet = {//回调函数用参数对象
+						    var _Parament = {//回调函数用参数对象
 								    id: this.ID,
 								    field: this.bi("field").value, 
 								    rs: this.bi, 
@@ -1076,7 +1076,7 @@ var ebx = {
 								    rsBI: rsBI
 							    }
 							    //debugger;
-						    rsBI(this.bi("field").value) = ebx.func.callback(this.bi("func").value, this.bi("value").value, _Paramet);
+						    rsBI(this.bi("field").value) = ebx.func.callback(this.bi("func").value, this.bi("value").value, _Parament);
 					    }
 					}
 				}
@@ -1188,17 +1188,17 @@ var ebx = {
 		}
 	},
 	func: {//服务器端回调函数处理对象 2018-7-24 zz
-		callback: function(callbackname, v, Paramet){//参数：callbackname：回调函数名(区分大小写)，v：值，Paramet：参数，可根据不同回掉函数自定义
+		callback: function(callbackname, v, Parament){//参数：callbackname：回调函数名(区分大小写)，v：值，Parament：参数，可根据不同回掉函数自定义
 			if(typeof(callbackname) != 'string') return v;
 			switch(callbackname){
 				case 'cbRSNotNullAndNotRepeatCheck'://同一账套内不允许重复，且不能为空
 					if(typeof(v) != 'string') throw name + '不能为空！';
 					if(v.length == 0) throw name + '不能为空！';
 					
-					var rs = ebx.dbx.open("select count(id) as n from " + Paramet.TableName + " where (accountid=" + ebx.accountid + " or accountid=0) and " + Paramet.ModType + " and " + Paramet.field + "='" + v +"' and id<>" + Paramet.id, 1, 1);
+					var rs = ebx.dbx.open("select count(id) as n from " + Parament.TableName + " where (accountid=" + ebx.accountid + " or accountid=0) and " + Parament.ModType + " and " + Parament.field + "='" + v +"' and id<>" + Parament.id, 1, 1);
 					if(!rs.eof){
 						if(rs('n').value > 0){
-							throw Paramet.rs('name').value + ' 不能重复！';
+							throw Parament.rs('name').value + ' 不能重复！';
 						}
 					}
 					rs = null;
@@ -1206,7 +1206,7 @@ var ebx = {
 					return v;
 					break;
 				case 'cbRSDirectPy'://字符串转拼音头码，回填数据库的SearchCode1字段
-					Paramet.rsBI('SearchCode1').value = ebx.strToPinYin.toPinYin(v);
+					Parament.rsBI('SearchCode1').value = ebx.strToPinYin.toPinYin(v);
 					return v;
 					break;
 				case 'cbRSDate'://日期格式化函数

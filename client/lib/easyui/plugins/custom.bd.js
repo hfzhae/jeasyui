@@ -15,7 +15,7 @@ ebx.bd = {
 	northPanel: [],
 	eastPanel: [],
 	centerPanel: [],
-	Paramet: {},
+	Parament: {},
 	biribbon: [],
 	centerstorage: [],
 	eaststorage: [],
@@ -26,9 +26,9 @@ ebx.bd = {
 	init: function(layoutName, callback, callback1){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
-		this.Paramet = ebx.getMenuParameter(this.tabs);
-		this.ID = ebx.validInt(this.Paramet.id);
-		if(ebx.validInt(this.Paramet.lock) == 1){
+		this.Parament = ebx.getMenuParamenter(this.tabs);
+		this.ID = ebx.validInt(this.Parament.id);
+		if(ebx.validInt(this.Parament.lock) == 1){
 			this.showLock = 1;
 		}
 		
@@ -77,7 +77,7 @@ ebx.bd = {
 		this.layout.layout('add',{
 			region: 'center',
 			title: '',
-			href: 'client/SimpChinese/' + this.Paramet.modedit + '/center.html',
+			href: 'client/SimpChinese/' + this.Parament.modedit + '/center.html',
 			//hideExpandTool: false,
 			//hideCollapsedContent: false,
 			border: false,
@@ -88,7 +88,7 @@ ebx.bd = {
 			maxWidth: '50%',
 			minWidth: 300,
 			//title: '基本信息',
-			href: 'client/SimpChinese/' + this.Paramet.modedit + '/east.html',
+			href: 'client/SimpChinese/' + this.Parament.modedit + '/east.html',
 			hideExpandTool: false,
 			hideCollapsedContent: false,
 			border: false,
@@ -105,7 +105,7 @@ ebx.bd = {
 			region: 'north',
 			//title:'功能',
 			height: 113,
-			href: 'client/SimpChinese/' + this.Paramet.modedit + '/north.html',
+			href: 'client/SimpChinese/' + this.Parament.modedit + '/north.html',
 			border: false,
 			split: false,
 			hideCollapsedContent: false,
@@ -123,7 +123,7 @@ ebx.bd = {
 		var bd = this,
 			_layout = this.layout,
 			_centerstorage = this.centerstorage,
-			_Paramet = this.Paramet,
+			_Parament = this.Parament,
 			toolbar = $('<div>'),
 			serialScan = $('<div>').appendTo(toolbar),
 			_showSearchserial = this.showSearchserial;
@@ -131,7 +131,7 @@ ebx.bd = {
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/DataProvider/style/',
-			data: {style:_Paramet.modedit+'list',_:(new Date()).getTime()},//style名称必须和mode相吻合
+			data: {style:_Parament.modedit+'list',_:(new Date()).getTime()},//style名称必须和mode相吻合
 			dataType: "json",
 			success: function(result){
 				if(result){
@@ -148,10 +148,10 @@ ebx.bd = {
 						border:false,
 						fitColumns:false,
 						striped:true,
-						url:'server/SimpChinese/'+_Paramet.modedit+'/center/',
+						url:'server/SimpChinese/'+_Parament.modedit+'/center/',
 						nowrap:true,//禁用自动换行
 						method:'post',
-						queryParams:{_:(new Date()).getTime(),id:_Paramet.id},
+						queryParams:{_:(new Date()).getTime(),id:_Parament.id},
 						multiSort:false,
 						checkOnSelect:false,
 						columns:columnsData,
@@ -184,28 +184,28 @@ ebx.bd = {
 		});
 	},
 	_new: function(options){
-		var paramet = '';
-		for(var i in options._Paramet){
-			if(typeof(options._Paramet[i]) == 'string'){
+		var Parament = '';
+		for(var i in options._Parament){
+			if(typeof(options._Parament[i]) == 'string'){
 				if(i.toLowerCase() == 'id'){
-					paramet += 'id=0';
+					Parament += 'id=0';
 				}else{
-					paramet += i + '=' + options._Paramet[i] + '&';
+					Parament += i + '=' + options._Parament[i] + '&';
 				}
 			}
 		}
-		paramet = paramet.substr(0, paramet.length - 1);
+		Parament = Parament.substr(0, Parament.length - 1);
 		var tabsid = 'tabs_'+ebx.RndNum(20)
 		ebx.center.tabs('add', {
 			id: tabsid,
-			title: '新建-' + options._Paramet.text,
-			href: 'client/SimpChinese/' + options._Paramet.modedit + '/?' + paramet,
+			title: '新建-' + options._Parament.text,
+			href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
 			//iconCls:node.iconCls,
 			selected: true,
 			closable:true
 		});
 	},
-	_save:function(asSave, _layout, _Paramet, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Paramet：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：单据全局对象，callback回到函数
+	_save:function(asSave, _layout, _Parament, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Parament：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：单据全局对象，callback回到函数
 		var listgrid = _layout.layout('panel', 'center').find('.datagrid-f'),
 			bdlistdata = listgrid.datagrid('getData').firstRows,
 			by = function(name){
@@ -234,9 +234,9 @@ ebx.bd = {
 			bdliststr =  ebx.convertDicToJson(bdlist),
 			bdstr = ebx.convertDicToJson(bd),
 			columnsstr = ebx.convertDicToJson(columns),
-			ParentID = asSave?_Paramet.id:0,
+			ParentID = asSave?_Parament.id:0,
 			savetext = asSave?'另存':'保存',
-			parameter = {bd: bdstr, bdlist: bdliststr, columns:columnsstr, _: (new Date()).getTime(), id: _Paramet.id, parentid: ParentID};
+			Paramenter = {bd: bdstr, bdlist: bdliststr, columns:columnsstr, _: (new Date()).getTime(), id: _Parament.id, parentid: ParentID};
 
 		if(ebx.validInt(bdlist.total) == 0){
 			$.messager.show({
@@ -258,8 +258,8 @@ ebx.bd = {
 		$.messager.progress({title:'正在保存...',text:''}); 
 		$.ajax({
 			type: 'post', 
-			url: 'server/SimpChinese/' + _Paramet.modedit + '/save/',
-			data: parameter,
+			url: 'server/SimpChinese/' + _Parament.modedit + '/save/',
+			data: Paramenter,
 			dataType: "json",
 			success: function(result){
 				$.messager.progress('close');
@@ -288,9 +288,9 @@ ebx.bd = {
 			_tabs = this.tabs;
 		
 		_eaststorage.propertygrid({
-			url: 'server/SimpChinese/'+this.Paramet.modedit+'/load/',
+			url: 'server/SimpChinese/'+this.Parament.modedit+'/load/',
 			method:'post',
-			queryParams:{_:(new Date()).getTime(),id:this.Paramet.id},
+			queryParams:{_:(new Date()).getTime(),id:this.Parament.id},
 			showGroup: true,
 			width:'100%',
 			height:'100%',
@@ -329,7 +329,7 @@ ebx.bd = {
 			_layout = this.layout,
 			_eastPanel = this.eastPanel,
 			_showLock = this.showLock,
-			_Paramet = this.Paramet,
+			_Parament = this.Parament,
 			_tabs = this.tabs,
 			_tab = this.tab,
 			_biribbon = this.biribbon,
@@ -357,7 +357,7 @@ ebx.bd = {
 								onClick: function(){
 									$.messager.confirm('提示', '是否需要另存？', function(r){
 										if (r){
-											_save(1, _layout, _Paramet, _tab, bd, function(){ });
+											_save(1, _layout, _Parament, _tab, bd, function(){ });
 										}
 									});
 								}
@@ -373,7 +373,7 @@ ebx.bd = {
 								}
 								var saveBtn = $(this);
 								saveBtn.linkbutton('disable');
-								_save(0, _layout, _Paramet, _tab, bd, function(){
+								_save(0, _layout, _Parament, _tab, bd, function(){
 									if(lockbtn && _showLock == 1){
 										lockbtn.find('.l-btn-icon').removeClass('icon-unLock-large').addClass('icon-Lock-large');
 										lockbtn.linkbutton('unselect');
@@ -405,7 +405,7 @@ ebx.bd = {
 								iconCls:'tree-file',
 								onClick: function(){
 									var options = {
-										_Paramet: _Paramet,
+										_Parament: _Parament,
 										browsertype: 'bd',
 										_tabs: _tabs,
 										_layout: _layout
@@ -422,7 +422,7 @@ ebx.bd = {
 										undeleted = ebx.getbiribbonobj(_biribbon, 'undeleted', 'linkbutton'),
 										_eaststorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
 										
-									ebx.browser._deleted(_ID, _Paramet.modedit, function(result){
+									ebx.browser._deleted(_ID, _Parament.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -450,7 +450,7 @@ ebx.bd = {
 										deleted = ebx.getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
 										_eaststorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
 										
-									ebx.browser._undeleted(_ID, _Paramet.modedit, function(result){
+									ebx.browser._undeleted(_ID, _Parament.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -482,7 +482,7 @@ ebx.bd = {
 							onClick:function(){
 								bd.print.init(
 								    bd.ID,
-									_Paramet.modedit,
+									_Parament.modedit,
 									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows')
 								);
 								bd.print.print();
@@ -492,7 +492,7 @@ ebx.bd = {
 							iconCls:'icon-ViewsAdpDiagramPrintPreview',
 							onClick: function(){
 								bd.print.init(bd.ID,
-									_Paramet.modedit,
+									_Parament.modedit,
 									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows')
 								);
 								bd.print.preview();
@@ -647,7 +647,7 @@ ebx.bd = {
 									iconCls:'icon-FileSaveAsExcelXlsx',
 									onclick:function(){
 										var columns = _layout.layout('panel', 'center').find('.datagrid-f').datagrid('options').columns;
-										ebx.importTemplate(columns, _Paramet.text);
+										ebx.importTemplate(columns, _Parament.text);
 									}
 								}],
 								onClick: function(){
