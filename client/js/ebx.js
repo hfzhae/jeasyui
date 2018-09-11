@@ -1135,8 +1135,19 @@ var ebx = {
 		}
 	},
 	sumfooter:function(footer, target){//datagrid表尾统计函数，参数：footer：显示式样表尾样式，1为显示表尾，0为不显示，target：datagrid对象
+	    var h = target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').height() - 28,
+	        scrolldiv = target.datagrid('getPanel').find('.datagrid-body');
+	    for(var i in scrolldiv){
+	        $(scrolldiv[i]).scrollLeft(10);
+	        if($(scrolldiv[i]).scrollLeft()>0 ){
+	            h -= 14;//判断如果有下滚动条，高度减掉14个像素，弥补srollwizard的bug
+	            $(scrolldiv[i]).scrollLeft(0);
+	            break;
+	        }
+	        $(scrolldiv[i]).scrollLeft(0);
+	    }
 		setTimeout(function(){
-			target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').css({'height': '100%'});
+			target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').css({'height': h});
 		},0)
 		if(!footer)return;
 		var footerrow = {},

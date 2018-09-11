@@ -56,7 +56,7 @@
 				for(var i = 0; i < rsBIFields.Count; i++){
 				    if(this.bd("field").value!=undefined){
 					    if(rsBIFields(i).name.toLowerCase() == this.bd("field").value.toLowerCase()){
-						    var _Paramet = {//回调函数用参数对象
+						    var _Parament = {//回调函数用参数对象
 								    id: this.ID,
 								    field: this.bd("field").value, 
 								    rs: this.bd, 
@@ -66,7 +66,7 @@
 								    rsBI: rsBI
 							    }
 							    //debugger;
-						    rsBI(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Paramet);
+						    rsBI(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Parament);
 					    }
 					}
 				}

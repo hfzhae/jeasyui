@@ -166,9 +166,9 @@ ebx.browser = {
 					ebx.setEditstatus(options._tabs.panel('options'), false);
 					options._layout.layout('add',{//添加新的layout
 						region: 'east',
-						width: 400,
+						width: '30%',
 						maxWidth: '50%',
-						minWidth: 400,
+						minWidth: 300,
 						title: '',
 						href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
 						hideExpandTool: false,
