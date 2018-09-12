@@ -1049,7 +1049,7 @@ var ebx = {
 					iconCls:Paramenters.iconCls,
 					selected: true,
 					closable:true
-				});
+				});				
 				$('#'+tabsid).css({padding:0});
 			}
 		}

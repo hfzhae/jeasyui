@@ -26,7 +26,7 @@
 					centertabs = ebx.center.tabs("tabs"),
 					tCount = centertabs.length,
 					index = ebx.center.tabs('getTabIndex',ebx.center.tabs('getSelected'));
-					
+				
 				if(tCount>0){
 					/*					
 					for(var i=0;i<tCount;i++){
@@ -39,9 +39,11 @@
 						ebx.center.tabs("close", arrTitle[i]); 
 					}
 					*/
-					if(centertabs[index].panel('options').closable){//获取可删除tab的index
-						ebx.center.tabs("close", index); 
-					}
+				    if(centertabs[index].panel('options').closable){//获取可删除tab的index
+					    ebx.center.tabs("close", index); 
+				    }else{
+				        ebx.center.tabs("select", index + 1);
+				    }
 				}  
 			}
 		}).addClass('homedelbtn');

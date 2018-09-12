@@ -23,13 +23,94 @@
 			fit:true,
 			border:false,
 			plain:false,
-			tabPosition:'top'
+			tabPosition:'top',
+			onContextMenu:function(e, title,index){
+				if(index < 0)return;
+				
+				e.preventDefault();
+				var RowContextMenu = $('<div>'),
+				    tabs = $(this);
+				    
+				tabs.tabs('select', index);
+				
+				RowContextMenu.menu({
+					width:100
+				});
+				if(index > 0){
+				    RowContextMenu.menu('appendItem', {
+					    text: '关闭',
+					    iconCls: 'icon-Delete',
+					    onclick:function(){
+                            tabs.tabs('close', index);
+					    }
+				    });
+				}
+				RowContextMenu.menu('appendItem', {
+					text: '关闭其他',
+					//iconCls: 'icon-Delete',
+					onclick: function(){
+                        var t = tabs.tabs('tabs'),
+                            ts = tabs.tabs('getSelected');
+                                                    
+                        for(var i = t.length-1; i > 0; i--){
+                            if(ts != t[i]){
+                                tabs.tabs('close',i);
+                            }
+                        }
+                        tabs.tabs('scrollBy', 0);                      
+					}
+				});
+				if(index > 0){
+				    RowContextMenu.menu('appendItem', {
+					    text: '关闭全部',
+					    //iconCls: 'icon-Delete',
+					    onclick: function(){
+                            var t = tabs.tabs('tabs');
+                                                        
+                            for(var i = t.length-1; i > 0; i--){
+                                tabs.tabs('close',i);
+                            }
+                            tabs.tabs('scrollBy', 0);                      
+					    }
+				    }).menu('appendItem', {
+					    text: '关闭右侧标签页',
+					    //iconCls: 'icon-Delete',
+					    onclick: function(){
+                            var t = tabs.tabs('tabs'),
+                                ts = tabs.tabs('getSelected'),
+                                index = tabs.tabs('getTabIndex',ts);
+                                                        
+                            for(var i = t.length-1; i > index; i--){
+                                tabs.tabs('close',i);
+                            }
+                            tabs.tabs('scrollBy', 0);                      
+					    }
+				    }).menu('appendItem', {
+					    text: '关闭左侧标签页',
+					    //iconCls: 'icon-Delete',
+					    onclick: function(){
+                            var ts =tabs.tabs('getSelected'),
+                                index = tabs.tabs('getTabIndex',ts),
+                                num = index-1;
+                            
+                            for(var i = 1; i <= num; i++ ){
+                                tabs.tabs('close',1);
+                            }
+                            tabs.tabs('scrollBy', 0);                      
+					    }
+				    });
+				}
+				RowContextMenu.menu('show', {
+					left: e.pageX,
+					top: e.pageY
+				});
+			}
 		}).tabs('add', {
 			title:'首页',
 			iconCls:'tabs-home32_1',
 			href:'client/SimpChinese/home/',
 			selected: true,
-			closable:true
+			closable:false
 		}).tabs({
 			onSelect: function(title, index){
 				if(index == 0)$('#homeDiv').portal('resize');
