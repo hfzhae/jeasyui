@@ -17,63 +17,61 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 	biribbon: [],
 	eaststorage: [],
 	showLock: 0,//是否显示安全group
-	init: function(layoutName, callback){//初始化函数。参数：layoutName：初始化区域名称，包括：east，callback：回掉函数
+	init: function(callback){//初始化函数。参数：layoutName：初始化区域名称，包括：east，callback：回掉函数
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
-		switch(layoutName.toLowerCase()){
-			case 'east':
-				this.layout = this.tabs.find('.layout');
-				this.eastPanel = this.layout.layout('panel', 'east');
-				
-				var eastlayout = $('<div>').appendTo(this.eastPanel);
-				eastlayout.layout({
-					width:'100%',
-					height:'100%'
-				}).layout('add',{
-					region: 'north',
-					width:'100%',
-					height: 114,    
-					split: false,
-					border:false
-  				}).layout('add',{
-					region: 'center',  
-					split: false,
-					border:false
-  				});
-				
-				this.eaststorage = $('<div>').appendTo(eastlayout.layout('panel', 'center'));
-				this.Parament = ebx.getMenuParamenter(this.eastPanel);
-				if(ebx.validInt(this.Parament.lock) == 1){
-					this.showLock = 1;
-				}
-				this.biribbon = $('<div>').appendTo(eastlayout.layout('panel', 'north'));
-				//this.mapitem = $('<div>').appendTo(eastlayout.layout('panel', 'center')),
-				this._east(callback);
-				break;
+		this.layout = this.tabs.find('.layout');
+		this.eastPanel = this.layout.layout('panel', 'east');
+		
+		var eastlayout = $('<div>').appendTo(this.eastPanel);
+		eastlayout.layout({
+			width:'100%',
+			height:'100%'
+		}).layout('add',{
+			region: 'north',
+			width:'100%',
+			height: 114,    
+			split: false,
+			border:false
+		}).layout('add',{
+			region: 'center',  
+			split: false,
+			border:false
+		});
+		
+		this.eaststorage = $('<div>').appendTo(eastlayout.layout('panel', 'center'));
+		this.Parament = ebx.getMenuParamenter(this.eastPanel);
+		if(ebx.validInt(this.Parament.lock) == 1){
+			this.showLock = 1;
 		}
+		this.biribbon = $('<div>').appendTo(eastlayout.layout('panel', 'north'));
+		//this.mapitem = $('<div>').appendTo(eastlayout.layout('panel', 'center')),
+		this._east(callback);
 	},
 	_new: function(options){
-		var Parament = '';
+		var Paramenter = {};
 		for(var i in options._Parament){
-			if(typeof(options._Parament[i]) == 'string'){
-				if(i.toLowerCase() == 'id'){
-					Parament += 'id=0';
-				}else{
-					Parament += i + '=' + options._Parament[i] + '&';
-				}
+			switch(typeof(options._Parament[i])){
+				case 'string':
+					Paramenter[i.toLowerCase()] = options._Parament[i].toString().toLowerCase();
+					break;
+				case 'number':
+					Paramenter[i.toLowerCase()] = options._Parament[i];
+					break;
 			}
 		}
-		Parament = Parament.substr(0, Parament.length - 1);
+		Paramenter.id = 0;
 		ebx.EditStatusMessager(options._tabs.panel('options').editstatus, options._Parament.text,function(){
 			options._layout.layout('remove', 'east');//删除编辑layout
 			ebx.setEditstatus(options._tabs.panel('options'), false);
 			options._layout.layout('add',{//添加新的layout
 				region: 'east',
-				width: 400,
+				width: '30%',
 				maxWidth: '50%',
-				minWidth: 400,
+				minWidth: 300,
 				title: '',
-				href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
+				href: 'client/SimpChinese/' + options._Parament.modedit + '/',
+				paramenters:Paramenter,
 				hideExpandTool: false,
 				hideCollapsedContent: false,
 				border: false,

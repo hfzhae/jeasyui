@@ -334,6 +334,30 @@ ebx.qt = {
 			}
 		});
 	},
+	_new: function(options){
+		var Paramenter = {};
+		for(var i in options._Parament){
+			switch(typeof(options._Parament[i])){
+				case 'string':
+					Paramenter[i.toLowerCase()] = options._Parament[i].toString().toLowerCase();
+					break;
+				case 'number':
+					Paramenter[i.toLowerCase()] = options._Parament[i];
+					break;
+			}
+		}
+		Paramenter.id = 0;
+		var tabsid = 'tabs_'+ebx.RndNum(20)
+		ebx.center.tabs('add', {
+			id: tabsid,
+			title: '新建-' + options._Parament.text,
+			href: 'client/SimpChinese/' + options._Parament.modedit + '/',
+			paramenters:Paramenter,
+			//iconCls:node.iconCls,
+			selected: true,
+			closable:true
+		});
+	},
 	_east: function(callback){//单据属性对象
 		var _eaststorage = this.eaststorage,
 			_tabs = this.tabs,
@@ -770,6 +794,7 @@ ebx.qt = {
 			_save = this._save,
 			_ID = this.ID,
 			_showLock = this.showLock,
+			_new = this._new,
 			data = {
 				selected:0,
 				tabs:[{
@@ -828,7 +853,7 @@ ebx.qt = {
 										_tabs: _tabs,
 										_layout: _layout
 									}; 
-									ebx.browser._new(options);
+									_new(options);
 								}
 							},{
 								name:'deleted',

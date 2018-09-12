@@ -13,9 +13,618 @@
 		'switchbutton',
 		'filebox',
 		'form',
-		'bdpring'
+		'bdpring',
+		'productserial'
 	], function(){
-		var bd = ebx.cloneObj(ebx.bd);
-		bd.init('default');
+		var bd = ebx.cloneObj(ebx.bd),
+		    callback = {//回掉函数对象
+		        north: function(data){//功能区域回调函数
+			        data.tabs[0].groups.push({//新增收款方式功能组
+				        title:'收款方式',
+				        tools:[{
+					        type:'toolbar',
+					        dir:'v',
+					        tools:[{
+						        //text:'收款方式',
+						        //iconAlign:'top',
+						        size:'large',
+						        iconCls:'icon-TableDrawTable-large',
+						        onClick: function(){
+							        if(ebx.validInt(bd.ID) == 0){
+								        $.messager.show({
+									        title: '提示',
+									        msg: '请先保存单据！',
+									        timeout: 3000,
+									        showType: 'slide'
+								        });
+								        return;
+							        }
+							        var win = $('<div>').appendTo('body'),
+								        toolbar = $('<div>'),
+								        newbtn = $('<div>').appendTo(toolbar),
+								        delbtn = $('<div>').appendTo(toolbar),
+								        clearbtn = $('<div>').appendTo(toolbar),
+								        savebtn = $('<div>').appendTo(toolbar),
+								        grid = $('<div>').appendTo(win);
+        							
+							        win.window({
+								        title: '收款方式',
+								        width:300,    
+								        height:400, 
+								        maxWidth:'90%',
+								        maxHeight:'90%',
+								        modal:true,
+								        collapsible:false,
+								        minimizable:false,
+								        maximizable:false,
+								        resizable:false,
+								        border:'thin',
+								        shadow:false
+							        });
+							        $('body').find('.window-mask').on('click', function(){
+								        win.window('close');
+							        });
+							        grid.datagrid({
+								        view:scrollview,
+								        pageSize:ebx.pagesize,
+								        url:'/server/SimpChinese/saleoutstock/getpayment/',
+								        queryParams:{
+									        id:bd.ID,
+									        _:(new Date()).getTime()
+								        },
+								        columns:[[    
+									        {field:'payment',title:'收款方式',editor:'text',width:100},
+									        {field:'amount',title:'金额',editor:'text',width:100,fieldstyle:'text-align:right;',render:'currencyRender'}
+								        ]],
+								        toolbar: toolbar,
+								        border: false,
+								        height:'100%',
+								        width:'100%',
+								        rownumbers:true,
+								        singleSelect:true,
+								        striped:true,
+								        //ctrlSelect:true,
+								        fitColumns:true
+							        }).datagrid('renderformatterstyler');
+        							
+							        newbtn.linkbutton({
+								        text:'新行',
+								        iconCls:'icon-CellsInsertDialog',
+								        plain:true,
+								        onClick: function(){
+									        grid.datagrid('appendRow', {});
+									        grid.datagrid('selectRow', grid.datagrid('getData').total - 1);
+									        grid.datagrid('editkeyboard', {index: grid.datagrid('getData').total - 1, field:'payment'});
+								        }
+							        });
+							        delbtn.linkbutton({
+								        text:'删行',
+								        iconCls:'icon-CellsDelete',
+								        plain:true,
+								        onClick: function(){
+									        var index = grid.datagrid('getRowIndex', grid.datagrid('getSelected'));
+									        if(index < 0){
+										        $.messager.show({
+											        title: '提示',
+											        msg: '请先选中一行。',
+											        timeout: 3000,
+											        showType: 'slide'
+										        });									
+										        return;
+									        }
+									        $.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+										        if (r){
+											        grid.datagrid('deleteRow', index);
+											        if(index >= grid.datagrid('getData').total && index > 0) index--;
+											        if(grid.datagrid('getData').total == 0 || index < 0){
+												        grid.datagrid('loadData', { total: 0, rows: [] }); 
+											        }else{
+												        grid.datagrid('selectRow', index);
+											        }
+										        }
+									        });
+								        }
+							        });
+							        clearbtn.linkbutton({
+								        text:'清空',
+								        iconCls:'icon-TableDelete',
+								        plain:true,
+								        onClick: function(){
+									        $.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
+										        if (r){
+											        grid.datagrid('loadData', { total: 0, rows: [] }); 
+										        }
+									        });
+								        }
+							        });
+							        savebtn.linkbutton({
+								        text:'保存',
+								        iconCls:'icon-FileSave',
+								        plain:true,
+								        onClick:function(){
+									        $.messager.progress({title:'正在保存...',text:''}); 
+									        var data = grid.datagrid('getData'),
+										        datastr = ebx.convertDicToJson(data);
+        										
+									        $.ajax({
+										        type: 'post', 
+										        url: 'server/SimpChinese/saleoutstock/setpayment/',
+										        data: {id: bd.ID, bd: datastr, _:(new Date()).getTime()},
+										        dataType: "json",
+										        success: function(result){
+											        $.messager.progress('close');
+											        if(result.result){
+												        $.messager.show({
+													        title: '提示',
+													        msg: '收款方式保存成功！',
+													        timeout: 3000,
+													        showType: 'slide'
+												        });
+												        grid.datagrid('load');
+											        }else{
+												        $.messager.alert({
+													        title: '错误',
+													        msg: result.msg,
+													        timeout: 3000,
+													        showType: 'slide'
+												        });
+											        }
+										        }
+									        });
+								        }
+							        });
+						        }
+					        }]
+				        }]
+			        });
+		        },
+		        east: function(c, s){//表头区域（load）回掉函数
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'custom', 'combogrid', {//用来重造客户的combogrid得方法
+			            onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+				            var r = s.datagrid('getData').rows;
+				            for(var i in r){
+					            if(r[i].field == 'organization'){
+						            r[i].value = rowData.id;
+					            }
+				            }
+			            }
+		            });
+        			
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'stockname', 'combogrid', {//用来重造仓库的combogrid的方法
+			            onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+				            var r = s.datagrid('getData').rows;
+				            for(var i in r){
+					            if(r[i].field == 'stock'){
+						            r[i].value = rowData.id;
+					            }
+				            }
+			            }
+		            });
+        			
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'operatorname', 'combogrid', {//用来重造业务员的combogrid的方法
+			            onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+				            var r = s.datagrid('getData').rows;
+				            for(var i in r){
+					            if(r[i].field == 'operator'){
+						            r[i].value = rowData.id;
+					            }
+				            }
+			            }
+		            });
+        			
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'InvoiceTypename', 'combogrid', {//用来重造发票类型的combogrid的方法
+			            onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+				            var r = s.datagrid('getData').rows;
+				            for(var i in r){
+					            if(r[i].field == 'InvoiceType'){
+						            r[i].value = rowData.id;
+					            }
+				            }
+			            }
+		            });
+        			
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'VIPCustomname', 'combogrid', {//用来重造会员的combogrid的方法
+			            onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+				            var r = s.datagrid('getData').rows;
+				            for(var i in r){
+					            if(r[i].field == 'VIPCustomID'){
+						            r[i].value = rowData.id;
+					            }
+				            }
+			            }
+		            });
+        			
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'Currencyname', 'combogrid', {//用来重造币种的combogrid的方法
+			            onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+				            var r = s.datagrid('getData').rows;
+				            for(var i in r){
+					            if(r[i].field == 'Currency'){
+						            r[i].value = rowData.id;
+					            }
+					            if(r[i].field == 'Relation'){
+						            r[i].value = rowData.relation;
+						            s.datagrid('refreshRow', i);
+					            }
+				            }
+			            }
+		            });
+        			
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'CheckTypename', 'combogrid', {//用来重造结算方式的combogrid的方法
+			            onSelect: function(rowIndex, rowData){//选中后更新当前行的内容为选中内容
+				            var r = s.datagrid('getData').rows;
+				            for(var i in r){
+					            if(r[i].field == 'CheckType'){
+						            r[i].value = rowData.id;
+					            }
+				            }
+			            }
+		            });
+        			
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'InvoiceNum', 'textbox', {//用来重造发票号码的onClickButton的方法
+			            onClickButton: function(){//选中后更新当前行的内容为选中内容
+				            var InvoiceNum = this.value,
+					            rows = bd.eaststorage.datagrid('getRows'),
+					            InvoiceType = 0,
+					            InvoiceMemo = '';
+        						
+				            for(var i in rows){
+					            if(rows[i].field){
+						            if(rows[i].field.toString().length > 0){
+							            if(rows[i].field.toLowerCase() === 'invoicetype'){
+								            InvoiceType = ebx.validInt(rows[i].value);
+							            }
+							            if(rows[i].field.toLowerCase() === 'invoicememo'){
+								            InvoiceMemo = rows[i].value;
+							            }
+						            }
+					            }
+				            }	
+				            if(InvoiceType == 0){
+					            $.messager.alert('错误', '请选择发票类型！', 'error');	
+					            return;
+				            };
+				            if(ebx.validInt(bd.ID) == 0){
+					            $.messager.show({
+						            title: '提示',
+						            msg: '请先保存单据。',
+						            timeout: 3000,
+						            showType: 'slide'
+					            });
+					            return;
+				            }
+				            $.messager.progress({title:'正在保存...',text:''});
+				            $.ajax({
+					            type: 'post', 
+					            url: 'server/SimpChinese/saleoutstock/saveInvoiceNum/',
+					            data: {id: bd.ID, invoicenum: escape(InvoiceNum),invoicetype: InvoiceType, invoicememo: escape(InvoiceMemo), _:(new Date()).getTime()},
+					            dataType: "json",
+					            success: function(result){
+						            $.messager.progress('close');
+						            if(result.result){
+							            $.messager.show({
+								            title: '提示',
+								            msg: '发票信息保存成功！',
+								            timeout: 3000,
+								            showType: 'slide'
+							            });
+							            bd.eaststorage.datagrid('load');
+							            ebx.setEditstatus(bd.tab, false);
+						            }else{
+							            $.messager.alert('错误', '保存失败！' + result.msg, 'error');	
+						            }
+					            }
+				            });
+        					
+			            }
+		            });
+        			
+		            ebx.setDatagridEditor.editorMethods(c.rows, 'InvoiceMemo', 'textbox', {//用来重造发票好嘛的onClickButton的方法
+			            onClickButton: function(){//选中后更新当前行的内容为选中内容
+				            var InvoiceNum = '',
+					            rows = bd.eaststorage.datagrid('getRows'),
+					            InvoiceType = 0,
+					            InvoiceMemo = this.value;
+        						
+				            for(var i in rows){
+					            if(rows[i].field){
+						            if(rows[i].field.toString().length > 0){
+							            if(rows[i].field.toLowerCase() === 'invoicetype'){
+								            InvoiceType = ebx.validInt(rows[i].value);
+							            }
+							            if(rows[i].field.toLowerCase() === 'invoicenum'){
+								            InvoiceNum = rows[i].value;
+							            }
+						            }
+					            }
+				            }	
+				            if(InvoiceType == 0){
+					            $.messager.alert('错误', '请选择发票类型！', 'error');	
+					            return;
+				            };
+				            if(ebx.validInt(bd.ID) == 0){
+					            $.messager.show({
+						            title: '提示',
+						            msg: '请先保存单据。',
+						            timeout: 3000,
+						            showType: 'slide'
+					            });
+					            return;
+				            }
+				            $.messager.progress({title:'正在保存...',text:''});
+				            $.ajax({
+					            type: 'post', 
+					            url: 'server/SimpChinese/saleoutstock/saveInvoiceNum/',
+					            data: {id: bd.ID, invoicenum: escape(InvoiceNum),invoicetype: InvoiceType, invoicememo: escape(InvoiceMemo), _:(new Date()).getTime()},
+					            dataType: "json",
+					            success: function(result){
+						            $.messager.progress('close');
+						            if(result.result){
+							            $.messager.show({
+								            title: '提示',
+								            msg: '发票信息保存成功！',
+								            timeout: 3000,
+								            showType: 'slide'
+							            });
+							            bd.eaststorage.datagrid('load');
+							            ebx.setEditstatus(bd.tab, false);
+						            }else{
+							            $.messager.alert('错误', '保存失败！' + result.msg, 'error');	
+						            }
+					            }
+				            });
+        					
+			            }
+		            });
+		        },
+		        center: function(c, s){//明细回掉函数，datagrid加载前触发
+			        ebx.setDatagridEditor.editorType(c[0], 'productname', 'droplist', {//用来选择菜单组的combogrid
+				        style:'product',
+				        //validType:'LetterInteger',
+				        remoteSort:false,
+				        required:true,
+				        idField:'id',
+				        idField:'productname',
+				        rownumbers:true,
+				        panelWidth:400,
+				        panelHeight:300,
+				        droplisturl:'server/SimpChinese/product/open/',
+				        hasDownArrow:false,//隐藏右边得下箭头
+				        //template:147,
+				        onCheck: function(rowIndex,rowData){//选中后更新当前行的内容为选中内容
+					        var r = s.datagrid('getData');
+					        r.firstRows[s.datagrid('options').editIndex].serial = r.firstRows.length;
+					        r.firstRows[s.datagrid('options').editIndex].productid = ebx.validInt(rowData.productid);
+					        r.firstRows[s.datagrid('options').editIndex].productcode = rowData.productcode;
+					        r.firstRows[s.datagrid('options').editIndex].spec = rowData.spec;
+					        r.firstRows[s.datagrid('options').editIndex].unit = rowData.unit;
+					        r.firstRows[s.datagrid('options').editIndex].aunit = rowData.aunit;
+					        r.firstRows[s.datagrid('options').editIndex].oldprice = ebx.validFloat(rowData.detailprice);
+					        r.firstRows[s.datagrid('options').editIndex].relation = ebx.validFloat(rowData.relation);
+					        r.firstRows[s.datagrid('options').editIndex].aquantity = ebx.validFloat(rowData.relation * 1);
+					        r.firstRows[s.datagrid('options').editIndex].quantity = 1;
+					        r.firstRows[s.datagrid('options').editIndex].price = ebx.validFloat(rowData.detailprice);
+					        r.firstRows[s.datagrid('options').editIndex].amount = ebx.validFloat(rowData.detailprice);
+					        r.firstRows[s.datagrid('options').editIndex].taxrate = ebx.validFloat(rowData.taxrate);
+					        r.firstRows[s.datagrid('options').editIndex].productserial = rowData.productserial;
+					        r.firstRows[s.datagrid('options').editIndex].lengthserial = rowData.lengthserial;
+				        }
+			        });
+        			
+			        ebx.setDatagridEditor.editorType(c[0], 'Quantity', 'textbox', {//处理编辑数量时的运算
+				        onChange: function(newValue, oldValue){
+					        if(newValue != oldValue){
+						        var data = s.datagrid('getData'),
+							        r = s.datagrid('getSelected'),
+							        index = s.datagrid('getRowIndex', r),
+							        quantity = ebx.validFloat(newValue);
+
+						        if(data.firstRows[index] != undefined){
+							        var TaxRate = ebx.validFloat(data.firstRows[index].taxrate);
+							        data.firstRows[index].aquantity = ebx.validFloat(data.firstRows[index].relation) * quantity;
+							        data.firstRows[index].amount = ebx.validFloat(data.firstRows[index].price) * quantity;
+							        if(TaxRate != -1){
+								        data.firstRows[index].taxamount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
+							        }else{
+								        data.firstRows[index].taxamount = 0;
+							        }
+							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxamount;
+						        }
+					        }
+				        }
+			        });
+        			
+			        ebx.setDatagridEditor.editorType(c[0], 'price', 'textbox', {//处理编辑数量时的运算
+				        onChange: function(newValue, oldValue){
+					        if(newValue != oldValue){
+						        var data = s.datagrid('getData'),
+							        r = s.datagrid('getSelected'),
+							        index = s.datagrid('getRowIndex', r),
+							        price = ebx.validFloat(newValue);
+        						
+						        if(data.firstRows[index] != undefined){
+							        var TaxRate = ebx.validFloat(data.firstRows[index].taxrate);
+							        data.firstRows[index].amount = ebx.validFloat(data.firstRows[index].quantity) * price
+							        if(TaxRate != -1){
+								        data.firstRows[index].taxamount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
+							        }else{
+								        data.firstRows[index].taxamount = 0;
+							        }
+							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxamount;
+						        }
+					        }
+				        }
+			        });
+        			
+			        ebx.setDatagridEditor.editorType(c[0], 'amount', 'textbox', {//处理编辑金额时的运算
+				        onChange: function(newValue, oldValue){
+					        if(newValue != oldValue){
+						        var data = s.datagrid('getData'),
+							        r = s.datagrid('getSelected'),
+							        index = s.datagrid('getRowIndex', r),
+							        amount = ebx.validFloat(newValue);
+        						
+						        if(data.firstRows[index] != undefined){
+							        var quantity = ebx.validFloat(data.firstRows[index].quantity),
+								        TaxRate = ebx.validFloat(data.firstRows[index].taxrate);
+							        if(quantity == 0){
+								        data.firstRows[index].price = 0
+							        }else{
+								        data.firstRows[index].price = amount/quantity;
+							        }
+							        if(TaxRate != -1){
+								        data.firstRows[index].taxamount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
+							        }else{
+								        data.firstRows[index].taxamount = 0;
+							        }
+							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxamount;
+						        }
+					        }
+				        }
+			        });
+        			
+			        ebx.setDatagridEditor.editorType(c[0], 'expire', 'datebox', {});//处理质保期
+
+			        ebx.setDatagridEditor.editorType(c[0], 'ProductSerial', '', {});//清除串号编辑功能
+			        ebx.setDatagridEditor.editorType(c[0], 'ColorSize', '', {});//清除色码编辑功能
+			        ebx.setDatagridEditor.editorType(c[0], 'ProductCode', '', {});//清除串号编辑功能
+        			
+			        ebx.setDatagridEditor.setColumnsFunc(c[0], 'expire', 'cbRSDate');//写入服务器端用回掉函数
+		        },
+		        center1: function(s){//明细回掉函数1，datagrid加载后触发
+			        s.datagrid('options').onClickCell = function(index, field, value){
+				        switch(field.toLowerCase()){//处理串号编辑
+					        case 'productserial':
+						        var productserialopen = ebx.cloneObj(ebx.productserial),//复制产品串号编辑对象
+							        row = s.datagrid('getData').firstRows[index];
+						        //productserialopen.open(row.productname, row.lengthserial, s, index);
+						        productserialopen.open(row.productname, row.lengthserial, s, index);
+						        break;
+					        case 'colorsize':
+						        var colorsizeopen = ebx.cloneObj(ebx.colorsize),//复制产品色码编辑对象
+							        row = s.datagrid('getData').firstRows[index];
+						        colorsizeopen.init(row.productname, s, index, bd.tab);
+						        colorsizeopen.open();
+						        break;
+					        default:
+						        var opts = s.datagrid('options');
+						        if(opts.editIndex>=0){
+							        s.datagrid('endEdit', opts.editIndex);
+						        }
+						        s.datagrid('selectRow', index).datagrid('editkeyboard', {index:index,field:field});
+						        opts.editIndex = index
+						        break;
+				        }
+			        }
+			        s.datagrid('options').onRowContextMenu = function(e, rowIndex, rowData){//鼠标右键处理方法
+				        if(rowIndex < 0)return;
+				        d = $(this);
+				        d.datagrid('selectRow', rowIndex)
+				        e.preventDefault();
+				        var RowContextMenu = $('<div>');
+				        RowContextMenu.menu({
+					        width:100
+				        }).menu('appendItem', {
+					        text: '查看库存',
+					        iconCls: 'icon-ChartTypePieInsertGallery',
+					        disable:true,
+					        onclick:function(){
+						        if(ebx.validInt(rowData.productid) == 0){
+							        $.messager.show({
+								        title: '错误',
+								        msg: '请选择产品。',
+								        timeout: 3000,
+								        showType: 'slide'
+							        });
+							        return;
+						        }
+						        var win = $('<div>').appendTo($('body')),
+							        stockquery = $('<div>').appendTo(win);
+						        win.window({
+							        title: rowData.productname + ' 的库存',
+							        width:800,    
+							        height:600, 
+							        maxWidth:'90%',
+							        maxHeight:'90%',
+							        modal:true,
+							        collapsible:false,
+							        minimizable:false,
+							        maximizable:false,
+							        resizable:false,
+							        border:'thin',
+							        shadow:false
+						        });
+						        $('body').find('.window-mask').on('click', function(){
+							        win.window('close');
+						        });
+						        $.ajax({
+							        type: 'post', 
+							        url: 'server/SimpChinese/DataProvider/style/',
+							        data: {style:'ItemBatch',_:(new Date()).getTime()},//style名称必须和mode相吻合
+							        dataType: "json",
+							        success: function(result){
+								        if(result){
+									        columnsData = [result.data];
+									        ebx.setListVies(columnsData[0]);
+									        stockquery.datagrid({
+										        view:scrollview,
+										        pageSize:ebx.pagesize,
+										        remoteSort:false,
+										        rownumbers:true,
+										        singleSelect:true,
+										        pagination:false,
+										        border:false,
+										        fit:false,
+										        fitColumns:false,
+										        striped:true,
+										        data:{total:0,rows:[]},
+										        url:'server/SimpChinese/product/stock/',
+										        nowrap:true,//禁用自动换行
+										        method:'post',
+										        queryParams:{_:(new Date()).getTime(),id:rowData.productid,listview:ebx.convertDicToJson(ebx.listview)},
+										        multiSort:false,
+										        checkOnSelect:false,
+										        columns:columnsData,
+										        height: '100%',
+										        border:result.bd[0].border,
+										        showFooter:result.bd[0].footer,
+										        showHeader:result.bd[0].header
+									        }).datagrid('renderformatterstyler');//启用显示式样回调函数
+								        }
+							        }
+						        });
+					        }
+				        }).menu('appendItem', {
+					        text: '删除',
+					        iconCls: 'icon-Delete',
+					        disabled:rowData.auditid?true:(rowData.isdeleted?true:false),
+					        onclick: function(){
+						        $.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
+							        if (r){
+								        d.datagrid('deleteRow', rowIndex);						
+								        ebx.setEditstatus(bd.tab, true);
+							        }
+						        });
+					        }
+				        }).menu('show', {
+					        left: e.pageX,
+					        top: e.pageY
+				        });
+			        }
+		        }
+		    };
+		    
+		bd._export = function(){//重造导入方法
+			$.messager.alert({
+				title: '错误',
+				msg: '不支持导入。',
+				timeout: 3000,
+				showType: 'slide'
+			});
+		}
+		bd.billtype = 1306;//单据类型赋值，用于附件支持
+		bd.showAudit = 1;//显示审核按钮
+		bd.showPrint = 1;//显示打印功能组
+		    
+		bd.init(callback);
 	});
 </script>

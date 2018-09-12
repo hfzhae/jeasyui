@@ -142,14 +142,7 @@ var ebx = {
 		return ebx.storage.get("themes").theme;
 	},
 	getMenuParamenter: function(t){//获取菜单传递到主窗口的参数 2018-4-20 zz, 参数：t：当前被激活的tabs对象
-		var p = t.panel('options').href.split('?')[1], 
-			a = {};
-		p = p.split('#')[0];
-		p = p.split('&');
-		for(var i in p){
-			a[p[i].split('=')[0]] = p[i].split('=')[1];
-		}
-		return a;
+		return t.panel('options').paramenters;
 	},
 	RndNum: function(n){//随机数生成函数
 		var rnd="";
@@ -1037,22 +1030,22 @@ var ebx = {
 			if($('#'+tabsid).length > 0){
 				ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
 			}else{
-				var Parament = '';
+				Paramenter = {};
 				for(var i in Paramenters){
 					switch(typeof(Paramenters[i])){
 						case 'string':
-							Parament += i + '=' + Paramenters[i].toString().toLowerCase() + '&';
+							Paramenter[i.toLowerCase()] = Paramenters[i].toString().toLowerCase();
 							break;
 						case 'number':
-						Parament += i + '=' + Paramenters[i] + '&';
+							Paramenter[i.toLowerCase()] = Paramenters[i];
 							break;
 					}
-				}
-				Parament = Parament.substr(0, Parament.length - 1);
+				}				
 				ebx.center.tabs('add',{
 					id:tabsid,
 					title:Paramenters.text,
-					href:href + '?' + Parament,
+					href:href,
+					paramenters:Paramenter,
 					iconCls:Paramenters.iconCls,
 					selected: true,
 					closable:true
@@ -1135,20 +1128,23 @@ var ebx = {
 		}
 	},
 	sumfooter:function(footer, target){//datagrid表尾统计函数，参数：footer：显示式样表尾样式，1为显示表尾，0为不显示，target：datagrid对象
-	    var h = target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').height() - 28,
-	        scrolldiv = target.datagrid('getPanel').find('.datagrid-body');
-	    for(var i in scrolldiv){
-	        $(scrolldiv[i]).scrollLeft(10);
-	        if($(scrolldiv[i]).scrollLeft()>0 ){
-	            h -= 14;//判断如果有下滚动条，高度减掉14个像素，弥补srollwizard的bug
-	            $(scrolldiv[i]).scrollLeft(0);
-	            break;
-	        }
-	        $(scrolldiv[i]).scrollLeft(0);
-	    }
-		setTimeout(function(){
-			target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').css({'height': h});
-		},0)
+	    if(!target.datagrid('options').footresize){//存在bug：只能调整一次，之后如果数据发生变化，会恢复侧滚动条
+		    setTimeout(function(){
+	            var h = target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').height() - 28,
+	                scrolldiv = target.datagrid('getPanel').find('.datagrid-body');
+    	            
+	            scrolldiv.each(function(){
+                    $(this).scrollLeft(1);
+                    if($(this).scrollLeft()>0 ){
+                        h -= 14;//判断如果有下滚动条，高度减掉14个像素，弥补srollwizard的bug
+                        $(this).scrollLeft(0);
+                    }
+                    $(this).scrollLeft(0);
+	            });
+			    target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').css({'height': h});
+			    target.datagrid('options').footresize = true;
+		    },0);
+		}
 		if(!footer)return;
 		var footerrow = {},
 			columns = target.datagrid('options').columns,

@@ -2,7 +2,9 @@
 	easyloader.load(['tree','tabs'], function(){
 		var west = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west')),
 			closbtn = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west'));
-
+			
+        ebx.bodylayout.layout('panel', 'west').addClass('customTree');
+		
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/ConceptUI/west/load/',

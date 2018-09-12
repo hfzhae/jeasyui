@@ -2,7 +2,7 @@
 <%
 (function(){
 	var id = ebx.validInt(ebx.stdin['id']),
-		sql = 'select a.MenuModule,a.isdeleted,a.updatedate,a.createdate,u.title as owner from ' + TableName + ' a,biuser u where a.owner=u.id and a.id=' + id,
+		sql = 'select a.MenuModule,a.isdeleted,a.updatedate,a.createdate,u.title as owner from bdStyleMenu a left join biuser u on a.owner=u.id where a.id=' + id,
 		rs,
 		data = [],
 		title = '', isdeleted = 0, updatedate = new Date(), createdate = new Date(), owner = '';

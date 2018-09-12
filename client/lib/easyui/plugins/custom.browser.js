@@ -15,7 +15,7 @@ ebx.browser = {
 	browsertype: '',//打开类型
 	showdate: 0,//是否显示查询日期控件，0为不显示，默认0
 	showAudit: 0,//是否显示审核combobox
-	init: function(layoutName, browsertype, callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：list，default，browsertype：类型，包括：'bd','bi',callback：回掉函数
+	init: function(browsertype){//单据初始化函数。参数：browsertype：类型，包括：'bd','bi'
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Parament = ebx.getMenuParamenter(this.tabs);
@@ -29,21 +29,15 @@ ebx.browser = {
 		}
 		
 		
-		switch(layoutName.toLowerCase()){
-			case 'default':
-				this.layout = $('<div>').appendTo(this.tabs);
-				this.Parament = ebx.getMenuParamenter(this.tabs);
-				this._default();
-				break;
-			case 'list':
-				this.layout = this.tabs.find('.layout');
-				this.listPanel = this.layout.layout('panel', 'center');
-				this.biribbon = $('<div>').appendTo(this.listPanel);
-				this.liststorage = $('<div>').appendTo(this.listPanel);
-				this.Parament = ebx.getMenuParamenter(this.tabs);
-				this._list()
-				break;
-		}
+		this.layout = $('<div>').appendTo(this.tabs);
+		this.Parament = ebx.getMenuParamenter(this.tabs);
+		this._default();
+		
+		this.listPanel = this.layout.layout('panel', 'center');
+		this.biribbon = $('<div>').appendTo(this.listPanel);
+		this.liststorage = $('<div>').appendTo(this.listPanel);
+		this.Parament = ebx.getMenuParamenter(this.tabs);
+		this._list()
 	},
 	_default: function(){//打开列表框架装载方法
 		this.layout.layout({
@@ -51,7 +45,7 @@ ebx.browser = {
 		}).layout('add',{
 			region: 'center',
 			title: '',
-			href:'client/SimpChinese/' + this.Parament.modedit + '/' + this.Parament.mode + '/list.html',
+			//href:'client/SimpChinese/' + this.Parament.modedit + '/' + this.Parament.mode + '/list.html',
 			hideExpandTool:false,
 			hideCollapsedContent:false,
 			border:false
@@ -64,20 +58,26 @@ ebx.browser = {
 		listPanel.css({overflow:'hidden'});//隐藏layout滚动条
 	},
 	_new: function(options){
-		var Parament = '';
+		var Parament = {};
 		for(var i in options._Parament){
-			if(typeof(options._Parament[i]) == 'string'){
-				Parament += i + '=' + options._Parament[i] + '&';
+			switch(typeof(options._Parament[i])){
+				case 'string':
+					Paramenter[i.toLowerCase()] = options._Parament[i].toString().toLowerCase();
+					break;
+				case 'number':
+					Paramenter[i.toLowerCase()] = options._Parament[i];
+					break;
 			}
 		}
-		Parament = Parament.substr(0, Parament.length - 1);
+		Parament.id = 0;
 		switch(options.browsertype){
 			case 'bd':
 				var tabsid = 'tabs_'+ebx.RndNum(20)
 				ebx.center.tabs('add', {
 					id: tabsid,
 					title: '新建-' + options._Parament.text,
-					href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
+					href: 'client/SimpChinese/' + options._Parament.modedit + '/',
+					paramenters:Paramenter,
 					//iconCls:node.iconCls,
 					selected: true,
 					closable:true
@@ -93,7 +93,8 @@ ebx.browser = {
 						maxWidth: '50%',
 						minWidth: 300,
 						title: '',
-						href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
+						href: 'client/SimpChinese/' + options._Parament.modedit + '/',
+						paramenters:Paramenter,
 						hideExpandTool: false,
 						hideCollapsedContent: false,
 						border: false,
@@ -134,14 +135,18 @@ ebx.browser = {
 		});
 	},
 	_edit: function(rowIndex, rowData, options){
-		options._Parament.id = rowData?rowData.id:'';
-		var Parament = '';
+		var Paramenter = {};
 		for(var i in options._Parament){
-			if(typeof(options._Parament[i]) == 'string' || typeof(options._Parament[i]) == 'number'){
-				Parament += i + '=' + options._Parament[i] + '&';
+			switch(typeof(options._Parament[i])){
+				case 'string':
+					Paramenter[i.toLowerCase()] = options._Parament[i].toString().toLowerCase();
+					break;
+				case 'number':
+					Paramenter[i.toLowerCase()] = options._Parament[i];
+					break;
 			}
 		}
-		Parament = Parament.substr(0, Parament.length - 1);
+		Paramenter.id = rowData?rowData.id:0;
 		switch(options.browsertype){
 			case 'bd':
 				var index = rowIndex;
@@ -151,7 +156,8 @@ ebx.browser = {
 				ebx.center.tabs('add', {
 					id: tabsid,
 					title: '打开-' + options._Parament.text,
-					href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
+					href: 'client/SimpChinese/' + options._Parament.modedit + '/',
+					paramenters:Paramenter,
 					//iconCls:node.iconCls,
 					selected: true,
 					closable:true
@@ -170,7 +176,8 @@ ebx.browser = {
 						maxWidth: '50%',
 						minWidth: 300,
 						title: '',
-						href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
+						href: 'client/SimpChinese/' + options._Parament.modedit + '/',
+						paramenters:Paramenter,
 						hideExpandTool: false,
 						hideCollapsedContent: false,
 						border: false,
@@ -385,11 +392,11 @@ ebx.browser = {
 									"text":"全部",
 									"selected":true
 								},{
-									"id":0,
-									"text":"未审核"
-								},{
 									"id":1,
 									"text":"已审核"
+								},{
+									"id":0,
+									"text":"未审核"
 								}],
 								valueField:'id',
 								textField:'text',
@@ -425,7 +432,7 @@ ebx.browser = {
 					}]
 				}]
 			};
-			
+		
 		if(!_showdate){
 			biribbondata.tabs[0].groups.splice(3, 1)
 		}
@@ -522,7 +529,7 @@ ebx.browser = {
 						if(isaudit)_isaudit = isaudit.combobox('getValue')
 					
 					columnsData = [result.data];
-					
+
 					_getsearchParament(browser, searchtext.textbox('getValue'), function(){
 						_liststorage.datagrid({
 							view:scrollview,

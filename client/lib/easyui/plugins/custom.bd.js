@@ -23,39 +23,30 @@ ebx.bd = {
 	showPrint: 0,//是否显示打印group
 	showLock: 0,//是否显示安全group
 	showSearchserial: 0,//是否显示串号扫描框
-	init: function(layoutName, callback, callback1){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
+	init: function(callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Parament = ebx.getMenuParamenter(this.tabs);
 		this.ID = ebx.validInt(this.Parament.id);
+		this.layout = $('<div>').appendTo(this.tabs);
+		
 		if(ebx.validInt(this.Parament.lock) == 1){
 			this.showLock = 1;
 		}
 		
-		switch(layoutName.toLowerCase()){
-			case 'north':
-				this.layout = this.tabs.find('.layout');
-				this.northPanel = this.layout.layout('panel', 'north');
-				this.biribbon = $('<div>').appendTo(this.northPanel);
-				this._north(callback);
-				break;
-			case 'east':
-				this.layout = this.tabs.find('.layout');
-				this.eastPanel = this.layout.layout('panel', 'east');
-				this.eaststorage = $('<div>').appendTo(this.eastPanel);
-				this._east(callback);
-				break;
-			case 'center':
-				this.layout = this.tabs.find('.layout');
-				this.centerPanel = this.layout.layout('panel', 'center');
-				this.centerstorage = $('<div>').appendTo(this.centerPanel);
-				this._center(callback, callback1);
-				break;
-			case 'default':
-				this.layout = $('<div>').appendTo(this.tabs)
-				this._default();
-				break;
-		}
+		this._default();
+
+		this.northPanel = this.layout.layout('panel', 'north');
+		this.eastPanel = this.layout.layout('panel', 'east');
+		this.centerPanel = this.layout.layout('panel', 'center');
+		
+		this.biribbon = $('<div>').appendTo(this.northPanel);
+		this.eaststorage = $('<div>').appendTo(this.eastPanel);
+		this.centerstorage = $('<div>').appendTo(this.centerPanel);
+		
+		this._north(callback.north);
+		this._east(callback.east);
+		this._center(callback.center, callback.center1);
 	},
 	_export: function(ExportBtn, _layout, _tab){//导入函数方法，参数：ExportBtn：点击的按钮对象，_layout：当前页的layout对象，_tab：当前页的tab对象
 		ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
@@ -77,7 +68,7 @@ ebx.bd = {
 		this.layout.layout('add',{
 			region: 'center',
 			title: '',
-			href: 'client/SimpChinese/' + this.Parament.modedit + '/center.html',
+			//href: 'client/SimpChinese/' + this.Parament.modedit + '/center.html',
 			//hideExpandTool: false,
 			//hideCollapsedContent: false,
 			border: false,
@@ -88,7 +79,7 @@ ebx.bd = {
 			maxWidth: '50%',
 			minWidth: 300,
 			//title: '基本信息',
-			href: 'client/SimpChinese/' + this.Parament.modedit + '/east.html',
+			//href: 'client/SimpChinese/' + this.Parament.modedit + '/east.html',
 			hideExpandTool: false,
 			hideCollapsedContent: false,
 			border: false,
@@ -105,7 +96,7 @@ ebx.bd = {
 			region: 'north',
 			//title:'功能',
 			height: 113,
-			href: 'client/SimpChinese/' + this.Parament.modedit + '/north.html',
+			//href: 'client/SimpChinese/' + this.Parament.modedit + '/north.html',
 			border: false,
 			split: false,
 			hideCollapsedContent: false,
@@ -184,22 +175,24 @@ ebx.bd = {
 		});
 	},
 	_new: function(options){
-		var Parament = '';
+		var Paramenter = {};
 		for(var i in options._Parament){
-			if(typeof(options._Parament[i]) == 'string'){
-				if(i.toLowerCase() == 'id'){
-					Parament += 'id=0';
-				}else{
-					Parament += i + '=' + options._Parament[i] + '&';
-				}
+			switch(typeof(options._Parament[i])){
+				case 'string':
+					Paramenter[i.toLowerCase()] = options._Parament[i].toString().toLowerCase();
+					break;
+				case 'number':
+					Paramenter[i.toLowerCase()] = options._Parament[i];
+					break;
 			}
 		}
-		Parament = Parament.substr(0, Parament.length - 1);
+		Paramenter.id = 0;
 		var tabsid = 'tabs_'+ebx.RndNum(20)
 		ebx.center.tabs('add', {
 			id: tabsid,
 			title: '新建-' + options._Parament.text,
-			href: 'client/SimpChinese/' + options._Parament.modedit + '/?' + Parament,
+			href: 'client/SimpChinese/' + options._Parament.modedit + '/',
+			paramenters:Paramenter,
 			//iconCls:node.iconCls,
 			selected: true,
 			closable:true

@@ -1,7 +1,7 @@
 <script type="text/javascript">
     easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler', 'combogrid', 'droplist', 'bi'], function() {
         var bi = ebx.cloneObj(ebx.bi);
-        bi.init('east', function(data, obj) {
+        bi.init(function(data, obj) {
             ebx.setDatagridEditor.editorMethods(data.rows, 'areatitle', 'combogrid', {//用来重造区域的combogrid的方法
                 onSelect: function(rowIndex, rowData) {//选中后更新当前行的内容为选中内容
                     //debugger;

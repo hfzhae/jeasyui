@@ -1,6 +1,23 @@
 <script type="text/javascript">
-	easyloader.load(['propertygrid', 'datagridkeyboard', 'datagridrenderstyler', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'ribbon', 'bd'], function(){
-		var bd = ebx.cloneObj(ebx.bd);
-		bd.init('default');
+	easyloader.load([
+	    'propertygrid', 
+	    'datagridkeyboard', 
+	    'datagridrenderstyler', 
+	    'splitbutton', 
+	    'datetimebox', 
+	    'datagridkeyboard', 
+	    'combobox', 
+	    'ribbon', 
+	    'bd'
+	], function(){
+		var bd = ebx.cloneObj(ebx.bd),
+		    callback = {
+		        center: function(c){
+			        //重造字段的editor的validatebox校验
+			        ebx.setDatagridEditor.validatebox(c[0], 'MenuName', 'String', true);
+			        ebx.setDatagridEditor.validatebox(c[0], 'MenuModule', 'LetterInteger', true);
+		        }
+		    };
+		bd.init(callback);
 	});
 </script>
