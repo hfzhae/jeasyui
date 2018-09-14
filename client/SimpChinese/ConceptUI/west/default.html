@@ -3,8 +3,6 @@
 		var west = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west')),
 			closbtn = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west'));
 			
-        ebx.bodylayout.layout('panel', 'west').addClass('customTree');
-		
 		$.ajax({
 			type: 'post', 
 			url: 'server/SimpChinese/ConceptUI/west/load/',
@@ -219,6 +217,7 @@
                     //$(usedchildren.target).find('.tree-file').removeClass('tree-file').addClass('icon-FileSave');
 
 				}
+		        ebx.bodylayout.layout('panel', 'west').addClass('customTree');
 			}
 		});
 	});
