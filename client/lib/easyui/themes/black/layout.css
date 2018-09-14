@@ -2,6 +2,9 @@
 	background-color:#000000;
 	color:#333333;
 }
+.customTree{
+	border-right: 1px solid #000;
+}
 .layout {
   position: relative;
   overflow: hidden;
