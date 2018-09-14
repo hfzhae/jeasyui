@@ -125,6 +125,11 @@ options.validType增加：combogridValue类型，校验值不能为空，require
 											t.combo("validate");
 										}
 									}catch(e){}
+			                        try{
+				                        var tabs = ebx.center.tabs('getSelected'),
+					                        tab = tabs.panel('options');
+				                        ebx.setEditstatus(tab, true);
+			                        }catch(e){}
 								},
 								opts.delay);
 							}
@@ -138,18 +143,13 @@ options.validType增加：combogridValue类型，校验值不能为空，require
 					t = co.combo('getText');
 				co.combo('setText', t);
 			}
-
+/*
 			options.onChange = function(newValue, oldValue){
 				var co = $(this);
 					//co.combo('setText', unescape(newValue));
 					co.combo('setText', newValue);
-				try{
-					var tabs = ebx.center.tabs('getSelected'),
-						tab = tabs.panel('options');
-					ebx.setEditstatus(tab, true);
-				}catch(e){}
 			}
-			
+*/			
 			options.keyHandler = {
 				up: function(){
 					try{

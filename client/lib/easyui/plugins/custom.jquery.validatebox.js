@@ -108,5 +108,12 @@ $.extend($.fn.validatebox.defaults.rules, {//validatebox自定义校验
 	        return reg.test(value);
 	    },
 	    message:'请输入正确的邮箱地址'
+	},
+	TaxRate:{
+	    validator:function(value){
+	        var reg=/^-?(0\.\d*[1-9]+\d*)/;
+	        return reg.test(value);
+	    },
+	    message:''
 	}
 });

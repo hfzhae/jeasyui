@@ -33,7 +33,7 @@
 							        if(ebx.validInt(bd.ID) == 0){
 								        $.messager.show({
 									        title: '提示',
-									        msg: '请先保存单据！',
+									        msg: '请先保存 ' + bd.Parament.text + '！',
 									        timeout: 3000,
 									        showType: 'slide'
 								        });
@@ -187,6 +187,16 @@
 						            r[i].value = rowData.id;
 					            }
 				            }
+			            },
+			            onChange: function(newValue, oldValue){
+			                if(newValue == ''){
+				                var r = s.datagrid('getData').rows;
+				                for(var i in r){
+					                if(r[i].field == 'organization'){
+						                r[i].value = 0;
+					                }
+					            }
+				            }
 			            }
 		            });
         			
@@ -196,6 +206,16 @@
 				            for(var i in r){
 					            if(r[i].field == 'stock'){
 						            r[i].value = rowData.id;
+					            }
+				            }
+			            },
+			            onChange: function(newValue, oldValue){
+			                if(newValue == ''){
+				                var r = s.datagrid('getData').rows;
+				                for(var i in r){
+					                if(r[i].field == 'stock'){
+						                r[i].value = 0;
+					                }
 					            }
 				            }
 			            }
@@ -209,6 +229,16 @@
 						            r[i].value = rowData.id;
 					            }
 				            }
+			            },
+			            onChange: function(newValue, oldValue){
+			                if(newValue == ''){
+				                var r = s.datagrid('getData').rows;
+				                for(var i in r){
+					                if(r[i].field == 'operator'){
+						                r[i].value = 0;
+					                }
+					            }
+				            }
 			            }
 		            });
         			
@@ -220,6 +250,16 @@
 						            r[i].value = rowData.id;
 					            }
 				            }
+			            },
+			            onChange: function(newValue, oldValue){
+			                if(newValue == ''){
+				                var r = s.datagrid('getData').rows;
+				                for(var i in r){
+					                if(r[i].field == 'InvoiceType'){
+						                r[i].value = 0;
+					                }
+					            }
+				            }
 			            }
 		            });
         			
@@ -229,6 +269,16 @@
 				            for(var i in r){
 					            if(r[i].field == 'VIPCustomID'){
 						            r[i].value = rowData.id;
+					            }
+				            }
+			            },
+			            onChange: function(newValue, oldValue){
+			                if(newValue == ''){
+				                var r = s.datagrid('getData').rows;
+				                for(var i in r){
+					                if(r[i].field == 'VIPCustomID'){
+						                r[i].value = 0;
+					                }
 					            }
 				            }
 			            }
@@ -246,6 +296,20 @@
 						            s.datagrid('refreshRow', i);
 					            }
 				            }
+			            },
+			            onChange: function(newValue, oldValue){
+			                if(newValue == ''){
+				                var r = s.datagrid('getData').rows;
+				                for(var i in r){
+					                if(r[i].field == 'Currency'){
+						                r[i].value = 0;
+					                }
+				                    if(r[i].field == 'Relation'){
+					                    r[i].value = 1;
+					                    s.datagrid('refreshRow', i);
+				                    }
+					            }
+				            }
 			            }
 		            });
         			
@@ -255,6 +319,16 @@
 				            for(var i in r){
 					            if(r[i].field == 'CheckType'){
 						            r[i].value = rowData.id;
+					            }
+				            }
+			            },
+			            onChange: function(newValue, oldValue){
+			                if(newValue == ''){
+				                var r = s.datagrid('getData').rows;
+				                for(var i in r){
+					                if(r[i].field == 'CheckType'){
+						                r[i].value = 0;
+					                }
 					            }
 				            }
 			            }
@@ -624,7 +698,7 @@
 		bd.billtype = 1306;//单据类型赋值，用于附件支持
 		bd.showAudit = 1;//显示审核按钮
 		bd.showPrint = 1;//显示打印功能组
-		    
+		bd.showSearchserial = 1;//显示串号扫描输入框
 		bd.init(callback);
 	});
 </script>

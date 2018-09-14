@@ -24,6 +24,24 @@
 			border:false,
 			plain:false,
 			tabPosition:'top',
+			scrollIncrement:200,
+			scrollDuration:200,
+			onAdd:function(title, index){
+			    //点击鼠标滚轮按键，关闭选项卡，首页忽略 2018-9-13 zz
+			    if(index > 0){
+			        var setlidown = function(index){
+			                var li = $(ebx.center.find('.tabs-header')[0]).find('li');
+			                $(li[index]).mousedown(function(e){
+			                    if(e.button == 1){
+			                        var i = $(ebx.center.find('.tabs-header')[0]).find('li').index(this);
+			                        ebx.center.tabs('close', i);
+			                        ebx.center.tabs('scrollBy', 0);
+			                    }
+			                });
+			            };
+			        setlidown(index);
+			    }
+			},
 			onContextMenu:function(e, title,index){
 				if(index < 0)return;
 				

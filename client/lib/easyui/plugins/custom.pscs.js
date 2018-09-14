@@ -110,7 +110,7 @@ ebx.productserial = {
 				var oldquantity = d.datagrid('getData').firstRows[index].quantity;
 				if(ebx.productserialquantitycheck){
 					if(oldquantity != data1.length){
-						$.messager.alert('错误','串号数量有误，数量应该为：' + oldquantity + '，当前数量：' + data1.length,'error');
+						$.messager.alert('错误','串号数量有误，数量应该为：' + oldquantity + '，当前数量：' + data1.length +'，关闭“数量校验”可忽略。','error');
 						return false;
 					}
 				}
@@ -543,7 +543,7 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 								var oldquantity = _d.datagrid('getData').firstRows[_index].quantity;
 								if(ebx.colorsizequantitycheck){
 									if(oldquantity != qty){
-										$.messager.alert('错误','色码数量有误，数量应该为：' + oldquantity + ' ，当前数量：' + qty,'error');
+										$.messager.alert('错误','色码数量有误，数量应该为：' + oldquantity + ' ，当前数量：' + qty +'，关闭“数量校验”可忽略。','error');
 										return false;
 									}
 								}

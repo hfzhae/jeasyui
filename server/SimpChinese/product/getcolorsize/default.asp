@@ -31,12 +31,12 @@
 		var rsSize1 = ebx.dbx.getRs();
 		var stylerows = [
 			{field:'colorid',fieldstyle:'',title:'colorid',hidden:true},
-			{field:'color',fieldstyle:'',title:'颜色/尺码'}
+			{field:'color',fieldstyle:'',title:'颜色',width:60}
 		];
 		rsSize1.Fields.Append('colorid', 203, -1);
 		rsSize1.Fields.Append('color', 203, -1);
 		rsSize1.Fields.Append('size_0', 203, -1);
-		stylerows.push({editor:'text',field:'size_0',fieldstyle:'text-align:right;',title:'通码',width:60});
+		stylerows.push({editor:'text',field:'size_0',fieldstyle:'text-align:right;',title:'数量',width:60});
 		rsSize1.open();
 	}
 	

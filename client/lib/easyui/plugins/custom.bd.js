@@ -23,7 +23,7 @@ ebx.bd = {
 	showPrint: 0,//是否显示打印group
 	showLock: 0,//是否显示安全group
 	showSearchserial: 0,//是否显示串号扫描框
-	init: function(callback){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
+	init: function(callback){//单据初始化函数。callback：回掉函数对象
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Parament = ebx.getMenuParamenter(this.tabs);
@@ -354,6 +354,13 @@ ebx.bd = {
 										}
 									});
 								}
+							},{
+								name:'saveas',
+								text:'红冲另存',
+								iconCls:'icon-GroupTableOfAuthorities',
+								onClick: function(){
+									//console.log(_layout)
+								}
 							}],
 							onClick: function(){
 								var lockbtn = ebx.getbiribbonobj(_biribbon, 'lock', 'linkbutton');
@@ -484,7 +491,8 @@ ebx.bd = {
 							text:'打印预览',
 							iconCls:'icon-ViewsAdpDiagramPrintPreview',
 							onClick: function(){
-								bd.print.init(bd.ID,
+								bd.print.init(
+								    bd.ID,
 									_Parament.modedit,
 									_tabs.find('.layout').layout('panel', 'center').find('.datagrid-f').datagrid('getRows')
 								);
@@ -710,7 +718,7 @@ ebx.bd = {
 									if(ebx.validInt(bd.ID) == 0){
 										$.messager.show({
 											title: '提示',
-											msg: '请先保存单据！',
+											msg: '请先保存 ' + _Parament.text + '！',
 											timeout: 3000,
 											showType: 'slide'
 										});

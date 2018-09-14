@@ -1,7 +1,7 @@
 /*
 2018-4-22 icons32 zz
 */
-/*修改原图标begin 2018-4-22 zz*/
+/*修改原图标begin 2018-4-22 zz
 .tree-folder{
 	background:url('icon32/RecentlyUsedFolder.png') no-repeat center center!important;
 	background-size:16px 16px!important;
@@ -14,6 +14,7 @@
 	background:url('icon32/FileNew.png') no-repeat center center!important;
 	background-size:16px 16px!important;
 }
+*/
 .calendar-prevyear {
 	left: 3px!important;
 	background: url('icon32/calendar_arrows_h.png') no-repeat -1px -2px!important;
@@ -89,469 +90,490 @@
 
 /*新增图标begin 2018-4-22 zz*/
 .icon-FileSave-large{
-	background:url('icon32/FileSave.png') no-repeat center center;
+	background:url('icon32/FileSave.png') no-repeat center center!important;
 }
 .icon-FileSave{
-	background:url('icon32/FileSave.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/FileSave.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-file{
-	background:url('icon32/FileNew.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/FileNew.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-file-large{
-	background:url('icon32/FileNew.png') no-repeat center center;
+	background:url('icon32/FileNew.png') no-repeat center center!important;
 }
 .icon-Delete{
-	background:url('icon32/Delete.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/Delete.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-Delete-large{
-	background:url('icon32/Delete.png') no-repeat center center;
+	background:url('icon32/Delete.png') no-repeat center center!important;
 }
 .icon-Recurrence{
-	background:url('icon32/Recurrence.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/Recurrence.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-Recurrence-large{
-	background:url('icon32/Recurrence.png') no-repeat center center;
+	background:url('icon32/Recurrence.png') no-repeat center center!important;
 }
 .icon-FileSaveAs{
-	background:url('icon32/FileSaveAs.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/FileSaveAs.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-FileSaveAs-large{
-	background:url('icon32/FileSaveAs.png') no-repeat center center;
+	background:url('icon32/FileSaveAs.png') no-repeat center center!important;
 }
 .icon-ExportExcel{
-	background:url('icon32/ExportExcel.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ExportExcel.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ExportExcel-large{
-	background:url('icon32/ExportExcel.png') no-repeat center center;
+	background:url('icon32/ExportExcel.png') no-repeat center center!important;
 }
 .icon-ImportExcel{
-	background:url('icon32/ImportExcel.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ImportExcel.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ImportExcel-large{
-	background:url('icon32/ImportExcel.png') no-repeat center center;
+	background:url('icon32/ImportExcel.png') no-repeat center center!important;
 }
 .icon-FileSaveAsExcelXlsx{
-	background:url('icon32/FileSaveAsExcelXlsx.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/FileSaveAsExcelXlsx.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-FileSaveAsExcelXlsx-large{
-	background:url('icon32/FileSaveAsExcelXlsx.png') no-repeat center center;
+	background:url('icon32/FileSaveAsExcelXlsx.png') no-repeat center center!important;
 }
 .icon-Lock{
-	background:url('icon32/Lock.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/Lock.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-Lock-large{
-	background:url('icon32/Lock.png') no-repeat center center;
+	background:url('icon32/Lock.png') no-repeat center center!important;
 }
 .icon-ChartTypePieInsertGallery{
-	background:url('icon32/ChartTypePieInsertGallery.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ChartTypePieInsertGallery.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ChartTypePieInsertGallery-large{
-	background:url('icon32/ChartTypePieInsertGallery.png') no-repeat center center;
+	background:url('icon32/ChartTypePieInsertGallery.png') no-repeat center center!important;
 }
 .icon-ChartTrendline{
-	background:url('icon32/ChartTrendline.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ChartTrendline.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ChartTrendline-large{
-	background:url('icon32/ChartTrendline.png') no-repeat center center;
+	background:url('icon32/ChartTrendline.png') no-repeat center center!important;
 }
 .icon-ChartTitle{
-	background:url('icon32/ChartTitle.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ChartTitle.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ChartTitle-large{
-	background:url('icon32/ChartTitle.png') no-repeat center center;
+	background:url('icon32/ChartTitle.png') no-repeat center center!important;
 }
 .icon-ChartTypeLineInsertGallery{
-	background:url('icon32/ChartTypeLineInsertGallery.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ChartTypeLineInsertGallery.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ChartTypeLineInsertGallery-large{
-	background:url('icon32/ChartTypeLineInsertGallery.png') no-repeat center center;
+	background:url('icon32/ChartTypeLineInsertGallery.png') no-repeat center center!important;
 }
 .icon-expand2{
-	background:url('icon32/expand2_h.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/expand2_h.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-expand2-large{
-	background:url('icon32/expand2_h.png') no-repeat center center;
+	background:url('icon32/expand2_h.png') no-repeat center center!important;
 }
 .icon-contract2{
-	background:url('icon32/contract2_h.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/contract2_h.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-contract2-large{
-	background:url('icon32/contract2_h.png') no-repeat center center;
+	background:url('icon32/contract2_h.png') no-repeat center center!important;
 }
 .icon-DeclineInvitation{
-	background:url('icon32/DeclineInvitation.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/DeclineInvitation.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-DeclineInvitation-large{
-	background:url('icon32/DeclineInvitation.png') no-repeat center center;
+	background:url('icon32/DeclineInvitation.png') no-repeat center center!important;
 }
 .tabs-home32_1{
-	background:url('icon32/home32_1.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/home32_1.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .tabs-home32_1-large{
-	background:url('icon32/home32_1.png') no-repeat center center;
+	background:url('icon32/home32_1.png') no-repeat center center!important;
 }
 .icon-ControlsGallery{
-	background:url('icon32/ControlsGallery.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ControlsGallery.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ControlsGallery-large{
-	background:url('icon32/ControlsGallery.png') no-repeat center center;
+	background:url('icon32/ControlsGallery.png') no-repeat center center!important;
 }
 .icon-AdpPrimaryKey{
-	background:url('icon32/AdpPrimaryKey.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/AdpPrimaryKey.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-AdpPrimaryKey-large{
-	background:url('icon32/AdpPrimaryKey.png') no-repeat center center;
+	background:url('icon32/AdpPrimaryKey.png') no-repeat center center!important;
 }
 .icon-NewContact{
-	background:url('icon32/NewContact.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/NewContact.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-NewContact-large{
-	background:url('icon32/NewContact.png') no-repeat center center;
+	background:url('icon32/NewContact.png') no-repeat center center!important;
 }
 .icon-AdvertisePublishAs{
-	background:url('icon32/AdvertisePublishAs.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/AdvertisePublishAs.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-AdvertisePublishAs-large{
-	background:url('icon32/AdvertisePublishAs.png') no-repeat center center;
+	background:url('icon32/AdvertisePublishAs.png') no-repeat center center!important;
 }
 .icon-button-white-help{
-	background:url('icon32/button-white-help.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/button-white-help.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-button-white-help-large{
-	background:url('icon32/button-white-help.png') no-repeat center center;
+	background:url('icon32/button-white-help.png') no-repeat center center!important;
 }
 .icon-GetExternalDataFromText{
 	background:url('icon32/GetExternalDataFromText.png') no-repeat center center!important;
 	background-size:16px 16px!important;
 }
 .icon-GetExternalDataFromText-large{
-	background:url('icon32/GetExternalDataFromText.png') no-repeat center center;
+	background:url('icon32/GetExternalDataFromText.png') no-repeat center center!important;
 }
 .icon-WindowsSwitch{
 	background:url('icon32/WindowsSwitch.png') no-repeat center center!important;
 	background-size:16px 16px!important;
 }
 .icon-WindowsSwitch-large{
-	background:url('icon32/WindowsSwitch.png') no-repeat center center;
+	background:url('icon32/WindowsSwitch.png') no-repeat center center!important;
 }
 .icon-ChartEditDataSource{
 	background:url('icon32/ChartEditDataSource.png') no-repeat center center!important;
 	background-size:16px 16px!important;
 }
 .icon-ChartEditDataSource-large{
-	background:url('icon32/ChartEditDataSource.png') no-repeat center center;
+	background:url('icon32/ChartEditDataSource.png') no-repeat center center!important;
 }
 .icon-ZoomClassic_custom{
-	background:url('icon32/ZoomClassic_custom.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ZoomClassic_custom.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ZoomClassic_custom-large{
-	background:url('icon32/ZoomClassic_custom.png') no-repeat center center;
+	background:url('icon32/ZoomClassic_custom.png') no-repeat center center!important;
 }
 .icon-Paste{
-	background:url('icon32/Paste.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/Paste.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-Paste-large{
-	background:url('icon32/Paste.png') no-repeat center center;
+	background:url('icon32/Paste.png') no-repeat center center!important;
 }
 .icon-Copy{
-	background:url('icon32/Copy.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/Copy.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-Copy-large{
-	background:url('icon32/Copy.png') no-repeat center center;
+	background:url('icon32/Copy.png') no-repeat center center!important;
 }
 .icon-trash_full{
-	background:url('icon32/trash_full.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/trash_full.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-trash_full-large{
-	background:url('icon32/trash_full.png') no-repeat center center;
+	background:url('icon32/trash_full.png') no-repeat center center!important;
 }
 .icon-edit-cut{
-	background:url('icon32/edit-cut.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/edit-cut.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-edit-cut-large{
-	background:url('icon32/edit-cut.png') no-repeat center center;
+	background:url('icon32/edit-cut.png') no-repeat center center!important;
 	background-size:32px 32px;
 }
 .icon-CellsDelete{
-	background:url('icon32/CellsDelete.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/CellsDelete.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-CellsDelete-large{
-	background:url('icon32/CellsDelete.png') no-repeat center center;
+	background:url('icon32/CellsDelete.png') no-repeat center center!important;
 }
 .icon-CellsInsertDialog{
-	background:url('icon32/CellsInsertDialog.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/CellsInsertDialog.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-CellsInsertDialog-large{
-	background:url('icon32/CellsInsertDialog.png') no-repeat center center;
+	background:url('icon32/CellsInsertDialog.png') no-repeat center center!important;
 }
 .icon-TableDelete{
-	background:url('icon32/TableDelete.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/TableDelete.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-TableDelete-large{
-	background:url('icon32/TableDelete.png') no-repeat center center;
+	background:url('icon32/TableDelete.png') no-repeat center center!important;
 }
 .icon-CopyToPersonalTaskList{
-	background:url('icon32/TableDelete.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/TableDelete.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-CopyToPersonalTaskList-large{
-	background:url('icon32/CopyToPersonalTaskList.png') no-repeat center center;
+	background:url('icon32/CopyToPersonalTaskList.png') no-repeat center center!important;
 }
 
 .icon-DesignMode{
-	background:url('icon32/DesignMode.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/DesignMode.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-DesignMode-large{
-	background:url('icon32/DesignMode.png') no-repeat center center;
+	background:url('icon32/DesignMode.png') no-repeat center center!important;
 }
 
 .icon-PrintDialogAccess{
-	background:url('icon32/PrintDialogAccess.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/PrintDialogAccess.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-PrintDialogAccess-large{
-	background:url('icon32/PrintDialogAccess.png') no-repeat center center;
+	background:url('icon32/PrintDialogAccess.png') no-repeat center center!important;
 }
 .icon-ViewsAdpDiagramPrintPreview{
-	background:url('icon32/ViewsAdpDiagramPrintPreview.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ViewsAdpDiagramPrintPreview.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ViewsAdpDiagramPrintPreview-large{
-	background:url('icon32/ViewsAdpDiagramPrintPreview.png') no-repeat center center;
+	background:url('icon32/ViewsAdpDiagramPrintPreview.png') no-repeat center center!important;
 }
 
 .icon-AcceptChanges{
-	background:url('icon32/AcceptChanges.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/AcceptChanges.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-AcceptChanges-large{
-	background:url('icon32/AcceptChanges.png') no-repeat center center;
+	background:url('icon32/AcceptChanges.png') no-repeat center center!important;
 }
 
 .icon-SaveSelectionToTableOfContentsGallery{
-	background:url('icon32/SaveSelectionToTableOfContentsGallery.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/SaveSelectionToTableOfContentsGallery.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-SaveSelectionToTableOfContentsGallery-large{
-	background:url('icon32/SaveSelectionToTableOfContentsGallery.png') no-repeat center center;
+	background:url('icon32/SaveSelectionToTableOfContentsGallery.png') no-repeat center center!important;
 }
 
 .icon-light-bulb-on{
-	background:url('icon32/light-bulb-on.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/light-bulb-on.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-light-bulb-on-large{
-	background:url('icon32/light-bulb-on.png') no-repeat center center;
+	background:url('icon32/light-bulb-on.png') no-repeat center center!important;
 }
 .icon-light-bulb-off{
-	background:url('icon32/light-bulb-off.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/light-bulb-off.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-light-bulb-off-large{
-	background:url('icon32/light-bulb-off.png') no-repeat center center;
+	background:url('icon32/light-bulb-off.png') no-repeat center center!important;
 }
 .icon-arrow-down{
-	background:url('icon32/arrow-down.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/arrow-down.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-arrow-down-large{
-	background:url('icon32/arrow-down.png') no-repeat center center;
+	background:url('icon32/arrow-down.png') no-repeat center center!important;
 }
 
 .icon-arrow-up{
-	background:url('icon32/arrow-up.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/arrow-up.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-arrow-up-large{
-	background:url('icon32/arrow-up.png') no-repeat center center;
+	background:url('icon32/arrow-up.png') no-repeat center center!important;
 }
 
 .icon-GroupSortFilterDown{
-	background:url('icon32/GroupSortFilterDown.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/GroupSortFilterDown.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-GroupSortFilterDown-large{
-	background:url('icon32/GroupSortFilterDown.png') no-repeat center center;
+	background:url('icon32/GroupSortFilterDown.png') no-repeat center center!important;
 }
 
 .icon-GroupSortFilterUp{
-	background:url('icon32/GroupSortFilterUp.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/GroupSortFilterUp.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-GroupSortFilterUp-large{
-	background:url('icon32/GroupSortFilterUp.png') no-repeat center center;
+	background:url('icon32/GroupSortFilterUp.png') no-repeat center center!important;
 }
 
 .icon-GroupSortFilter{
-	background:url('icon32/GroupSortFilter.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/GroupSortFilter.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-GroupSortFilter-large{
-	background:url('icon32/GroupSortFilter.png') no-repeat center center;
+	background:url('icon32/GroupSortFilter.png') no-repeat center center!important;
 }
 
 .icon-DeclineInvitationNull{
-	background:url('icon32/DeclineInvitationNull.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/DeclineInvitationNull.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-DeclineInvitationNull-large{
-	background:url('icon32/DeclineInvitationNull.png') no-repeat center center;
+	background:url('icon32/DeclineInvitationNull.png') no-repeat center center!important;
 }
 
 .icon-PrintOptionsMenu{
-	background:url('icon32/PrintOptionsMenu.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/PrintOptionsMenu.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-PrintOptionsMenu-large{
-	background:url('icon32/PrintOptionsMenu.png') no-repeat center center;
+	background:url('icon32/PrintOptionsMenu.png') no-repeat center center!important;
 }
 
 .icon-TableInsertColumnsRight{
-	background:url('icon32/TableInsertColumnsRight.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/TableInsertColumnsRight.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-TableInsertColumnsRight-large{
-	background:url('icon32/TableInsertColumnsRight.png') no-repeat center center;
+	background:url('icon32/TableInsertColumnsRight.png') no-repeat center center!important;
 }
 
 .icon-TableInsertRowsAbove{
-	background:url('icon32/TableInsertRowsAbove.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/TableInsertRowsAbove.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-TableInsertRowsAbove-large{
-	background:url('icon32/TableInsertRowsAbove.png') no-repeat center center;
+	background:url('icon32/TableInsertRowsAbove.png') no-repeat center center!important;
 }
 
 .icon-unLock{
-	background:url('icon32/unLock.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/unLock.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-unLock-large{
-	background:url('icon32/unLock.png') no-repeat center center;
+	background:url('icon32/unLock.png') no-repeat center center!important;
 }
 
 .icon-BarcodeInsert{
-	background:url('icon32/BarcodeInsert.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/BarcodeInsert.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-BarcodeInsert-large{
-	background:url('icon32/BarcodeInsert.png') no-repeat center center;
+	background:url('icon32/BarcodeInsert.png') no-repeat center center!important;
 }
 .icon-AttachFile{
-	background:url('icon32/AttachFile.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/AttachFile.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-AttachFile-large{
-	background:url('icon32/AttachFile.png') no-repeat center center;
+	background:url('icon32/AttachFile.png') no-repeat center center!important;
 }
 .icon-TableDrawTable{
-	background:url('icon32/TableDrawTable.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/TableDrawTable.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-TableDrawTable-large{
-	background:url('icon32/TableDrawTable.png') no-repeat center center;
+	background:url('icon32/TableDrawTable.png') no-repeat center center!important;
 }
 .icon-ViewsAdpDiagramSqlView{
-	background:url('icon32/ViewsAdpDiagramSqlView.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/ViewsAdpDiagramSqlView.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ViewsAdpDiagramSqlView-large{
-	background:url('icon32/ViewsAdpDiagramSqlView.png') no-repeat center center;
+	background:url('icon32/ViewsAdpDiagramSqlView.png') no-repeat center center!important;
 }
 .icon-AdpStoredProcedureEditSql{
-	background:url('icon32/AdpStoredProcedureEditSql.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/AdpStoredProcedureEditSql.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-AdpStoredProcedureEditSql-large{
-	background:url('icon32/AdpStoredProcedureEditSql.png') no-repeat center center;
+	background:url('icon32/AdpStoredProcedureEditSql.png') no-repeat center center!important;
 }
 .icon-SourceControlAddObjects{
-	background:url('icon32/SourceControlAddObjects.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/SourceControlAddObjects.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-SourceControlAddObjects-large{
-	background:url('icon32/SourceControlAddObjects.png') no-repeat center center;
+	background:url('icon32/SourceControlAddObjects.png') no-repeat center center!important;
 }
 .icon-GroupImport{
-	background:url('icon32/GroupImport.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/GroupImport.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-GroupImport-large{
-	background:url('icon32/GroupImport.png') no-repeat center center;
+	background:url('icon32/GroupImport.png') no-repeat center center!important;
 }
 .icon-PivotFieldList{
-	background:url('icon32/PivotFieldList.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/PivotFieldList.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-PivotFieldList-large{
-	background:url('icon32/PivotFieldList.png') no-repeat center center;
+	background:url('icon32/PivotFieldList.png') no-repeat center center!important;
 }
 .icon-AdpDiagramRelationships{
-	background:url('icon32/AdpDiagramRelationships.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/AdpDiagramRelationships.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-AdpDiagramRelationships-large{
-	background:url('icon32/AdpDiagramRelationships.png') no-repeat center center;
+	background:url('icon32/AdpDiagramRelationships.png') no-repeat center center!important;
 }
 .icon-TableInsertColumnsRightprv{
-	background:url('icon32/TableInsertColumnsRightprv.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/TableInsertColumnsRightprv.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-TableInsertColumnsRightprv-large{
-	background:url('icon32/TableInsertColumnsRightprv.png') no-repeat center center;
+	background:url('icon32/TableInsertColumnsRightprv.png') no-repeat center center!important;
 }
 
 .icon-TableInsertColumnsRightprvall{
-	background:url('icon32/TableInsertColumnsRightprvall.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/TableInsertColumnsRightprvall.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-TableInsertColumnsRightprvall-large{
-	background:url('icon32/TableInsertColumnsRightprvall.png') no-repeat center center;
+	background:url('icon32/TableInsertColumnsRightprvall.png') no-repeat center center!important;
 }
 .icon-downarrow{
-	background:url('icon32/downarrow.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/downarrow.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-downarrow-large{
-	background:url('icon32/downarrow.png') no-repeat center center;
+	background:url('icon32/downarrow.png') no-repeat center center!important;
 }
 .icon-uparrow{
-	background:url('icon32/uparrow.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icon32/uparrow.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-uparrow-large{
-	background:url('icon32/uparrow.png') no-repeat center center;
+	background:url('icon32/uparrow.png') no-repeat center center!important;
+}
+.icon-GroupTableOfAuthorities{
+	background:url('icon32/GroupTableOfAuthorities.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-GroupTableOfAuthorities-large{
+	background:url('icon32/GroupTableOfAuthorities.png') no-repeat center center!important;
+}
+.icon-usedmenu{
+	background:url('icon32/usedmenu.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-usedmenu-large{
+	background:url('icon32/usedmenu.png') no-repeat center center!important;
+}
+.icon-usedmenufile{
+	background:url('icon32/usedmenufile.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-usedmenufile-large{
+	background:url('icon32/usedmenufile.png') no-repeat center center!important;
 }
 
 
@@ -561,75 +583,75 @@
 
 
 /*.icon-arrow-out{
-	background:url('icons/arrow-out.png') no-repeat center center;
+	background:url('icons/arrow-out.png') no-repeat center center!important;
 }
 .icon-arrow-in{
-	background:url('icons/arrow-in.png') no-repeat center center;
+	background:url('icons/arrow-in.png') no-repeat center center!important;
 }
 .icon-home{
-	background:url('icons/home.png') no-repeat center center;
+	background:url('icons/home.png') no-repeat center center!important;
 }
 .icon-cross{
-	background:url('icons/cross.png') no-repeat center center;
+	background:url('icons/cross.png') no-repeat center center!important;
 }
 .icon-contract{
-	background:url('icons/contract.png') no-repeat center center;
+	background:url('icons/contract.png') no-repeat center center!important;
 }
 .icon-expand{
-	background:url('icons/expand.png') no-repeat center center;
+	background:url('icons/expand.png') no-repeat center center!important;
 }
 .icon-expand2{
-	background:url('icons/expand2_h.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/expand2_h.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-window-resize{
-	background:url('icons/window-resize.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/window-resize.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-trash_full{
-	background:url('icons/trash_full.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/trash_full.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 */
 .icon-reload{
-	background:url('icons/32/Recurrence.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/Recurrence.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-reload-large{
-	background:url('icons/32/Recurrence.png') no-repeat center center;
+	background:url('icons/32/Recurrence.png') no-repeat center center!important;
 }
 .icon-cancel{
-	background:url('icons/32/DeclineInvitation.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/DeclineInvitation.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-cancel-large{
-	background:url('icons/32/DeclineInvitation.png') no-repeat center center;
+	background:url('icons/32/DeclineInvitation.png') no-repeat center center!important;
 }
 
 
 .icon-print{
-	background:url('icons/32/FilePrint.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/FilePrint.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-save{
-	background:url('icons/32/Save32.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/Save32.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-edit{
-	background:url('icons/32/ViewsModeMenu.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/ViewsModeMenu.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-add{
-	background:url('icons/32/glyph-add.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/glyph-add.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-remove{
-	background:url('icons/32/glyph-remove.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/glyph-remove.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-back{
-	background:url('icons/32/arrow-left.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/arrow-left.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 /*
 .tree-expanded {
@@ -651,7 +673,7 @@
 }
 
 .layout-button-up {
-  background: url('images/layout_arrows_h.png') no-repeat -16px -16px;
+  background: url('images/layout_arrows_h.png') no-repeat -16px -16px!important;
   background-size:32px 32px;
 }
 .layout-button-down {
@@ -663,47 +685,47 @@
   background-size:32px 32px;
 }
 .layout-button-right {
-  background: url('images/layout_arrows_h.png') no-repeat 0 -16px;
+  background: url('images/layout_arrows_h.png') no-repeat 0 -16px!important;
   background-size:32px 32px;
 }
 */
 
 
 .icon-tip{
-	background:url('icons/32/light-bulb-on.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/light-bulb-on.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-ok{
-	background:url('icons/32/SharingRequestAllow.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/SharingRequestAllow.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 /*
 .combo-arrow {
-	background: url('images/combo_arrow_h.png') no-repeat center center;
-	background-size:16px 16px;
+	background: url('images/combo_arrow_h.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 	background-color: #E0ECFF;
 }
 .datebox .combo-arrow {
 	background-image: url('images/datebox_arrow_h.png');
-	background-position: center center;
-	background-size:16px 16px;
+	background-position: center center!important;
+	background-size:16px 16px!important;
 }
 */
 .icon-cut{
-	background:url('icons/32/edit-cut.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/edit-cut.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 /*
 .panel-tool-close{
-	background:url('icons/32/GroupHeaderFooterClose.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/GroupHeaderFooterClose.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 */
 .icon-GroupShapeStyles{
-	background:url('icons/32/GroupShapeStyles.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/GroupShapeStyles.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }
 .icon-user_custom{
-	background:url('icons/32/user_custom.png') no-repeat center center;
-	background-size:16px 16px;
+	background:url('icons/32/user_custom.png') no-repeat center center!important;
+	background-size:16px 16px!important;
 }

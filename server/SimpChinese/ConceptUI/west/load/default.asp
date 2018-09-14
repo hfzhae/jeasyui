@@ -4,8 +4,8 @@
 	var nav = [
 			{
 				menu:'ConceptUIWindowManage',
-				text:'Ê×Ò³',
-				img:'/client/images/NavigationICON/home32_1.png',
+				text:'¿ªÊ¼',
+				img:'/client/images/NavigationICON/start.png',
 				children:[]
 			},{
 				menu:'Guide.Sales',

@@ -21,7 +21,7 @@ ebx.qt = {
 	centerstorage: [],
 	eaststorage: [],
 	showLock:0,
-	init: function(layoutName, callback, callback1){//单据初始化函数。参数：layoutName：初始化区域名称，包括：default，center，east，north，callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
+	init: function(callback){//单据初始化函数。callback：回掉函数对象
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
 		this.Parament = ebx.getMenuParamenter(this.tabs);
@@ -29,31 +29,21 @@ ebx.qt = {
 		if(ebx.validInt(this.Parament.lock) == 1){
 			this.showLock = 1;
 		}
+		this.layout = $('<div>').appendTo(this.tabs)
+		this._default();
 		
-		switch(layoutName.toLowerCase()){
-			case 'north':
-				this.layout = this.tabs.find('.layout');
-				this.northPanel = this.layout.layout('panel', 'north');
-				this.biribbon = $('<div>').appendTo(this.northPanel);
-				this._north(callback);
-				break;
-			case 'east':
-				this.layout = this.tabs.find('.layout');
-				this.eastPanel = this.layout.layout('panel', 'east');
-				this.eaststorage = $('<div>').appendTo(this.eastPanel);
-				this._east(callback);
-				break;
-			case 'center':
-				this.layout = this.tabs.find('.layout');
-				this.centerPanel = this.layout.layout('panel', 'center');
-				this.centerstorage = $('<div>').appendTo(this.centerPanel);
-				this._center(callback, callback1);
-				break;
-			case 'default':
-				this.layout = $('<div>').appendTo(this.tabs)
-				this._default();
-				break;
-		}
+		this.northPanel = this.layout.layout('panel', 'north');
+		this.biribbon = $('<div>').appendTo(this.northPanel);
+		this._north(callback.north);
+		
+		
+		this.eastPanel = this.layout.layout('panel', 'east');
+		this.eaststorage = $('<div>').appendTo(this.eastPanel);
+		this._east(callback.east);
+		
+		this.centerPanel = this.layout.layout('panel', 'center');
+		this.centerstorage = $('<div>').appendTo(this.centerPanel);
+		this._center(callback.center, callback.center1);
 	},
 	_export: function(ExportBtn, _layout, _tab){//导入函数方法，参数：ExportBtn：点击的按钮对象，_layout：当前页的layout对象，_tab：当前页的tab对象
 		ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
@@ -75,7 +65,7 @@ ebx.qt = {
 		this.layout.layout('add',{
 			region: 'center',
 			title: '',
-			href: 'client/SimpChinese/' + this.Parament.modedit + '/center.html',
+			//href: 'client/SimpChinese/' + this.Parament.modedit + '/center.html',
 			//hideExpandTool: false,
 			//hideCollapsedContent: false,
 			border: false,
@@ -86,7 +76,7 @@ ebx.qt = {
 			maxWidth: '50%',
 			minWidth: 300,
 			//title: '基本信息',
-			href: 'client/SimpChinese/' + this.Parament.modedit + '/east.html',
+			//href: 'client/SimpChinese/' + this.Parament.modedit + '/east.html',
 			hideExpandTool: false,
 			hideCollapsedContent: false,
 			border: false,
@@ -103,7 +93,7 @@ ebx.qt = {
 			region: 'north',
 			//title:'功能',
 			height: 113,
-			href: 'client/SimpChinese/' + this.Parament.modedit + '/north.html',
+			//href: 'client/SimpChinese/' + this.Parament.modedit + '/north.html',
 			border: false,
 			split: false,
 			hideCollapsedContent: false,
@@ -145,6 +135,7 @@ ebx.qt = {
 						panelWidth:300,
 						fitColumns:true,
 						prompt:'选择列',
+						editable:true,
 						width:100,
 						onShowPanel:function(newValue,oldValue){
 							var d = _layout.layout('panel', 'east').find('.datagrid-f').datagrid('options').WizardData,

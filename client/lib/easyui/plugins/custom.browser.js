@@ -40,9 +40,18 @@ ebx.browser = {
 		this._list()
 	},
 	_default: function(){//打开列表框架装载方法
-		this.layout.layout({
-			fit: true
-		}).layout('add',{
+	    var _layout = this.layout;
+	    
+		_layout.layout({
+			fit: true,
+			hideCollapsedContent:true,
+			onCollapse: function(){
+			    _layout.find('.layout-expand-east').find('.panel-header').css({'border-top':0,'border-right':0,'border-bottom':0})
+			    _layout.find('.layout-expand-east').find('.panel-body').css({'border-top':0,'border-right':0,'border-bottom':0})
+			}
+		});
+		//this.layout.layout('collapse','east');
+		_layout.layout('add',{
 			region: 'center',
 			title: '',
 			//href:'client/SimpChinese/' + this.Parament.modedit + '/' + this.Parament.mode + '/list.html',
@@ -50,15 +59,31 @@ ebx.browser = {
 			hideCollapsedContent:false,
 			border:false
 		});
+		if(this.browsertype === 'bi'){
+		    _layout.layout('add',{//添加新的layout
+		        title: '新建-' + this.Parament.text,
+			    region: 'east',
+			    width: '30%',
+			    maxWidth: '50%',
+			    minWidth: 300,
+			    href: 'client/SimpChinese/' + this.Parament.modedit + '/',
+			    paramenters:this.Parament,
+			    hideExpandTool: false,
+			    hideCollapsedContent: false,
+			    border: false,
+			    split: true
+		    });
+		}
 		
-		var eastPanel = this.layout.layout('panel', 'east'),
-			listPanel = this.layout.layout('panel', 'center');
+		
+		var eastPanel = _layout.layout('panel', 'east'),
+			listPanel = _layout.layout('panel', 'center');
 
 		eastPanel.css({overflow:'hidden'});//隐藏layout滚动条
 		listPanel.css({overflow:'hidden'});//隐藏layout滚动条
 	},
 	_new: function(options){
-		var Parament = {};
+		var Paramenter = {};
 		for(var i in options._Parament){
 			switch(typeof(options._Parament[i])){
 				case 'string':
@@ -69,7 +94,7 @@ ebx.browser = {
 					break;
 			}
 		}
-		Parament.id = 0;
+		Paramenter.id = 0;
 		switch(options.browsertype){
 			case 'bd':
 				var tabsid = 'tabs_'+ebx.RndNum(20)
@@ -92,7 +117,7 @@ ebx.browser = {
 						width: '30%',
 						maxWidth: '50%',
 						minWidth: 300,
-						title: '',
+						title: '新建-' + options._Parament.text,
 						href: 'client/SimpChinese/' + options._Parament.modedit + '/',
 						paramenters:Paramenter,
 						hideExpandTool: false,
@@ -175,7 +200,7 @@ ebx.browser = {
 						width: '30%',
 						maxWidth: '50%',
 						minWidth: 300,
-						title: '',
+						title: '打开-' + options._Parament.text,
 						href: 'client/SimpChinese/' + options._Parament.modedit + '/',
 						paramenters:Paramenter,
 						hideExpandTool: false,
@@ -247,37 +272,52 @@ ebx.browser = {
 					groups:[{
 						title:'基本操作',
 						tools:[{
-							name:'del',
-							text:'删除',
-							iconCls:'icon-Delete-large',
+							name:'edit',
+							text:'编辑',
+							iconCls:'icon-DesignMode-large',
 							iconAlign:'top',
 							size:'large',
-							disabled: true,
-							onClick: function(){
-								var id = ebx.validInt(_liststorage.datagrid('getSelected').id);
-								if(id <= 0)return;
-								_deleted(id, _Parament.modedit, function(result){
-									if(result.result){
-										$.messager.show({
-											title: '提示',
-											msg: '删除成功！',
-											timeout: 2000,
-											showType: 'slide'
-										});	
-										_search(browser, searchtext.textbox('getValue'));
-									}else{
-										$.messager.alert('错误', '删除失败！<br>' + JSON.stringify(result.msg), 'error');
-									}
-								});
-							}
+							disabled: true
 						},{
 							type:'toolbar',
 							dir:'v',
 							tools:[{
-								name:'edit',
-								text:'编辑',
-								iconCls:'icon-DesignMode',
-								disabled: true
+								name:'new',
+								text:'新建',
+								iconCls:'tree-file',
+								onClick: function(){
+									var options = {
+										_Parament: _Parament,
+										browsertype: 'bi',
+										_tabs: _tabs,
+										_layout: _layout
+									}; 
+									setTimeout(function(){
+										_new(options);
+									},0);
+								}
+							},{
+								name:'del',
+								text:'删除',
+								iconCls:'icon-Delete',
+								disabled: true,
+							    onClick: function(){
+								    var id = ebx.validInt(_liststorage.datagrid('getSelected').id);
+								    if(id <= 0)return;
+								    _deleted(id, _Parament.modedit, function(result){
+									    if(result.result){
+										    $.messager.show({
+											    title: '提示',
+											    msg: '删除成功！',
+											    timeout: 2000,
+											    showType: 'slide'
+										    });	
+										    _search(browser, searchtext.textbox('getValue'));
+									    }else{
+										    $.messager.alert('错误', '删除失败！<br>' + JSON.stringify(result.msg), 'error');
+									    }
+								    });
+							    }
 							},{
 								name:'reload',
 								text:'恢复',
@@ -460,6 +500,7 @@ ebx.browser = {
 			},
 			prompt:'输入搜索文字并回车'
 		});
+
 		newbtn.linkbutton({
 			text:'新建',
 			iconCls: 'icon-file',
@@ -474,6 +515,7 @@ ebx.browser = {
 				_new(options);
 			}
 		});
+		
 		functionbtn.linkbutton({
 			//text:'更多',
 			iconCls: 'icon-downarrow',

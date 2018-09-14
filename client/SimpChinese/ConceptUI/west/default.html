@@ -1,4 +1,4 @@
- <script type="text/javascript">
+﻿ <script type="text/javascript">
 	easyloader.load(['tree','tabs'], function(){
 		var west = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west')),
 			closbtn = $('<div>').appendTo(ebx.bodylayout.layout('panel', 'west'));
@@ -22,19 +22,177 @@
 						narrow:false,
 						pill:false,
 						plain:false
-					});  
-
+					});
+				    result[0].children.unshift({
+			            id:0,
+			            text:'常用菜单',
+			            iconCls:'icon-usedmenu',
+			            children:[]
+			        });
+					if(ebx.usedmenu.length > 0){
+				        result[0].children[0].children = ebx.usedmenu;
+				    }
 					for(var i in result){
 						var westtree = $('<div>'),
 						    title = result[i].text?'<div style="position:absolute;width:100%;margin-top:14px;margin-left:-13px;text-align:center;">' + result[i].text + '</div>':'',
 						    img = result[i].img?'<img src="' + result[i].img + '" style="width:25px;position: absolute;padding-top:6px;padding-left:3px;"/>':'<img src="/client/images/NavigationICON/ShowCustomPage" style="width:24px;position: absolute;padding-top:8px;padding-left:4px;"/>';
+						
 						westtree.tree({
 							data: result[i].children,
 							animate: true,
 							dnd: false,
+							/*
+                            formatter:function(node){
+                                var s = node.text;
+                                if (node.children){
+                                    s += '&nbsp;<span style=\'color:blue\'>(' + node.children.length + ')</span>';
+                                }
+                                return s;
+                            },
+                            */
 							onClick: function(node){
 								ebx.tabs.newtab(node);
-							}
+							},
+                            onContextMenu: function(e, node){//常用菜单鼠标右键事件 2018-9-14 zz
+                                if(node.iconCls === 'icon-usedmenufile'){
+                                    var ContextMenu = $('<div>');
+		                            e.preventDefault();
+				                    ContextMenu.menu().menu('appendItem', {
+					                    text: '从常用菜单中删除',
+					                    iconCls: 'icon-Delete',
+					                    onclick: function(){
+                                            westtree.tree('remove', node.target);
+		                                    for(var i in ebx.usedmenu){
+		                                        if(ebx.usedmenu[i].menuid == node.menuid){
+		                                            ebx.usedmenu.splice(i, 1)
+		                                        }
+		                                    }
+                                	        ebx.storage.set('usedmenu', ebx.usedmenu);
+					                    }
+				                    }).menu('appendItem', {
+					                    text: '清空常用菜单',
+					                    iconCls: 'icon-trash_full',
+					                    onclick: function(){
+									        $.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
+										        if (r){
+                                                    var usedtree = ebx.bodylayout.layout('panel', 'west').find('.tabs-container').tabs('getTab', 0).find('.tree'),
+                                                        usedchildren = usedtree.tree('find', 0);
+                                                    
+                                                    var usedchildrenChildren = usedtree.tree('getChildren', usedchildren.target);
+                                                    for(var i in usedchildrenChildren){
+                                                        usedtree.tree('remove', usedchildrenChildren[i].target);
+                                                    }
+                                                    ebx.usedmenu = [];
+                                	                ebx.storage.set('usedmenu', []);
+										        }
+									        });
+					                    }
+				                    }).menu('show', {
+			                            left: e.pageX,
+			                            top: e.pageY
+		                            });
+		                        }
+		                        if(node.iconCls === 'icon-usedmenu'){
+                                    var ContextMenu = $('<div>');
+		                            e.preventDefault();
+				                    ContextMenu.menu().menu('appendItem', {
+					                    text: '设置常用菜单数量',
+					                    iconCls: 'icon-ControlsGallery',
+					                    onclick: function(){
+	                                        easyloader.load('numberspinner', function(){
+					                    
+	                                            var win = $('<div>').appendTo('body'),
+		                                            size = $('<div>').appendTo(win)
+                                        		
+	                                            win.window({
+		                                            title: '常用菜单设置',
+		                                            width:180,    
+		                                            height:25, 
+		                                            maxWidth:'90%',
+		                                            maxHeight:'90%',
+		                                            modal:true,
+		                                            noheader:true,
+		                                            collapsible:false,
+		                                            minimizable:false,
+		                                            maximizable:false,
+		                                            resizable:false,
+		                                            border:'thin',
+		                                            shadow:false,
+		                                            onBeforeClose: function(){
+	                                                    if(ebx.usedmenu.length >= ebx.validInt(ebx.usedmenusize)){
+	                                                        var t = [];
+	                                                        for(var i in ebx.usedmenu){
+	                                                            if(ebx.validInt(i) < ebx.validInt(ebx.usedmenusize)){
+	                                                                t.push(ebx.usedmenu[i])
+	                                                            }
+	                                                        }
+	                                                        ebx.usedmenu = t;
+	                                                    }
+	                                                    ebx.storage.set('usedmenu', ebx.usedmenu);
+        	                                            
+                                                        var usedtree = ebx.bodylayout.layout('panel', 'west').find('.tabs-container').tabs('getTab', 0).find('.tree'),
+                                                            usedchildren = usedtree.tree('find', 0);
+                                                        
+                                                        var usedchildrenChildren = usedtree.tree('getChildren', usedchildren.target);
+                                                        for(var i in usedchildrenChildren){
+                                                            if(ebx.validInt(i) >=  ebx.usedmenusize){
+                                                                usedtree.tree('remove', usedchildrenChildren[i].target);
+                                                            }
+                                                        }
+			                                            win.remove();
+		                                            }
+	                                            }).css({'padding':10});
+                                        		
+	                                            $('body').find('.window-mask').on('click', function(){
+		                                            win.window('close');
+	                                            }); 
+
+	                                            size.numberspinner({    
+		                                            min: 5,    
+		                                            max: 50,    
+		                                            editable: false,
+		                                            label:'常用菜单数量',
+		                                            value: ebx.usedmenusize,
+		                                            onSpinUp:function(){
+			                                            ebx.usedmenusize = size.numberspinner('getValue');
+			                                            setToStorage();
+		                                            },
+		                                            onSpinDown:function(){
+			                                            ebx.usedmenusize = size.numberspinner('getValue');
+			                                            setToStorage();
+		                                            }
+	                                            }).css({'margin':'5px'}); 
+
+	                                            function setToStorage(){
+		                                            ebx.storage.set('usedmenusize', {size: ebx.usedmenusize});
+	                                            }
+                                                
+	                                        });
+					                    }
+				                    }).menu('appendItem', {
+					                    text: '清空常用菜单',
+					                    iconCls: 'icon-trash_full',
+					                    onclick: function(){
+									        $.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
+										        if (r){
+                                                    var usedtree = ebx.bodylayout.layout('panel', 'west').find('.tabs-container').tabs('getTab', 0).find('.tree'),
+                                                        usedchildren = usedtree.tree('find', 0);
+                                                    
+                                                    var usedchildrenChildren = usedtree.tree('getChildren', usedchildren.target);
+                                                    for(var i in usedchildrenChildren){
+                                                        usedtree.tree('remove', usedchildrenChildren[i].target);
+                                                    }
+                                                    ebx.usedmenu = [];
+                                	                ebx.storage.set('usedmenu', []);
+										        }
+									        });
+					                    }
+				                    }).menu('show', {
+			                            left: e.pageX,
+			                            top: e.pageY
+		                            });
+		                        }
+	                        }
 						}).css({padding:5});
 						
 						west.tabs('add',{    
@@ -55,6 +213,11 @@
 						ebx.bodylayout.layout('collapse','west');
 					})
 					.find('.l-btn-icon').css({marginLeft:-6});
+					
+	                var usedtree = ebx.bodylayout.layout('panel', 'west').find('.tabs-container').tabs('getTab', 0).find('.tree'),
+                    usedchildren = usedtree.tree('find', 0);
+                    //$(usedchildren.target).find('.tree-file').removeClass('tree-file').addClass('icon-FileSave');
+
 				}
 			}
 		});

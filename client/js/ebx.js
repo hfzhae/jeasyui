@@ -9,6 +9,8 @@ var ebx = {
 	printpagesize: 10,
 	printtype:0,//打印样式，0为宽行打印，1为窄行打印
 	importFileMaxSize: 1024*5,//导入文件大小控制，单位K
+	usedmenu:[],
+	usedmenusize: 10,
 	listview:{ //显示列数组
 		productserial:1, //串号
 		colorsize:1,//色码
@@ -31,6 +33,14 @@ var ebx = {
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
 		easyloader.locale = "zh_CN";
+		if(ebx.storage.get("usedmenu")){
+		    ebx.usedmenu = ebx.storage.get("usedmenu")
+		}
+		if(!ebx.storage.get("usedmenusize")){
+		    ebx.storage.set("usedmenusize", {size:10});
+		}
+	    ebx.usedmenusize = ebx.storage.get("usedmenusize").size
+		
 		//easyloader.number = 100;
 		easyloader.load([
 			'parser',
@@ -1021,6 +1031,18 @@ var ebx = {
 				}
 			}
 			
+			var Paramenter = {};
+			for(var i in Paramenters){
+				switch(typeof(Paramenters[i])){
+					case 'string':
+						Paramenter[i.toLowerCase()] = Paramenters[i].toString().toLowerCase();
+						break;
+					case 'number':
+						Paramenter[i.toLowerCase()] = Paramenters[i];
+						break;
+				}
+			}		
+					
 			if(ebx.multitabs){
 				tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
 			}else{
@@ -1030,17 +1052,6 @@ var ebx = {
 			if($('#'+tabsid).length > 0){
 				ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
 			}else{
-				Paramenter = {};
-				for(var i in Paramenters){
-					switch(typeof(Paramenters[i])){
-						case 'string':
-							Paramenter[i.toLowerCase()] = Paramenters[i].toString().toLowerCase();
-							break;
-						case 'number':
-							Paramenter[i.toLowerCase()] = Paramenters[i];
-							break;
-					}
-				}				
 				ebx.center.tabs('add',{
 					id:tabsid,
 					title:Paramenters.text,
@@ -1049,9 +1060,44 @@ var ebx = {
 					iconCls:Paramenters.iconCls,
 					selected: true,
 					closable:true
-				});				
+				});
+				
 				$('#'+tabsid).css({padding:0});
 			}
+			for(var i in ebx.usedmenu){
+			    if(ebx.usedmenu[i].menuid == Paramenter.menuid){
+			        ebx.usedmenu.splice(i, 1)
+			    }
+			}
+			Paramenter.iconCls = 'icon-usedmenufile';
+	        ebx.usedmenu.unshift(Paramenter)
+	        if(ebx.usedmenu.length >= ebx.validInt(ebx.usedmenusize)){
+	            var t = [];
+	            for(var i in ebx.usedmenu){
+	                if(ebx.validInt(i) < ebx.validInt(ebx.usedmenusize)){
+	                    t.push(ebx.usedmenu[i])
+	                }
+	            }
+	            ebx.usedmenu = t;
+	        }
+	        ebx.storage.set('usedmenu', ebx.usedmenu);
+		    
+            var usedtree = ebx.bodylayout.layout('panel', 'west').find('.tabs-container').tabs('getTab', 0).find('.tree'),
+                usedchildren = usedtree.tree('find', 0);
+            
+            if(usedchildren){
+                var usedchildrenChildren = usedtree.tree('getChildren', usedchildren.target);
+                for(var i in usedchildrenChildren){
+                    usedtree.tree('remove', usedchildrenChildren[i].target);
+                }
+                
+                for(var i in ebx.usedmenu){
+                    usedtree.tree('append', {
+                        parent: usedchildren.target,
+                        data: [ebx.usedmenu[i]]
+                    });
+                }
+            }
 		}
 	},
 	getbiribbonobj: function(biribbon, name, type){//获取biribbon指定对象，参数：biribbon：biribbon对象，name：name属性或按钮字符，type：空间类型 2018-7-17 zz
