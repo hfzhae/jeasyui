@@ -103,8 +103,15 @@ var ebx = {
 				});
 				*/
 				setTimeout(function(){
-					bl.layout('resize')
+					bl.layout('resize');
 				}, 300);
+				var $preloader = $('#page-preloader');//,
+					$spinner = $preloader.find('span');
+				$spinner.text('loading...');
+				setTimeout(function(){
+					$spinner.fadeOut();
+					$preloader.delay(350).fadeOut(800);
+				}, 1000);
 		});
 		
 		window.onbeforeunload=function(e){//处理编辑未保存时窗口关闭或刷新时的提醒 2018-4-25 zz
@@ -143,7 +150,7 @@ var ebx = {
 		if(ebx.storage.get('print'))ebx.printtype=ebx.storage.get('print').printtype;//读取浏览器缓存。设置打印类型
 		if(ebx.storage.get('productserialquantitycheck')!=undefined)ebx.productserialquantitycheck = ebx.storage.get('productserialquantitycheck');//串号数量校验
 		if(ebx.storage.get('colorsizequantitycheck')!=undefined)ebx.colorsizequantitycheck = ebx.storage.get('colorsizequantitycheck');//色码数量校验
- 	},
+	},
 	getThemes: function(){//获取主题函数
 		//var Storage = window.localStorage;
 		if(ebx.storage.get("themes") === null){
