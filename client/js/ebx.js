@@ -26,6 +26,7 @@ var ebx = {
 		aquantity: 0, //辅助数量
 		relation: 0,//核算关系
 	},
+	preloader:$('<div class="preloader"><span></span></div>').appendTo('body'),
 	productseriallength: 5000,//串号数量上限
 	productserialquantitycheck:1,//串号数量校验
 	colorsizequantitycheck:1,//色码数量校验
