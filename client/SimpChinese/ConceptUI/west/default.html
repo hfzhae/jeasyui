@@ -215,8 +215,12 @@
 	                var usedtree = ebx.bodylayout.layout('panel', 'west').find('.tabs-container').tabs('getTab', 0).find('.tree'),
                     usedchildren = usedtree.tree('find', 0);
                     //$(usedchildren.target).find('.tree-file').removeClass('tree-file').addClass('icon-FileSave');
-
 				}
+				var $preloader = $('#page-preloader');//,
+					$spinner = $preloader.find('span');
+				$spinner.text('loading...');
+				$spinner.fadeOut();
+				$preloader.delay(350).fadeOut(800);
 			}
 		});
 	});

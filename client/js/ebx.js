@@ -105,16 +105,6 @@ var ebx = {
 				setTimeout(function(){
 					bl.layout('resize');
 				}, 300);
-				
-				var $preloader = $('#page-preloader');//,
-					$spinner = $preloader.find('span');
-				$.parser.onComplete = function(){
-					$spinner.text('loading...');
-					//setTimeout(function(){
-						$spinner.fadeOut();
-						$preloader.delay(350).fadeOut(800);
-					//}, 1000);
-				};
 		});
 		
 		window.onbeforeunload=function(e){//处理编辑未保存时窗口关闭或刷新时的提醒 2018-4-25 zz
