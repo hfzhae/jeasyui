@@ -3,10 +3,8 @@
 .preloader span:before, .preloader span:after { content: ''; position: absolute; border-radius: 50%; }
 .preloader span:before {top: 5px; left: 5px; right: 5px; bottom: 5px; border: 3px solid transparent; border-top-color: #088cdc; -webkit-animation: spin 2s infinite linear; animation: spin 2s infinite linear; }
 .preloader span:after {top: 15px; left: 15px; right: 15px; bottom: 15px; border: 3px solid transparent; border-top-color: #52bf81; -webkit-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
-@-webkit-keyframes spin { 0% { -webkit-transform: rotate(0); transform: rotate(0); }
-  100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
-@keyframes spin { 0% { -webkit-transform: rotate(0); transform: rotate(0); }
-  100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
+@-webkit-keyframes spin { 0% { -webkit-transform: rotate(0); transform: rotate(0); }100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
+@keyframes spin { 0% { -webkit-transform: rotate(0); transform: rotate(0); }100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
 .homttitleimg
 {
     position:absolute;
