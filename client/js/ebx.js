@@ -106,14 +106,14 @@ var ebx = {
 					bl.layout('resize');
 				}, 300);
 				
+				var $preloader = $('#page-preloader');//,
+					$spinner = $preloader.find('span');
 				$.parser.onComplete = function(){
-					var $preloader = $('#page-preloader');//,
-						$spinner = $preloader.find('span');
 					$spinner.text('loading...');
-					setTimeout(function(){
+					//setTimeout(function(){
 						$spinner.fadeOut();
 						$preloader.delay(350).fadeOut(800);
-					}, 1000);
+					//}, 1000);
 				};
 		});
 		
