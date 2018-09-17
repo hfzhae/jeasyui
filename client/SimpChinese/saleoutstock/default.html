@@ -20,15 +20,203 @@
 		    callback = {//回掉函数对象
 		        north: function(data){//功能区域回调函数
 			        data.tabs[0].groups.push({//新增收款方式功能组
-				        title:'收款方式',
+				        title:'其他',
 				        tools:[{
 					        type:'toolbar',
+					        tools:[{
+						        text:'读取订单',
+						        iconAlign:'top',
+						        size:'large',
+						        iconCls:'icon-MarkTaskComplete-large',
+						        onClick: function(){
+									if(bd.layout.layout('panel', 'south').length > 0){
+										if(bd.layout.layout('panel', 'south').panel('options').title == '读取订单'){
+											bd.layout.layout('remove', 'south');
+											return;
+										}else{
+											bd.layout.layout('remove', 'south');
+										}
+									}
+									bd.layout.layout('add', {
+										region: 'south',
+										title:'读取订单',
+										height: '30%',
+										maxHeight: '50%',
+										minHeight: 150,
+										collapsible: false,
+										iconCls:'icon-MarkTaskComplete',
+										border: false,
+										split: true,
+										hideCollapsedContent: false,    
+										tools: [{    
+											iconCls:'panel-tool-close',    
+											handler:function(){
+												bd.layout.layout('remove', 'south');
+											}    
+										}],
+										collapsedContent: function(title){
+											var region = $(this).panel('options').region;
+											if(region =='east'|| region =='center'){
+												//返回标题;
+											} else {
+												return '<div class="panel-title layout-expand-title-down">销售订单</ div>';
+											}
+										},
+										onCollapse: function(){
+											bd.layout.find('.layout-expand-south').find('.panel-header').css({'border-right':0,'border-left':0,'border-bottom':0})
+											bd.layout.find('.layout-expand-south').find('.panel-body').css({'border-right':0,'border-left':0,'border-bottom':0})
+										}
+									});
+								}
+							}]
+						},{
+							type:'toolbar',
 					        dir:'v',
 					        tools:[{
-						        //text:'收款方式',
+						        text:'价格跟踪',
 						        //iconAlign:'top',
-						        size:'large',
-						        iconCls:'icon-TableDrawTable-large',
+						        //size:'large',
+						        iconCls:'icon-AdpDiagramRelationships',
+						        onClick: function(){
+									var grid = bd.layout.layout('panel', 'center').find('.datagrid-f'),
+										index = grid.datagrid('getRowIndex', grid.datagrid('getSelected'));
+									if(index < 0){
+										$.messager.show({
+											title: '提示',
+											msg: '请先选中一行。',
+											timeout: 3000,
+											showType: 'slide'
+										});									
+										return;
+									}
+									if(bd.layout.layout('panel', 'south').length > 0){
+										if(bd.layout.layout('panel', 'south').panel('options').title == '价格跟踪'){
+											bd.layout.layout('remove', 'south');
+											return;
+										}else{
+											bd.layout.layout('remove', 'south');
+										}
+									}
+									bd.layout.layout('add', {
+										region: 'south',
+										title:'价格跟踪',
+										height: '30%',
+										maxHeight: '50%',
+										minHeight: 150,
+										collapsible: false,
+										iconCls:'icon-AdpDiagramRelationships',
+										border: false,
+										split: true,
+										hideCollapsedContent: false,    
+										tools: [{    
+											iconCls:'panel-tool-close',    
+											handler:function(){
+												bd.layout.layout('remove', 'south');
+											}    
+										}],
+										collapsedContent: function(title){
+											var region = $(this).panel('options').region;
+											if(region =='east'|| region =='center'){
+												//返回标题;
+											} else {
+												return '<div class="panel-title layout-expand-title-down">销售订单</ div>';
+											}
+										},
+										onCollapse: function(){
+											bd.layout.find('.layout-expand-south').find('.panel-header').css({'border-right':0,'border-left':0,'border-bottom':0})
+											bd.layout.find('.layout-expand-south').find('.panel-body').css({'border-right':0,'border-left':0,'border-bottom':0})
+										}
+									});
+								}
+							},{
+						        text:'整单打折',
+						        //iconAlign:'top',
+						        //size:'large',
+						        iconCls:'icon-GroupNumber',
+						        onClick: function(){
+									easyloader.load(['numberspinner','combobox'], function(){
+										var win = $('<div>').appendTo('body'),
+											discount = $('<div>').appendTo(win),
+											target = $('<div>').appendTo(win);
+										
+										win.window({
+											title: '常用菜单设置',
+											width:180,    
+											height:50, 
+											maxWidth:'90%',
+											maxHeight:'90%',
+											modal:true,
+											noheader:true,
+											collapsible:false,
+											minimizable:false,
+											maximizable:false,
+											resizable:false,
+											border:'thin',
+											shadow:false,
+											onBeforeClose: function(){
+												bd.discount = discount.numberspinner('getValue');
+												var grid = bd.layout.layout('panel', 'center').find('.datagrid-f'),
+													data = grid.datagrid('getData');
+
+												if(data.firstRows){
+													data = data.firstRows;
+												}else{
+													data = data.rows;
+												}
+												for(var i in data){
+													if(ebx.discountprice == 1){
+														data[i].price = data[i].oldprice * bd.discount;
+													}else{
+														data[i].price = data[i].price * bd.discount;
+													}
+													data[i].amount = data[i].price * data[i].quantity;
+												}
+												grid.datagrid('loadData', {total: data.length, rows: data});
+												ebx.setEditstatus(bd.tab, true);
+												win.remove();
+											}
+										}).css({'padding':10});
+										
+										$('body').find('.window-mask').on('click', function(){
+											win.window('close');
+										}); 
+
+										discount.numberspinner({    
+											min: 0,    
+											max: 10,    
+											editable: true,
+											label:'折扣',
+											precision: 2,
+											increment: 0.1,
+											value: bd.discount
+										}); 
+										
+										target.combobox({
+											label:'折扣参考',
+											valueField: 'id',    
+											textField: 'text',
+											panelHeight: 'auto',
+											value: ebx.discountprice,
+											data:[{    
+												"id":2,    
+												"text":"单价"   
+											},{    
+												"id":1,    
+												"text":"原单价"   
+											}],
+											onChange: function(){
+												var v = target.combobox('getValue');
+												ebx.discountprice = v
+												ebx.storage.set("discountprice", {discountprice: v});
+											}
+										});										
+									});
+								}
+							},{
+						        text:'收款方式',
+						        //iconAlign:'top',
+						        //size:'large',
+						        iconCls:'icon-AccountingFormat',
 						        onClick: function(){
 							        if(ebx.validInt(bd.ID) == 0){
 								        $.messager.show({

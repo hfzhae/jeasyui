@@ -9,8 +9,9 @@ var ebx = {
 	printpagesize: 10,
 	printtype:0,//打印样式，0为宽行打印，1为窄行打印
 	importFileMaxSize: 1024*5,//导入文件大小控制，单位K
-	usedmenu:[],
-	usedmenusize: 10,
+	usedmenu:[],//常用菜单对象
+	usedmenusize: 10,//常用菜单数量
+	discountprice: 2,//折扣参考，1：原单价，2：单价
 	listview:{ //显示列数组
 		productserial:1, //串号
 		colorsize:1,//色码
@@ -18,7 +19,7 @@ var ebx = {
 		taxrate: 0, //税率
 		taxamount: 0, //税额
 		discount: 0,//折扣
-		expire: 1, //保质期
+		expire: 0, //保质期
 		oldprice: 0, //零售价
 		batch: 0, //批次
 		unit: 0, //单位
@@ -39,7 +40,11 @@ var ebx = {
 		if(!ebx.storage.get("usedmenusize")){
 		    ebx.storage.set("usedmenusize", {size:10});
 		}
+		if(!ebx.storage.get("discountprice")){
+		    ebx.storage.set("discountprice", {discountprice:2});
+		}
 	    ebx.usedmenusize = ebx.storage.get("usedmenusize").size
+	    ebx.discountprice = ebx.storage.get('discountprice').discountprice;
 		
 		//easyloader.number = 100;
 		easyloader.load([

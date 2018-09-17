@@ -18,6 +18,7 @@ ebx.bd = {
 	Parament: {},
 	biribbon: [],
 	centerstorage: [],
+	discount: 1,//整单折扣
 	eaststorage: [],
 	showAudit: 0,//是否显示审核bombobox
 	showPrint: 0,//是否显示打印group
@@ -117,6 +118,9 @@ ebx.bd = {
 			_Parament = this.Parament,
 			toolbar = $('<div>'),
 			serialScan = $('<div>').appendTo(toolbar),
+			newbtn = $('<div>').appendTo(toolbar),
+			_tabs = this.tabs,
+			_tab = this.tab,
 			_showSearchserial = this.showSearchserial;
 			
 		$.ajax({
@@ -169,6 +173,34 @@ ebx.bd = {
 							
 						}
 					});
+					newbtn.linkbutton({
+						text:'添加产品',
+						iconCls: 'icon-CellsInsertDialog',
+						plain:true,
+						onClick: function(){
+							var listdatagrid = _layout.layout('panel', 'center').find('.datagrid-f'),
+								opts = listdatagrid.datagrid('options'),
+								fields = listdatagrid.datagrid('options').columns[0],
+								field = fields[0].field;
+							
+							opts.editIndex = listdatagrid.datagrid('getData').total;
+							listdatagrid.datagrid('appendRow',{});
+							listdatagrid.datagrid('scrollTo', listdatagrid.datagrid('getData').total - 1);//滚动到新增的行
+							listdatagrid.datagrid('selectRow', listdatagrid.datagrid('getData').total - 1);
+							
+							for(var i in fields){
+								if(fields[i].editor && !fields[i].hidden){
+									field = fields[i].field;
+									break;
+								}
+							}
+
+							listdatagrid.datagrid('editkeyboard', {index: listdatagrid.datagrid('getData').total - 1, field: field}); //自动触发编辑第一个字段
+							
+							ebx.setEditstatus(_tab, true);
+							//listdatagrid.datagrid('reload');
+						}
+					})
 					if(ebx.validInt(_showSearchserial) == 0 || ebx.listview.productserial == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
 				}
 			}
@@ -679,32 +711,6 @@ ebx.bd = {
 							}]
 						}]
 					},{
-						title:'显示/隐藏',
-						tools:[{
-							type:'toolbar',
-							dir:'v',
-							tools:[{
-								text:'功能',
-								iconCls:'icon-TableInsertRowsAbove',
-								onClick: function(){
-									_layout.layout('collapse', 'north');
-									_layout.find('.layout-expand-north').find('.panel-header').css({'border-top':0,'border-left':0,'border-right':0});
-								}
-							},{
-								text:'属性',
-								iconCls:'icon-TableInsertColumnsRight',
-								onClick: function(){
-									if(_layout.layout("panel", "east")[0].clientWidth > 0){
-										_layout.layout('collapse', 'east');
-										_layout.find('.layout-expand-east').find('.panel-header').css({'border-top':0,'border-right':0});
-										_layout.find('.layout-expand-east').find('.panel-body').css({'border-top':0,'border-right':0,'border-bottom':0});
-									}else{
-										_layout.layout('expand', 'east');
-									}
-								}
-							}]
-						}]
-					},{
 						title:'附件',
 						tools:[{
 							type:'toolbar',
@@ -932,6 +938,32 @@ ebx.bd = {
 											window.open(window.location.protocol +'//'+ window.location.host + '/attaches/' + bd.billtype + '/' + bd.ID + '/' + filegrid.datagrid('getSelected').filename);
 										}
 									});
+								}
+							}]
+						}]
+					},{
+						title:'显示/隐藏',
+						tools:[{
+							type:'toolbar',
+							dir:'v',
+							tools:[{
+								text:'功能',
+								iconCls:'icon-TableInsertRowsAbove',
+								onClick: function(){
+									_layout.layout('collapse', 'north');
+									_layout.find('.layout-expand-north').find('.panel-header').css({'border-top':0,'border-left':0,'border-right':0});
+								}
+							},{
+								text:'属性',
+								iconCls:'icon-TableInsertColumnsRight',
+								onClick: function(){
+									if(_layout.layout("panel", "east")[0].clientWidth > 0){
+										_layout.layout('collapse', 'east');
+										_layout.find('.layout-expand-east').find('.panel-header').css({'border-top':0,'border-right':0});
+										_layout.find('.layout-expand-east').find('.panel-body').css({'border-top':0,'border-right':0,'border-bottom':0});
+									}else{
+										_layout.layout('expand', 'east');
+									}
 								}
 							}]
 						}]

@@ -575,6 +575,41 @@
 .icon-usedmenufile-large{
 	background:url('icon32/usedmenufile.png') no-repeat center center!important;
 }
+.icon-OutlookTaskCreate{
+	background:url('icon32/OutlookTaskCreate.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-OutlookTaskCreate-large{
+	background:url('icon32/OutlookTaskCreate.png') no-repeat center center!important;
+}
+.icon-MarkTaskComplete{
+	background:url('icon32/MarkTaskComplete.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-MarkTaskComplete-large{
+	background:url('icon32/MarkTaskComplete.png') no-repeat center center!important;
+}
+.icon-GroupNumber{
+	background:url('icon32/GroupNumber.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-GroupNumber-large{
+	background:url('icon32/GroupNumber.png') no-repeat center center!important;
+}
+.icon-AccountingFormat{
+	background:url('icon32/AccountingFormat.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-AccountingFormat-large{
+	background:url('icon32/AccountingFormat.png') no-repeat center center!important;
+}
+.icon-OutlookTaskCreateSave{
+	background:url('icon32/OutlookTaskCreateSave.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-OutlookTaskCreateSave-large{
+	background:url('icon32/OutlookTaskCreateSave.png') no-repeat center center!important;
+}
 
 
 
