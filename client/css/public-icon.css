@@ -610,6 +610,13 @@
 .icon-OutlookTaskCreateSave-large{
 	background:url('icon32/OutlookTaskCreateSave.png') no-repeat center center!important;
 }
+.icon-AcceptTask{
+	background:url('icon32/AcceptTask.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-AcceptTask-large{
+	background:url('icon32/AcceptTask.png') no-repeat center center!important;
+}
 
 
 

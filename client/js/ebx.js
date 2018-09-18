@@ -15,9 +15,9 @@ var ebx = {
 	listview:{ //显示列数组
 		productserial:1, //串号
 		colorsize:1,//色码
-		nat:0, //不含税额
-		taxrate: 0, //税率
-		taxamount: 0, //税额
+		nat:1, //不含税额
+		taxrate: 1, //税率
+		taxamount: 1, //税额
 		discount: 0,//折扣
 		expire: 0, //保质期
 		oldprice: 0, //零售价

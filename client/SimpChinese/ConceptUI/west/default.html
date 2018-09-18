@@ -99,13 +99,16 @@
 					                    onclick: function(){
 	                                        easyloader.load('numberspinner', function(){
 					                    
-	                                            var win = $('<div>').appendTo('body'),
-		                                            size = $('<div>').appendTo(win)
+	                                            var win = $('<div style="text-align:center;">').appendTo('body'),
+		                                            size = $('<div>').appendTo(win),
+													foot = $('<div style="padding:3px;text-align:center;">'),
+													okbtn = $('<div>').appendTo(foot),
+													cancelbtn = $('<div>').appendTo(foot);
                                         		
 	                                            win.window({
 		                                            title: '常用菜单设置',
-		                                            width:180,    
-		                                            height:25, 
+		                                            width:200,    
+		                                            height:80, 
 		                                            maxWidth:'90%',
 		                                            maxHeight:'90%',
 		                                            modal:true,
@@ -116,7 +119,34 @@
 		                                            resizable:false,
 		                                            border:'thin',
 		                                            shadow:false,
+													footer:foot,
 		                                            onBeforeClose: function(){
+			                                            win.remove();
+		                                            }
+	                                            }).css({'padding':10});
+                                        		
+	                                            $('body').find('.window-mask').on('click', function(){
+		                                            win.window('close');
+	                                            }); 
+
+	                                            size.numberspinner({    
+		                                            min: 5,    
+		                                            max: 50,    
+		                                            editable: true,
+		                                            label:'常用菜单数量',
+		                                            value: ebx.usedmenusize
+	                                            }).css({'margin':'5px'}); 
+
+	                                            function setToStorage(){
+		                                            ebx.storage.set('usedmenusize', {size: ebx.usedmenusize});
+	                                            }
+												okbtn.linkbutton({
+													text: '确定',
+													iconCls:'icon-AcceptTask',
+													plain:true,
+													onClick:function(){
+														ebx.usedmenusize = size.numberspinner('getValue');
+			                                            setToStorage();
 	                                                    if(ebx.usedmenu.length >= ebx.validInt(ebx.usedmenusize)){
 	                                                        var t = [];
 	                                                        for(var i in ebx.usedmenu){
@@ -137,34 +167,19 @@
                                                                 usedtree.tree('remove', usedchildrenChildren[i].target);
                                                             }
                                                         }
-			                                            win.remove();
-		                                            }
-	                                            }).css({'padding':10});
-                                        		
-	                                            $('body').find('.window-mask').on('click', function(){
-		                                            win.window('close');
-	                                            }); 
-
-	                                            size.numberspinner({    
-		                                            min: 5,    
-		                                            max: 50,    
-		                                            editable: false,
-		                                            label:'常用菜单数量',
-		                                            value: ebx.usedmenusize,
-		                                            onSpinUp:function(){
-			                                            ebx.usedmenusize = size.numberspinner('getValue');
-			                                            setToStorage();
-		                                            },
-		                                            onSpinDown:function(){
-			                                            ebx.usedmenusize = size.numberspinner('getValue');
-			                                            setToStorage();
-		                                            }
-	                                            }).css({'margin':'5px'}); 
-
-	                                            function setToStorage(){
-		                                            ebx.storage.set('usedmenusize', {size: ebx.usedmenusize});
-	                                            }
-                                                
+														win.window('close');
+													}
+												});
+												cancelbtn.linkbutton({
+													text: '取消',
+													iconCls:'icon-DeclineInvitation',
+													plain:true,
+													onClick:function(){
+														win.window('close');
+													}
+												});
+												win.parent().find('.panel-footer').css({'border-left': 0,'border-bottom': 0,'border-right': 0});
+												win.window('resize');
 	                                        });
 					                    }
 				                    }).menu('appendItem', {

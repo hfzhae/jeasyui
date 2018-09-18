@@ -38,7 +38,7 @@ ebx.bd.print = {
 				});
 				win.window({
 					title: '打印预览',
-					width:'60%',    
+					width:910,    
 					height:'90%', 
 					maxWidth:'90%',
 					maxHeight:'90%',
@@ -323,15 +323,18 @@ ebx.bd.print = {
 		});
 	},
 	setup: function(){//打印设置
-		var win = $('<div>').appendTo('body'),
+		var win = $('<div style="padding:3px;text-align:center;">').appendTo('body'),
 			pagesize = $('<div>').appendTo(win),
 			printtype = $('<div>').appendTo(win),
-			defaultbtn = $('<div>').appendTo(win);
+			foot = $('<div style="padding:3px;text-align:center;">'),
+			okbtn = $('<div>').appendTo(foot),
+			cancelbtn = $('<div>').appendTo(foot),
+			defaultbtn = $('<div>').appendTo(foot);
 		
 		win.window({
 			title: '打印设置',
 			width:200,    
-			height:120, 
+			height:110, 
 			maxWidth:'90%',
 			maxHeight:'90%',
 			modal:true,
@@ -339,8 +342,10 @@ ebx.bd.print = {
 			minimizable:false,
 			maximizable:false,
 			resizable:false,
+			noheader:true,
 			border:'thin',
 			shadow:false,
+			footer: foot,
 			onBeforeClose: function(){
 				win.remove();
 			}
@@ -353,17 +358,9 @@ ebx.bd.print = {
 		pagesize.numberspinner({    
 			min: 1,    
 			max: 100,    
-			editable: false,
+			editable: true,
 			label:'每页打印行数',
-			value: ebx.printpagesize,
-			onSpinUp:function(){
-				ebx.printpagesize = pagesize.numberspinner('getValue');
-				setPrintToStorage();
-			},
-			onSpinDown:function(){
-				ebx.printpagesize = pagesize.numberspinner('getValue');
-				setPrintToStorage();
-			}
+			value: ebx.printpagesize
 		}).css({'margin':'5px'}); 
 
 		printtype.combobox({
@@ -386,19 +383,43 @@ ebx.bd.print = {
 			}
 		}).css({'margin':'5px'}); 
 
+		okbtn.linkbutton({
+			text: '确定',
+			iconCls:'icon-AcceptTask',
+			plain:true,
+			onClick:function(){
+				ebx.printpagesize = pagesize.numberspinner('getValue');
+				setPrintToStorage();
+				win.window('close');
+			}
+		});
+		cancelbtn.linkbutton({
+			text: '取消',
+			iconCls:'icon-DeclineInvitation',
+			plain:true,
+			onClick:function(){
+				win.window('close');
+			}
+		});
+
+
 		defaultbtn.linkbutton({
-			text:'恢复默认值',
+			text:'默认',
+			plain: true,
+			iconCls:'icon-Recurrence',
 			onClick:function(){
 				pagesize.numberspinner('setValue', 10);
-				ebx.printpagesize = 10;
+				//ebx.printpagesize = 10;
 				printtype.combobox('setValue', 0);
-				ebx.printtype = 0;
-				setPrintToStorage();
+				//ebx.printtype = 0;
+				//setPrintToStorage();
 			}
-		}).css({'margin-top':'10px'});
+		});
 		
 		function setPrintToStorage(){
 			ebx.storage.set('print', {printtype:ebx.printtype, printpagesize: ebx.printpagesize});
 		}
+		win.parent().find('.panel-footer').css({'border-left': 0,'border-bottom': 0,'border-right': 0});
+		win.window('resize');
 	}
 }

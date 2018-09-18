@@ -111,9 +111,9 @@ $.extend($.fn.validatebox.defaults.rules, {//validatebox自定义校验
 	},
 	TaxRate:{
 	    validator:function(value){
-	        var reg=/^-?(0\.\d*[1-9]+\d*)/;
+	        var reg=/^([0](\.0+)?|0\.[0-9]+)$/;
 	        return reg.test(value);
 	    },
-	    message:''
+	    message:'税率应填写0～1之间的数值'
 	}
 });

@@ -751,6 +751,10 @@ ebx.bd = {
 										resizable:false,
 										border:'thin',
 										shadow:false,
+										onClose: function(){
+											var Attach = ebx.getbiribbonobj(_biribbon, '附件', 'toolbar');
+											bd.getAttachCount(bd.ID, bd.billtype, Attach)
+										}
 									});
 									$('body').find('.window-mask').on('click', function(){
 										win.window('close');
@@ -1008,7 +1012,36 @@ ebx.bd = {
 				Attach.next().hide();
 				Attach.hide();
 			}
+		}else{
+			if(this.ID > 0){
+				var Attach = ebx.getbiribbonobj(_biribbon, '附件', 'toolbar');
+				this.getAttachCount(this.ID, this.billtype, Attach)
+			}
 		}
 		
+	},
+	getAttachCount: function(id, billtype, obj){
+		$.ajax({
+			type: 'post', 
+			url: 'server/SimpChinese/attaches/getattachcount/',
+			data: {_:(new Date()).getTime(),id:id,billtype:billtype},
+			dataType: "json",
+			success: function(result){
+				if(result){
+					if(ebx.validInt(result.count) > 0){
+						obj.find('.icon-AttachFile-large').tooltip({
+							position: 'bottom',
+							content: '<span style="color:#000;">有 ' + result.count + ' 个文件</span>',
+							onShow: function(){
+								$(this).tooltip('tip').css({
+									backgroundColor: '#FFFFCC',
+									borderColor: '#CC9933'
+								});
+							}
+						}).tooltip('show');
+					}
+				}
+			}
+		});
 	}
 }

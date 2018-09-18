@@ -135,14 +135,17 @@
 						        iconCls:'icon-GroupNumber',
 						        onClick: function(){
 									easyloader.load(['numberspinner','combobox'], function(){
-										var win = $('<div>').appendTo('body'),
+										var win = $('<div style="text-align:center;">').appendTo('body'),
 											discount = $('<div>').appendTo(win),
-											target = $('<div>').appendTo(win);
+											target = $('<div>').appendTo(win),
+											foot = $('<div style="padding:3px;text-align:center;">'),
+											okbtn = $('<div>').appendTo(foot),
+											cancelbtn = $('<div>').appendTo(foot);
 										
 										win.window({
-											title: '常用菜单设置',
-											width:180,    
-											height:50, 
+											title: '整单折扣',
+											width:200,    
+											height:110, 
 											maxWidth:'90%',
 											maxHeight:'90%',
 											modal:true,
@@ -153,26 +156,8 @@
 											resizable:false,
 											border:'thin',
 											shadow:false,
+											footer: foot,
 											onBeforeClose: function(){
-												bd.discount = discount.numberspinner('getValue');
-												var grid = bd.layout.layout('panel', 'center').find('.datagrid-f'),
-													data = grid.datagrid('getData');
-
-												if(data.firstRows){
-													data = data.firstRows;
-												}else{
-													data = data.rows;
-												}
-												for(var i in data){
-													if(ebx.discountprice == 1){
-														data[i].price = data[i].oldprice * bd.discount;
-													}else{
-														data[i].price = data[i].price * bd.discount;
-													}
-													data[i].amount = data[i].price * data[i].quantity;
-												}
-												grid.datagrid('loadData', {total: data.length, rows: data});
-												ebx.setEditstatus(bd.tab, true);
 												win.remove();
 											}
 										}).css({'padding':10});
@@ -203,13 +188,51 @@
 											},{    
 												"id":1,    
 												"text":"原单价"   
-											}],
-											onChange: function(){
+											}]
+										});	
+
+										okbtn.linkbutton({
+											text: '确定',
+											iconCls:'icon-AcceptTask',
+											plain:true,
+											onClick:function(){
 												var v = target.combobox('getValue');
 												ebx.discountprice = v
 												ebx.storage.set("discountprice", {discountprice: v});
+												bd.discount = discount.numberspinner('getValue');
+												var grid = bd.layout.layout('panel', 'center').find('.datagrid-f'),
+													data = grid.datagrid('getData');
+
+												if(data.firstRows){
+													data = data.firstRows;
+												}else{
+													data = data.rows;
+												}
+												for(var i in data){
+													if(ebx.discountprice == 1){
+														data[i].price = data[i].oldprice * bd.discount;
+													}else{
+														data[i].price = data[i].price * bd.discount;
+													}
+													data[i].amount = data[i].price * data[i].quantity;
+													data[i].taxamount = data[i].amount / (data[i].taxrate + 1) * data[i].taxrate
+													data[i].nat = data[i].amount - data[i].taxamount;
+												}
+												grid.datagrid('loadData', {total: data.length, rows: data});
+												ebx.setEditstatus(bd.tab, true);
+												win.window('close');
 											}
-										});										
+										});
+										cancelbtn.linkbutton({
+											text: '取消',
+											iconCls:'icon-DeclineInvitation',
+											plain:true,
+											onClick:function(){
+												win.window('close');
+											}
+										});
+										win.parent().find('.panel-footer').css({'border-left': 0,'border-bottom': 0,'border-right': 0});
+										win.window('resize');
 									});
 								}
 							},{
@@ -669,7 +692,9 @@
 					        r.firstRows[s.datagrid('options').editIndex].taxrate = ebx.validFloat(rowData.taxrate);
 					        r.firstRows[s.datagrid('options').editIndex].productserial = rowData.productserial;
 					        r.firstRows[s.datagrid('options').editIndex].lengthserial = rowData.lengthserial;
-				        }
+							r.firstRows[s.datagrid('options').editIndex].taxamount = r.firstRows[s.datagrid('options').editIndex].amount / (r.firstRows[s.datagrid('options').editIndex].taxrate + 1) * r.firstRows[s.datagrid('options').editIndex].taxrate;
+							r.firstRows[s.datagrid('options').editIndex].nat = r.firstRows[s.datagrid('options').editIndex].amount - r.firstRows[s.datagrid('options').editIndex].taxamount;
+						}
 			        });
         			
 			        ebx.setDatagridEditor.editorType(c[0], 'Quantity', 'textbox', {//处理编辑数量时的运算

@@ -1,15 +1,54 @@
 <script type="text/javascript">
-	easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler', 'combogrid', 'droplist'], function(){		
+    easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler', 'combogrid', 'droplist', 'bi'], function() {
+    var bi = ebx.cloneObj(ebx.bi);
+        bi.infotype = 1262; //设置基本资料类型，支持上传附件
+        bi.init(function(data, obj) {
+            ebx.setDatagridEditor.editorMethods(data.rows, 'productclass', 'combogrid', {//用来重造产品类型的combogrid的方法
+                onSelect: function(rowIndex, rowData) {//选中后更新当前行的内容为选中内容
+                    var r = obj.datagrid('getData').rows;
+                    for (var i in r) {
+                        if (r[i].field == 'bigint1') {
+                            r[i].value = rowData.id;
+                        }
+                    }
+                }
+            });
+            ebx.setDatagridEditor.editorMethods(data.rows, 'ColorSizeGroupText', 'combogrid', {//用来重造颜色尺码组的combogrid的方法
+                onSelect: function(rowIndex, rowData) {//选中后更新当前行的内容为选中内容
+                    var r = obj.datagrid('getData').rows;
+                    for (var i in r) {
+                        if (r[i].field == 'ColorSizeGroup') {
+                            r[i].value = rowData.id;
+                        }
+                    }
+                },
+                onChange: function(newValue, oldValue) {
+                    if (newValue == "") {
+                        var r = obj.datagrid('getData').rows;
+                        for (var i in r) {
+                            if (r[i].field == 'ColorSizeGroup') {
+                                r[i].value = 0;
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    });
+	/*easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler', 'combogrid', 'droplist'], function(){
+	    
+		
 		var tabs = ebx.center.tabs('getSelected'),
 			tab = tabs.panel('options'),
-			Paramet = ebx.getMenuParameter(tabs),
+			Parament = ebx.getMenuParamenter(tabs),
 			layout = tabs.find('.layout'),
 			eastPanel = layout.layout('panel', 'east'),
 			biribbon = $('<div>').appendTo(eastPanel),
 			mapitem = $('<div>').appendTo(eastPanel),
-			eastParamet = ebx.getMenuParameter(eastPanel),
+			eastParament = ebx.getMenuParamenter(eastPanel),
 			storage = $('<div>'),
-			Parament=ebx.getMenuParameter(eastPanel),
+
 			mycolumns = [[
 				{field:'name',title:'名称',width:100,resizable:true,sortable:true},
 				{field:'value',title:'值',width:100,resizable:true}
@@ -124,7 +163,7 @@
 				{
 					iconCls:'icon-DeclineInvitation',
 					handler:function(){
-						ebx.EditStatusMessager(tab.editstatus,Paramet.text,function(){
+						ebx.EditStatusMessager(tab.editstatus,Parament.text,function(){
 							layout.layout('remove', 'east');//删除编辑layout
 							tab.editstatus = false;
 						});
@@ -166,11 +205,10 @@
 			},200);
 		}
 
-        console.log("xxxxxxxxxxxxxxxxx"+Paramet.id);
 		storage.propertygrid({
-			url: 'server/SimpChinese/'+Parament.modedit+'/load/',
+			url: 'server/SimpChinese/'+eastParament.modedit+'/load/',
 			method:'post',
-			queryParams:{_:(new Date()).getTime(),id:Paramet.id},
+			queryParams:{_:(new Date()).getTime(),id:eastParament.id},
 			showGroup: true,
 			width:'100%',
 			height:'100%',
@@ -180,6 +218,7 @@
 			showHeader: true
 		}).datagrid('renderformatterstyler', 'propertygrid');//启用显示式样回调函数
 		
-	});
+		
+	});*/
 	
 </script>

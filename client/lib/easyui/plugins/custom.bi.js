@@ -330,7 +330,11 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 										maximizable:false,
 										resizable:false,
 										border:'thin',
-										shadow:false
+										shadow:false,
+										onClose: function(){
+											var Attach = ebx.getbiribbonobj(_biribbon, '附件', 'toolbar');
+											bi.getAttachCount(bi.ID, bi.infotype, Attach)
+										}
 									});
 									$('body').find('.window-mask').on('click', function(){
 										win.window('close');
@@ -563,11 +567,16 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 				lockgroup.hide();
 			}
 		}
-		if(this.infotype == 0){
+		if(this.billtype == 0){
 			var Attach = ebx.getbiribbonobj(_biribbon, '附件', 'toolbar');
 			if(Attach){
 				Attach.next().hide();
 				Attach.hide();
+			}
+		}else{
+			if(this.ID > 0){
+				var Attach = ebx.getbiribbonobj(_biribbon, '附件', 'toolbar');
+				this.getAttachCount(this.ID, this.infotype, Attach)
 			}
 		}
 		_eaststorage.propertygrid({
@@ -607,5 +616,29 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 
+	},
+	getAttachCount: function(id, infotype, obj){
+		$.ajax({
+			type: 'post', 
+			url: 'server/SimpChinese/attaches/getattachcount/',
+			data: {_:(new Date()).getTime(),id:id,billtype:infotype},
+			dataType: "json",
+			success: function(result){
+				if(result){
+					if(ebx.validInt(result.count) > 0){
+						obj.find('.icon-AttachFile-large').tooltip({
+							position: 'bottom',
+							content: '<span style="color:#000;">有 ' + result.count + ' 个文件</span>',
+							onShow: function(){
+								$(this).tooltip('tip').css({
+									backgroundColor: '#FFFFCC',
+									borderColor: '#CC9933'
+								});
+							}
+						}).tooltip('show');
+					}
+				}
+			}
+		});
 	}
 }
