@@ -628,11 +628,11 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 					if(ebx.validInt(result.count) > 0){
 						obj.find('.icon-AttachFile-large').tooltip({
 							position: 'bottom',
-							content: '<span style="color:#000;">有 ' + result.count + ' 个文件</span>',
+							content: '<span style="color:#ffffff;">' + result.count + '个附件</span>',
 							onShow: function(){
 								$(this).tooltip('tip').css({
-									backgroundColor: '#FFFFCC',
-									borderColor: '#CC9933'
+									backgroundColor: '#666666',
+									borderColor: '#ffffff'
 								});
 							}
 						}).tooltip('show');
