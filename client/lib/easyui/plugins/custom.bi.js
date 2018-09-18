@@ -567,7 +567,7 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 				lockgroup.hide();
 			}
 		}
-		if(this.billtype == 0){
+		if(this.infotype == 0){
 			var Attach = ebx.getbiribbonobj(_biribbon, '附件', 'toolbar');
 			if(Attach){
 				Attach.next().hide();
