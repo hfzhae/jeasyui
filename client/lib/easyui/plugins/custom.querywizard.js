@@ -33,15 +33,13 @@ ebx.qw = {
 		
 		this._default();
 		
-		this.northPanel = this.layout.layout('panel', 'north');
-		this.biribbon = $('<div>').appendTo(this.northPanel);
-		this._north(callback.north);
-		
-		
 		this.eastPanel = this.layout.layout('panel', 'east');
 		this.eaststorage = $('<div>').appendTo(this.eastPanel);
 		this._east(callback.east);
 		
+		this.northPanel = this.layout.layout('panel', 'north');
+		this.biribbon = $('<div>').appendTo(this.northPanel);
+		this._north(callback.north);
 		
 		this.centerPanel = this.layout.layout('panel', 'center');
 		this.centerstorage = $('<div>').appendTo(this.centerPanel);
@@ -872,6 +870,8 @@ ebx.qw = {
 			_ID = this.ID,
 			_showLock = this.showLock,
 			_new = this._new,
+			hidenorthbtn = $('<div>').appendTo(_layout.layout('panel', 'north')),
+			hideeastbtn = $('<div>').appendTo(_layout.layout('panel', 'east')),
 			data = {
 				selected:0,
 				tabs:[{
@@ -1064,7 +1064,7 @@ ebx.qw = {
 								}
 							}]
 						}]
-					},{
+					}/*,{
 						title:'显示/隐藏',
 						tools:[{
 							type:'toolbar',
@@ -1090,7 +1090,7 @@ ebx.qw = {
 								}
 							}]
 						}]
-					}]
+					}*/]
 				}]
 			};
 			
@@ -1103,6 +1103,41 @@ ebx.qw = {
 			border: false,
 			plain:true,
 			showHeader: false
+		});
+
+		hidenorthbtn.linkbutton({
+			iconCls: 'icon-uparrow',
+			iconAlign:'right',
+			plain:true,
+			onClick:function(){
+				_layout.layout('collapse', 'north');
+				_layout.find('.layout-expand-north').find('.panel-header').css({'border-top':0,'border-left':0,'border-right':0});
+			}
+		}).css({
+			'position':'absolute',
+			//'z-index':99999,
+			'right':0,
+			'bottom':0
+		});
+		
+		hideeastbtn.linkbutton({
+			iconCls: 'icon-rightarrow',
+			iconAlign:'right',
+			plain:true,
+			onClick:function(){
+				_layout.layout('collapse', 'east');
+				_layout.find('.layout-expand-east').find('.panel-header').css({'border-top':0,'border-right':0});
+				_layout.find('.layout-expand-east').find('.panel-body').css({'border-top':0,'border-right':0,'border-bottom':0});
+			}
+		}).css({
+			'position':'absolute',
+			//'z-index':99999,
+			'left':0,
+			'top':0,
+			'width':14
+		}).find('.icon-rightarrow').css({
+			'position':'absolute',
+			'left':-2
 		});
 
 		if(this.showLock == 0){
