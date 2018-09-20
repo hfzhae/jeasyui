@@ -394,24 +394,28 @@ ebx.productserial = {
 								if(result.rows[0].productserial.total == 1){
 									if(data[index].productserial){
 										var rows = data[index].productserial.rows;
-										if(rows.length >= ebx.productseriallength){
-											$.messager.alert('错误','单行产品串号的数量上限为：' + ebx.productseriallength +'。','error');
-											return false;
-										}
+									    if(rows){
+										    if(rows.length >= ebx.productseriallength){
+											    $.messager.alert('错误','单行产品串号的数量上限为：' + ebx.productseriallength +'。','error');
+											    return false;
+										    }
 
-										for(var i in rows){
-											if(rows[i].productserial == result.rows[0].productserial.rows[0].productserial){
-												$.messager.alert('错误', '产品：' + data[index].productname +' 的串号：' + rows[i].productserial + ' 已存在！', 'error', function(){
-													t.textbox('textbox').focus().select();
-												});	
-												return;
-											}
-										}
-										if(data[index].productserial.length == 0){
-											data[index].productserial = result.rows[0].productserial;
+										    for(var i in rows){
+											    if(rows[i].productserial == result.rows[0].productserial.rows[0].productserial){
+												    $.messager.alert('错误', '产品：' + data[index].productname +' 的串号：' + rows[i].productserial + ' 已存在！', 'error', function(){
+													    t.textbox('textbox').focus().select();
+												    });	
+												    return;
+											    }
+										    }
+										    if(data[index].productserial.length == 0){
+											    data[index].productserial = result.rows[0].productserial;
+										    }else{
+											    rows.push(result.rows[0].productserial.rows[0]);
+											    data[index].productserial.total++;
+										    }
 										}else{
-											rows.push(result.rows[0].productserial.rows[0]);
-											data[index].productserial.total++;
+										    data[index].productserial = result.rows[0].productserial;
 										}
 									}else{
 										data[index].productserial = result.rows[0].productserial;

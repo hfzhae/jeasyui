@@ -225,8 +225,9 @@ ebx.bd = {
 								data[i].auditamount *= -1;
 							}
 							gird.datagrid('loadData', {total:data.length,rows:data});
+							ebx.setEditstatus(_tab, true)
 						}
-					})
+					}).addClass('browser-functionbtn');
 					if(ebx.validInt(_showSearchserial) == 0 || ebx.listview.productserial == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
 				}
 			}
