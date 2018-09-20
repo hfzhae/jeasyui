@@ -119,6 +119,7 @@ ebx.bd = {
 			toolbar = $('<div>'),
 			serialScan = $('<div>').appendTo(toolbar),
 			newbtn = $('<div>').appendTo(toolbar),
+			negativebtn = $('<div>').appendTo(toolbar),
 			_tabs = this.tabs,
 			_tab = this.tab,
 			_showSearchserial = this.showSearchserial;
@@ -164,7 +165,8 @@ ebx.bd = {
 					}).datagrid('renderformatterstyler')
 					if(callback1)callback1(_centerstorage);
 					serialScan.searchbox({
-						prompt:'搜索串号添加产品',
+						prompt:'搜索串号或条码添加产品',
+						width:160,
 						searcher: function(index){
 							var textbox = $(this),
 								v = textbox.textbox('getValue');
@@ -199,6 +201,30 @@ ebx.bd = {
 							
 							ebx.setEditstatus(_tab, true);
 							//listdatagrid.datagrid('reload');
+						}
+					});
+					negativebtn.linkbutton({
+						text:'+/-',
+						plain:true,
+						onClick: function(){
+							var gird = _layout.layout('panel', 'center').find('.datagrid-f'),
+								data = (function(){
+									var d = gird.datagrid('getData');
+									if(d.firstRows){
+										return d.firstRows;
+									}else{
+										return d.rows;
+									}
+								})();
+							
+							for(var i in data){
+								data[i].quantity *= -1;
+								data[i].amount *= -1;
+								data[i].famount *= -1;
+								data[i].taxamount *= -1;
+								data[i].auditamount *= -1;
+							}
+							gird.datagrid('loadData', {total:data.length,rows:data});
 						}
 					})
 					if(ebx.validInt(_showSearchserial) == 0 || ebx.listview.productserial == 0)_layout.layout('panel', 'center').find('.datagrid-toolbar').remove();
@@ -393,7 +419,29 @@ ebx.bd = {
 								text:'红冲另存',
 								iconCls:'icon-GroupTableOfAuthorities',
 								onClick: function(){
-									//console.log(_layout)
+									$.messager.confirm('提示', '是否需要红冲另存？', function(r){
+										if (r){
+											var gird = _layout.layout('panel', 'center').find('.datagrid-f'),
+												data = (function(){
+													var d = gird.datagrid('getData');
+													if(d.firstRows){
+														return d.firstRows;
+													}else{
+														return d.rows;
+													}
+												})();
+											
+											for(var i in data){
+												data[i].quantity *= -1;
+												data[i].amount *= -1;
+												data[i].famount *= -1;
+												data[i].taxamount *= -1;
+												data[i].auditamount *= -1;
+											}
+											gird.datagrid('loadData', {total:data.length,rows:data});
+											_save(1, _layout, _Parament, _tab, bd, function(){ });
+										}
+									});
 								}
 							}],
 							onClick: function(){
@@ -419,13 +467,13 @@ ebx.bd = {
 							type:'splitbutton',
 							name:'audit',
 							text:'审核',
-							iconCls:'icon-AcceptChanges-large',
+							iconCls:'icon-OutlookTaskCreate-large',
 							iconAlign:'top',
 							size:'large',
 							menuItems:[{
 								name:'saveas',
 								text:'保存并审核',
-								iconCls:'icon-SaveSelectionToTableOfContentsGallery',
+								iconCls:'icon-OutlookTaskCreateSave',
 								onClick: function(){
 									//console.log(_layout)
 								}
@@ -947,33 +995,7 @@ ebx.bd = {
 								}
 							}]
 						}]
-					}/*,{
-						title:'显示/隐藏',
-						tools:[{
-							type:'toolbar',
-							dir:'v',
-							tools:[{
-								text:'功能',
-								iconCls:'icon-TableInsertRowsAbove',
-								onClick: function(){
-									_layout.layout('collapse', 'north');
-									_layout.find('.layout-expand-north').find('.panel-header').css({'border-top':0,'border-left':0,'border-right':0});
-								}
-							},{
-								text:'属性',
-								iconCls:'icon-TableInsertColumnsRight',
-								onClick: function(){
-									if(_layout.layout("panel", "east")[0].clientWidth > 0){
-										_layout.layout('collapse', 'east');
-										_layout.find('.layout-expand-east').find('.panel-header').css({'border-top':0,'border-right':0});
-										_layout.find('.layout-expand-east').find('.panel-body').css({'border-top':0,'border-right':0,'border-bottom':0});
-									}else{
-										_layout.layout('expand', 'east');
-									}
-								}
-							}]
-						}]
-					}*/]
+					}]
 				}]
 			};
 			
@@ -1068,12 +1090,9 @@ ebx.bd = {
 					if(ebx.validInt(result.count) > 0){
 						obj.find('.icon-AttachFile-large').tooltip({
 							position: 'bottom',
-							content: '<span style="color:#ffffff;">' + result.count + '个附件</span>',
+							content: result.count + '个附件',
 							onShow: function(){
-								$(this).tooltip('tip').css({
-									backgroundColor: '#666666',
-									borderColor: '#ffffff'
-								});
+								//$(this).tooltip('tip').addClass('bdtip');
 							}
 						}).tooltip('show');
 					}

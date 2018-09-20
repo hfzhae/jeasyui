@@ -2,7 +2,7 @@
 <%
 (function(){
 	var id = ebx.validInt(ebx.stdin['id']),
-		sql = 'select a.billmemo,a.isdeleted,a.auditid,a.updatedate,a.createdate,u.title as owner,c.title as custom,a.Organization,a.billdate,s.title as stockname,a.stock, o.title as operatorname,a.operator,i.title as InvoiceTypename,a.InvoiceType,a.InvoiceNum,a.InvoiceMemo,v.title as VIPCustomname,a.VIPCustomID,a.UUID,r.title as Currencyname,a.Currency,a.Relation,sm.title as CheckTypename,a.CheckType from ' + TableName + ' a,biuser u,bicustom c,bistock s,biuser o,biInvoiceType i, biVIPCustom v,biCurrency r,biSettlement sm where a.CheckType=sm.id and r.id=a.Currency and a.VIPCustomID=v.id and a.InvoiceType=i.id and a.Operator=o.id and a.Stock=s.id and a.Organization=c.id and a.owner=u.id and a.id=' + id,
+		sql = 'select a.int1,a.int2,a.billmemo,a.isdeleted,a.auditid,a.updatedate,a.createdate,u.title as owner,c.title as custom,a.Organization,a.billdate,s.title as stockname,a.stock, o.title as operatorname,a.operator,i.title as InvoiceTypename,a.InvoiceType,a.InvoiceNum,a.InvoiceMemo,v.title as VIPCustomname,a.VIPCustomID,a.UUID,r.title as Currencyname,a.Currency,a.Relation,sm.title as CheckTypename,a.CheckType from ' + TableName + ' a,biuser u,bicustom c,bistock s,biuser o,biInvoiceType i, biVIPCustom v,biCurrency r,biSettlement sm where a.CheckType=sm.id and r.id=a.Currency and a.VIPCustomID=v.id and a.InvoiceType=i.id and a.Operator=o.id and a.Stock=s.id and a.Organization=c.id and a.owner=u.id and a.id=' + id,
 		rs,
 		data = [],
 		isdeleted = 0,
@@ -30,7 +30,9 @@
 		Relation = 1,
 		CheckTypename = ''
 		CheckType = 0,
-		billmemo = '';
+		billmemo = '',
+		int1 = 0,
+		int2 = 0;
 	
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1)
@@ -60,6 +62,8 @@
 			CheckTypename = rs('CheckTypename').value;
 			CheckType = ebx.validInt(rs('CheckType').value);
 			billmemo = rs('billmemo').value;
+			int1 = ebx.validInt(rs('int1').value);
+			int2 = ebx.validInt(rs('int2').value);
 		}
 	}
 	data = {"total":11,"rows":[
@@ -193,8 +197,10 @@
 				}
 			},
 			'field':'CheckTypename','func':''},
-		{'name':'CheckType','value':CheckType,'group':'系统生成','hidden':true,'field':'CheckType','func':''},
-		{"name":"备注","value":billmemo,"group":"其他","editor":"text","field":"billmemo"},
+		{name:'CheckType',value:CheckType,group:'系统生成',hidden:true,field:'CheckType',func:''},
+		{name:"现款现结",value:int1,group:'其他',render:"boolRender",editor:{type:"checkbox",options:{on:1,off:0}},field:"int1"},
+		{name:"应收款按单结算",value:int2,group:"其他",render:"boolRender",editor:{type:"checkbox",options:{on:1,off:0}},field:"int2"},
+		{name:"备注","value":billmemo,"group":"其他","editor":"text","field":"billmemo"},
 
 	]};
 	ebx.stdout = data;

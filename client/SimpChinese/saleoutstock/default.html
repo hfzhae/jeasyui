@@ -29,21 +29,37 @@
 						        size:'large',
 						        iconCls:'icon-MarkTaskComplete-large',
 						        onClick: function(){
-									if(bd.layout.layout('panel', 'south').length > 0){
-										if(bd.layout.layout('panel', 'south').panel('options').title == '读取订单'){
-											bd.layout.layout('remove', 'south');
-											return;
-										}else{
-											bd.layout.layout('remove', 'south');
-										}
+									var eastdata = bd.layout.layout('panel', 'east').find('.datagrid-f').datagrid('getRows'),
+										customid = (function(){
+											var id = 0;
+											for(var i in eastdata){
+												if(eastdata[i].field){
+													if(eastdata[i].field.toLowerCase() === 'organization'){
+														id = ebx.validInt(eastdata[i].value);
+													}
+												}
+											}
+											return id;
+										})();
+
+									if(customid == 0){
+										$.messager.show({
+											title: '提示',
+											msg: '请先选择客户。',
+											timeout: 3000,
+											showType: 'slide'
+										});
+										return;
 									}
+									bd.layout.layout('remove', 'south');
+									
 									bd.layout.layout('add', {
 										region: 'south',
 										title:'读取订单',
-										height: '30%',
+										height: '40%',
 										maxHeight: '50%',
 										minHeight: 150,
-										collapsible: false,
+										collapsible: true,
 										iconCls:'icon-MarkTaskComplete',
 										border: false,
 										split: true,
@@ -67,6 +83,163 @@
 											bd.layout.find('.layout-expand-south').find('.panel-body').css({'border-right':0,'border-left':0,'border-bottom':0})
 										}
 									});
+									
+									var orderdata = $('<div>').appendTo(bd.layout.layout('panel', 'south')),
+										toolbar = $('<div>'),
+										searchtext = $('<div>').appendTo(toolbar),
+										allselectbtn = $('<div>').appendTo(toolbar),
+										cancelselectbtn = $('<div>').appendTo(toolbar),
+										Reversalselectbtn = $('<div>').appendTo(toolbar),
+										okbtn = $('<div>').appendTo(toolbar),
+										closebtn = $('<div>'),//.appendTo(toolbar),
+										okfn = function(d){
+											if(!d)return;
+											if(d.length == 0)return;
+											var grid = bd.layout.layout('panel', 'center').find('.datagrid-f');
+											if(d.length == 1){
+												grid.datagrid('appendRow',{
+													productid: d[0].productid,
+													productname:d[0].pname,
+													productcode:d[0].pcode,
+													quantity:d[0].quantity,
+													price:d[0].price,
+													oldprice:d[0].oldprice,
+													amount:d[0].amount,
+													spec:d[0].spec,
+													aunit:d[0].aunit,
+													taxrate:d[0].taxrate,
+													taxamount:d[0].amount/(1+d[0].taxrate)*d[0].taxrate,
+													famount:d[0].amount,
+													billlistmemo:d[0].strmemo
+												});
+												grid.datagrid('scrollTo', grid.datagrid('getData').total - 1);//滚动到新增的行
+												grid.datagrid('selectRow', grid.datagrid('getData').total - 1);
+											}else{
+												var data = grid.datagrid('getData');
+												if(data.firstRows){
+													data = data.firstRows;
+												}else{
+													data = data.rows;
+												}
+												for(var i in d){
+													data.push({
+														productid: d[i].productid,
+														productname:d[i].pname,
+														productcode:d[i].pcode,
+														quantity:d[i].quantity,
+														price:d[i].price,
+														oldprice:d[i].oldprice,
+														amount:d[i].amount,
+														spec:d[i].spec,
+														aunit:d[i].aunit,
+														taxrate:d[i].taxrate,
+														taxamount:d[i].amount/(1+d[i].taxrate)*d[i].taxrate,
+														famount:d[i].amount,
+														billlistmemo:d[i].strmemo
+													})
+												}
+												grid.datagrid('loadData',{total:data.length, rows:data});
+											}
+											ebx.setEditstatus(bd.tab, true);
+										};
+									$.ajax({
+										type: 'post', 
+										url: 'server/SimpChinese/DataProvider/style/',
+										data: {style:'SO_Open',_:(new Date()).getTime()},
+										dataType: "json",
+										success: function(result){
+											if(result){
+												var columnsData = [result.data];
+												ebx.setListVies(columnsData[0]);
+												orderdata.datagrid({
+													view:scrollview,
+													pageSize:ebx.pagesize,
+													remoteSort:true,
+													rownumbers:true,
+													singleSelect:false,
+													pagination:false,
+													fitColumns:false,
+													striped:true,
+													nowrap:true,//禁用自动换行
+													url:'server/SimpChinese/saleoutstock/getorder/',
+													method:'post',
+													queryParams: {id: customid, _: (new Date()).getTime()},
+													toolbar: toolbar,
+													multiSort:false,
+													checkOnSelect:false,
+													checkOnSelect:true,
+													columns:columnsData,
+													height: '100%',
+													//width: '100%',
+													border:result.bd[0].border,
+													showFooter:result.bd[0].footer,
+													showHeader:result.bd[0].header,
+													onClickCell:function(index, row){},
+													onDblClickRow:function(index, row){
+														okfn([row]);
+														orderdata.datagrid('deleteRow', index);
+													}
+												}).datagrid('renderformatterstyler');
+											}
+										}
+									});
+									searchtext.searchbox({ 
+										searcher:function(value,name){ 
+											orderdata.datagrid('load', {
+												id:customid,
+												find: escape(value)
+											})
+										}, 
+										prompt:'请输入搜索文本' 
+									}); 
+									allselectbtn.linkbutton({
+										text:'全选',
+										iconCls:'icon-TableInsertColumnsRightprvall',
+										plain:true,
+										onClick: function(){
+											orderdata.datagrid('checkAll');
+										}
+									});
+									cancelselectbtn.linkbutton({
+										text:'取消选中',
+										iconCls:'icon-TableDelete',
+										plain:true,
+										onClick:function(){
+											orderdata.datagrid('uncheckAll');
+										}
+									});
+									Reversalselectbtn.linkbutton({
+										text:'反选',
+										iconCls:'icon-Reversalselectbtn',
+										plain:true,
+										onClick: function(){
+											var s = orderdata.datagrid('getSelections');
+											orderdata.datagrid('checkAll');
+											for(var i in s){
+												orderdata.datagrid('unselectRow', orderdata.datagrid('getRowIndex', s[i]));
+											}
+										}
+									});
+									okbtn.linkbutton({
+										text:'添加选中的行到单据',
+										iconCls:'icon-arrow-up',
+										plain:true,
+										onClick: function(){
+											var data = orderdata.datagrid('getSelections')
+											okfn(data);
+											for(var i in data){
+												orderdata.datagrid('deleteRow',  orderdata.datagrid('getRowIndex', data[i]));
+											}
+										}
+									});
+									closebtn.linkbutton({
+										text:'关闭',
+										iconCls:'icon-DeclineInvitation',
+										plain:true,
+										onClick: function(){
+											bd.layout.layout('remove', 'south');
+										}
+									});
 								}
 							}]
 						},{
@@ -78,32 +251,37 @@
 						        //size:'large',
 						        iconCls:'icon-AdpDiagramRelationships',
 						        onClick: function(){
-									var grid = bd.layout.layout('panel', 'center').find('.datagrid-f'),
-										index = grid.datagrid('getRowIndex', grid.datagrid('getSelected'));
-									if(index < 0){
+									var eastdata = bd.layout.layout('panel', 'east').find('.datagrid-f').datagrid('getRows'),
+										customid = (function(){
+											var id = 0;
+											for(var i in eastdata){
+												if(eastdata[i].field){
+													if(eastdata[i].field.toLowerCase() === 'organization'){
+														id = ebx.validInt(eastdata[i].value);
+													}
+												}
+											}
+											return id;
+										})();
+
+									if(customid == 0){
 										$.messager.show({
 											title: '提示',
-											msg: '请先选中一行。',
+											msg: '请先选择客户。',
 											timeout: 3000,
 											showType: 'slide'
-										});									
+										});
 										return;
 									}
-									if(bd.layout.layout('panel', 'south').length > 0){
-										if(bd.layout.layout('panel', 'south').panel('options').title == '价格跟踪'){
-											bd.layout.layout('remove', 'south');
-											return;
-										}else{
-											bd.layout.layout('remove', 'south');
-										}
-									}
+									bd.layout.layout('remove', 'south');
+
 									bd.layout.layout('add', {
 										region: 'south',
 										title:'价格跟踪',
-										height: '30%',
+										height: '40%',
 										maxHeight: '50%',
 										minHeight: 150,
-										collapsible: false,
+										collapsible: true,
 										iconCls:'icon-AdpDiagramRelationships',
 										border: false,
 										split: true,
@@ -127,12 +305,169 @@
 											bd.layout.find('.layout-expand-south').find('.panel-body').css({'border-right':0,'border-left':0,'border-bottom':0})
 										}
 									});
+									
+									var trackgrid = $('<div>').appendTo(bd.layout.layout('panel', 'south')),
+										toolbar = $('<div>'),
+										searchtext = $('<div>').appendTo(toolbar),
+										allselectbtn = $('<div>').appendTo(toolbar),
+										cancelselectbtn = $('<div>').appendTo(toolbar),
+										Reversalselectbtn = $('<div>').appendTo(toolbar),
+										okbtn = $('<div>').appendTo(toolbar),
+										closebtn = $('<div>'),//.appendTo(toolbar),
+										okfn = function(d){
+											if(!d)return;
+											if(d.length == 0)return;
+											var grid = bd.layout.layout('panel', 'center').find('.datagrid-f');
+											if(d.length == 1){
+												grid.datagrid('appendRow',{
+													productid: d[0].productid,
+													productname:d[0].productname,
+													productcode:d[0].productcode,
+													quantity:d[0].quantity,
+													price:d[0].price,
+													oldprice:d[0].oldprice,
+													amount:d[0].price,
+													spec:d[0].spec,
+													aunit:d[0].aunit,
+													taxrate:d[0].taxrate,
+													taxamount:d[0].price/(1+d[0].taxrate)*d[0].taxrate,
+													famount:d[0].price
+												});
+												grid.datagrid('scrollTo', grid.datagrid('getData').total - 1);//滚动到新增的行
+												grid.datagrid('selectRow', grid.datagrid('getData').total - 1);
+											}else{
+												var data = grid.datagrid('getData');
+												if(data.firstRows){
+													data = data.firstRows;
+												}else{
+													data = data.rows;
+												}
+												for(var i in d){
+													data.push({
+														productid: d[i].productid,
+														productname:d[i].productname,
+														productcode:d[i].productcode,
+														quantity:d[i].quantity,
+														price:d[i].price,
+														oldprice:d[i].oldprice,
+														amount:d[i].price,
+														spec:d[i].spec,
+														aunit:d[i].aunit,
+														taxrate:d[i].taxrate,
+														taxamount:d[i].price/(1+d[i].taxrate)*d[i].taxrate,
+														famount:d[i].price
+													})
+												}
+												grid.datagrid('loadData',{total:data.length, rows:data});
+											}
+											ebx.setEditstatus(bd.tab, true);
+										};
+									
+									$.ajax({
+										type: 'post', 
+										url: 'server/SimpChinese/DataProvider/style/',
+										data: {style:'ProductSaleTrack',_:(new Date()).getTime()},
+										dataType: "json",
+										success: function(result){
+											if(result){
+												var columnsData = [result.data];
+												ebx.setListVies(columnsData[0]);
+												trackgrid.datagrid({
+													view:scrollview,
+													pageSize:ebx.pagesize,
+													remoteSort:true,
+													rownumbers:true,
+													singleSelect:false,
+													pagination:false,
+													fitColumns:false,
+													striped:true,
+													nowrap:true,//禁用自动换行
+													url:'server/SimpChinese/saleoutstock/gettrack/',
+													method:'post',
+													queryParams: {id: customid, _: (new Date()).getTime()},
+													toolbar: toolbar,
+													multiSort:false,
+													checkOnSelect:false,
+													checkOnSelect:true,
+													columns:columnsData,
+													height: '100%',
+													//width: '100%',
+													border:result.bd[0].border,
+													showFooter:result.bd[0].footer,
+													showHeader:result.bd[0].header,
+													onClickCell:function(index, row){},
+													onDblClickRow:function(index, row){
+														okfn([row]);
+														trackgrid.datagrid('deleteRow', index);
+													}
+												}).datagrid('renderformatterstyler');
+											}
+										}
+									});
+									searchtext.searchbox({ 
+										searcher:function(value,name){ 
+											trackgrid.datagrid('load', {
+												id:customid,
+												find: escape(value)
+											})
+										}, 
+										prompt:'请输入搜索文本' 
+									}); 
+									allselectbtn.linkbutton({
+										text:'全选',
+										iconCls:'icon-TableInsertColumnsRightprvall',
+										plain:true,
+										onClick: function(){
+											trackgrid.datagrid('checkAll');
+										}
+									});
+									cancelselectbtn.linkbutton({
+										text:'取消选中',
+										iconCls:'icon-TableDelete',
+										plain:true,
+										onClick:function(){
+											trackgrid.datagrid('uncheckAll');
+										}
+									});
+									Reversalselectbtn.linkbutton({
+										text:'反选',
+										iconCls:'icon-Reversalselectbtn',
+										plain:true,
+										onClick: function(){
+											var s = trackgrid.datagrid('getSelections');
+											trackgrid.datagrid('checkAll');
+											for(var i in s){
+												trackgrid.datagrid('unselectRow', trackgrid.datagrid('getRowIndex', s[i]));
+											}
+										}
+									});
+									okbtn.linkbutton({
+										text:'添加选中的行到单据',
+										iconCls:'icon-arrow-up',
+										plain:true,
+										onClick: function(){
+											var data = trackgrid.datagrid('getSelections')
+											okfn(data);
+											for(var i in data){
+												trackgrid.datagrid('deleteRow',  trackgrid.datagrid('getRowIndex', data[i]));
+											}
+										}
+									});
+									closebtn.linkbutton({
+										text:'关闭',
+										iconCls:'icon-DeclineInvitation',
+										plain:true,
+										onClick: function(){
+											bd.layout.layout('remove', 'south');
+										}
+									});
 								}
 							},{
 						        text:'整单打折',
 						        //iconAlign:'top',
 						        //size:'large',
 						        iconCls:'icon-GroupNumber',
+								name:'discount',
 						        onClick: function(){
 									easyloader.load(['numberspinner','combobox'], function(){
 										var win = $('<div style="text-align:center;">').appendTo('body'),
@@ -158,6 +493,7 @@
 											shadow:false,
 											footer: foot,
 											onBeforeClose: function(){
+												rediscount();
 												win.remove();
 											}
 										}).css({'padding':10});
@@ -388,6 +724,22 @@
 					        }]
 				        }]
 			        });
+					function rediscount(){
+						return;//窄屏显示效果较差，暂停提示
+						var discountbtn = ebx.getbiribbonobj(bd.biribbon, 'discount', 'linkbutton');
+						if(discountbtn){
+							discountbtn.tooltip({
+								position: 'right',
+								content: '折扣：' + bd.discount + '<br>参考：'+(ebx.discountprice==1?'原单价':'单价'),
+								onShow: function(){
+									//$(this).tooltip('tip').addClass('bdtip');
+								}
+							}).tooltip('show');
+						}
+					}
+					setTimeout(function(){
+						rediscount();
+					}, 0);
 		        },
 		        east: function(c, s){//表头区域（load）回掉函数
 		            ebx.setDatagridEditor.editorMethods(c.rows, 'custom', 'combogrid', {//用来重造客户的combogrid得方法
@@ -398,6 +750,7 @@
 						            r[i].value = rowData.id;
 					            }
 				            }
+							bd.layout.layout('remove', 'south');
 			            },
 			            onChange: function(newValue, oldValue){
 			                if(newValue == ''){

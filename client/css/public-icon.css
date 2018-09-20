@@ -631,6 +631,13 @@
 .icon-leftarrow-large{
 	background:url('icon32/leftarrow.png') no-repeat center center!important;
 }
+.icon-Reversalselectbtn{
+	background:url('icon32/Reversalselectbtn.png') no-repeat center center!important;
+	background-size:16px 16px!important;
+}
+.icon-Reversalselectbtn-large{
+	background:url('icon32/Reversalselectbtn.png') no-repeat center center!important;
+}
 
 
 

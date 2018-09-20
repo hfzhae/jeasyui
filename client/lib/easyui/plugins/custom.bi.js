@@ -628,12 +628,9 @@ ebx.bi = {//基本资料对象 2018-7-13 zz
 					if(ebx.validInt(result.count) > 0){
 						obj.find('.icon-AttachFile-large').tooltip({
 							position: 'bottom',
-							content: '<span style="color:#ffffff;">' + result.count + '个附件</span>',
+							content: result.count + '个附件',
 							onShow: function(){
-								$(this).tooltip('tip').css({
-									backgroundColor: '#666666',
-									borderColor: '#ffffff'
-								});
+								//$(this).tooltip('tip').addClass('bdtip');
 							}
 						}).tooltip('show');
 					}
