@@ -1,7 +1,8 @@
 <!-- #include file="../Common.asp" -->
+<!-- #include virtual="/server/savebd.asp" -->
 <%
 (function(){
-	ebx.saveBD.init(TableName, ModType, IGID);
-	ebx.saveBD.save();
+	ebx.savebd.init(TableName, ModType, IGID);
+	ebx.savebd.save();
 })();
 %>

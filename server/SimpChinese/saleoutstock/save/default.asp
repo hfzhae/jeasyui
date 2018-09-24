@@ -1,8 +1,9 @@
 <!-- #include file="../Common.asp" -->
+<!-- #include virtual="/server/savebd.asp" -->
 <%
 (function(){
-	ebx.saveBD.init(TableName, ModType, IGID);
-	ebx.saveBD.save(function(rsBD, rsBDList){
+	ebx.savebd.init(TableName, ModType, IGID);
+	ebx.savebd.save(function(rsBD, rsBDList){
 		if(ebx.validInt(rsBD('auditid').value) > 0){
 			throw 'µ•æ›“—…Û∫À£°'
 		}

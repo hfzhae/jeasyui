@@ -1,4 +1,5 @@
 <!-- #include file="../Common.asp" -->
+<!-- #include virtual="/server/print.asp" -->
 <%
 (function(){
 	ebx.print.printing({
