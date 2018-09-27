@@ -2,10 +2,10 @@
 <%
 (function(){
 	var data = {"total": 0, "rows": []},
-		id = ebx.validInt(ebx.stdin['id']);
+		id = ebx.validInt(ebx.stdIn['id']);
 		
 	if(id == 0){
-		ebx.stdout = data;
+		ebx.stdOut = data;
 		return;
 	}
 	var sqlSize = "select s.title, s.id from bdColorSizeList l,bisize s where l.ColorSizeID=s.id and l.id="+id+" and l.Type=1",
@@ -55,6 +55,6 @@
 	data["total"] = rsSize1.Recordcount;
 	data["rows"] = eval('('+ebx.convertRsToJson(rsSize1, 1)+')');
 	data["footer"] = [{}];
-	ebx.stdout = data;
+	ebx.stdOut = data;
 })();
 %>

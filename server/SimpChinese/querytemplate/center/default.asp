@@ -1,11 +1,11 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-	if(!ebx.stdin['id']){ 
-		ebx.stdout = {total:0, rows:[]};
+	if(!ebx.stdIn['id']){ 
+		ebx.stdOut = {total:0, rows:[]};
 		return;
 	}
-	var id = ebx.validInt(ebx.stdin['id']),
+	var id = ebx.validInt(ebx.stdIn['id']),
 		data = ebx.dbx.open('select null where 0 is null',1,1);
 		sql = 'select [Columns] from ' + TableName + ' where id=' + id,
 		rs = ebx.dbx.open(sql, 1, 1);
@@ -17,6 +17,6 @@
 			data.MoveNext();
 		}
 	}
-	ebx.stdout = data;
+	ebx.stdOut = data;
 })();
 %>

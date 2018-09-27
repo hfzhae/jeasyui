@@ -1,18 +1,18 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-    var id = ebx.validInt(ebx.stdin["id"]),
-		sql = "select a.code,a.title,a.isdeleted,a.updatedate,a.createdate,u.title owner,a.bigint1 productclassid,bipc.title productclass,a.[Nvarchar2],a.[Nvarchar1],a.[Nvarchar3],a.[Nvarchar4],a.[Currency1],a.[Currency2],a.[Currency3],a.[Currency4],a.[Currency5],a.[Currency6],a.[Currency7],a.[Currency8],a.[Currency9],a.[Currency10],a.[TaxRate],a.[ProductType],a.[IsGroup],a.[ColorSizeGroup],a.[MemoInfo],a.[MadeIn],a.[OriginMade],a.[VenderCode],a.[Material],a.[Price],a.[WebFlag],a.[pProfile],a.[WebID],a.[bAttaches],a.[FromFlag],a.[AssessCost],a.[code1],a.[code2],a.[code3],a.[code4],a.[code5],a.[code6],a.[code7],a.[LengthSerial],a.[Batch],a.[VIPPoints],a.[VIPDateFrom],a.[VIPDateTo],a.[VIPCoefficient],a.[VIPCash],isnull(bdcs.title,'') ColorSizeGroupText from " + TableName + " a left join  bdcolorsize bdcs on a.ColorSizeGroup =bdcs.id,biuser u,biproductclass bipc where  a.bigint1=bipc.id and a.owner=u.id and a.id=" + id,
+    var id = ebx.validInt(ebx.stdIn["id"]),
+		sql = "select a.code,a.title,a.isDeleted,a.updatedate,a.createdate,u.title owner,a.bigint1 productclassid,bipc.title productclass,a.[Nvarchar2],a.[Nvarchar1],a.[Nvarchar3],a.[Nvarchar4],a.[Currency1],a.[Currency2],a.[Currency3],a.[Currency4],a.[Currency5],a.[Currency6],a.[Currency7],a.[Currency8],a.[Currency9],a.[Currency10],a.[TaxRate],a.[ProductType],a.[IsGroup],a.[ColorSizeGroup],a.[MemoInfo],a.[MadeIn],a.[OriginMade],a.[VenderCode],a.[Material],a.[Price],a.[WebFlag],a.[pProfile],a.[WebID],a.[bAttaches],a.[FromFlag],a.[AssessCost],a.[code1],a.[code2],a.[code3],a.[code4],a.[code5],a.[code6],a.[code7],a.[LengthSerial],a.[Batch],a.[VIPPoints],a.[VIPDateFrom],a.[VIPDateTo],a.[VIPCoefficient],a.[VIPCash],isnull(bdcs.title,'') ColorSizeGroupText from " + TableName + " a left join  bdcolorSize bdcs on a.ColorSizeGroup =bdcs.id,biuser u,biproductclass bipc where  a.bigint1=bipc.id and a.owner=u.id and a.id=" + id,
 		rs,
 		data = [],
-		code = "", title = "", isdeleted = 0, updatedate = new Date(), createdate = new Date(),owner="",bigint1=0,productclass="",Nvarchar2="",Material="",Nvarchar3="",Nvarchar4="",Currency10=0,Nvarchar1="",Madein="",OriginMade="",VenderCode="",Currency7=0,Currency6=0,Currency5=0,Currency1=0,Currency4=0,Currency2=0,Currency3=0,AssessCost=0,TaxRate=0.16,LengthSerial=0,pProfile="",MemoInfo="",WebFlag=0,ProductType=0,IsGroup=0,VIPDateFrom=new Date(),VIPDateTo=new Date(),VIPCoefficient=1,VIPPoints=0,VIPCash=0,Batch=0,ColorSizeGroup=0,ColorSizeGroupText="";	
+		code = "", title = "", isDeleted = 0, updatedate = new Date(), createdate = new Date(),owner="",bigint1=0,productclass="",Nvarchar2="",Material="",Nvarchar3="",Nvarchar4="",Currency10=0,Nvarchar1="",Madein="",OriginMade="",VenderCode="",Currency7=0,Currency6=0,Currency5=0,Currency1=0,Currency4=0,Currency2=0,Currency3=0,AssessCost=0,TaxRate=0.16,LengthSerial=0,pProfile="",MemoInfo="",WebFlag=0,ProductType=0,IsGroup=0,VIPDateFrom=new Date(),VIPDateTo=new Date(),VIPCoefficient=1,VIPPoints=0,VIPCash=0,Batch=0,ColorSizeGroup=0,ColorSizeGroupText="";	
 	
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1);
 		if(!rs.eof){
 			code = rs("code").value;
 			title = rs("title").value;
-			isdeleted = rs("isdeleted").value;
+			isDeleted = rs("isDeleted").value;
 			updatedate = rs("updatedate").value;
 			createdate = rs("createdate").value;
 			owner = rs("owner").value;
@@ -54,7 +54,7 @@
 	}
 	
 	data = {"total":40,"rows":[
-		{"name":"删除","value":isdeleted,"group":"系统生成","field":"_isdeleted","render":"boolRender","rowstyle":"color:#999;","fieldstyle":"color:#f00;","func":""},
+		{"name":"删除","value":isDeleted,"group":"系统生成","field":"_isDeleted","render":"boolRender","rowstyle":"color:#999;","fieldstyle":"color:#f00;","func":""},
 		{"name":"创建时间","value": new Date(createdate).Format("yyyy-MM-dd hh:mm:ss"),"group":"系统生成","field":"_createdate","rowstyle":"color:#999;"},
 		{"name":"更新时间","value": new Date(updatedate).Format("yyyy-MM-dd hh:mm:ss"),"group":"系统生成","field":"_updatedate","rowstyle":"color:#999;"},
 		{"name":"操作员","value":owner,"group":"系统生成","field":"_owner","rowstyle":"color:#999;"},
@@ -96,7 +96,7 @@
 		{"name":"兑换规则","value":VIPCash,"group":"会员兑换规则","editor":{"type":"validatebox", "options":{"required":false,"validType":"Money"}},"field":"VIPCash","func":""}
 	]};
 	
-	ebx.stdout = data;
+	ebx.stdOut = data;
 	
 })();
 

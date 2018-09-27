@@ -15,7 +15,7 @@
 		'filebox'		
 	], function(){
 		var bd = ebx.cloneObj(ebx.bd);
-		    callback = {
+		    callBack = {
 		        center: function(c, s){
 			        //重造字段的editor的validatebox校验
 			        ebx.setDatagridEditor.validatebox(c[0], 'Serial', 'Integer', true);
@@ -34,7 +34,7 @@
 					        var r = s.datagrid('getData').rows[s.datagrid('options').editIndex];
 					        r.menugroupid = rowData.id;
 					        r.menugroupname = rowData.menugroupname;
-					        r.menugrouptitle = ebx.unescapeEx(rowData.menugrouptitle);
+					        r.menugrouptitle = ebx.unEscapeEx(rowData.menugrouptitle);
 				        }
 			        });
 		        }
@@ -48,6 +48,6 @@
 				showType: 'slide'
 			});
 		}
-		bd.init(callback);
+		bd.init(callBack);
 	});
 </script>

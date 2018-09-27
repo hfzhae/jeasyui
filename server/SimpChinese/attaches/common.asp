@@ -1,15 +1,15 @@
 <% @debug = on
 var upload = {
-	stdout: '',
+	stdOut: '',
 	conn:[],
-	stdout: {},
+	stdOut: {},
 	size: 0,
 	maxlength: 5000000,//最大上传5M文件
 	fso: [],
 	file: [],
 	filename: '',
 	id: 0,
-	billtype: 0,
+	billType: 0,
 	filepath: '',
 	Folder: '',
 	Initialize:function(){
@@ -27,8 +27,8 @@ var upload = {
 			}
 			this.filename = this.sqlStringEncode(unescape(Request.form('filename').Item));
 			this.id = this.validInt(Request.form('id').Item);
-			this.billtype = this.validInt(Request.form('billtype').Item);
-			if(this.id == 0 || this.billtype == 0){
+			this.billType = this.validInt(Request.form('billType').Item);
+			if(this.id == 0 || this.billType == 0){
 				throw '上传信息有误！';
 			}
 			if(this.filename.length == 0){
@@ -37,8 +37,8 @@ var upload = {
 		}else{
 			this.filename = this.sqlStringEncode(unescape(Request('filename')));
 			this.id = this.validInt(Request('id'));
-			this.billtype = this.validInt(Request('billtype'));
-			if(this.id == 0 || this.billtype == 0){
+			this.billType = this.validInt(Request('billType'));
+			if(this.id == 0 || this.billType == 0){
 				throw '上传信息有误！';
 			}
 			if(this.filename.length == 0){
@@ -53,11 +53,11 @@ var upload = {
 			this.fso.CreateFolder(this.Folder);
 		}
 		
-		if(!this.fso.FolderExists(this.Folder + this.billtype + '\\')){
-			this.fso.CreateFolder(this.Folder + this.billtype + '\\');
+		if(!this.fso.FolderExists(this.Folder + this.billType + '\\')){
+			this.fso.CreateFolder(this.Folder + this.billType + '\\');
 		}
 		
-		this.Folder = NetBox.MapPath('\\wwwroot\\attaches\\') + this.billtype + '\\' + this.id + '\\';
+		this.Folder = NetBox.MapPath('\\wwwroot\\attaches\\') + this.billType + '\\' + this.id + '\\';
 		
 		if(!this.fso.FolderExists(this.Folder)){
 			this.fso.CreateFolder(this.Folder);
@@ -71,17 +71,17 @@ var upload = {
 			this.deldata();
 			this.delfile();
 			this.conn.CommitTrans;
-			this.stdout = '{"result":true}';
+			this.stdOut = '{"result":true}';
 		}catch(e){
 			this.conn.RollbackTrans;
-			this.stdout = '{"result":false, "msg":"'+e+'"}';
+			this.stdOut = '{"result":false, "msg":"'+e+'"}';
 		}
 	},
 	delfile: function(){
 		if(this.fso.FileExists(this.filepath))this.fso.DeleteFile(this.filepath, true);
 	},
 	deldata: function(){
-		var sql = 'select FileName from NPAttaches where BillID=' + this.id + ' and billtype=' + this.billtype,
+		var sql = 'select FileName from NPAttaches where BillID=' + this.id + ' and billType=' + this.billType,
 			rs = Server.CreateObject('ADODB.RecordSet');
 		rs.CursorLocation = 3;
 		rs.CacheSize = 16;
@@ -100,7 +100,7 @@ var upload = {
 					}
 					s = s.substr(0, s.length - 1);
 					if(s.length == 0){
-						this.conn.execute('delete NPAttaches where BillID=' + this.id + ' and billtype=' + this.billtype);
+						this.conn.execute('delete NPAttaches where BillID=' + this.id + ' and billType=' + this.billType);
 						//this.fso.DeleteFOLDER(this.Folder);
 					}else{
 						rs('filename') = s;
@@ -118,7 +118,7 @@ var upload = {
 			this.savedata();
 			this.savefile();
 			this.conn.CommitTrans;
-			this.stdout = '{"result":true}';
+			this.stdOut = '{"result":true}';
 		}catch(e){
 			this.conn.RollbackTrans;
 			var message = ''
@@ -127,7 +127,7 @@ var upload = {
 			}else{
 				message = e.message;
 			}
-			this.stdout = '{"result":false, "msg":"'+message+'"}';
+			this.stdOut = '{"result":false, "msg":"'+message+'"}';
 		}
 	},
 	savefile:function(){
@@ -136,14 +136,14 @@ var upload = {
 		this.file.close();
 	},
 	savedata: function(){
-		var sql = 'select BillType,BillID,FileName from NPAttaches where BillID=' + this.id + ' and billtype=' + this.billtype,
+		var sql = 'select BillType,BillID,FileName from NPAttaches where BillID=' + this.id + ' and billType=' + this.billType,
 			rs = Server.CreateObject('ADODB.RecordSet');
 		rs.CursorLocation = 3;
 		rs.CacheSize = 16;
 		rs.open(sql, this.conn, 3, 3);
 		if(rs.eof){
 			rs.AddNew();
-			rs('billtype') = this.billtype;
+			rs('billType') = this.billType;
 			rs('billid') = this.id;
 			rs('filename') = this.filename;
 		}else{
@@ -174,20 +174,20 @@ var upload = {
 			i = Math.floor(Math.log(bytes) / Math.log(k));
 	    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 	},
-	OnPageEnd: function(Response){//页面结束处理函数
+	onPageEnd: function(Response){//页面结束处理函数
 		Response.Clear();
 		Response.ContentType="text/HTML;charset=GB2312" 
 		Response.ContentEncoding = 'gzip';
-		Response.Write(this.stdout);
-		this.CleanData();
+		Response.Write(this.stdOut);
+		this.cleanData();
 	},
-	CleanData: function(){//清除对象函数
+	cleanData: function(){//清除对象函数
 		this.conn = null;
 		this.fso = null;
 		this.file = null;
 	}
 }
 upload.Initialize()
-function OnScriptEnd(){upload.OnPageEnd(Response);}
+function OnScriptEnd(){upload.onPageEnd(Response);}
 
  %>

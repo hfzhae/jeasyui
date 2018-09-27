@@ -1,14 +1,14 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-	if(!ebx.stdin['tblName']){ 
-		ebx.stdout = {total:0, rows:[]};
+	if(!ebx.stdIn['tblName']){ 
+		ebx.stdOut = {total:0, rows:[]};
 		return;
 	}
 	var rs = ebx.dbx.getRs(),
 		sql = '',
 		ocat = Server.CreateObject('ADOX.Catalog'),
-		tblName = ebx.sqlStringEncode(ebx.stdin['tblName']);
+		tblName = ebx.sqlStringEncode(ebx.stdIn['tblName']);
 		
 	rs.Fields.Append('title', 203, -1);
 	rs.Fields.Append('type', 203, -1);
@@ -22,7 +22,7 @@
 			rs(1) = GetDataType(ocat.Tables(tblName).Columns(i).Type);
 		}
 	}
-	ebx.stdout = rs;
+	ebx.stdOut = rs;
 	
 	function GetDataType(n){
 		switch(ebx.validInt(n)){

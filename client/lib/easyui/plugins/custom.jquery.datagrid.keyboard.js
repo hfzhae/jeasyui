@@ -306,7 +306,7 @@ $.extend($.fn.datagrid.defaults, {
 	//onLoadSuccess: function(data){//unescape所有文本数据
 	//	var dg = $(this);
 	//	dg.datagrid('fixRowHeight');
-	//	ebx.UnescapeJson(data);
+	//	ebx.unEscapeJson(data);
 	//},
 	onAfterEdit: function(rowIndex, rowData, changes){//完成编辑时修改编辑状态，用于判断是否需要保存提醒
 		try{
@@ -314,7 +314,7 @@ $.extend($.fn.datagrid.defaults, {
 				tab = tabs.panel('options');
 				
 			if(Object.keys(changes).length){
-				ebx.setEditstatus(tab, true);
+				ebx.setEditStatus(tab, true);
 			}
 		}catch(e){}
 	},
@@ -327,7 +327,7 @@ $.extend($.fn.propertygrid.defaults, {
 				tab = tabs.panel('options');
 				
 			if(Object.keys(changes).length){
-				ebx.setEditstatus(tab, true);
+				ebx.setEditStatus(tab, true);
 			}
 		}catch(e){}
 	}

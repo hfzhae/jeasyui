@@ -108,6 +108,6 @@
 		}
 		rs.MoveNext();
 	}
-	ebx.stdout = nav;
+	ebx.stdOut = nav;
 })();
 %>

@@ -8,7 +8,7 @@ ebx.deleted = {//
 	ID: 0,
 	TableName:'',
 	init:function(TableName){
-		this.ID = ebx.validInt(ebx.stdin['id']),
+		this.ID = ebx.validInt(ebx.stdIn['id']),
 		this.TableName = ebx.sqlStringEncode(TableName);
 	},
 	deleted: function(){
@@ -16,14 +16,14 @@ ebx.deleted = {//
 		try{
 			this._del();
 			ebx.conn.commitTrans;
-			ebx.stdout['result'] = 1;
-			ebx.stdout['id'] = this.ID;
+			ebx.stdOut['result'] = 1;
+			ebx.stdOut['id'] = this.ID;
 		}catch(e){
 			ebx.conn.RollbackTrans;
-			ebx.stdout['result'] = 0;
-			ebx.stdout['msg'] = e;
+			ebx.stdOut['result'] = 0;
+			ebx.stdOut['msg'] = e;
 		}
-		this.CleanData();
+		this.cleanData();
 	},
 	_del: function(){
 		if(this.ID > 0){
@@ -42,7 +42,7 @@ ebx.deleted = {//
 			throw '记录不存在！';
 		}
 	},
-	CleanData: function(){
+	cleanData: function(){
 		this.ID = null;
 		this.TableName = null;
 		this.ModType = null;

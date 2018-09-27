@@ -1,7 +1,7 @@
 <script type="text/javascript">
 	easyloader.load(['propertygrid', 'datagridkeyboard', 'datagridrenderstyler', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'ribbon', 'querywizard', 'combogrid', 'droplist'], function(){
 		var qw = ebx.cloneObj(ebx.qw),
-		    callback = {
+		    callBack = {
 		        center:function(c, s){
 			        //重造字段的editor的validatebox校验
 			        ebx.setDatagridEditor.validatebox(c[0], 'Serial', 'Integer', true);
@@ -19,12 +19,12 @@
 					        var r = s.datagrid('getData').rows[s.datagrid('options').editIndex];
 					        r.MenuGroupID = rowData.ID;
 					        r.MenuGroupName = rowData.MenuGroupName;
-					        r.MenuGroupTitle = ebx.unescapeEx(rowData.MenuGroupTitle);
+					        r.MenuGroupTitle = ebx.unEscapeEx(rowData.MenuGroupTitle);
 				        }
 			        });
 		        }
 		    };
 		
-		qw.init(callback);
+		qw.init(callBack);
 	});
 </script>

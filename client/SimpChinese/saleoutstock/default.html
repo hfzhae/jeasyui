@@ -14,10 +14,10 @@
 		'filebox',
 		'form',
 		'bdpring',
-		'productserial'
+		'productSerial'
 	], function(){
 		var bd = ebx.cloneObj(ebx.bd),
-		    callback = {//回掉函数对象
+		    callBack = {//回掉函数对象
 		        north: function(data){//功能区域回调函数
 			        data.tabs[0].groups.push({//新增收款方式功能组
 				        title:'其他',
@@ -90,7 +90,7 @@
 										allselectbtn = $('<div>').appendTo(toolbar),
 										cancelselectbtn = $('<div>').appendTo(toolbar),
 										Reversalselectbtn = $('<div>').appendTo(toolbar),
-										okbtn = $('<div>').appendTo(toolbar),
+										okBtn = $('<div>').appendTo(toolbar),
 										closebtn = $('<div>'),//.appendTo(toolbar),
 										okfn = function(d){
 											if(!d)return;
@@ -103,12 +103,12 @@
 													productcode:d[0].pcode,
 													quantity:d[0].quantity,
 													price:d[0].price,
-													oldprice:d[0].oldprice,
+													oldPrice:d[0].oldPrice,
 													amount:d[0].amount,
 													spec:d[0].spec,
-													aunit:d[0].aunit,
-													taxrate:d[0].taxrate,
-													taxamount:d[0].amount/(1+d[0].taxrate)*d[0].taxrate,
+													aUnit:d[0].aUnit,
+													taxRate:d[0].taxRate,
+													taxAmount:d[0].amount/(1+d[0].taxRate)*d[0].taxRate,
 													famount:d[0].amount,
 													billlistmemo:d[0].strmemo
 												});
@@ -128,19 +128,19 @@
 														productcode:d[i].pcode,
 														quantity:d[i].quantity,
 														price:d[i].price,
-														oldprice:d[i].oldprice,
+														oldPrice:d[i].oldPrice,
 														amount:d[i].amount,
 														spec:d[i].spec,
-														aunit:d[i].aunit,
-														taxrate:d[i].taxrate,
-														taxamount:d[i].amount/(1+d[i].taxrate)*d[i].taxrate,
+														aUnit:d[i].aUnit,
+														taxRate:d[i].taxRate,
+														taxAmount:d[i].amount/(1+d[i].taxRate)*d[i].taxRate,
 														famount:d[i].amount,
 														billlistmemo:d[i].strmemo
 													})
 												}
 												grid.datagrid('loadData',{total:data.length, rows:data});
 											}
-											ebx.setEditstatus(bd.tab, true);
+											ebx.setEditStatus(bd.tab, true);
 										};
 									$.ajax({
 										type: 'post', 
@@ -153,7 +153,7 @@
 												ebx.setListVies(columnsData[0]);
 												orderdata.datagrid({
 													view:scrollview,
-													pageSize:ebx.pagesize,
+													pageSize:ebx.pageSize,
 													remoteSort:true,
 													rownumbers:true,
 													singleSelect:false,
@@ -220,7 +220,7 @@
 											}
 										}
 									});
-									okbtn.linkbutton({
+									okBtn.linkbutton({
 										text:'添加选中的行到单据',
 										iconCls:'icon-arrow-up',
 										plain:true,
@@ -312,7 +312,7 @@
 										allselectbtn = $('<div>').appendTo(toolbar),
 										cancelselectbtn = $('<div>').appendTo(toolbar),
 										Reversalselectbtn = $('<div>').appendTo(toolbar),
-										okbtn = $('<div>').appendTo(toolbar),
+										okBtn = $('<div>').appendTo(toolbar),
 										closebtn = $('<div>'),//.appendTo(toolbar),
 										okfn = function(d){
 											if(!d)return;
@@ -325,12 +325,12 @@
 													productcode:d[0].productcode,
 													quantity:d[0].quantity,
 													price:d[0].price,
-													oldprice:d[0].oldprice,
+													oldPrice:d[0].oldPrice,
 													amount:d[0].price,
 													spec:d[0].spec,
-													aunit:d[0].aunit,
-													taxrate:d[0].taxrate,
-													taxamount:d[0].price/(1+d[0].taxrate)*d[0].taxrate,
+													aUnit:d[0].aUnit,
+													taxRate:d[0].taxRate,
+													taxAmount:d[0].price/(1+d[0].taxRate)*d[0].taxRate,
 													famount:d[0].price
 												});
 												grid.datagrid('scrollTo', grid.datagrid('getData').total - 1);//滚动到新增的行
@@ -349,18 +349,18 @@
 														productcode:d[i].productcode,
 														quantity:d[i].quantity,
 														price:d[i].price,
-														oldprice:d[i].oldprice,
+														oldPrice:d[i].oldPrice,
 														amount:d[i].price,
 														spec:d[i].spec,
-														aunit:d[i].aunit,
-														taxrate:d[i].taxrate,
-														taxamount:d[i].price/(1+d[i].taxrate)*d[i].taxrate,
+														aUnit:d[i].aUnit,
+														taxRate:d[i].taxRate,
+														taxAmount:d[i].price/(1+d[i].taxRate)*d[i].taxRate,
 														famount:d[i].price
 													})
 												}
 												grid.datagrid('loadData',{total:data.length, rows:data});
 											}
-											ebx.setEditstatus(bd.tab, true);
+											ebx.setEditStatus(bd.tab, true);
 										};
 									
 									$.ajax({
@@ -374,7 +374,7 @@
 												ebx.setListVies(columnsData[0]);
 												trackgrid.datagrid({
 													view:scrollview,
-													pageSize:ebx.pagesize,
+													pageSize:ebx.pageSize,
 													remoteSort:true,
 													rownumbers:true,
 													singleSelect:false,
@@ -441,7 +441,7 @@
 											}
 										}
 									});
-									okbtn.linkbutton({
+									okBtn.linkbutton({
 										text:'添加选中的行到单据',
 										iconCls:'icon-arrow-up',
 										plain:true,
@@ -474,8 +474,8 @@
 											discount = $('<div>').appendTo(win),
 											target = $('<div>').appendTo(win),
 											foot = $('<div style="padding:3px;text-align:center;">'),
-											okbtn = $('<div>').appendTo(foot),
-											cancelbtn = $('<div>').appendTo(foot);
+											okBtn = $('<div>').appendTo(foot),
+											cancelBtn = $('<div>').appendTo(foot);
 										
 										win.window({
 											title: '整单折扣',
@@ -517,7 +517,7 @@
 											valueField: 'id',    
 											textField: 'text',
 											panelHeight: 'auto',
-											value: ebx.discountprice,
+											value: ebx.discountPrice,
 											data:[{    
 												"id":2,    
 												"text":"单价"   
@@ -527,14 +527,14 @@
 											}]
 										});	
 
-										okbtn.linkbutton({
+										okBtn.linkbutton({
 											text: '确定',
 											iconCls:'icon-AcceptTask',
 											plain:true,
 											onClick:function(){
 												var v = target.combobox('getValue');
-												ebx.discountprice = v
-												ebx.storage.set("discountprice", {discountprice: v});
+												ebx.discountPrice = v
+												ebx.storage.set("discountPrice", {discountPrice: v});
 												bd.discount = discount.numberspinner('getValue');
 												var grid = bd.layout.layout('panel', 'center').find('.datagrid-f'),
 													data = grid.datagrid('getData');
@@ -545,21 +545,21 @@
 													data = data.rows;
 												}
 												for(var i in data){
-													if(ebx.discountprice == 1){
-														data[i].price = data[i].oldprice * bd.discount;
+													if(ebx.discountPrice == 1){
+														data[i].price = data[i].oldPrice * bd.discount;
 													}else{
 														data[i].price = data[i].price * bd.discount;
 													}
 													data[i].amount = data[i].price * data[i].quantity;
-													data[i].taxamount = data[i].amount / (data[i].taxrate + 1) * data[i].taxrate
-													data[i].nat = data[i].amount - data[i].taxamount;
+													data[i].taxAmount = data[i].amount / (data[i].taxRate + 1) * data[i].taxRate
+													data[i].nat = data[i].amount - data[i].taxAmount;
 												}
 												grid.datagrid('loadData', {total: data.length, rows: data});
-												ebx.setEditstatus(bd.tab, true);
+												ebx.setEditStatus(bd.tab, true);
 												win.window('close');
 											}
 										});
-										cancelbtn.linkbutton({
+										cancelBtn.linkbutton({
 											text: '取消',
 											iconCls:'icon-DeclineInvitation',
 											plain:true,
@@ -580,7 +580,7 @@
 							        if(ebx.validInt(bd.ID) == 0){
 								        $.messager.show({
 									        title: '提示',
-									        msg: '请先保存 ' + bd.Parament.text + '！',
+									        msg: '请先保存 ' + bd.parament.text + '！',
 									        timeout: 3000,
 									        showType: 'slide'
 								        });
@@ -588,8 +588,8 @@
 							        }
 							        var win = $('<div>').appendTo('body'),
 								        toolbar = $('<div>'),
-								        newbtn = $('<div>').appendTo(toolbar),
-								        delbtn = $('<div>').appendTo(toolbar),
+								        newBtn = $('<div>').appendTo(toolbar),
+								        delBtn = $('<div>').appendTo(toolbar),
 								        clearbtn = $('<div>').appendTo(toolbar),
 								        savebtn = $('<div>').appendTo(toolbar),
 								        grid = $('<div>').appendTo(win);
@@ -613,7 +613,7 @@
 							        });
 							        grid.datagrid({
 								        view:scrollview,
-								        pageSize:ebx.pagesize,
+								        pageSize:ebx.pageSize,
 								        url:'/server/SimpChinese/saleoutstock/getpayment/',
 								        queryParams:{
 									        id:bd.ID,
@@ -634,7 +634,7 @@
 								        fitColumns:true
 							        }).datagrid('renderformatterstyler');
         							
-							        newbtn.linkbutton({
+							        newBtn.linkbutton({
 								        text:'新行',
 								        iconCls:'icon-CellsInsertDialog',
 								        plain:true,
@@ -644,7 +644,7 @@
 									        grid.datagrid('editkeyboard', {index: grid.datagrid('getData').total - 1, field:'payment'});
 								        }
 							        });
-							        delbtn.linkbutton({
+							        delBtn.linkbutton({
 								        text:'删行',
 								        iconCls:'icon-CellsDelete',
 								        plain:true,
@@ -726,11 +726,11 @@
 			        });
 					function rediscount(){
 						return;//窄屏显示效果较差，暂停提示
-						var discountbtn = ebx.getbiribbonobj(bd.biribbon, 'discount', 'linkbutton');
+						var discountbtn = ebx.getBiribbonObj(bd.biribbon, 'discount', 'linkbutton');
 						if(discountbtn){
 							discountbtn.tooltip({
 								position: 'right',
-								content: '折扣：' + bd.discount + '<br>参考：'+(ebx.discountprice==1?'原单价':'单价'),
+								content: '折扣：' + bd.discount + '<br>参考：'+(ebx.discountPrice==1?'原单价':'单价'),
 								onShow: function(){
 									//$(this).tooltip('tip').addClass('bdtip');
 								}
@@ -901,7 +901,7 @@
 		            ebx.setDatagridEditor.editorMethods(c.rows, 'InvoiceNum', 'textbox', {//用来重造发票号码的onClickButton的方法
 			            onClickButton: function(){//选中后更新当前行的内容为选中内容
 				            var InvoiceNum = this.value,
-					            rows = bd.eaststorage.datagrid('getRows'),
+					            rows = bd.eastStorage.datagrid('getRows'),
 					            InvoiceType = 0,
 					            InvoiceMemo = '';
         						
@@ -945,8 +945,8 @@
 								            timeout: 3000,
 								            showType: 'slide'
 							            });
-							            bd.eaststorage.datagrid('load');
-							            ebx.setEditstatus(bd.tab, false);
+							            bd.eastStorage.datagrid('load');
+							            ebx.setEditStatus(bd.tab, false);
 						            }else{
 							            $.messager.alert('错误', '保存失败！' + result.msg, 'error');	
 						            }
@@ -959,7 +959,7 @@
 		            ebx.setDatagridEditor.editorMethods(c.rows, 'InvoiceMemo', 'textbox', {//用来重造发票好嘛的onClickButton的方法
 			            onClickButton: function(){//选中后更新当前行的内容为选中内容
 				            var InvoiceNum = '',
-					            rows = bd.eaststorage.datagrid('getRows'),
+					            rows = bd.eastStorage.datagrid('getRows'),
 					            InvoiceType = 0,
 					            InvoiceMemo = this.value;
         						
@@ -1003,8 +1003,8 @@
 								            timeout: 3000,
 								            showType: 'slide'
 							            });
-							            bd.eaststorage.datagrid('load');
-							            ebx.setEditstatus(bd.tab, false);
+							            bd.eastStorage.datagrid('load');
+							            ebx.setEditStatus(bd.tab, false);
 						            }else{
 							            $.messager.alert('错误', '保存失败！' + result.msg, 'error');	
 						            }
@@ -1035,18 +1035,18 @@
 					        r.firstRows[s.datagrid('options').editIndex].productcode = rowData.productcode;
 					        r.firstRows[s.datagrid('options').editIndex].spec = rowData.spec;
 					        r.firstRows[s.datagrid('options').editIndex].unit = rowData.unit;
-					        r.firstRows[s.datagrid('options').editIndex].aunit = rowData.aunit;
-					        r.firstRows[s.datagrid('options').editIndex].oldprice = ebx.validFloat(rowData.detailprice);
+					        r.firstRows[s.datagrid('options').editIndex].aUnit = rowData.aUnit;
+					        r.firstRows[s.datagrid('options').editIndex].oldPrice = ebx.validFloat(rowData.detailprice);
 					        r.firstRows[s.datagrid('options').editIndex].relation = ebx.validFloat(rowData.relation);
-					        r.firstRows[s.datagrid('options').editIndex].aquantity = ebx.validFloat(rowData.relation * 1);
+					        r.firstRows[s.datagrid('options').editIndex].aQuantity = ebx.validFloat(rowData.relation * 1);
 					        r.firstRows[s.datagrid('options').editIndex].quantity = 1;
 					        r.firstRows[s.datagrid('options').editIndex].price = ebx.validFloat(rowData.detailprice);
 					        r.firstRows[s.datagrid('options').editIndex].amount = ebx.validFloat(rowData.detailprice);
-					        r.firstRows[s.datagrid('options').editIndex].taxrate = ebx.validFloat(rowData.taxrate);
-					        r.firstRows[s.datagrid('options').editIndex].productserial = rowData.productserial;
+					        r.firstRows[s.datagrid('options').editIndex].taxRate = ebx.validFloat(rowData.taxRate);
+					        r.firstRows[s.datagrid('options').editIndex].productSerial = rowData.productSerial;
 					        r.firstRows[s.datagrid('options').editIndex].lengthserial = rowData.lengthserial;
-							r.firstRows[s.datagrid('options').editIndex].taxamount = r.firstRows[s.datagrid('options').editIndex].amount / (r.firstRows[s.datagrid('options').editIndex].taxrate + 1) * r.firstRows[s.datagrid('options').editIndex].taxrate;
-							r.firstRows[s.datagrid('options').editIndex].nat = r.firstRows[s.datagrid('options').editIndex].amount - r.firstRows[s.datagrid('options').editIndex].taxamount;
+							r.firstRows[s.datagrid('options').editIndex].taxAmount = r.firstRows[s.datagrid('options').editIndex].amount / (r.firstRows[s.datagrid('options').editIndex].taxRate + 1) * r.firstRows[s.datagrid('options').editIndex].taxRate;
+							r.firstRows[s.datagrid('options').editIndex].nat = r.firstRows[s.datagrid('options').editIndex].amount - r.firstRows[s.datagrid('options').editIndex].taxAmount;
 						}
 			        });
         			
@@ -1059,15 +1059,15 @@
 							        quantity = ebx.validFloat(newValue);
 
 						        if(data.firstRows[index] != undefined){
-							        var TaxRate = ebx.validFloat(data.firstRows[index].taxrate);
-							        data.firstRows[index].aquantity = ebx.validFloat(data.firstRows[index].relation) * quantity;
+							        var TaxRate = ebx.validFloat(data.firstRows[index].taxRate);
+							        data.firstRows[index].aQuantity = ebx.validFloat(data.firstRows[index].relation) * quantity;
 							        data.firstRows[index].amount = ebx.validFloat(data.firstRows[index].price) * quantity;
 							        if(TaxRate != -1){
-								        data.firstRows[index].taxamount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
+								        data.firstRows[index].taxAmount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
 							        }else{
-								        data.firstRows[index].taxamount = 0;
+								        data.firstRows[index].taxAmount = 0;
 							        }
-							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxamount;
+							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxAmount;
 						        }
 					        }
 				        }
@@ -1082,14 +1082,14 @@
 							        price = ebx.validFloat(newValue);
         						
 						        if(data.firstRows[index] != undefined){
-							        var TaxRate = ebx.validFloat(data.firstRows[index].taxrate);
+							        var TaxRate = ebx.validFloat(data.firstRows[index].taxRate);
 							        data.firstRows[index].amount = ebx.validFloat(data.firstRows[index].quantity) * price
 							        if(TaxRate != -1){
-								        data.firstRows[index].taxamount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
+								        data.firstRows[index].taxAmount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
 							        }else{
-								        data.firstRows[index].taxamount = 0;
+								        data.firstRows[index].taxAmount = 0;
 							        }
-							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxamount;
+							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxAmount;
 						        }
 					        }
 				        }
@@ -1105,18 +1105,18 @@
         						
 						        if(data.firstRows[index] != undefined){
 							        var quantity = ebx.validFloat(data.firstRows[index].quantity),
-								        TaxRate = ebx.validFloat(data.firstRows[index].taxrate);
+								        TaxRate = ebx.validFloat(data.firstRows[index].taxRate);
 							        if(quantity == 0){
 								        data.firstRows[index].price = 0
 							        }else{
 								        data.firstRows[index].price = amount/quantity;
 							        }
 							        if(TaxRate != -1){
-								        data.firstRows[index].taxamount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
+								        data.firstRows[index].taxAmount = data.firstRows[index].amount / (TaxRate + 1) * TaxRate;
 							        }else{
-								        data.firstRows[index].taxamount = 0;
+								        data.firstRows[index].taxAmount = 0;
 							        }
-							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxamount;
+							        data.firstRows[index].nat = data.firstRows[index].amount - data.firstRows[index].taxAmount;
 						        }
 					        }
 				        }
@@ -1133,17 +1133,17 @@
 		        center1: function(s){//明细回掉函数1，datagrid加载后触发
 			        s.datagrid('options').onClickCell = function(index, field, value){
 				        switch(field.toLowerCase()){//处理串号编辑
-					        case 'productserial':
-						        var productserialopen = ebx.cloneObj(ebx.productserial),//复制产品串号编辑对象
+					        case 'productSerial':
+						        var productSerialopen = ebx.cloneObj(ebx.productSerial),//复制产品串号编辑对象
 							        row = s.datagrid('getData').firstRows[index];
-						        //productserialopen.open(row.productname, row.lengthserial, s, index);
-						        productserialopen.open(row.productname, row.lengthserial, s, index);
+						        //productSerialopen.open(row.productname, row.lengthserial, s, index);
+						        productSerialopen.open(row.productname, row.lengthserial, s, index);
 						        break;
-					        case 'colorsize':
-						        var colorsizeopen = ebx.cloneObj(ebx.colorsize),//复制产品色码编辑对象
+					        case 'colorSize':
+						        var colorSizeopen = ebx.cloneObj(ebx.colorSize),//复制产品色码编辑对象
 							        row = s.datagrid('getData').firstRows[index];
-						        colorsizeopen.init(row.productname, s, index, bd.tab);
-						        colorsizeopen.open();
+						        colorSizeopen.init(row.productname, s, index, bd.tab);
+						        colorSizeopen.open();
 						        break;
 					        default:
 						        var opts = s.datagrid('options');
@@ -1207,7 +1207,7 @@
 									        ebx.setListVies(columnsData[0]);
 									        stockquery.datagrid({
 										        view:scrollview,
-										        pageSize:ebx.pagesize,
+										        pageSize:ebx.pageSize,
 										        remoteSort:false,
 										        rownumbers:true,
 										        singleSelect:true,
@@ -1220,7 +1220,7 @@
 										        url:'server/SimpChinese/product/stock/',
 										        nowrap:true,//禁用自动换行
 										        method:'post',
-										        queryParams:{_:(new Date()).getTime(),id:rowData.productid,listview:ebx.convertDicToJson(ebx.listview)},
+										        queryParams:{_:(new Date()).getTime(),id:rowData.productid,listView:ebx.convertDicToJson(ebx.listView)},
 										        multiSort:false,
 										        checkOnSelect:false,
 										        columns:columnsData,
@@ -1236,12 +1236,12 @@
 				        }).menu('appendItem', {
 					        text: '删除',
 					        iconCls: 'icon-Delete',
-					        disabled:rowData.auditid?true:(rowData.isdeleted?true:false),
+					        disabled:rowData.auditid?true:(rowData.isDeleted?true:false),
 					        onclick: function(){
 						        $.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
 							        if (r){
 								        d.datagrid('deleteRow', rowIndex);						
-								        ebx.setEditstatus(bd.tab, true);
+								        ebx.setEditStatus(bd.tab, true);
 							        }
 						        });
 					        }
@@ -1261,10 +1261,10 @@
 				showType: 'slide'
 			});
 		}
-		bd.billtype = 1306;//单据类型赋值，用于附件支持
+		bd.billType = 1306;//单据类型赋值，用于附件支持
 		bd.showAudit = 1;//显示审核按钮
 		bd.showPrint = 1;//显示打印功能组
-		bd.showSearchserial = 1;//显示串号扫描输入框
-		bd.init(callback);
+		bd.showSearchSerial = 1;//显示串号扫描输入框
+		bd.init(callBack);
 	});
 </script>

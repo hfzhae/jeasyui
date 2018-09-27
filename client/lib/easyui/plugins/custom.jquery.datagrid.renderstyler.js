@@ -18,7 +18,7 @@ $.extend($.fn.datagrid.methods,{
 				return v;
 			}
 			columns[0][1].formatter = function(value, rowData, rowIndex) {//设置值字段返回值
-				return ebx.Render.setRender(rowData.render, value, rowIndex);
+				return ebx.render.setRender(rowData.render, value, rowIndex);
 				return v;
 			}
 			columns[0][1].styler = function(value, rowData, rowIndex){//设置单元格样式
@@ -42,7 +42,7 @@ $.extend($.fn.datagrid.methods,{
 						d.datagrid('hideColumn', columns[0][i].field);
 					}
 					_c.formatter = function(value, rowData, rowIndex){//设置返回值
-						return ebx.Render.setRender(this.render, value, rowIndex);
+						return ebx.render.setRender(this.render, value, rowIndex);
 					}
 				}
 				if(_c.fieldstyle){

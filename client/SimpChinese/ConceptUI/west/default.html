@@ -24,11 +24,11 @@
 				    result[0].children.unshift({
 			            id:0,
 			            text:'常用菜单',
-			            iconCls:'icon-usedmenu',
+			            iconCls:'icon-usedMenu',
 			            children:[]
 			        });
-					if(ebx.usedmenu.length > 0){
-				        result[0].children[0].children = ebx.usedmenu;
+					if(ebx.usedMenu.length > 0){
+				        result[0].children[0].children = ebx.usedMenu;
 				    }
 					for(var i in result){
 						var westtree = $('<div>'),
@@ -52,7 +52,7 @@
 								ebx.tabs.newtab(node);
 							},
                             onContextMenu: function(e, node){//常用菜单鼠标右键事件 2018-9-14 zz
-                                if(node.iconCls === 'icon-usedmenufile'){
+                                if(node.iconCls === 'icon-usedMenufile'){
                                     var ContextMenu = $('<div>');
 		                            e.preventDefault();
 				                    ContextMenu.menu().menu('appendItem', {
@@ -60,12 +60,12 @@
 					                    iconCls: 'icon-Delete',
 					                    onclick: function(){
                                             westtree.tree('remove', node.target);
-		                                    for(var i in ebx.usedmenu){
-		                                        if(ebx.usedmenu[i].menuid == node.menuid){
-		                                            ebx.usedmenu.splice(i, 1)
+		                                    for(var i in ebx.usedMenu){
+		                                        if(ebx.usedMenu[i].menuid == node.menuid){
+		                                            ebx.usedMenu.splice(i, 1)
 		                                        }
 		                                    }
-                                	        ebx.storage.set('usedmenu', ebx.usedmenu);
+                                	        ebx.storage.set('usedMenu', ebx.usedMenu);
 					                    }
 				                    }).menu('appendItem', {
 					                    text: '清空常用菜单',
@@ -80,8 +80,8 @@
                                                     for(var i in usedchildrenChildren){
                                                         usedtree.tree('remove', usedchildrenChildren[i].target);
                                                     }
-                                                    ebx.usedmenu = [];
-                                	                ebx.storage.set('usedmenu', []);
+                                                    ebx.usedMenu = [];
+                                	                ebx.storage.set('usedMenu', []);
 										        }
 									        });
 					                    }
@@ -90,7 +90,7 @@
 			                            top: e.pageY
 		                            });
 		                        }
-		                        if(node.iconCls === 'icon-usedmenu'){
+		                        if(node.iconCls === 'icon-usedMenu'){
                                     var ContextMenu = $('<div>');
 		                            e.preventDefault();
 				                    ContextMenu.menu().menu('appendItem', {
@@ -102,8 +102,8 @@
 	                                            var win = $('<div style="text-align:center;">').appendTo('body'),
 		                                            size = $('<div>').appendTo(win),
 													foot = $('<div style="padding:3px;text-align:center;">'),
-													okbtn = $('<div>').appendTo(foot),
-													cancelbtn = $('<div>').appendTo(foot);
+													okBtn = $('<div>').appendTo(foot),
+													cancelBtn = $('<div>').appendTo(foot);
                                         		
 	                                            win.window({
 		                                            title: '常用菜单设置',
@@ -134,43 +134,43 @@
 		                                            max: 50,    
 		                                            editable: true,
 		                                            label:'常用菜单数量',
-		                                            value: ebx.usedmenusize
+		                                            value: ebx.usedMenusize
 	                                            }).css({'margin':'5px'}); 
 
 	                                            function setToStorage(){
-		                                            ebx.storage.set('usedmenusize', {size: ebx.usedmenusize});
+		                                            ebx.storage.set('usedMenusize', {size: ebx.usedMenusize});
 	                                            }
-												okbtn.linkbutton({
+												okBtn.linkbutton({
 													text: '确定',
 													iconCls:'icon-AcceptTask',
 													plain:true,
 													onClick:function(){
-														ebx.usedmenusize = size.numberspinner('getValue');
+														ebx.usedMenusize = size.numberspinner('getValue');
 			                                            setToStorage();
-	                                                    if(ebx.usedmenu.length >= ebx.validInt(ebx.usedmenusize)){
+	                                                    if(ebx.usedMenu.length >= ebx.validInt(ebx.usedMenusize)){
 	                                                        var t = [];
-	                                                        for(var i in ebx.usedmenu){
-	                                                            if(ebx.validInt(i) < ebx.validInt(ebx.usedmenusize)){
-	                                                                t.push(ebx.usedmenu[i])
+	                                                        for(var i in ebx.usedMenu){
+	                                                            if(ebx.validInt(i) < ebx.validInt(ebx.usedMenusize)){
+	                                                                t.push(ebx.usedMenu[i])
 	                                                            }
 	                                                        }
-	                                                        ebx.usedmenu = t;
+	                                                        ebx.usedMenu = t;
 	                                                    }
-	                                                    ebx.storage.set('usedmenu', ebx.usedmenu);
+	                                                    ebx.storage.set('usedMenu', ebx.usedMenu);
         	                                            
                                                         var usedtree = ebx.bodylayout.layout('panel', 'west').find('.tabs-container').tabs('getTab', 0).find('.tree'),
                                                             usedchildren = usedtree.tree('find', 0);
                                                         
                                                         var usedchildrenChildren = usedtree.tree('getChildren', usedchildren.target);
                                                         for(var i in usedchildrenChildren){
-                                                            if(ebx.validInt(i) >=  ebx.usedmenusize){
+                                                            if(ebx.validInt(i) >=  ebx.usedMenusize){
                                                                 usedtree.tree('remove', usedchildrenChildren[i].target);
                                                             }
                                                         }
 														win.window('close');
 													}
 												});
-												cancelbtn.linkbutton({
+												cancelBtn.linkbutton({
 													text: '取消',
 													iconCls:'icon-DeclineInvitation',
 													plain:true,
@@ -195,8 +195,8 @@
                                                     for(var i in usedchildrenChildren){
                                                         usedtree.tree('remove', usedchildrenChildren[i].target);
                                                     }
-                                                    ebx.usedmenu = [];
-                                	                ebx.storage.set('usedmenu', []);
+                                                    ebx.usedMenu = [];
+                                	                ebx.storage.set('usedMenu', []);
 										        }
 									        });
 					                    }

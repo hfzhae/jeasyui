@@ -1,7 +1,7 @@
 <script type="text/javascript">
     easyloader.load(['bi'], function() {
         var bi = ebx.cloneObj(ebx.bi);
-		//bi.infotype = 1263;//设置基本资料类型，支持上传附件
+		//bi.infoType = 1263;//设置基本资料类型，支持上传附件
         bi.init(function(data, obj) {
             ebx.setDatagridEditor.editorMethods(data.rows, 'areatitle', 'combogrid', {//用来重造区域的combogrid的方法
                 onSelect: function(rowIndex, rowData) {//选中后更新当前行的内容为选中内容

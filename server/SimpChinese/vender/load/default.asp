@@ -1,11 +1,11 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-	var id = ebx.validInt(ebx.stdin["id"]),
-		sql = "select a.code,a.title,a.MemoInfo,a.isdeleted,a.int1,a.updatedate,a.createdate,u.title as owner,a.nvarchar4,a.nvarchar1,a.nvarchar8,a.nvarchar6,a.nvarchar7,a.mobile,a.currency1,a.nvarchar3,a.nvarchar9,a.nvarchar2,a.nvarchar5,a.nvarchar10  from " + TableName + " a,biuser u where a.owner=u.id and a.id=" + id,
+	var id = ebx.validInt(ebx.stdIn["id"]),
+		sql = "select a.code,a.title,a.MemoInfo,a.isDeleted,a.int1,a.updatedate,a.createdate,u.title as owner,a.nvarchar4,a.nvarchar1,a.nvarchar8,a.nvarchar6,a.nvarchar7,a.mobile,a.currency1,a.nvarchar3,a.nvarchar9,a.nvarchar2,a.nvarchar5,a.nvarchar10  from " + TableName + " a,biuser u where a.owner=u.id and a.id=" + id,
 		rs,
 		data = [],
-		code = "", title = "", MemoInfo = "", isdeleted = 0, int1 = 0, updatedate = new Date(), createdate = new Date(), owner = "",nvarchar4="",nvarchar1="",nvarchar8="",nvarchar6="",nvarchar7="",mobile="",currency1=0,int1=0,nvarchar3="",nvarchar9="",nvarchar2="",nvarchar5="",nvarchar10="" ;
+		code = "", title = "", MemoInfo = "", isDeleted = 0, int1 = 0, updatedate = new Date(), createdate = new Date(), owner = "",nvarchar4="",nvarchar1="",nvarchar8="",nvarchar6="",nvarchar7="",mobile="",currency1=0,int1=0,nvarchar3="",nvarchar9="",nvarchar2="",nvarchar5="",nvarchar10="" ;
 		
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1)
@@ -13,7 +13,7 @@
 			code = rs("code").value;
 			title = rs("title").value;
 			MemoInfo = rs("MemoInfo").value;
-			isdeleted = rs("isdeleted").value;
+			isDeleted = rs("isDeleted").value;
 			int1 = rs("int1").value;
 			updatedate = rs("updatedate").value;
 			createdate = rs("createdate").value;
@@ -36,7 +36,7 @@
 	
 
 	data = {"total":25,"rows":[
-		{"name":"删除","value":isdeleted,"group":"系统生成","field":"_isdeleted","render":"boolRender","rowstyle":"color:#999;","fieldstyle":"color:#f00;","func":""},
+		{"name":"删除","value":isDeleted,"group":"系统生成","field":"_isDeleted","render":"boolRender","rowstyle":"color:#999;","fieldstyle":"color:#f00;","func":""},
 		{"name":"创建时间","value": new Date(createdate).Format("yyyy-MM-dd hh:mm:ss"),"group":"系统生成","field":"_createdate","rowstyle":"color:#999;"},
 		{"name":"更新时间","value": new Date(updatedate).Format("yyyy-MM-dd hh:mm:ss"),"group":"系统生成","field":"_updatedate","rowstyle":"color:#999;"},
 		{"name":"操作员","value":owner,"group":"系统生成","field":"_owner","rowstyle":"color:#999;"},
@@ -58,6 +58,6 @@
 		{"name":"备注","value":MemoInfo,"group":"其他","editor":"text","field":"MemoInfo"},
 	]};
 
-	ebx.stdout = data;
+	ebx.stdOut = data;
 })();
 %>

@@ -561,19 +561,19 @@
 .icon-GroupTableOfAuthorities-large{
 	background:url('icon32/GroupTableOfAuthorities.png') no-repeat center center!important;
 }
-.icon-usedmenu{
-	background:url('icon32/usedmenu.png') no-repeat center center!important;
+.icon-usedMenu{
+	background:url('icon32/usedMenu.png') no-repeat center center!important;
 	background-size:16px 16px!important;
 }
-.icon-usedmenu-large{
-	background:url('icon32/usedmenu.png') no-repeat center center!important;
+.icon-usedMenu-large{
+	background:url('icon32/usedMenu.png') no-repeat center center!important;
 }
-.icon-usedmenufile{
-	background:url('icon32/usedmenufile.png') no-repeat center center!important;
+.icon-usedMenufile{
+	background:url('icon32/usedMenufile.png') no-repeat center center!important;
 	background-size:16px 16px!important;
 }
-.icon-usedmenufile-large{
-	background:url('icon32/usedmenufile.png') no-repeat center center!important;
+.icon-usedMenufile-large{
+	background:url('icon32/usedMenufile.png') no-repeat center center!important;
 }
 .icon-OutlookTaskCreate{
 	background:url('icon32/OutlookTaskCreate.png') no-repeat center center!important;

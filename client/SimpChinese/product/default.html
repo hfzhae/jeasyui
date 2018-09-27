@@ -1,7 +1,7 @@
 <script type="text/javascript">
     easyloader.load(['propertygrid', 'ribbon', 'splitbutton', 'datetimebox', 'datagridkeyboard', 'combobox', 'datagridrenderstyler', 'combogrid', 'droplist', 'bi'], function() {
     var bi = ebx.cloneObj(ebx.bi);
-        bi.infotype = 1262; //设置基本资料类型，支持上传附件
+        bi.infoType = 1262; //设置基本资料类型，支持上传附件
         bi.init(function(data, obj) {
             ebx.setDatagridEditor.editorMethods(data.rows, 'productclass', 'combogrid', {//用来重造产品类型的combogrid的方法
                 onSelect: function(rowIndex, rowData) {//选中后更新当前行的内容为选中内容
@@ -41,12 +41,12 @@
 		
 		var tabs = ebx.center.tabs('getSelected'),
 			tab = tabs.panel('options'),
-			Parament = ebx.getMenuParamenter(tabs),
+			parament = ebx.getMenuparamenter(tabs),
 			layout = tabs.find('.layout'),
 			eastPanel = layout.layout('panel', 'east'),
 			biribbon = $('<div>').appendTo(eastPanel),
-			mapitem = $('<div>').appendTo(eastPanel),
-			eastParament = ebx.getMenuParamenter(eastPanel),
+			mapItem = $('<div>').appendTo(eastPanel),
+			eastparament = ebx.getMenuparamenter(eastPanel),
 			storage = $('<div>'),
 
 			mycolumns = [[
@@ -163,7 +163,7 @@
 				{
 					iconCls:'icon-DeclineInvitation',
 					handler:function(){
-						ebx.EditStatusMessager(tab.editstatus,Parament.text,function(){
+						ebx.editStatusMessager(tab.editstatus,parament.text,function(){
 							layout.layout('remove', 'east');//删除编辑layout
 							tab.editstatus = false;
 						});
@@ -173,7 +173,7 @@
 			plain:true
 		}).css({'padding':0});
 				
-		mapitem.tabs({
+		mapItem.tabs({
 			border:false,
 			width:'100%',
 			tabPosition:'bottom',
@@ -181,7 +181,7 @@
 			plain:true
 		});
 		
-		mapitem.tabs('add', {
+		mapItem.tabs('add', {
 			title: '基本资料',
 			content: storage,
 			selected: true
@@ -198,7 +198,7 @@
 		
 		window.onresize = function() {//窗口高度发生变化时，自动调整tabs的高度 2018-4-22 zz
 			setTimeout(function(){
-				mapitem.tabs('resize', {
+				mapItem.tabs('resize', {
 					height:eastPanel.height()-140
 				});
 				storage.propertygrid('resize');
@@ -206,9 +206,9 @@
 		}
 
 		storage.propertygrid({
-			url: 'server/SimpChinese/'+eastParament.modedit+'/load/',
+			url: 'server/SimpChinese/'+eastparament.modedit+'/load/',
 			method:'post',
-			queryParams:{_:(new Date()).getTime(),id:eastParament.id},
+			queryParams:{_:(new Date()).getTime(),id:eastparament.id},
 			showGroup: true,
 			width:'100%',
 			height:'100%',

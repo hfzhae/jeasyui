@@ -1,19 +1,19 @@
 <!--# include virtual="server/public.asp" -->
 <%
 (function(){
-	if(!ebx.stdin['id'] || !ebx.stdin['billtype']){
-		ebx.stdout = {"total": 0, "rows": []}; 
+	if(!ebx.stdIn['id'] || !ebx.stdIn['billType']){
+		ebx.stdOut = {"total": 0, "rows": []}; 
 		return
 	};
-	var id = ebx.validInt(ebx.stdin['id']),
-		billtype = ebx.validInt(ebx.stdin['billtype']);
+	var id = ebx.validInt(ebx.stdIn['id']),
+		billType = ebx.validInt(ebx.stdIn['billType']);
 	
-	if(id == 0 || billtype == 0){
-		ebx.stdout = {"total": 0, "rows": []}; 
+	if(id == 0 || billType == 0){
+		ebx.stdOut = {"total": 0, "rows": []}; 
 		return
 	}
 	
-	var rs = ebx.dbx.open('select billid,billtype,filename from NPAttaches where billid=' + id + ' and billtype=' + billtype, 1, 1);
+	var rs = ebx.dbx.open('select billid,billType,filename from NPAttaches where billid=' + id + ' and billType=' + billType, 1, 1);
 	
 	if(!rs.eof){
 		var data = rs('filename').value.toString().split(','),
@@ -22,7 +22,7 @@
 			fso = Server.CreateObject('Scripting.FileSystemObject'),
 			path = NetBox.MapPath('\\wwwroot\\attaches\\');
 			
-		path += rs('billtype').value +'\\'+ rs('billid').value +'\\';
+		path += rs('billType').value +'\\'+ rs('billid').value +'\\';
 		for(var i in data){
 			if(fso.fileExists(path + data[i])){
 				filesize=ebx.bytesToSize(fso.GetFile(path + data[i]).size);
@@ -34,9 +34,9 @@
 				});
 			}
 		}
-		ebx.stdout = {total: data.length, rows: rows}
+		ebx.stdOut = {total: data.length, rows: rows}
 	}else{
-		ebx.stdout = {"total": 0, "rows": []}; 
+		ebx.stdOut = {"total": 0, "rows": []}; 
 	}
 })();
 %>

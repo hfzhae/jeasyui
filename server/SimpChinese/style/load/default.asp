@@ -1,11 +1,11 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-	var id = ebx.validInt(ebx.stdin["id"]),
-		sql = "select a.title,a.[type],a.FieldStyle,a.HeaderStyle,a.FooterStyle,a.Border,a.Header,a.Footer,a.Height,a.Width,a.isdeleted,a.updatedate,a.createdate,u.title as owner from " + TableName + " a,biuser u where a.owner=u.id and a.id=" + id,
+	var id = ebx.validInt(ebx.stdIn["id"]),
+		sql = "select a.title,a.[type],a.FieldStyle,a.HeaderStyle,a.FooterStyle,a.Border,a.Header,a.Footer,a.Height,a.Width,a.isDeleted,a.updatedate,a.createdate,u.title as owner from " + TableName + " a,biuser u where a.owner=u.id and a.id=" + id,
 		rs,
 		data = [],
-		title = "", type = "", FieldStyle = "", HeaderStyle = "", FooterStyle = "", Border = 0, Header = 0, Footer = 0, Height = "", Width = "", isdeleted = 0, updatedate = new Date(), createdate = new Date(), owner = "";
+		title = "", type = "", FieldStyle = "", HeaderStyle = "", FooterStyle = "", Border = 0, Header = 0, Footer = 0, Height = "", Width = "", isDeleted = 0, updatedate = new Date(), createdate = new Date(), owner = "";
 	
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1)
@@ -20,14 +20,14 @@
 			Footer = rs("Footer").value;
 			Height = rs("Height").value;
 			Width = rs("Width").value;
-			isdeleted = rs("isdeleted").value;
+			isDeleted = rs("isDeleted").value;
 			updatedate = rs("updatedate").value;
 			createdate = rs("createdate").value;
 			owner = rs("owner").value
 		}
 	}
 	data = {total:14,rows:[
-		{name:"删除",value:isdeleted,group:"系统生成",field:"",render:"boolRender",func:"",rowstyle:"color:#999;",fieldstyle:"color:#f00;"},
+		{name:"删除",value:isDeleted,group:"系统生成",field:"",render:"boolRender",func:"",rowstyle:"color:#999;",fieldstyle:"color:#f00;"},
 		{name:"创建时间",value:new Date(createdate).Format("yyyy-MM-dd hh:mm:ss"),group:"系统生成",rowstyle:"color:#999;"},
 		{name:"更新时间",value:new Date(updatedate).Format("yyyy-MM-dd hh:mm:ss"),group:"系统生成",rowstyle:"color:#999;"},
 		{name:"操作员",value:owner,group:"系统生成",rowstyle:"color:#999;"},
@@ -42,6 +42,6 @@
 		{name:"高度",value:Height,group:"其他",editor:{type:"validatebox", options:{required:false,validType:"String"}},field:"Height"},
 		{name:"宽度",value:Width,group:"其他",editor:{type:"validatebox", options:{required:false,validType:"String"}},field:"Width"}
 	]};
-	ebx.stdout = data;
+	ebx.stdOut = data;
 })();
 %>

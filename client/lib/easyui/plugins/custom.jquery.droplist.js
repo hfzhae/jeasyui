@@ -33,7 +33,7 @@ options.validType增加：combogridValue类型，校验值不能为空，require
 					pageSize = options.pageSize,
 					queryParams = {_:(new Date()).getTime()};
 					
-				if(!pageSize)pageSize = ebx.pagesize;
+				if(!pageSize)pageSize = ebx.pageSize;
 				if(template){
 					queryParams.template = template;
 					url = 'server/SimpChinese/DataProvider/list/';
@@ -128,7 +128,7 @@ options.validType增加：combogridValue类型，校验值不能为空，require
 			                        try{
 				                        var tabs = ebx.center.tabs('getSelected'),
 					                        tab = tabs.panel('options');
-				                        ebx.setEditstatus(tab, true);
+				                        ebx.setEditStatus(tab, true);
 			                        }catch(e){}
 								},
 								opts.delay);

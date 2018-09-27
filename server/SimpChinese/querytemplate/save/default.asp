@@ -1,19 +1,20 @@
 <!-- #include file="../Common.asp" -->
+<!-- #include virtual="/server/func.asp" -->
 <%
 (function(){
 	var save = {
 		ID:0,
-		ParentID:0,
+		ParentId:0,
 		bd:[],
-		bdlist: [], 
+		bdList: [], 
 		TableName:'',
 		ModType:'',
 		IGID:'',
 		init: function(TableName, ModType, IGID){
-			this.bd = ebx.convertJsonToRs(eval('(' + ebx.stdin['bd'] + ')'));
-			this.bdlist = ebx.convertJsonToRs(eval('(' + ebx.stdin['bdlist'] + ')'));
-			this.ID = ebx.validInt(ebx.stdin['id']);
-			this.ParentID = ebx.validInt(ebx.stdin['parentid']);
+			this.bd = ebx.convertJsonToRs(eval('(' + ebx.stdIn['bd'] + ')'));
+			this.bdList = ebx.convertJsonToRs(eval('(' + ebx.stdIn['bdList'] + ')'));
+			this.ID = ebx.validInt(ebx.stdIn['id']);
+			this.ParentId = ebx.validInt(ebx.stdIn['parentid']);
 			this.TableName = ebx.sqlStringEncode(TableName);
 			this.ModType = ebx.validInt(ModType);
 			this.IGID = ebx.validInt(IGID);
@@ -23,26 +24,26 @@
 			try{
 				this._save();
 				ebx.conn.commitTrans;
-				ebx.stdout['result'] = 1;
-				ebx.stdout['id'] = this.ID;
+				ebx.stdOut['result'] = 1;
+				ebx.stdOut['id'] = this.ID;
 			}catch(e){
 				ebx.conn.RollbackTrans;
-				ebx.stdout['result'] = 0;
-				ebx.stdout['msg'] = e;
+				ebx.stdOut['result'] = 0;
+				ebx.stdOut['msg'] = e;
 			}
-			this.CleanData();
+			this.cleanData();
 		},
 		_save: function(){
-			if(this.ID == 0 || this.ParentID > 0){//ID为0或者ParentID>0(另存)时新建记录
+			if(this.ID == 0 || this.ParentId > 0){//ID为0或者ParentId>0(另存)时新建记录
 				var rsBI = ebx.dbx.open('select * from ' + this.TableName + ' where 1=2');
 					
-				this.ID = ebx.IDGen.CTIDGen(this.IGID);
+				this.ID = ebx.IdGen.CTIdGen(this.IGID);
 				rsBI.AddNew();
 				rsBI('RootID') = this.ID;
-				rsBI('ParentID') = this.ParentID;
+				rsBI('ParentId') = this.ParentId;
 				rsBI('CreateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 				rsBI("Infotype") = this.ModType;
-				rsBI("AccountID") = ebx.accountid;
+				rsBI("AccountID") = ebx.accountId;
 				rsBI("owner") = ebx.owner;
 				rsBI("IsDeleted") = 0,
 				rsBIFields = rsBI.Fields;
@@ -56,7 +57,7 @@
 				for(var i = 0; i < rsBIFields.Count; i++){
 				    if(this.bd("field").value!=undefined){
 					    if(rsBIFields(i).name.toLowerCase() == this.bd("field").value.toLowerCase()){
-						    var _Parament = {//回调函数用参数对象
+						    var _parament = {//回调函数用参数对象
 								    id: this.ID,
 								    field: this.bd("field").value, 
 								    rs: this.bd, 
@@ -66,24 +67,24 @@
 								    rsBI: rsBI
 							    }
 							    //debugger;
-						    rsBI(this.bd("field").value) = ebx.func.callback(this.bd("func").value, this.bd("value").value, _Parament);
+						    rsBI(this.bd("field").value) = ebx.func.callBack(this.bd("func").value, this.bd("value").value, _parament);
 					    }
 					}
 				}
 				this.bd.MoveNext();
 			}
 			rsBI('ID') = this.ID;
-			rsBI('Columns') = ebx.convertRsToBin(this.bdlist);
+			rsBI('Columns') = ebx.convertRsToBin(this.bdList);
 			rsBI('UpdateDate') = new Date().Format('yyyy-MM-dd hh:mm:ss');
 			rsBI('UpdateCount') = ebx.validInt(rsBI('UpdateCount').value) + 1;
 			rsBI.Update();
 			rsBI = null;
 		},
-		CleanData: function(){
+		cleanData: function(){
 			this.ID = null;
-			this.ParentID = null;
+			this.ParentId = null;
 			this.bd = null;
-			this.bdlist = null;
+			this.bdList = null;
 			this.TableName = null;
 			this.ModType = null;
 		}

@@ -3,27 +3,27 @@
 	font-size:22px;
 	margin-top:0px;
 }
-.headtext{
+.headText{
 	text-align:center;
 	font-size:16px;
 	margin-bottom:40px;
 }
-.foottext{
+.footText{
 	text-align:center;
 	margin-bottom:20px;
 }
-.bdheadtable{
+.bdHeadtable{
 	width:100%;
 	border-collapse:collapse;
 	border-spacing:0;
 }
-.bdfoottable{
+.bdFoottable{
 	width:100%;
 	border-collapse:collapse;
 	border-spacing:0;
 	margin-bottom:20px;
 }
-.listheadtable{
+.listHeadtable{
 	width:100%;
 	border-collapse:collapse;
 	border-spacing:0;
@@ -31,31 +31,31 @@
 	border-top:2px solid #000;
 	border-right:2px solid #000;
 }
-.listbodytable{
+.listBodytable{
 	width:100%;
 	border-collapse:collapse;
 	border-spacing:0;
 	border-left:2px solid #000;
 }
-.bdhead{
+.bdHead{
 	width:33%;
 }
-.bdfoot{
+.bdFoot{
 	width:33%;
 	vertical-align:top;
 	white-space:nowrap;
 }
-.listhead{
+.listHead{
 	border-top:1px solid #000;
 	border-bottom:2px solid #000;
 	border-right:1px solid #000;
 	text-align:center;
 }
-.listbody{
+.listBody{
 	border-bottom:1px solid #000;
 	border-right:1px solid #000;
 }
-.pagesize{
+.pageSize{
 	text-align:center;
 	font-size:10px;
 	color:#000;

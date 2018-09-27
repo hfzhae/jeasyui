@@ -5,15 +5,15 @@ dev by zz on 2018/8/5
 
 *****************************************************************/
 
-ebx.productserial = {
+ebx.productSerial = {
 	open: function(title, seriallength, d, index){//打开串号编辑界面，参数：title：产品名称，seriallength：串号长度，d：单据明细datagrid对象，index：单据明细datagrid得index
-		var v = d.datagrid('getData').firstRows[index].productserial,
+		var v = d.datagrid('getData').firstRows[index].productSerial,
 			win = $('<div>').appendTo($('body')),
-			productserial = $('<div>').appendTo(win),
+			productSerial = $('<div>').appendTo(win),
 			toolbar = $('<div>'),
 			searchtext = $('<div>').appendTo(toolbar),
-			newbtn = $('<div>').appendTo(toolbar),
-			delbtn = $('<div>').appendTo(toolbar),
+			newBtn = $('<div>').appendTo(toolbar),
+			delBtn = $('<div>').appendTo(toolbar),
 			removebtn = $('<div>').appendTo(toolbar),
 			outbtn = $('<div>').appendTo(toolbar),
 			inputbtn = $('<div>').appendTo(toolbar),
@@ -21,7 +21,7 @@ ebx.productserial = {
 			checktext = $('<table style="border-collapse:collapse;border-spacing:0px;border:0px" align="right"><tr><td>数量校验：</td><td></td></tr></table>').appendTo(toolbar),
 			check = $('<div>').appendTo(checktext.find('td:last')),
 			columnsData = [[    
-				{field:'productserial',title:'串号',width:300,sortable:true,
+				{field:'productSerial',title:'串号',width:300,sortable:true,
 					editor:{
 						type:'textbox',
 						options:{
@@ -37,8 +37,8 @@ ebx.productserial = {
 		if(!v){
 			v = {total:0, rows: []};
 		}
-		if(d.datagrid('getData').firstRows[index].colorsize){
-			if(ebx.validInt(d.datagrid('getData').firstRows[index].colorsize.total) > 0){
+		if(d.datagrid('getData').firstRows[index].colorSize){
+			if(ebx.validInt(d.datagrid('getData').firstRows[index].colorSize.total) > 0){
 				$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
 				return;
 			}
@@ -58,36 +58,36 @@ ebx.productserial = {
 			border:'thin',
 			shadow:false,
 			onBeforeClose: function(){
-				var data = productserial.datagrid('getData').firstRows,
+				var data = productSerial.datagrid('getData').firstRows,
 					data1 = [],
 					data2 = [],
 					reserialcount = 0,
 					reserial = '';
 					
-				if(data.length > ebx.productseriallength){
-					$.messager.alert('错误','单行产品串号的数量上限为：' + ebx.productseriallength +'，当前数量为：' + data.length,'error');
+				if(data.length > ebx.productSerialLength){
+					$.messager.alert('错误','单行产品串号的数量上限为：' + ebx.productSerialLength +'，当前数量为：' + data.length,'error');
 					return false;
 				}
 
 				for(var i in data){
 					reserialcount = 0
-					if(data[i].productserial != '' && data[i].productserial != undefined){
+					if(data[i].productSerial != '' && data[i].productSerial != undefined){
 						data1.push(data[i]);
-						data2.push(data[i].productserial);
-						if(data[i].productserial.length != ebx.validInt(seriallength) && ebx.validInt(seriallength) > 0){
+						data2.push(data[i].productSerial);
+						if(data[i].productSerial.length != ebx.validInt(seriallength) && ebx.validInt(seriallength) > 0){
 							$.messager.show({
 								title: '错误',
-								msg: '串号：' + data[i].productserial + ' 的长度有误！串号长度应该为：' + seriallengthtext,
+								msg: '串号：' + data[i].productSerial + ' 的长度有误！串号长度应该为：' + seriallengthtext,
 								timeout: 3000,
 								showType: 'slide'
 							});
-							//productserial.datagrid('scrollTo', i);
-							if(i > ebx.pagesize){
-								productserial.datagrid('gotoPage', (ebx.validInt(i/ebx.pagesize) + 1));
+							//productSerial.datagrid('scrollTo', i);
+							if(i > ebx.pageSize){
+								productSerial.datagrid('gotoPage', (ebx.validInt(i/ebx.pageSize) + 1));
 							}
 							setTimeout(function(){
-								productserial.datagrid('editkeyboard', {index: i, field:'productserial'});
-								productserial.datagrid('selectRow', i);
+								productSerial.datagrid('editkeyboard', {index: i, field:'productSerial'});
+								productSerial.datagrid('selectRow', i);
 							}, 0);
 							return false;
 						}
@@ -103,12 +103,12 @@ ebx.productserial = {
 				}
 
 				if(reserial.length > 0){
-					productserial.datagrid('clearSelections');
+					productSerial.datagrid('clearSelections');
 					$.messager.alert('错误','串号：' + reserial.substr(0, reserial.length - 1) + ' 存在重复','error');
 					return false;
 				}
 				var oldquantity = d.datagrid('getData').firstRows[index].quantity;
-				if(ebx.productserialquantitycheck){
+				if(ebx.productSerialQuantityCheck){
 					if(oldquantity != data1.length){
 						$.messager.alert('错误','串号数量有误，数量应该为：' + oldquantity + '，当前数量：' + data1.length +'，关闭“数量校验”可忽略。','error');
 						return false;
@@ -117,7 +117,7 @@ ebx.productserial = {
 				d.datagrid('updateRow', {
 					index: index,
 					row:{
-						productserial: data1.length>0?{total: data1.length, rows: data1}:[],
+						productSerial: data1.length>0?{total: data1.length, rows: data1}:[],
 						quantity: data1.length==0?1:data1.length
 					}
 				})
@@ -129,9 +129,9 @@ ebx.productserial = {
 		$('body').find('.window-mask').on('click', function(){
 			win.window('close');
 		}); 
-		productserial.datagrid({    
+		productSerial.datagrid({    
 			view:scrollview,
-			pageSize:ebx.pagesize,
+			pageSize:ebx.pageSize,
 			remoteSort:false,
 			data: v,
 			border:false,
@@ -145,26 +145,26 @@ ebx.productserial = {
 			fitColumns:true,
 			onLoadSuccess: function(data){
 				if(data.total > 128){
-					productserial.datagrid('resize');
+					productSerial.datagrid('resize');
 				}
 			}
 		});
 		searchtext.textbox({    
 			buttonText:'搜索',
 			onClickButton: function(){
-				productserial.datagrid('clearSelections');
+				productSerial.datagrid('clearSelections');
 				var find = searchtext.textbox('getValue'),
-					data = productserial.datagrid('getData').firstRows;
+					data = productSerial.datagrid('getData').firstRows;
 				if(find.length <= 0) return;
 				for(var i in data){
-					if(data[i].productserial != undefined && data[i].productserial != ''){
-						if(find.toLowerCase() == data[i].productserial.toLowerCase()){
-							if(i > ebx.pagesize){
-								productserial.datagrid('gotoPage', (ebx.validInt(i/ebx.pagesize) + 1));
+					if(data[i].productSerial != undefined && data[i].productSerial != ''){
+						if(find.toLowerCase() == data[i].productSerial.toLowerCase()){
+							if(i > ebx.pageSize){
+								productSerial.datagrid('gotoPage', (ebx.validInt(i/ebx.pageSize) + 1));
 							}
 							setTimeout(function(){
-								//productserial.datagrid('scrollTo', i + i%ebx.pagesize);
-								productserial.datagrid('selectRow', i);
+								//productSerial.datagrid('scrollTo', i + i%ebx.pageSize);
+								productSerial.datagrid('selectRow', i);
 								
 							},0);
 							return;
@@ -175,19 +175,19 @@ ebx.productserial = {
 		});
 		searchtext.textbox('textbox').bind('keydown', function(e) {  
 			if (e.keyCode == 13) { 
-				productserial.datagrid('clearSelections');
+				productSerial.datagrid('clearSelections');
 				var find = searchtext.textbox('getValue'),
-					data = productserial.datagrid('getData').firstRows;
+					data = productSerial.datagrid('getData').firstRows;
 				if(find.length <= 0) return;
 				for(var i in data){
-					if(data[i].productserial != undefined && data[i].productserial != ''){
-						if(find.toLowerCase() == data[i].productserial.toLowerCase()){
-							if(i > ebx.pagesize){
-								productserial.datagrid('gotoPage', (ebx.validInt(i/ebx.pagesize) + 1));
+					if(data[i].productSerial != undefined && data[i].productSerial != ''){
+						if(find.toLowerCase() == data[i].productSerial.toLowerCase()){
+							if(i > ebx.pageSize){
+								productSerial.datagrid('gotoPage', (ebx.validInt(i/ebx.pageSize) + 1));
 							}
 							setTimeout(function(){
-								//productserial.datagrid('scrollTo', (i - 70));
-								productserial.datagrid('selectRow', i);
+								//productSerial.datagrid('scrollTo', (i - 70));
+								productSerial.datagrid('selectRow', i);
 							},0);
 							return;
 						}
@@ -195,22 +195,22 @@ ebx.productserial = {
 				}
 			}  
 		});
-		newbtn.linkbutton({
+		newBtn.linkbutton({
 			text:'新行',
 			iconCls: 'icon-CellsInsertDialog',
 			plain:true,
 			onClick: function(){
-				productserial.datagrid('appendRow', {});
-				productserial.datagrid('selectRow', productserial.datagrid('getData').total - 1);
-				productserial.datagrid('editkeyboard', {index: productserial.datagrid('getData').total - 1, field:'productserial'});
+				productSerial.datagrid('appendRow', {});
+				productSerial.datagrid('selectRow', productSerial.datagrid('getData').total - 1);
+				productSerial.datagrid('editkeyboard', {index: productSerial.datagrid('getData').total - 1, field:'productSerial'});
 			}
 		});
-		delbtn.linkbutton({
+		delBtn.linkbutton({
 			text:'删行',
 			iconCls: 'icon-CellsDelete',
 			plain:true,
 			onClick: function(){
-				var index = productserial.datagrid('getRowIndex', productserial.datagrid('getSelected'));
+				var index = productSerial.datagrid('getRowIndex', productSerial.datagrid('getSelected'));
 				if(index < 0){
 					$.messager.show({
 						title: '提示',
@@ -222,12 +222,12 @@ ebx.productserial = {
 				}
 				$.messager.confirm('确认对话框', '您想要删除吗？删除操作后数据将无法恢复。', function(r){
 					if (r){
-						productserial.datagrid('deleteRow', index);
-						if(index >= productserial.datagrid('getData').total && index > 0) index--;
-						if(productserial.datagrid('getData').total == 0 || index < 0){
-							productserial.datagrid('loadData', { total: 0, rows: [] }); 
+						productSerial.datagrid('deleteRow', index);
+						if(index >= productSerial.datagrid('getData').total && index > 0) index--;
+						if(productSerial.datagrid('getData').total == 0 || index < 0){
+							productSerial.datagrid('loadData', { total: 0, rows: [] }); 
 						}else{
-							productserial.datagrid('selectRow', index);
+							productSerial.datagrid('selectRow', index);
 						}
 					}
 				});
@@ -240,7 +240,7 @@ ebx.productserial = {
 			onClick: function(){
 				$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
 					if (r){
-						productserial.datagrid('loadData', { total: 0, rows: [] }); 
+						productSerial.datagrid('loadData', { total: 0, rows: [] }); 
 					}
 				});
 			}
@@ -250,8 +250,8 @@ ebx.productserial = {
 			iconCls: 'icon-ImportExcel',
 			plain:true,
 			onClick: function(){
-				var data = productserial.datagrid('getData').firstRows;
-				ebx.clipboardData(columnsData, {total: data.length, rows: data} );
+				var data = productSerial.datagrid('getData').firstRows;
+				ebx.clipBoardData(columnsData, {total: data.length, rows: data} );
 			}
 		});
 		inputbtntemplate.menu({}).menu('appendItem', {
@@ -268,11 +268,11 @@ ebx.productserial = {
 			onClick: function(){
 				var ExportBtn = $(this);
 				
-				ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
-				ebx.importExcel.fileinput.change(function(){
+				ebx.importExcel.fileInput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
+				ebx.importExcel.fileInput.change(function(){
 					$.messager.progress({title:'正在导入...',text:''}); 
 					ExportBtn.linkbutton('disable');
-					ebx.importExcel.datagridObj = productserial;
+					ebx.importExcel.datagridObj = productSerial;
 					//ebx.importExcel.tabObj = [];
 					ebx.importExcel.btnObj = ExportBtn;
 					ebx.importExcel.getFile(this, function(d){
@@ -312,15 +312,15 @@ ebx.productserial = {
 								dataData.push(importData[i]);
 							}
 						}
-						if(dataData.length > ebx.productseriallength){
-							$.messager.alert('错误','串号导入数量上限为：' + ebx.productseriallength +'，当前导入数量为：' + dataData.length,'error');
+						if(dataData.length > ebx.productSerialLength){
+							$.messager.alert('错误','串号导入数量上限为：' + ebx.productSerialLength +'，当前导入数量为：' + dataData.length,'error');
 							ebx.importExcel.btnObj.linkbutton('enable');
 							$.messager.progress('close');
 							return;
 						}
 						datagrid.datagrid('loadData', {total: dataData.length, rows: dataData}); 
 						
-						if(tab) ebx.setEditstatus(tab, true);
+						if(tab) ebx.setEditStatus(tab, true);
 						$.messager.show({
 							title: '提示',
 							msg: '成功导入了：' + importData.length + ' 行数据。',
@@ -329,13 +329,13 @@ ebx.productserial = {
 						});	
 						ebx.importExcel.btnObj.linkbutton('enable');
 						$.messager.progress('close');
-						ebx.importExcel.fileinput.remove();
+						ebx.importExcel.fileInput.remove();
 						ebx.importExcel.datagridObj = null;
 						ebx.importExcel.tabObj = null;
 						ebx.importExcel.btnObj = null;
 					});
 				});
-				ebx.importExcel.fileinput.trigger("click");
+				ebx.importExcel.fileInput.trigger("click");
 			},
 			menu:inputbtntemplate
 		});
@@ -343,16 +343,16 @@ ebx.productserial = {
 		check.switchbutton({
 			onText:'开',
 			offText:'关',
-			checked:ebx.productserialquantitycheck?true:false,
+			checked:ebx.productSerialQuantityCheck?true:false,
 			width:50,
 			height:24,
 			onChange:function(checked){
 				if(checked){
-					ebx.productserialquantitycheck = 1
-					ebx.storage.set('productserialquantitycheck', ebx.productserialquantitycheck);
+					ebx.productSerialQuantityCheck = 1
+					ebx.storage.set('productSerialQuantityCheck', ebx.productSerialQuantityCheck);
 				}else{
-					ebx.productserialquantitycheck = 0
-					ebx.storage.set('productserialquantitycheck', ebx.productserialquantitycheck);
+					ebx.productSerialQuantityCheck = 0
+					ebx.storage.set('productSerialQuantityCheck', ebx.productSerialQuantityCheck);
 				}
 			}
 			//handleText:'数量',
@@ -384,44 +384,44 @@ ebx.productserial = {
 						if(addflag == 0){
 							d.datagrid('appendRow', result.rows[0]);
 							d.datagrid('selectRow', d.datagrid('getData').total - 1);
-							if(result.rows[0].productserial){
-								if(result.rows[0].productserial.total == 1){
-									serialText = '<br>串号：' + result.rows[0].productserial.rows[0].productserial;
+							if(result.rows[0].productSerial){
+								if(result.rows[0].productSerial.total == 1){
+									serialText = '<br>串号：' + result.rows[0].productSerial.rows[0].productSerial;
 								}
 							}
 						}else{
-							if(result.rows[0].productserial){
-								if(result.rows[0].productserial.total == 1){
-									if(data[index].productserial){
-										var rows = data[index].productserial.rows;
+							if(result.rows[0].productSerial){
+								if(result.rows[0].productSerial.total == 1){
+									if(data[index].productSerial){
+										var rows = data[index].productSerial.rows;
 									    if(rows){
-										    if(rows.length >= ebx.productseriallength){
-											    $.messager.alert('错误','单行产品串号的数量上限为：' + ebx.productseriallength +'。','error');
+										    if(rows.length >= ebx.productSerialLength){
+											    $.messager.alert('错误','单行产品串号的数量上限为：' + ebx.productSerialLength +'。','error');
 											    return false;
 										    }
 
 										    for(var i in rows){
-											    if(rows[i].productserial == result.rows[0].productserial.rows[0].productserial){
-												    $.messager.alert('错误', '产品：' + data[index].productname +' 的串号：' + rows[i].productserial + ' 已存在！', 'error', function(){
+											    if(rows[i].productSerial == result.rows[0].productSerial.rows[0].productSerial){
+												    $.messager.alert('错误', '产品：' + data[index].productname +' 的串号：' + rows[i].productSerial + ' 已存在！', 'error', function(){
 													    t.textbox('textbox').focus().select();
 												    });	
 												    return;
 											    }
 										    }
-										    if(data[index].productserial.length == 0){
-											    data[index].productserial = result.rows[0].productserial;
+										    if(data[index].productSerial.length == 0){
+											    data[index].productSerial = result.rows[0].productSerial;
 										    }else{
-											    rows.push(result.rows[0].productserial.rows[0]);
-											    data[index].productserial.total++;
+											    rows.push(result.rows[0].productSerial.rows[0]);
+											    data[index].productSerial.total++;
 										    }
 										}else{
-										    data[index].productserial = result.rows[0].productserial;
+										    data[index].productSerial = result.rows[0].productSerial;
 										}
 									}else{
-										data[index].productserial = result.rows[0].productserial;
+										data[index].productSerial = result.rows[0].productSerial;
 									}
-									serialText = '<br>串号：' + result.rows[0].productserial.rows[0].productserial;
-									data[index].quantity = data[index].productserial.total;
+									serialText = '<br>串号：' + result.rows[0].productSerial.rows[0].productSerial;
+									data[index].quantity = data[index].productSerial.total;
 								}else{
 									return;
 								}
@@ -429,17 +429,17 @@ ebx.productserial = {
 								data[index].quantity++;
 							}
 							
-							var TaxRate = ebx.validFloat(data[index].taxrate);
+							var TaxRate = ebx.validFloat(data[index].taxRate);
 							
 							data[index].amount = ebx.validFloat(data[index].price) * ebx.validFloat(data[index].quantity);
-							data[index].aquantity = ebx.validFloat(data[index].quantity) * ebx.validFloat(data[index].relation);
+							data[index].aQuantity = ebx.validFloat(data[index].quantity) * ebx.validFloat(data[index].relation);
 							
 							if(TaxRate != -1){
-								data[index].taxamount = data[index].amount / (TaxRate + 1) * TaxRate;
+								data[index].taxAmount = data[index].amount / (TaxRate + 1) * TaxRate;
 							}else{
-								data[index].taxamount = 0;
+								data[index].taxAmount = 0;
 							}
-							data[index].nat = ebx.validFloat(data[index].amount) - ebx.validFloat(data[index].taxamount);
+							data[index].nat = ebx.validFloat(data[index].amount) - ebx.validFloat(data[index].taxAmount);
 							d.datagrid('appendRow', {});
 							d.datagrid('deleteRow', d.datagrid('getData').total - 1);
 							d.datagrid('selectRow', index);
@@ -451,7 +451,7 @@ ebx.productserial = {
 							showType: 'slide'
 						});	
 
-						if(tab) ebx.setEditstatus(tab, true);
+						if(tab) ebx.setEditStatus(tab, true);
 					}
 				}
 				t.textbox('textbox').focus().select();
@@ -460,7 +460,7 @@ ebx.productserial = {
 	}
 }
 
-ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
+ebx.colorSize = {//单据色码处理对象 2018-8-13 zz
 	title:'',
 	productid:0,
 	group:{},
@@ -487,8 +487,8 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 			_tab = this.tab,
 			oldquantity = _d.datagrid('getData').firstRows[_index].quantity;
 			
-		if(_d.datagrid('getData').firstRows[_index].productserial){
-			if(ebx.validInt(_d.datagrid('getData').firstRows[_index].productserial.total) > 0){
+		if(_d.datagrid('getData').firstRows[_index].productSerial){
+			if(ebx.validInt(_d.datagrid('getData').firstRows[_index].productSerial.total) > 0){
 				$.messager.alert('错误','串号和颜色尺码不能同时使用！','error');
 				return;
 			}
@@ -507,11 +507,11 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 					}else{
 						_group = result.rows[0];
 						var win = $('<div>').appendTo($('body')),
-							colorsize = $('<div>').appendTo(win),
+							colorSize = $('<div>').appendTo(win),
 							toolbar = $('<div>'),
 							outbtn = $('<div>').appendTo(toolbar),
 							delall = $('<div>').appendTo(toolbar),
-							colorsizedata = $('<div>').appendTo(win),
+							colorSizedata = $('<div>').appendTo(win),
 							checktext = $('<table style="border-collapse:collapse;border-spacing:0px;border:0px" align="right"><tr><td>数量校验：</td><td></td></tr></table>').appendTo(toolbar),
 							check = $('<div>').appendTo(checktext.find('td:last'));
 
@@ -529,23 +529,23 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 							border:'thin',
 							shadow:false,
 							onBeforeClose: function(){
-								var data = colorsizedata.datagrid('getRows'),
-									colorsize = {total:0, rows: []},
+								var data = colorSizedata.datagrid('getRows'),
+									colorSize = {total:0, rows: []},
 									qty = 0;
 								
 								for(var i in data){
 									for(var k in data[i]){
 										if(k.toLowerCase() != 'color' && k.toLowerCase() != 'colorid'){
 											if(ebx.validInt(data[i][k]) != 0){
-												colorsize.rows.push({colorid:data[i].colorid,sizeid:ebx.validInt(k.substr(5, k.length)),quantity:ebx.validInt(data[i][k])});
+												colorSize.rows.push({colorid:data[i].colorid,sizeid:ebx.validInt(k.substr(5, k.length)),quantity:ebx.validInt(data[i][k])});
 												qty += ebx.validInt(data[i][k]);
-												colorsize.total++
+												colorSize.total++
 											}
 										}
 									}
 								}
 								var oldquantity = _d.datagrid('getData').firstRows[_index].quantity;
-								if(ebx.colorsizequantitycheck){
+								if(ebx.colorSizeQuantityCheck){
 									if(oldquantity != qty){
 										$.messager.alert('错误','色码数量有误，数量应该为：' + oldquantity + ' ，当前数量：' + qty +'，关闭“数量校验”可忽略。','error');
 										return false;
@@ -554,7 +554,7 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 								_d.datagrid('updateRow', {
 									index: _index,
 									row:{
-										colorsize: colorsize.rows.length>0?colorsize:[],
+										colorSize: colorSize.rows.length>0?colorSize:[],
 										quantity: qty==0?1:qty
 									}
 								})
@@ -571,16 +571,16 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 						check.switchbutton({
 							onText:'开',
 							offText:'关',
-							checked:ebx.colorsizequantitycheck?true:false,
+							checked:ebx.colorSizeQuantityCheck?true:false,
 							width:50,
 							height:24,
 							onChange:function(checked){
 								if(checked){
-									ebx.colorsizequantitycheck = 1
-									ebx.storage.set('colorsizequantitycheck', ebx.colorsizequantitycheck);
+									ebx.colorSizeQuantityCheck = 1
+									ebx.storage.set('colorSizeQuantityCheck', ebx.colorSizeQuantityCheck);
 								}else{
-									ebx.colorsizequantitycheck = 0
-									ebx.storage.set('colorsizequantitycheck', ebx.colorsizequantitycheck);
+									ebx.colorSizeQuantityCheck = 0
+									ebx.storage.set('colorSizeQuantityCheck', ebx.colorSizeQuantityCheck);
 								}
 							}
 							//handleText:'数量',
@@ -589,18 +589,18 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 						
 						$.ajax({
 							type: 'post', 
-							url: 'server/SimpChinese/product/getcolorsize/',
+							url: 'server/SimpChinese/product/getcolorSize/',
 							data: {id: _group.id, _:(new Date()).getTime()},
 							dataType: "json",
 							success: function(result){
 								if(result){
-									if(_row.colorsize){
+									if(_row.colorSize){
 										for(var i in result.rows){
-											for(var k in _row.colorsize.rows){
-												if(ebx.validInt(_row.colorsize.rows[k].colorid) == ebx.validInt(result.rows[i].colorid)){
+											for(var k in _row.colorSize.rows){
+												if(ebx.validInt(_row.colorSize.rows[k].colorid) == ebx.validInt(result.rows[i].colorid)){
 													for(var j in result.rows[i]){
-														if(ebx.validInt(j.substr(5, j.length), -1) == ebx.validInt(_row.colorsize.rows[k].sizeid)){
-															result.rows[i][j] = ebx.validInt(_row.colorsize.rows[k].quantity);
+														if(ebx.validInt(j.substr(5, j.length), -1) == ebx.validInt(_row.colorSize.rows[k].sizeid)){
+															result.rows[i][j] = ebx.validInt(_row.colorSize.rows[k].quantity);
 														}
 													}
 												}
@@ -608,7 +608,7 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 										}
 									}
 									
-									colorsizedata.datagrid({
+									colorSizedata.datagrid({
 										remoteSort:false,
 										view:scrollview,//使用scrollview插件，否则无法使用renderformatterstyler插件
 										pageSize:500,
@@ -629,8 +629,8 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 										iconCls: 'icon-ImportExcel',
 										plain:true,
 										onClick: function(){
-											var data = colorsizedata.datagrid('getRows')
-											ebx.clipboardData([result.style.rows], {total: data.length, rows: data} );
+											var data = colorSizedata.datagrid('getRows')
+											ebx.clipBoardData([result.style.rows], {total: data.length, rows: data} );
 										}
 									});
 									
@@ -641,16 +641,16 @@ ebx.colorsize = {//单据色码处理对象 2018-8-13 zz
 										onClick: function(){
 											$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
 												if (r){
-													var data = colorsizedata.datagrid('getRows');
+													var data = colorSizedata.datagrid('getRows');
 													for(var i in data){
 														for(var j in data[i]){
 															if(j.toLowerCase() != 'colorid' && j.toLowerCase() != 'color'){
 																data[i][j] = '';
 															}
 														}
-														colorsizedata.datagrid('refreshRow', i);
+														colorSizedata.datagrid('refreshRow', i);
 													}
-													if(_tab) ebx.setEditstatus(_tab, true);
+													if(_tab) ebx.setEditStatus(_tab, true);
 												}
 											});
 										}

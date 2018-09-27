@@ -6,9 +6,9 @@ dev by zz on 2018/8/27
 *****************************************************************/
 
 ebx.qw = {
-	ID: 0,
-	billtype: 0,
-	ParentID: 0,
+	id: 0,
+	billType: 0,
+	ParentId: 0,
 	data:{},
 	tabs: [],
 	tab: [],
@@ -16,45 +16,45 @@ ebx.qw = {
 	northPanel: [],
 	eastPanel: [],
 	centerPanel: [],
-	Parament: {},
+	parament: {},
 	biribbon: [],
-	centerstorage: [],
-	eaststorage: [],
+	centerStorage: [],
+	eastStorage: [],
 	showLock:0,
-	init: function(callback){//单据初始化函数。callback：回掉函数对象
+	init: function(callBack){//单据初始化函数。callBack：回掉函数对象
 		this.tabs = ebx.center.tabs('getSelected');
 		this.tab = this.tabs.panel('options');
-		this.Parament = ebx.getMenuParamenter(this.tabs);
-		this.ID = ebx.validInt(this.Parament.id);
+		this.parament = ebx.getMenuparamenter(this.tabs);
+		this.id = ebx.validInt(this.parament.id);
 		this.layout = $('<div>').appendTo(this.tabs)
-		if(ebx.validInt(this.Parament.lock) == 1){
+		if(ebx.validInt(this.parament.lock) == 1){
 			this.showLock = 1;
 		}
 		
 		this._default();
 		
 		this.eastPanel = this.layout.layout('panel', 'east');
-		this.eaststorage = $('<div>').appendTo(this.eastPanel);
-		this._east(callback.east);
+		this.eastStorage = $('<div>').appendTo(this.eastPanel);
+		this._east(callBack.east);
 		
 		this.northPanel = this.layout.layout('panel', 'north');
 		this.biribbon = $('<div>').appendTo(this.northPanel);
-		this._north(callback.north);
+		this._north(callBack.north);
 		
 		this.centerPanel = this.layout.layout('panel', 'center');
-		this.centerstorage = $('<div>').appendTo(this.centerPanel);
-		this._center(callback.center, callback.center1);
+		this.centerStorage = $('<div>').appendTo(this.centerPanel);
+		this._center(callBack.center, callBack.center1);
 	},
 	_export: function(ExportBtn, _layout, _tab){//导入函数方法，参数：ExportBtn：点击的按钮对象，_layout：当前页的layout对象，_tab：当前页的tab对象
-		ebx.importExcel.fileinput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
-		ebx.importExcel.fileinput.change(function(){
+		ebx.importExcel.fileInput = $('<input type="file" accept=".xls,.xlsx">').appendTo('body');
+		ebx.importExcel.fileInput.change(function(){
 			ExportBtn.linkbutton('disable');
 			ebx.importExcel.datagridObj = _layout.layout('panel', 'center').find('.datagrid-f');
 			ebx.importExcel.tabObj = _tab;
 			ebx.importExcel.btnObj = ExportBtn;
 			ebx.importExcel.getFile(this);
 		});
-		ebx.importExcel.fileinput.trigger("click");
+		ebx.importExcel.fileInput.trigger("click");
 	},
 	_default: function(){//单据页面框架 2018-8-10 zz
 		this.layout.layout({
@@ -65,7 +65,7 @@ ebx.qw = {
 		this.layout.layout('add',{
 			region: 'center',
 			title: '',
-			//href: 'client/SimpChinese/' + this.Parament.modedit + '/center.html',
+			//href: 'client/SimpChinese/' + this.parament.modedit + '/center.html',
 			//hideExpandTool: false,
 			//hideCollapsedContent: false,
 			border: false,
@@ -76,7 +76,7 @@ ebx.qw = {
 			maxWidth: '50%',
 			minWidth: 300,
 			//title: '基本信息',
-			//href: 'client/SimpChinese/' + this.Parament.modedit + '/east.html',
+			//href: 'client/SimpChinese/' + this.parament.modedit + '/east.html',
 			hideExpandTool: false,
 			hideCollapsedContent: false,
 			border: false,
@@ -93,7 +93,7 @@ ebx.qw = {
 			region: 'north',
 			//title:'功能',
 			height: 113,
-			//href: 'client/SimpChinese/' + this.Parament.modedit + '/north.html',
+			//href: 'client/SimpChinese/' + this.parament.modedit + '/north.html',
 			border: false,
 			split: false,
 			hideCollapsedContent: false,
@@ -107,17 +107,17 @@ ebx.qw = {
 			}
 		});
 	},
-	_center: function(callback, callback1){//单据表体对象，参数：callback：回掉函数，datagrid装载前执行，callback1：回掉函数，datagrid装载后执行
+	_center: function(callBack, callBack1){//单据表体对象，参数：callBack：回掉函数，datagrid装载前执行，callBack1：回掉函数，datagrid装载后执行
 		var bd = this,
 			_layout = this.layout,
 			_centerPanel = this.centerPanel,
-			_Parament = this.Parament,
+			_parament = this.parament,
 			_tab = this.tab;
 			
 		$.ajax({
 			type: 'post', 
-			url: 'server/SimpChinese/'+_Parament.modedit+'/center/',
-			data: {id:_Parament.id+'list',_:(new Date()).getTime()},
+			url: 'server/SimpChinese/'+_parament.modedit+'/center/',
+			data: {id:_parament.id+'list',_:(new Date()).getTime()},
 			dataType: "json",
 			success: function(result){
 				if(result){
@@ -251,7 +251,7 @@ ebx.qw = {
 								});
 								tables.datagrid('selectRow', tables.datagrid('getData').total-1);
 								tables.datagrid('editkeyboard', {index:tables.datagrid('getData').total-1, field: 'alias'});
-								ebx.setEditstatus(_tab, true);
+								ebx.setEditStatus(_tab, true);
 							}
 						}
 					});
@@ -282,7 +282,7 @@ ebx.qw = {
 										tables.datagrid('selectRow', index);
 									}
 									
-									ebx.setEditstatus(_tab, true);
+									ebx.setEditStatus(_tab, true);
 								}
 							});
 						}
@@ -295,7 +295,7 @@ ebx.qw = {
 							$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
 								if (r){
 									tables.datagrid('loadData', {total: 0, rows: []});
-									ebx.setEditstatus(_tab, true);
+									ebx.setEditStatus(_tab, true);
 								}
 							});
 						}
@@ -402,7 +402,7 @@ ebx.qw = {
 								columns.datagrid('selectRow', columns.datagrid('getData').total - 1);
 								columns.datagrid('editkeyboard', {index: columns.datagrid('getData').total - 1, field: 'datatype'}); //自动触发编辑第一个字段
 							}
-							ebx.setEditstatus(_tab, true);
+							ebx.setEditStatus(_tab, true);
 						}
 					});
 					coltable.combogrid({
@@ -466,7 +466,7 @@ ebx.qw = {
 							columns.datagrid('scrollTo', columns.datagrid('getData').total - 1);//滚动到新增的行
 							columns.datagrid('selectRow', columns.datagrid('getData').total - 1);
 							columns.datagrid('editkeyboard', {index: columns.datagrid('getData').total - 1, field: 'alias'}); //自动触发编辑第一个字段
-							ebx.setEditstatus(_tab, true);
+							ebx.setEditStatus(_tab, true);
 						}
 					});
 
@@ -497,7 +497,7 @@ ebx.qw = {
 										columns.datagrid('selectRow', index);
 									}
 									
-									ebx.setEditstatus(_tab, true);
+									ebx.setEditStatus(_tab, true);
 								}
 							});
 						}
@@ -510,7 +510,7 @@ ebx.qw = {
 							$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
 								if (r){
 									columns.datagrid('loadData', {total: 0, rows: []});
-									ebx.setEditstatus(_tab, true);
+									ebx.setEditStatus(_tab, true);
 								}
 							});
 						}
@@ -651,7 +651,7 @@ ebx.qw = {
 							relates.datagrid('scrollTo', relates.datagrid('getData').total - 1);//滚动到新增的行
 							relates.datagrid('selectRow', relates.datagrid('getData').total - 1);
 							relates.datagrid('editkeyboard', {index: relates.datagrid('getData').total - 1, field: 'table'}); //自动触发编辑第一个字段
-							ebx.setEditstatus(_tab, true);
+							ebx.setEditStatus(_tab, true);
 						}
 					});
 					relatesdel.linkbutton({
@@ -681,7 +681,7 @@ ebx.qw = {
 										relates.datagrid('selectRow', index);
 									}
 									
-									ebx.setEditstatus(_tab, true);
+									ebx.setEditStatus(_tab, true);
 								}
 							});
 						}
@@ -694,7 +694,7 @@ ebx.qw = {
 							$.messager.confirm('确认对话框', '您想要清空吗？清空操作后数据将无法恢复。', function(r){
 								if (r){
 									relates.datagrid('loadData', {total: 0, rows: []});
-									ebx.setEditstatus(_tab, true);
+									ebx.setEditStatus(_tab, true);
 								}
 							});
 						}
@@ -712,7 +712,7 @@ ebx.qw = {
 						cls:'querywizardfilter',
 						validType:'SQLCheck',
 						onChange: function(newValue, oldValue){
-							ebx.setEditstatus(_tab, true);
+							ebx.setEditStatus(_tab, true);
 						}
 					});
 					filter.parent().find('span').css({
@@ -725,105 +725,105 @@ ebx.qw = {
 						'background':'transparent'
 					}).attr('spellcheck',false);
 				}
-				if(callback1)callback1(_centerstorage);
+				if(callBack1)callBack1(_centerStorage);
 			}
 		});
 	},
-	_save:function(asSave, _layout, _Parament, _tab, bdx, callback){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_Parament：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：全局对象，callback回到函数
+	_save:function(asSave, _layout, _parament, _tab, bdx, callBack){//保存方法，参数：asSave：是否另存，1为另存，_layout：单据页面的layout对象，_parament：参数数组，_tab：tabs的tab对象用来标识编辑状态，bdx：全局对象，callBack回到函数
 		var tables = _layout.layout('panel', 'center').find('.layout').layout('panel', 'west').find('.datagrid-f').datagrid('getData'),
 			columns = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 0).find('.datagrid-f').datagrid('getData'),
 			relates = _layout.layout('panel', 'center').find('.layout').layout('panel', 'center').find('.tabs-container').tabs('getTab', 1).find('.datagrid-f').datagrid('getData'),
 			filter = _layout.layout('panel', 'center').find('.querywizardfilter').parent().parent().find('.textbox-f'),
 			bd = ebx.convertDicToJson(_layout.layout('panel', 'east').find('.datagrid-f').datagrid('getData')),
-			ParentID = asSave?_Parament.id:0,
-			savetext = asSave?'另存':'保存',
-			Paramenter = {tables: ebx.convertDicToJson(tables), columns: ebx.convertDicToJson(columns), relates: ebx.convertDicToJson(relates), filter: filter.val(), bd: bd, _: (new Date()).getTime(), id: _Parament.id, parentid: ParentID};
+			ParentId = asSave?_parament.id:0,
+			saveText = asSave?'另存':'保存',
+			paramenter = {tables: ebx.convertDicToJson(tables), columns: ebx.convertDicToJson(columns), relates: ebx.convertDicToJson(relates), filter: filter.val(), bd: bd, _: (new Date()).getTime(), id: _parament.id, parentid: ParentId};
 
 		if(tables.total == 0){
-			$.messager.alert('错误', savetext + '失败！数据库表不能为空。', 'error');
-			callback(false);
+			$.messager.alert('错误', saveText + '失败！数据库表不能为空。', 'error');
+			callBack(false);
 			return;
 		}
 		
 		if(columns.total == 0){
-			$.messager.alert('错误', savetext + '失败！列不能为空。', 'error');
-			callback(false);
+			$.messager.alert('错误', saveText + '失败！列不能为空。', 'error');
+			callBack(false);
 			return;
 		}
 		
-		if(!ebx.checkedBDvalidatebox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
-			callback(false);
+		if(!ebx.checkedBdValidateBox(_layout.layout('panel', 'east').find('.datagrid-f'))){//校验BD输入的内容
+			callBack(false);
 			return;
 		}
 
 		if(!filter.textbox('isValid')){//校验条件输入框的sql语法是否符合规定
-			$.messager.alert('错误', savetext + '失败！<br>“条件”中录入的SQL语句有误。', 'error', function(){
+			$.messager.alert('错误', saveText + '失败！<br>“条件”中录入的SQL语句有误。', 'error', function(){
 				filter.textbox('textbox').focus();
 			});
-			callback(false);
+			callBack(false);
 			return;
 		}
 		$.messager.progress({title:'正在保存...',text:''}); 
 		$.ajax({
 			type: 'post', 
-			url: 'server/SimpChinese/' + _Parament.modedit + '/save/',
-			data: Paramenter,
+			url: 'server/SimpChinese/' + _parament.modedit + '/save/',
+			data: paramenter,
 			dataType: "json",
 			success: function(result){
 				$.messager.progress('close');
 				if(result.result){
 					$.messager.show({
 						title: '提示',
-						msg: savetext + '成功！',
+						msg: saveText + '成功！',
 						timeout: 3000,
 						showType: 'slide'
 					});	
-					ebx.setEditstatus(_tab, false);
-					bdx.ID = result.id;
+					ebx.setEditStatus(_tab, false);
+					bdx.id = result.id;
 					
-					//_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:bdx.ID, _:(new Date()).getTime(), page:1, rows: ebx.pagesize});
+					//_layout.layout('panel', 'center').find('.datagrid-f').datagrid('load', {id:bdx.id, _:(new Date()).getTime(), page:1, rows: ebx.pageSize});
 					//bdx.init('center');
-					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:bdx.ID, _:(new Date()).getTime()});
+					_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:bdx.id, _:(new Date()).getTime()});
 					
 				}else{
-					$.messager.alert('错误', savetext + '失败！<br>' + JSON.stringify(result.msg), 'error');	
+					$.messager.alert('错误', saveText + '失败！<br>' + JSON.stringify(result.msg), 'error');	
 				}
-				callback(true)
+				callBack(true)
 			}
 		});
 	},
 	_new: function(options){
-		var Paramenter = {};
-		for(var i in options._Parament){
-			switch(typeof(options._Parament[i])){
+		var paramenter = {};
+		for(var i in options._parament){
+			switch(typeof(options._parament[i])){
 				case 'string':
-					Paramenter[i.toLowerCase()] = options._Parament[i].toString().toLowerCase();
+					paramenter[i.toLowerCase()] = options._parament[i].toString().toLowerCase();
 					break;
 				case 'number':
-					Paramenter[i.toLowerCase()] = options._Parament[i];
+					paramenter[i.toLowerCase()] = options._parament[i];
 					break;
 			}
 		}
-		Paramenter.id = 0;
-		var tabsid = 'tabs_'+ebx.RndNum(20)
+		paramenter.id = 0;
+		var tabsId = 'tabs_'+ebx.rndNum(20)
 		ebx.center.tabs('add', {
-			id: tabsid,
-			title: '新建-' + options._Parament.text,
-			href: 'client/SimpChinese/' + options._Parament.modedit + '/',
-			paramenters:Paramenter,
+			id: tabsId,
+			title: '新建-' + options._parament.text,
+			href: 'client/SimpChinese/' + options._parament.modedit + '/',
+			paramenters:paramenter,
 			//iconCls:node.iconCls,
 			selected: true,
 			closable:true
 		});
 	},
-	_east: function(callback){//单据属性对象
-		var _eaststorage = this.eaststorage,
+	_east: function(callBack){//单据属性对象
+		var _eastStorage = this.eastStorage,
 			_tabs = this.tabs;
 		
-		_eaststorage.propertygrid({
-			url: 'server/SimpChinese/'+this.Parament.modedit+'/load/',
+		_eastStorage.propertygrid({
+			url: 'server/SimpChinese/'+this.parament.modedit+'/load/',
 			method:'post',
-			queryParams:{_:(new Date()).getTime(),id:this.Parament.id},
+			queryParams:{_:(new Date()).getTime(),id:this.parament.id},
 			showGroup: true,
 			width:'100%',
 			height:'100%',
@@ -836,14 +836,14 @@ ebx.qw = {
 			showHeader: true,
 			onLoadSuccess: function(data){
 				var _biribbon = _tabs.find('.layout').layout('panel', 'north').find('.ribbon-tab'),
-					deleted = ebx.getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
-					undeleted = ebx.getbiribbonobj(_biribbon, 'undeleted', 'linkbutton');
+					deleted = ebx.getBiribbonObj(_biribbon, 'deleted', 'linkbutton'),
+					undeleted = ebx.getBiribbonObj(_biribbon, 'undeleted', 'linkbutton');
 					
 				if(undeleted)undeleted.linkbutton('disable');
 				if(deleted)deleted.linkbutton('disable');
 					
 				for(var i in data.rows){
-					if(data.rows[i].field == '_isdeleted'){//处理删除显示
+					if(data.rows[i].field == '_isDeleted'){//处理删除显示
 						if(ebx.validInt(data.rows[i].value) == 0){
 							if(undeleted)undeleted.linkbutton('disable');
 							if(deleted)deleted.linkbutton('enable');
@@ -853,25 +853,25 @@ ebx.qw = {
 						}
 					}
 				}
-				if(callback)callback(data, _eaststorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
+				if(callBack)callBack(data, _eastStorage);//触发回掉函数，主要用于重造字段的editor的validatebox校验
 			}
 		}).datagrid('renderformatterstyler');//启用显示式样回调函数
 	},
-	_north: function (callback){//单据表头按钮对象 2018-7-9 zz
+	_north: function (callBack){//单据表头按钮对象 2018-7-9 zz
 		var bd = this,
 			_layout = this.layout,
 			_eastPanel = this.eastPanel,
-			_Parament = this.Parament,
+			_parament = this.parament,
 			_tabs = this.tabs,
 			_tab = this.tab,
 			_biribbon = this.biribbon,
-			_centerstorage = this.centerstorage,
+			_centerStorage = this.centerStorage,
 			_save = this._save,
-			_ID = this.ID,
+			_ID = this.id,
 			_showLock = this.showLock,
 			_new = this._new,
-			hidenorthbtn = $('<div>').appendTo(_layout.layout('panel', 'north')),
-			hideeastbtn = $('<div>').appendTo(_layout.layout('panel', 'east')),
+			hideNorthBtn = $('<div>').appendTo(_layout.layout('panel', 'north')),
+			hideEastBtn = $('<div>').appendTo(_layout.layout('panel', 'east')),
 			data = {
 				selected:0,
 				tabs:[{
@@ -892,13 +892,13 @@ ebx.qw = {
 								onClick: function(){
 									$.messager.confirm('提示', '是否需要另存？', function(r){
 										if (r){
-											_save(1, _layout, _Parament, _tab, bd, function(){ });
+											_save(1, _layout, _parament, _tab, bd, function(){ });
 										}
 									});
 								}
 							}],
 							onClick: function(){
-								var lockbtn = ebx.getbiribbonobj(_biribbon, 'lock', 'linkbutton');
+								var lockbtn = ebx.getBiribbonObj(_biribbon, 'lock', 'linkbutton');
 								if(lockbtn && _showLock == 1){
 									if(lockbtn.find('.l-btn-icon').hasClass('icon-Lock-large')){
 										$.messager.alert('提醒', '编辑锁为锁定状态，请点击解锁后再保存。', 'warning');
@@ -908,7 +908,7 @@ ebx.qw = {
 								}
 								var saveBtn = $(this);
 								saveBtn.linkbutton('disable');
-								_save(0, _layout, _Parament, _tab, bd, function(result){
+								_save(0, _layout, _parament, _tab, bd, function(result){
 									if(result){
 										if(lockbtn){
 											lockbtn.find('.l-btn-icon').removeClass('icon-unLock-large').addClass('icon-Lock-large');
@@ -927,8 +927,8 @@ ebx.qw = {
 								iconCls:'tree-file',
 								onClick: function(){
 									var options = {
-										_Parament: _Parament,
-										browsertype: 'bd',
+										_parament: _parament,
+										browserType: 'bd',
 										_tabs: _tabs,
 										_layout: _layout
 									}; 
@@ -941,10 +941,10 @@ ebx.qw = {
 								disable:true,
 								onClick:function(){
 									var btn = $(this),
-										undeleted = ebx.getbiribbonobj(_biribbon, 'undeleted', 'linkbutton'),
-										_eaststorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
+										undeleted = ebx.getBiribbonObj(_biribbon, 'undeleted', 'linkbutton'),
+										_eastStorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
 										
-									ebx.browser._deleted(_ID, _Parament.modedit, function(result){
+									ebx.browser._deleted(_ID, _parament.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -955,7 +955,7 @@ ebx.qw = {
 											btn.linkbutton('disable');
 											if(undeleted)undeleted.linkbutton('enable');
 											//_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
-											_eaststorage.propertygrid('reload');
+											_eastStorage.propertygrid('reload');
 											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 										}else{
 											$.messager.alert('错误', '删除失败！<br>' + JSON.stringify(result.msg), 'error');
@@ -969,10 +969,10 @@ ebx.qw = {
 								disable:true,
 								onClick:function(){
 									var btn = $(this),
-										deleted = ebx.getbiribbonobj(_biribbon, 'deleted', 'linkbutton'),
-										_eaststorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
+										deleted = ebx.getBiribbonObj(_biribbon, 'deleted', 'linkbutton'),
+										_eastStorage = _tabs.find('.layout').layout('panel', 'east').find('.datagrid-f');
 										
-									ebx.browser._undeleted(_ID, _Parament.modedit, function(result){
+									ebx.browser._undeleted(_ID, _parament.modedit, function(result){
 										if(result.result){
 											$.messager.show({
 												title: '提示',
@@ -983,7 +983,7 @@ ebx.qw = {
 											btn.linkbutton('disable');
 											if(deleted)deleted.linkbutton('enable');
 											//_layout.layout('panel', 'center').find('.datagrid-f').datagrid('reload');
-											_eaststorage.propertygrid('reload');
+											_eastStorage.propertygrid('reload');
 											//_layout.layout('panel', 'east').find('.datagrid-f').datagrid('load', {id:id, _:(new Date()).getTime()});
 										}else{
 											$.messager.alert('错误', '恢复失败！<br>' + JSON.stringify(result.msg), 'error');
@@ -1039,7 +1039,7 @@ ebx.qw = {
 								if(filter == '')sql = sql.substr(0, sql.length - 5);
 								sql += filter;
 								if(groupcount > 0)sql += group;
-								ebx.clipboardString(sql);
+								ebx.clipBoardString(sql);
 							}
 						}]
 					},{
@@ -1094,7 +1094,7 @@ ebx.qw = {
 				}]
 			};
 			
-		if(callback)callback(data);//回掉函数处理功能按钮的添加删除；
+		if(callBack)callBack(data);//回掉函数处理功能按钮的添加删除；
 		
 		_biribbon.ribbon({
 			data:data,
@@ -1105,7 +1105,7 @@ ebx.qw = {
 			showHeader: false
 		});
 
-		hidenorthbtn.linkbutton({
+		hideNorthBtn.linkbutton({
 			iconCls: 'icon-uparrow',
 			iconAlign:'right',
 			plain:true,
@@ -1120,7 +1120,7 @@ ebx.qw = {
 			'bottom':0
 		});
 		
-		hideeastbtn.linkbutton({
+		hideEastBtn.linkbutton({
 			iconCls: 'icon-rightarrow',
 			iconAlign:'right',
 			plain:true,
@@ -1141,7 +1141,7 @@ ebx.qw = {
 		});
 
 		if(this.showLock == 0){
-			var lockgroup = ebx.getbiribbonobj(_biribbon, '安全', 'toolbar');
+			var lockgroup = ebx.getBiribbonObj(_biribbon, '安全', 'toolbar');
 			if(lockgroup){
 				lockgroup.next().hide();
 				lockgroup.hide();

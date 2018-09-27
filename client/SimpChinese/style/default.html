@@ -11,7 +11,7 @@
 	    'bd'
 	], function(){
 		var bd = ebx.cloneObj(ebx.bd);
-		    callback = {//回掉函数对象
+		    callBack = {//回掉函数对象
 		        center:function(c){
 			        //重造字段的editor的validatebox校验
 			        ebx.setDatagridEditor.validatebox(c[0], 'serial', 'Integer');
@@ -28,10 +28,10 @@
 				        hasDownArrow:false,//隐藏右边得下箭头
 				        panelHeight:'auto',
 				        reversed:false,
-				        data: ebx.Render.render  
+				        data: ebx.render.render  
 			        });
 		        }
 		    }
-		bd.init(callback);
+		bd.init(callBack);
 	});
 </script>

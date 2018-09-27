@@ -5,10 +5,10 @@ dev by zz on 2018/5/6
 *****************************************************************/
 var ebx = {
 	conn: [],
-	accountid: 1,
+	accountId: 1,
 	owner: 1,
-	stdin: new Array(),
-	stdout: new Array(),
+	stdIn: new Array(),
+	stdOut: new Array(),
 	init: function(){
 		Date.prototype.Format = function (fmt) { //author: meizz 
 			var o = {
@@ -31,35 +31,35 @@ var ebx = {
 		String.prototype.replaceAll = function(s1,s2){ 
 			return(this.replace(new RegExp(s1,"gm"),s2)); 
 		}
-		this.IDGen.init(0);
-		this.accountid = 1;//读取账套ID，待处理。。。
+		this.IdGen.init(0);
+		this.accountId = 1;//读取账套ID，待处理。。。
 		this.owner = 1;//读取登陆用户ID，待处理。。。
-		var ParamentStr, FormSize, FormData, Parament
+		var paramentStr, formSize, formData, parament
 		if(Request.ServerVariables('Request_Method') == 'POST' ){ //post
-			FormSize = Request.TotalBytes;
-			FormData = Request.BinaryRead(FormSize);
-			ParamentStr = ebx.stream_binarytostring(FormData, '');
-			ParamentStr = ParamentStr.replaceAll('\\+', ' ');//把jquery的ajax传递时空格转换成的加号替换成空格
-			if(typeof(ParamentStr) == 'string'){
-				if(ParamentStr.length > 0){
+			formSize = Request.TotalBytes;
+			formData = Request.BinaryRead(formSize);
+			paramentStr = ebx.streamBinaryToString(formData, '');
+			paramentStr = paramentStr.replaceAll('\\+', ' ');//把jquery的ajax传递时空格转换成的加号替换成空格
+			if(typeof(paramentStr) == 'string'){
+				if(paramentStr.length > 0){
 					try{
-						var Parament = ebx.parseToJson(ParamentStr);
-						ebx.convertObjToDic(ebx.stdin, ebx.UnescapeJson(Parament));
-						//ebx.convertObjToDic(ebx.stdin, unescape(decodeURI(Parament)));
+						var parament = ebx.parseToJson(paramentStr);
+						ebx.convertObjToDic(ebx.stdIn, ebx.unEscapeJson(parament));
+						//ebx.convertObjToDic(ebx.stdIn, unescape(decodeURI(parament)));
 						
 					}catch(e){
 						if(e.name == 'SyntaxError'){
-							ebx.stdin = ebx.UnescapeJson(ebx.getRequestParament(ParamentStr));
-							//ebx.stdin = unescape(decodeURI(ebx.getRequestParament(ParamentStr)));
+							ebx.stdIn = ebx.unEscapeJson(ebx.getRequestparament(paramentStr));
+							//ebx.stdIn = unescape(decodeURI(ebx.getRequestparament(paramentStr)));
 						}
 					}
 				}
 			}
 		}else{ //get
-			ParamentStr = Request.ServerVariables("QUERY_STRING")(1);
-			if(typeof(ParamentStr) == 'string'){
-				ebx.stdin = ebx.UnescapeJson(ebx.getRequestParament(ParamentStr));
-				//ebx.stdin = unescape(decodeURI(ebx.getRequestParament(ParamentStr)));
+			paramentStr = Request.ServerVariables("QUERY_STRING")(1);
+			if(typeof(paramentStr) == 'string'){
+				ebx.stdIn = ebx.unEscapeJson(ebx.getRequestparament(paramentStr));
+				//ebx.stdIn = unescape(decodeURI(ebx.getRequestparament(paramentStr)));
 			}
 		}
 		ebx.conn = Server.CreateObject('ADODB.Connection');
@@ -69,7 +69,7 @@ var ebx = {
 		eval("var o=" + json_data);
 		return(o);
 	},
-	getRequestParament: function(s){//get参数格式转对象
+	getRequestparament: function(s){//get参数格式转对象
 		var arr = s.split('&'),
 			d = new Array();
 		if(arr.length <= 0) return(d);
@@ -99,7 +99,7 @@ var ebx = {
 		//s = unescape(decodeURI(s));
 		return(s.replaceAll("'", "''"));
 	},
-	sqlstrTtodate: function (num) {//sql的日期文本格式化
+	sqlStrToDate: function (num) {//sql的日期文本格式化
         //Fri Oct 31 18:00:00 UTC+0800 2008  
         num=num+"";
         var date="";
@@ -130,7 +130,7 @@ var ebx = {
         //date=date+" 周"+week[str[0]];
         return(date);
 	},
-	stream_binarytostring: function (binary, charset){//用adodb.stream获取requet内容 2018-5-4 zz
+	streamBinaryToString: function (binary, charset){//用adodb.stream获取requet内容 2018-5-4 zz
 		var binarystream = Server.CreateObject('adodb.stream');
 
 		binarystream.type = 1
@@ -267,19 +267,19 @@ var ebx = {
 		rs.Update();
 		return rs;
 	},
-	validstring: function(v){
+	validString: function(v){
 		return v.replaceAll('"', '\'\'');
 	},
 	getType: function(Fields){ //数据类型判断函数，Fields：字段rs.Fields对象，返回针对类型处理后的值
 		var v = ebx.escapeEx(Fields.value)
 		switch(Fields.type){
 			case 200:
-				return('"' + ebx.validstring(v) + '"'); //"文本"
+				return('"' + ebx.validString(v) + '"'); //"文本"
 			case 202:
-				return('"' + ebx.validstring(v) + '"'); //"文本"
+				return('"' + ebx.validString(v) + '"'); //"文本"
 				break;
 			case 203:
-				return('"' + ebx.validstring(v) + '"'); //"备注"
+				return('"' + ebx.validString(v) + '"'); //"备注"
 				break;
 			case 3:
 				return(ebx.validInt(v)); //"长整型"
@@ -331,13 +331,13 @@ var ebx = {
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
 			//return escape(str);
-			//return ebx.GB2312ToUTF8(str);
+			//return ebx.Gb2312ToUtf8(str);
 			return str;
 		}else{
 			return(str);
 		}
 	},
-	unescapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
+	unEscapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
 		if(str == null) return('');
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
 		if(typeof(str) == 'string'){
@@ -348,7 +348,7 @@ var ebx = {
 			return(str);
 		}
 	},
-	GB2312ToUTF8: function (OutStr){//用Adodb.Stream转码gb2312-utf8，存在问题，转码彻底
+	Gb2312ToUtf8: function (OutStr){//用Adodb.Stream转码gb2312-utf8，存在问题，转码彻底
 		var Stream = Server.CreateObject("Adodb.Stream")
 		Stream.Charset = 'UTF-8'
 		Stream.Mode = 3
@@ -360,25 +360,25 @@ var ebx = {
 		Stream.Charset = 'GB2312'
 		return Stream.ReadText;
 	},
-	UnescapeJson: function(s){//转码所有嵌套json中文的escape
+	unEscapeJson: function(s){//转码所有嵌套json中文的escape
 		if(typeof(s) == 'object'){
 			for(var i in s){
 				if(typeof(s[i]) == 'object'){
-					s[i] = this.UnescapeJson(s[i]);
+					s[i] = this.unEscapeJson(s[i]);
 				}else{
-					s[i] = ebx.unescapeEx(s[i].replace(/%25/g, "%"));
+					s[i] = ebx.unEscapeEx(s[i].replace(/%25/g, "%"));
 				}
 			}
 		}else{
-			s = ebx.unescapeEx(s.replace(/%25/g, "%"))
+			s = ebx.unEscapeEx(s.replace(/%25/g, "%"))
 		}
 		return(s);
 	},
-	EscapeJson: function(s){
+	escapeJson: function(s){
 		if(typeof(s) == 'object'){
 			for(var i in s){
 				if(typeof(s[i]) == 'object'){
-					s[i] = this.UnescapeJson(s[i]);
+					s[i] = this.unEscapeJson(s[i]);
 				}else{
 					if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
 						s[i] = ebx.escapeEx(s[i]);
@@ -417,17 +417,17 @@ var ebx = {
 		stm.position = 0
 		return(stm.read());
 	},
-	OnPageEnd: function(Response){//页面结束处理函数
+	onPageEnd: function(Response){//页面结束处理函数
 		Response.Clear();
 		Response.ContentType="text/HTML;charset=GB2312" 
 		Response.ContentEncoding = 'gzip';
-		Response.Write(ebx.convertDicToJson(ebx.stdout));
-		ebx.CleanData();
+		Response.Write(ebx.convertDicToJson(ebx.stdOut));
+		ebx.cleanData();
 	},
-	CleanData: function(){//清除对象函数
+	cleanData: function(){//清除对象函数
 		ebx.conn.Close;
-		ebx.stdin = null;
-		ebx.stdout = null;
+		ebx.stdIn = null;
+		ebx.stdOut = null;
 		ebx = null;
 	},
 	convertDicToJson: function(d){//将Dic对象转化成json文本，支持字典、数组和rs的嵌套 2018-5-6 zz
@@ -490,7 +490,7 @@ var ebx = {
 		}
 	},
 	getTemplateSQL: function(id){//从查询模板获取SQL，参数id：模板ID，返回sql语句
-		var sql = 'select title,WizardID,Columns from biQueryTemplate where isdeleted=0 and id =' + id,
+		var sql = 'select title,WizardID,Columns from biQueryTemplate where isDeleted=0 and id =' + id,
 			rs = ebx.dbx.open(sql, 1, 1),
 			Wizard,//查询设计对象
 			Title,
@@ -514,10 +514,10 @@ var ebx = {
 		Sort.Fields.Append("Sort", 203, 1024);//定义排序文本
 		Sort.Open();
 				
-		for(var i in ebx.stdin){//遍历获取客户端排序信息
+		for(var i in ebx.stdIn){//遍历获取客户端排序信息
 			if(i == 'order'){
-				remoteorder = ebx.stdin['order'];
-				remotesort = ebx.stdin['sort'];
+				remoteorder = ebx.stdIn['order'];
+				remotesort = ebx.stdIn['sort'];
 			}
 		}
 		
@@ -587,43 +587,43 @@ var ebx = {
 		}
 		s = s.toLowerCase();
 		
-		s = s.replaceAll('@@accountid', this.accountid);//账套
+		s = s.replaceAll('@@accountid', this.accountId);//账套
 		s = s.replaceAll('@@owner', this.owner);//用户
 
-		var find = ebx.sqlStringEncode(ebx.stdin['find']),//获取搜索字段
-			findid = ebx.validInt(ebx.stdin['findid']),
-			datefrom = ebx.sqlStringEncode(ebx.stdin['datefrom']),
-			dateto = ebx.sqlStringEncode(ebx.stdin['dateto']),
-			isdeleted = ebx.validInt(ebx.stdin['isdeleted'], -1),
-			isaudit =  ebx.validInt(ebx.stdin['isaudit'], -1); 
+		var find = ebx.sqlStringEncode(ebx.stdIn['find']),//获取搜索字段
+			findid = ebx.validInt(ebx.stdIn['findid']),
+			dateFrom = ebx.sqlStringEncode(ebx.stdIn['dateFrom']),
+			dateTo = ebx.sqlStringEncode(ebx.stdIn['dateTo']),
+			isDeleted = ebx.validInt(ebx.stdIn['isDeleted'], -1),
+			isAudit =  ebx.validInt(ebx.stdIn['isAudit'], -1); 
 
-		if(datefrom.length > 0){
-			datefrom = datefrom.replaceAll('-', '/');
-			s = s.replaceAll('@@datefrom', "'" + new Date(datefrom).Format('yyyy-MM-dd hh:mm:ss') + "'");//开始时间
+		if(dateFrom.length > 0){
+			dateFrom = dateFrom.replaceAll('-', '/');
+			s = s.replaceAll('@@datefrom', "'" + new Date(dateFrom).Format('yyyy-MM-dd hh:mm:ss') + "'");//开始时间
 		}else{
 			s = s.replaceAll('@@datefrom', "'" + new Date('1900/1/1').Format('yyyy-MM-dd hh:mm:ss') + "'");//开始时间
 		}
 		
-		if(dateto.length > 0){
-			dateto = dateto.replaceAll('-', '/');
-			s = s.replaceAll('@@dateto', "'" + new Date(dateto).Format('yyyy-MM-dd hh:mm:ss') + "'");//结束时间
+		if(dateTo.length > 0){
+			dateTo = dateTo.replaceAll('-', '/');
+			s = s.replaceAll('@@dateto', "'" + new Date(dateTo).Format('yyyy-MM-dd hh:mm:ss') + "'");//结束时间
 		}else{
 			s = s.replaceAll('@@dateto', "'" + new Date().Format('yyyy-MM-dd hh:mm:ss') + "'");//结束时间
 		}
 
-		switch(isdeleted){
+		switch(isDeleted){
 			case 0:
-				s = s.replaceAll('where', 'where [bd].[isdeleted]=0 and ');//未删除，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
+				s = s.replaceAll('where', 'where [bd].[isDeleted]=0 and ');//未删除，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
 				break;
 			case 1:
-				s = s.replaceAll('where', 'where [bd].[isdeleted]=1 and ');//已删除，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
+				s = s.replaceAll('where', 'where [bd].[isDeleted]=1 and ');//已删除，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
 				break;
 			case 2:
 				//全部
 				break;
 		}
 		
-		switch(isaudit){
+		switch(isAudit){
 			case 0:
 				s = s.replaceAll('where', 'where [bd].[auditid]=0 and ');//未审核，存在问题：查询设计主表别名必须是bd，且必须有bd得别名，否则会报错
 				break;
@@ -690,7 +690,7 @@ var ebx = {
 		return(s);
 	},
 	getWizard: function(id){//获取查询设计对象，参数id：查询设计ID，返回查询设计字典
-		var sql = 'select Title,Filter,Tables,Relates,Columns from biQueryWizard where isdeleted=0 and id=' + id,
+		var sql = 'select Title,Filter,Tables,Relates,Columns from biQueryWizard where isDeleted=0 and id=' + id,
 			rs = ebx.dbx.open(sql, 1, 1),
 			Wizard = new Array();
 		if(rs.State > 0){
@@ -724,7 +724,7 @@ var ebx = {
 			}
 			return(rs);
 		},
-		openpage: function(strSQL, page){//分页rs函数，参数：strSQL：sql语句，page.iStart：起始行数，page.iLength：每页行数，page.iTotalLength：总行数（回调用）
+		openPage: function(strSQL, page){//分页rs函数，参数：strSQL：sql语句，page.iStart：起始行数，page.iLength：每页行数，page.iTotalLength：总行数（回调用）
 			var rs,
 				sLength = ebx.validInt(page.iLength,0)<1?2147483647:ebx.validInt(page.iLength,0);
 			
@@ -736,22 +736,22 @@ var ebx = {
 			return(rs.NextRecordset());
 		}
 	},
-	IDGen: {//ID发生器对象 2018-7-6 zz
+	IdGen: {//ID发生器对象 2018-7-6 zz
 		conn: Server.CreateObject('ADODB.Connection'),
-		Connstring: Application('DateBase.ConnectString'),
-		ConnActive: function(){
+		connString: Application('DateBase.ConnectString'),
+		connActive: function(){
 			if(this.conn.State != 1){
-				this.conn.Open(this.Connstring);
+				this.conn.Open(this.connString);
 			}
 		},
-		ConnDisActive: function(){
+		connDisActive: function(){
 			this.conn.Close();
 		},
-		init:function(bForce){//初始化函数，参数：bForce：是否清空，非0则清空所有NPIDGen表数据，0则退出函数
-			this.ConnActive();
+		init:function(bForce){//初始化函数，参数：bForce：是否清空，非0则清空所有NPIdGen表数据，0则退出函数
+			this.connActive();
 			var v, sSQL, bUser
 			if(ebx.validInt(bForce) == 0){
-				sSQL = 'Select Count(*) from NPIDGen';
+				sSQL = 'Select Count(*) from NPIdGen';
 				v = this.conn.Execute(sSQL);
 				if(v(0).value > 0){ 
 					return;
@@ -759,41 +759,41 @@ var ebx = {
 				//this.conn.BeginTrans;
 			}else{
 				this.conn.BeginTrans();
-				sSQL = 'Delete from NPIDGen';
+				sSQL = 'Delete from NPIdGen';
 				this.conn.Execute(sSQL, v)
 			}
 			
 			try{
 				sSQL = 'Select Distinct IGID as [TableID], [TableName] from BaseInfoType where InfoType>0';
-				this.SetIDGen(sSQL);
+				this.setIdGen(sSQL);
 
 				sSQL = 'Select Distinct IGID as [TableID], [TableName] from BillDocumentType where BillType>0';
-				this.SetIDGen(sSQL);
+				this.setIdGen(sSQL);
 				
 				/*
 				bUser = NetBOX.SysInfo("PROG_Info").length;//判断是否开发版
 				if(bUser > 0){
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9465 and MaxID <10000'); //查询设计biQueryWizard
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9466 and MaxID <10000'); //查询模板biQueryTemplate
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =9467 and MaxID <10000'); //查询方案biQueryRender
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1420 and MaxID <10000'); //权限NPPrivileges
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1421 and MaxID <10000'); //权限组NPGroups
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1405 and MaxID <10000'); //显示式样bdStyle
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1408 and MaxID <10000'); //菜单bdStyleMenu
-					this.conn.execute('Update NPIDGen set MaxID =10000 where TableID =1409 and MaxID <10000'); //菜单组bdStyleMenuGroup
+					this.conn.execute('Update NPIdGen set MaxID =10000 where TableID =9465 and MaxID <10000'); //查询设计biQueryWizard
+					this.conn.execute('Update NPIdGen set MaxID =10000 where TableID =9466 and MaxID <10000'); //查询模板biQueryTemplate
+					this.conn.execute('Update NPIdGen set MaxID =10000 where TableID =9467 and MaxID <10000'); //查询方案biQueryRender
+					this.conn.execute('Update NPIdGen set MaxID =10000 where TableID =1420 and MaxID <10000'); //权限NPPrivileges
+					this.conn.execute('Update NPIdGen set MaxID =10000 where TableID =1421 and MaxID <10000'); //权限组NPGroups
+					this.conn.execute('Update NPIdGen set MaxID =10000 where TableID =1405 and MaxID <10000'); //显示式样bdStyle
+					this.conn.execute('Update NPIdGen set MaxID =10000 where TableID =1408 and MaxID <10000'); //菜单bdStyleMenu
+					this.conn.execute('Update NPIdGen set MaxID =10000 where TableID =1409 and MaxID <10000'); //菜单组bdStyleMenuGroup
 				}
 				*/
 				sSQL = 'Select Distinct IGID as [TableID], [TableName] from ResourceType';
-				this.SetAuditIDGen(sSQL);
+				this.setAuditIdGen(sSQL);
 				this.conn.CommitTrans();
 			}catch(e){
 				this.conn.RollbackTrans;
-				ebx.stdout['result'] = 0;
-				ebx.stdout['msg'] = e;
+				ebx.stdOut['result'] = 0;
+				ebx.stdOut['msg'] = e;
 			}
-			this.ConnDisActive();
+			this.connDisActive();
 		},
-		SetIDGen: function(sSQL){//写NPIDGen表，参数：sSQL：BaseInfoType表或BillDocumentType表的sql语句
+		setIdGen: function(sSQL){//写NPIdGen表，参数：sSQL：BaseInfoType表或BillDocumentType表的sql语句
 			var str, v, MaxID, rs;
 			
 			rs = Server.CreateObject('adodb.recordset');
@@ -804,13 +804,13 @@ var ebx = {
 				str = 'Select Max(ID) as n from [' + rs('TableName').value + ']';
 				v = this.conn.Execute(str);
 				MaxID = ebx.validInt(v(0).value);
-				str = 'Insert Into [NPIDGen] ([TableID], [MaxID]) values(' + rs('TableID').value + ',' + MaxID + ')';
+				str = 'Insert Into [NPIdGen] ([TableID], [MaxID]) values(' + rs('TableID').value + ',' + MaxID + ')';
 				this.conn.Execute(str);
 				rs.MoveNext();
 			}
 			v = null;
 		},
-		SetAuditIDGen: function(sSQL){//写资源表的NPIDGen表，参数：sSQL：ResourceType表的sql语句
+		setAuditIdGen: function(sSQL){//写资源表的NPIdGen表，参数：sSQL：ResourceType表的sql语句
 			var str, v, MaxID, rs, vID, affectedRecords;
 			rs = ebx.dbx.getRs();
 			rs.Open(sSQL, this.conn, 0, 1, 1);
@@ -819,32 +819,32 @@ var ebx = {
 				str = 'Select Max(ID) as n, Max(AuditID) as m from [' + rs("TableName").value + ']';
 				v = this.conn.Execute(str);
 				vID = ebx.validInt(v(0).value);
-				str = 'Insert Into [NPIDGen] ([TableID], [MaxID]) values(' + rs("TableID").value + ',' + vID + ')'; 
+				str = 'Insert Into [NPIdGen] ([TableID], [MaxID]) values(' + rs("TableID").value + ',' + vID + ')'; 
 				try{
 					this.conn.Execute(str, affectedRecords);
 				}catch(e){
-					str = 'Update [NPIDGen] set [MaxID]=' + vID + ' where TableID=' + rs("TableID").value + ' and  MaxID<' + vID;
+					str = 'Update [NPIdGen] set [MaxID]=' + vID + ' where TableID=' + rs("TableID").value + ' and  MaxID<' + vID;
 					this.conn.Execute(str, affectedRecords);
 				}
 				vID = ebx.validInt(v(1).value);
 				if(vID >MaxID) MaxID =vID;
 				rs.MoveNext();
 			}
-			str = 'Insert Into [NPIDGen] ([TableID], [MaxID]) values(3, ' + MaxID + ')'; 
+			str = 'Insert Into [NPIdGen] ([TableID], [MaxID]) values(3, ' + MaxID + ')'; 
 			this.conn.Execute(str);
 			v = null;
 		},
-		CTIDGen: function(Obj_ID, Obj_Number){//id发生器函数，参数：Obj_ID：发生器编号，Obj_Number：递增长度，默认1
-			this.ConnActive();
+		CTIdGen: function(Obj_ID, Obj_Number){//id发生器函数，参数：Obj_ID：发生器编号，Obj_Number：递增长度，默认1
+			this.connActive();
 			
 			Obj_Number = ebx.validInt(Obj_Number, 1);
 
 			this.conn.BeginTrans();
 
 			try{
-				var v, sSQL, options, IDGen = 0, rs
+				var v, sSQL, options, IdGen = 0, rs
 				
-				sSQL = 'Select TableID, MaxID from NPIDGen where [TableID]=' + Obj_ID;
+				sSQL = 'Select TableID, MaxID from NPIdGen where [TableID]=' + Obj_ID;
 				rs = ebx.dbx.getRs();
 				rs.Open(sSQL, this.conn, 3, 3, 1);
 				
@@ -858,16 +858,16 @@ var ebx = {
 				}
 				rs.Update();
 				rs = null;
-				IDGen = Obj_Number;
+				IdGen = Obj_Number;
 				this.conn.CommitTrans();
 			}catch(e){
 				this.conn.RollbackTrans;
-				ebx.stdout['result'] = 0;
-				ebx.stdout['msg'] = e;
+				ebx.stdOut['result'] = 0;
+				ebx.stdOut['msg'] = e;
 			}
-			this.ConnDisActive();
+			this.connDisActive();
 			
-			return IDGen;
+			return IdGen;
 		}
 	},
 	bytesToSize: function(bytes) {//字节转换函数

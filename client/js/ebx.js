@@ -3,48 +3,48 @@ Copyright (c) 2018 by ZYDSOFT Company. ALL RIGHTS RESERVED.
 dev by zz on 2018/2/16
 *****************************************************************/
 var ebx = {
-	multitabs:0,//同一菜单链接多tabs打开支持，1为支持
-	decimal:2,//小数位数，默认2
-	pagesize: 128,//datagrid分页行数
-	printpagesize: 10,
-	printtype:0,//打印样式，0为宽行打印，1为窄行打印
+	multiTabs:0,//同一菜单链接多tabs打开支持，1为支持
+	decimalDigits:2,//小数位数，默认2
+	pageSize: 128,//datagrid分页行数
+	printPageSize: 10,
+	printType:0,//打印样式，0为宽行打印，1为窄行打印
 	importFileMaxSize: 1024*5,//导入文件大小控制，单位K
-	usedmenu:[],//常用菜单对象
-	usedmenusize: 10,//常用菜单数量
-	discountprice: 2,//折扣参考，1：原单价，2：单价
-	listview:{ //显示列数组
-		productserial:1, //串号
-		colorsize:1,//色码
+	usedMenu:[],//常用菜单对象
+	usedMenusize: 10,//常用菜单数量
+	discountPrice: 2,//折扣参考，1：原单价，2：单价
+	listView:{ //显示列数组
+		productSerial:1, //串号
+		colorSize:1,//色码
 		nat:1, //不含税额
-		taxrate: 1, //税率
-		taxamount: 1, //税额
+		taxRate: 1, //税率
+		taxAmount: 1, //税额
 		discount: 0,//折扣
 		expire: 0, //保质期
-		oldprice: 0, //零售价
+		oldPrice: 0, //零售价
 		batch: 0, //批次
 		unit: 0, //单位
-		aunit: 0, //辅助单位
-		aquantity: 0, //辅助数量
+		aUnit: 0, //辅助单位
+		aQuantity: 0, //辅助数量
 		relation: 0,//核算关系
 	},
-	productseriallength: 5000,//串号数量上限
-	productserialquantitycheck:1,//串号数量校验
-	colorsizequantitycheck:1,//色码数量校验
+	productSerialLength: 5000,//串号数量上限
+	productSerialQuantityCheck:1,//串号数量校验
+	colorSizeQuantityCheck:1,//色码数量校验
 	init: function(){
 		easyloader.base = 'client/lib/easyui/';
 		easyloader.theme = this.getThemes();
 		easyloader.locale = "zh_CN";
-		if(ebx.storage.get("usedmenu")){
-		    ebx.usedmenu = ebx.storage.get("usedmenu")
+		if(ebx.storage.get("usedMenu")){
+		    ebx.usedMenu = ebx.storage.get("usedMenu")
 		}
-		if(!ebx.storage.get("usedmenusize")){
-		    ebx.storage.set("usedmenusize", {size:10});
+		if(!ebx.storage.get("usedMenusize")){
+		    ebx.storage.set("usedMenusize", {size:10});
 		}
-		if(!ebx.storage.get("discountprice")){
-		    ebx.storage.set("discountprice", {discountprice:2});
+		if(!ebx.storage.get("discountPrice")){
+		    ebx.storage.set("discountPrice", {discountPrice:2});
 		}
-	    ebx.usedmenusize = ebx.storage.get("usedmenusize").size
-	    ebx.discountprice = ebx.storage.get('discountprice').discountprice;
+	    ebx.usedMenusize = ebx.storage.get("usedMenusize").size
+	    ebx.discountPrice = ebx.storage.get('discountPrice').discountPrice;
 		
 		//easyloader.number = 100;
 		easyloader.load([
@@ -144,10 +144,10 @@ var ebx = {
 					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			return fmt;
 		}
-		if(ebx.storage.get('print'))ebx.printpagesize=ebx.storage.get('print').printpagesize;//读取浏览器缓存。设置打印行数
-		if(ebx.storage.get('print'))ebx.printtype=ebx.storage.get('print').printtype;//读取浏览器缓存。设置打印类型
-		if(ebx.storage.get('productserialquantitycheck')!=undefined)ebx.productserialquantitycheck = ebx.storage.get('productserialquantitycheck');//串号数量校验
-		if(ebx.storage.get('colorsizequantitycheck')!=undefined)ebx.colorsizequantitycheck = ebx.storage.get('colorsizequantitycheck');//色码数量校验
+		if(ebx.storage.get('print'))ebx.printPageSize=ebx.storage.get('print').printPageSize;//读取浏览器缓存。设置打印行数
+		if(ebx.storage.get('print'))ebx.printType=ebx.storage.get('print').printType;//读取浏览器缓存。设置打印类型
+		if(ebx.storage.get('productSerialQuantityCheck')!=undefined)ebx.productSerialQuantityCheck = ebx.storage.get('productSerialQuantityCheck');//串号数量校验
+		if(ebx.storage.get('colorSizeQuantityCheck')!=undefined)ebx.colorSizeQuantityCheck = ebx.storage.get('colorSizeQuantityCheck');//色码数量校验
 	},
 	getThemes: function(){//获取主题函数
 		//var Storage = window.localStorage;
@@ -156,24 +156,24 @@ var ebx = {
 		}
 		return ebx.storage.get("themes").theme;
 	},
-	getMenuParamenter: function(t){//获取菜单传递到主窗口的参数 2018-4-20 zz, 参数：t：当前被激活的tabs对象
+	getMenuparamenter: function(t){//获取菜单传递到主窗口的参数 2018-4-20 zz, 参数：t：当前被激活的tabs对象
 		return t.panel('options').paramenters;
 	},
-	RndNum: function(n){//随机数生成函数
+	rndNum: function(n){//随机数生成函数
 		var rnd="";
 		for(var i=0;i<n;i++)
 			rnd+=Math.floor(Math.random()*10);
 		return rnd;
 	},
-	EditStatusMessager: function(s, t, backcall){//编辑状态判断提醒函数，参数：s：状态true为被编辑，t：显示文本，backcall：回调函数
+	editStatusMessager: function(s, t, callBack){//编辑状态判断提醒函数，参数：s：状态true为被编辑，t：显示文本，callBack：回调函数
 		if(s){//判断数据是否被编辑过。
 			$.messager.confirm('提醒', t + '的数据已经被修改，点击确定将不保留修改的数据，是否继续?', function(r){
 				if (r){
-					backcall();
+					callBack();
 				}
 			});
 		}else {
-			backcall();
+			callBack();
 		}
 	},
 	escapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
@@ -187,7 +187,7 @@ var ebx = {
 			return(str);
 		}
 	},
-	unescapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
+	unEscapeEx: function(str){ //判断是否字符，如果是用escapt编码加密 2018-5-4 zz
 		if(str == null) return('');
 		
 		//if(/^[\u3220-\uFA29]+$/.test(str)){//中文正则
@@ -198,25 +198,25 @@ var ebx = {
 			return(str);
 		}
 	},
-	UnescapeJson: function(s){//转码所有嵌套json中文的escape
+	unEscapeJson: function(s){//转码所有嵌套json中文的escape
 		if(typeof(s) == 'object'){
 			for(var i in s){
 				if(typeof(s[i]) == 'object'){
-					s[i] = this.UnescapeJson(s[i]);
+					s[i] = this.unEscapeJson(s[i]);
 				}else{
-					s[i] = ebx.unescapeEx(s[i]);
+					s[i] = ebx.unEscapeEx(s[i]);
 				}
 			}
 		}else{
-			s = ebx.unescapeEx(s)
+			s = ebx.unEscapeEx(s)
 		}
 		return s
 	},
-	EscapeJson: function(s){
+	escapeJson: function(s){
 		if(typeof(s) == 'object'){
 			for(var i in s){
 				if(typeof(s[i]) == 'object'){
-					s[i] = this.EscapeJson(s[i]);
+					s[i] = this.escapeJson(s[i]);
 				}else{
 					//if(/^[\u3220-\uFA29]+$/.test(s[i])){//判断是否包含中文字符
 						s[i] = ebx.escapeEx(s[i]);
@@ -313,9 +313,9 @@ var ebx = {
 		}
 	},
 	importTemplate:function(columns, title){//导入模板的导出函数 2018-5-17 zz
-		ebx.clipboardData(columns, {total:1, rows:[eval('({' + columns[0][0].field +':"这是导入“' + title + '”的模板，请按以上格式编辑数据。（本行为说明文字，编辑前请删除）"})')]});
+		ebx.clipBoardData(columns, {total:1, rows:[eval('({' + columns[0][0].field +':"这是导入“' + title + '”的模板，请按以上格式编辑数据。（本行为说明文字，编辑前请删除）"})')]});
 	},
-	clipboardString: function(s){//将文本复制到剪贴板，参数：s：文本内容 2018-9-4 zz
+	clipBoardString: function(s){//将文本复制到剪贴板，参数：s：文本内容 2018-9-4 zz
 		easyloader.load(['clipboard'], function(){//异步加载clipboard.min.js
 			var	centererpanelwindow = $('<div style="text-align:center;padding:5px;"><p>正在读取...</p></div>').appendTo($('body')),
 				copybtn = $('<div id="copybtndiv" data-clipboard-target="#bar">').appendTo(centererpanelwindow),
@@ -378,7 +378,7 @@ var ebx = {
 			},0);
 		});
 	},
-	clipboardData: function (columns, data){//导出grid函数，复制到剪贴板方法用到了clipboard.js插件，参数：columns：表头对象，data：数据内容，包含total和rows 2018-5-15 zz
+	clipBoardData: function (columns, data){//导出grid函数，复制到剪贴板方法用到了clipboard.js插件，参数：columns：表头对象，data：数据内容，包含total和rows 2018-5-15 zz
 		easyloader.load(['clipboard'], function(){//异步加载clipboard.min.js
 			if(typeof(columns) != 'object')return;
 			if(typeof(data) != 'object')return;
@@ -445,7 +445,7 @@ var ebx = {
 			}); 
 			
 			for(var i in columns[0]){//表头文字
-				//s += ebx.unescapeEx(columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
+				//s += ebx.unEscapeEx(columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
 				s += columns[0][i].title.toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_') + '\t';
 			}
 			s = s.substr(0, s.length - 1);
@@ -455,7 +455,7 @@ var ebx = {
 				for(var j in columns[0]){//按表头顺序加载
 					for(var k in allData[i]){
 						if(columns[0][j].field == k){
-							//s += ebx.unescapeEx(allData[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
+							//s += ebx.unEscapeEx(allData[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_')) + '\t';
 							s += allData[i][k].toString().replaceAll(' ','_').replaceAll('	', '_').replaceAll('　', '_') + '\t';
 							nullfield = 1
 						}
@@ -545,7 +545,7 @@ var ebx = {
 		datagrid.datagrid('loadData', {total: copyData.length, rows: copyData}); 
 
 		if(tab){
-			ebx.setEditstatus(tab, true)
+			ebx.setEditStatus(tab, true)
 		}
 		$.messager.show({
 			title: '提示',
@@ -554,7 +554,7 @@ var ebx = {
 			showType: 'slide'
 		});	
 	},
-	reomvecopyData: function(){//清空页面内复制内容 2018-5-17 zz
+	reomveCopyData: function(){//清空页面内复制内容 2018-5-17 zz
 		ebx.copyData = null;
 		$('body').find('.icon-Paste-large').parent().parent().linkbutton('disable');
 		$('body').find('.icon-Paste').parent().parent().linkbutton('disable');
@@ -568,7 +568,7 @@ var ebx = {
 	importExcel: {//导入excel对象 2018-5-17 zz
 		datagridObj: null,//回调用datagrid表格对象
 		tabObj: null,//回调用修改标记的tabs对象
-		fileinput: null,//上传用的file类型input控件
+		fileInput: null,//上传用的file类型input控件
 		btnObj: null,//导出按钮控件，用于解除禁用
 		getFile: function (obj, fnback) {//读取excel文件函数，使用了xlsx.full.min.js（异步加载），参数：obj：file的input对象，fnback回掉函数，回掉函数参数data，返回excel内容，空内容无字段 2018-5-17 zz
 			easyloader.load(['xlsx'], function(){//异步加载xlsx.full.min.js
@@ -597,7 +597,7 @@ var ebx = {
 				reader.onload = function(e) {
 					var data = e.target.result;
 					if(rABS) {
-						wb = XLSX.read(btoa(ebx.importExcel.fixdata(data)), {//手动转化
+						wb = XLSX.read(btoa(ebx.importExcel.fixData(data)), {//手动转化
 							type: 'base64'
 						});
 					} else {
@@ -611,7 +611,7 @@ var ebx = {
 					if(fnback){
 						fnback(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]))
 					}else{
-						ebx.importExcel.backcall(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
+						ebx.importExcel.callBack(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
 					}
 					//return xlsData;
 				};
@@ -622,7 +622,7 @@ var ebx = {
 				}
 			});
 		},
-		fixdata: function(data) { //文件流转BinaryString，导入excel文件用
+		fixData: function(data) { //文件流转BinaryString，导入excel文件用
 			var o = "",
 				l = 0,
 				w = 10240;
@@ -630,7 +630,7 @@ var ebx = {
 			o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
 			return o;
 		},
-		backcall: function(d){//导入文件回掉函数，参数：d：获取到的excel文件内容 2018-5-17 zz
+		callBack: function(d){//导入文件回掉函数，参数：d：获取到的excel文件内容 2018-5-17 zz
 			if(!ebx.importExcel.datagridObj) return;
 
 			var datagrid = ebx.importExcel.datagridObj,
@@ -670,7 +670,7 @@ var ebx = {
 
 			datagrid.datagrid('loadData', {total: dataData.length, rows: dataData}); 
 			
-			if(tab) ebx.setEditstatus(tab, true);
+			if(tab) ebx.setEditStatus(tab, true);
 			$.messager.show({
 				title: '提示',
 				msg: '成功导入了：' + importData.length + ' 行数据。',
@@ -679,7 +679,7 @@ var ebx = {
 			});	
 			ebx.importExcel.btnObj.linkbutton('enable');
 			
-			ebx.importExcel.fileinput.remove();
+			ebx.importExcel.fileInput.remove();
 			ebx.importExcel.datagridObj = null;
 			ebx.importExcel.tabObj = null;
 			ebx.importExcel.btnObj = null;
@@ -692,7 +692,7 @@ var ebx = {
 		i = Math.floor(Math.log(bytes) / Math.log(k))
 		return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 	},
-	checkedBDvalidatebox: function (datagrid){ //校验表格的validatebox，参数：datagrid：需要校验的datagrid控件对象 2018-5-21 zz
+	checkedBdValidateBox: function (datagrid){ //校验表格的validatebox，参数：datagrid：需要校验的datagrid控件对象 2018-5-21 zz
 		var checked = [],
 			data = datagrid.datagrid('getData').rows;
 		
@@ -833,7 +833,7 @@ var ebx = {
 			}
 		}
 	},
-	Render: {//显示函数全局定义对象 2018-5-23 zz
+	render: {//显示函数全局定义对象 2018-5-23 zz
 		render: [//显示函数内容对象
 			{
 				label: '布尔',
@@ -867,7 +867,7 @@ var ebx = {
 					if(v == 0){
 						v = '';
 					}else{
-						v = v.toFixed(ebx.decimal);
+						v = v.toFixed(ebx.decimalDigits);
 					}
 					return v;
 				}
@@ -879,7 +879,7 @@ var ebx = {
 					if(v == 0){
 						v = '';
 					}else{
-						v = v.toFixed(ebx.decimal);
+						v = v.toFixed(ebx.decimalDigits);
 					}
 					return v;
 				}
@@ -892,7 +892,7 @@ var ebx = {
 						v = '';
 					}else{
 						v = v * 100;
-						v = (v.toFixed(ebx.decimal)) + '%';
+						v = (v.toFixed(ebx.decimalDigits)) + '%';
 					}
 					return v;
 				}
@@ -959,9 +959,9 @@ var ebx = {
 			if(typeof(rowIndex) != 'number') return;
 			
 			var f = 0;
-			for(var i in ebx.Render.render){
-				if(render.toLowerCase() == ebx.Render.render[i].value.toLowerCase()){
-					return ebx.Render.render[i].render(value, rowIndex);
+			for(var i in ebx.render.render){
+				if(render.toLowerCase() == ebx.render.render[i].value.toLowerCase()){
+					return ebx.render.render[i].render(value, rowIndex);
 					f = 1;
 				}
 			}
@@ -970,25 +970,25 @@ var ebx = {
 			}
 		},
 		getRender: function(v, render){
-			for(var i in ebx.Render.render){
-				if(ebx.Render.render[i].value.toLowerCase() === render.toLowerCase()){
-					return ebx.Render.render[i].render(v);
+			for(var i in ebx.render.render){
+				if(ebx.render.render[i].value.toLowerCase() === render.toLowerCase()){
+					return ebx.render.render[i].render(v);
 				}
 			}
 		}
 	},
-	setEditstatus: function(tab, s){//内容变化状态修改
+	setEditStatus: function(tab, s){//内容变化状态修改
 		var st = s?'<span style="color:#F00;">○</span> ':'';
 		tab.editstatus = s;
 		ebx.center.find('.tabs-selected').find('.tabs-closable').html(st + tab.title);
 	},
 	setListVies: function(c){//设置显示列，参数：c：datagrid的columns列对象
-		for(var i in ebx.listview){
+		for(var i in ebx.listView){
 			for(var j in c){
-				if(i.toLowerCase() == c[j].field.toLowerCase() && ebx.listview[i] == 0){
+				if(i.toLowerCase() == c[j].field.toLowerCase() && ebx.listView[i] == 0){
 					c[j].hidden = true;
 				}
-				if(i.toLowerCase() == 'colorsize' && ebx.listview[i] == 0){
+				if(i.toLowerCase() == 'colorSize' && ebx.listView[i] == 0){
 					if(c[j].field.toLowerCase() == 'color' || c[j].field.toLowerCase() == 'size'){
 						c[j].hidden = true;
 					}
@@ -1020,72 +1020,72 @@ var ebx = {
 		return (Array(length).join('0') + num).slice(-length);
 	},
 	tabs:{//全局主区域操作对象 2018-9-10 zz
-		newtab: function(Paramenters){//新建主区域tab，参数：Paramenters：参数对象，必须包含：mode（模块名），menuid（唯一ID值文本），text（标签名称），iconCls（图标css式样，可为空） 2018-9-10 zz
-			if(Paramenters.children) return;//如果包含子项目，不执行打开操作
-			var tabsid = '',
-				href = '/client/SimpChinese/' + Paramenters.mode + '/';
+		newtab: function(paramenters){//新建主区域tab，参数：paramenters：参数对象，必须包含：mode（模块名），menuid（唯一ID值文本），text（标签名称），iconCls（图标css式样，可为空） 2018-9-10 zz
+			if(paramenters.children) return;//如果包含子项目，不执行打开操作
+			var tabsId = '',
+				href = '/client/SimpChinese/' + paramenters.mode + '/';
 			//如果参数mode是browser，那么改变访问路径，参数edit必须存在值
-			if(Paramenters.mode.toLowerCase() === 'browser'){
-				if(Paramenters.modedit){
-					href = '/client/SimpChinese/' + Paramenters.modedit + '/' + Paramenters.mode + '/';
+			if(paramenters.mode.toLowerCase() === 'browser'){
+				if(paramenters.modedit){
+					href = '/client/SimpChinese/' + paramenters.modedit + '/' + paramenters.mode + '/';
 				}
 			}else{
-				if(!Paramenters.modedit){
-					Paramenters.modedit = Paramenters.mode.toLowerCase();
-					href = '/client/SimpChinese/' + Paramenters.modedit + '/';
+				if(!paramenters.modedit){
+					paramenters.modedit = paramenters.mode.toLowerCase();
+					href = '/client/SimpChinese/' + paramenters.modedit + '/';
 				}
 			}
 			
-			var Paramenter = {};
-			for(var i in Paramenters){
-				switch(typeof(Paramenters[i])){
+			var paramenter = {};
+			for(var i in paramenters){
+				switch(typeof(paramenters[i])){
 					case 'string':
-						Paramenter[i.toLowerCase()] = Paramenters[i].toString().toLowerCase();
+						paramenter[i.toLowerCase()] = paramenters[i].toString().toLowerCase();
 						break;
 					case 'number':
-						Paramenter[i.toLowerCase()] = Paramenters[i];
+						paramenter[i.toLowerCase()] = paramenters[i];
 						break;
 				}
 			}		
 					
-			if(ebx.multitabs){
-				tabsid= 'tabs_'+ebx.RndNum(20);//支持tabs多开
+			if(ebx.multiTabs){
+				tabsId= 'tabs_'+ebx.rndNum(20);//支持tabs多开
 			}else{
-				tabsid= 'tabs_' + Paramenters.menuid;
+				tabsId= 'tabs_' + paramenters.menuid;
 			}
 
-			if($('#'+tabsid).length > 0){
-				ebx.center.tabs('select', $('#'+tabsid).panel('options').index);
+			if($('#'+tabsId).length > 0){
+				ebx.center.tabs('select', $('#'+tabsId).panel('options').index);
 			}else{
 				ebx.center.tabs('add',{
-					id:tabsid,
-					title:Paramenters.text,
+					id:tabsId,
+					title:paramenters.text,
 					href:href,
-					paramenters:Paramenter,
-					iconCls:Paramenters.iconCls,
+					paramenters:paramenter,
+					iconCls:paramenters.iconCls,
 					selected: true,
 					closable:true
 				});
 				
-				$('#'+tabsid).css({padding:0});
+				$('#'+tabsId).css({padding:0});
 			}
-			for(var i in ebx.usedmenu){
-			    if(ebx.usedmenu[i].menuid == Paramenter.menuid){
-			        ebx.usedmenu.splice(i, 1)
+			for(var i in ebx.usedMenu){
+			    if(ebx.usedMenu[i].menuid == paramenter.menuid){
+			        ebx.usedMenu.splice(i, 1)
 			    }
 			}
-			Paramenter.iconCls = 'icon-usedmenufile';
-	        ebx.usedmenu.unshift(Paramenter)
-	        if(ebx.usedmenu.length >= ebx.validInt(ebx.usedmenusize)){
+			paramenter.iconCls = 'icon-usedMenufile';
+	        ebx.usedMenu.unshift(paramenter)
+	        if(ebx.usedMenu.length >= ebx.validInt(ebx.usedMenusize)){
 	            var t = [];
-	            for(var i in ebx.usedmenu){
-	                if(ebx.validInt(i) < ebx.validInt(ebx.usedmenusize)){
-	                    t.push(ebx.usedmenu[i])
+	            for(var i in ebx.usedMenu){
+	                if(ebx.validInt(i) < ebx.validInt(ebx.usedMenusize)){
+	                    t.push(ebx.usedMenu[i])
 	                }
 	            }
-	            ebx.usedmenu = t;
+	            ebx.usedMenu = t;
 	        }
-	        ebx.storage.set('usedmenu', ebx.usedmenu);
+	        ebx.storage.set('usedMenu', ebx.usedMenu);
 		    
             var usedtree = ebx.bodylayout.layout('panel', 'west').find('.tabs-container').tabs('getTab', 0).find('.tree'),
                 usedchildren = usedtree.tree('find', 0);
@@ -1096,16 +1096,16 @@ var ebx = {
                     usedtree.tree('remove', usedchildrenChildren[i].target);
                 }
                 
-                for(var i in ebx.usedmenu){
+                for(var i in ebx.usedMenu){
                     usedtree.tree('append', {
                         parent: usedchildren.target,
-                        data: [ebx.usedmenu[i]]
+                        data: [ebx.usedMenu[i]]
                     });
                 }
             }
 		}
 	},
-	getbiribbonobj: function(biribbon, name, type){//获取biribbon指定对象，参数：biribbon：biribbon对象，name：name属性或按钮字符，type：空间类型 2018-7-17 zz
+	getBiribbonObj: function(biribbon, name, type){//获取biribbon指定对象，参数：biribbon：biribbon对象，name：name属性或按钮字符，type：空间类型 2018-7-17 zz
 		switch(type){
 			case 'textbox':
 				var o = biribbon.find('.textbox-f');
@@ -1178,7 +1178,7 @@ var ebx = {
 				break;
 		}
 	},
-	sumfooter:function(footer, target){//datagrid表尾统计函数，参数：footer：显示式样表尾样式，1为显示表尾，0为不显示，target：datagrid对象
+	sumFooter:function(footer, target){//datagrid表尾统计函数，参数：footer：显示式样表尾样式，1为显示表尾，0为不显示，target：datagrid对象
 	    if(!target.datagrid('options').footresize){//存在bug：只能调整一次，之后如果数据发生变化，会恢复侧滚动条
 		    setTimeout(function(){
 	            var h = target.datagrid('getPanel').find('.datagrid-btable-bottom').find('div').height() - 28,

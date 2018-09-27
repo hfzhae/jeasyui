@@ -1,13 +1,13 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-	var sql = 'select id,title,memo from NPPrivileges where isdeleted=0',
+	var sql = 'select id,title,memo from NPPrivileges where isDeleted=0',
 		rs = ebx.dbx.open(sql, 1, 1);
 	
 	if(rs.eof){
-		ebx.stdout = {total:0, rows:[]};
+		ebx.stdOut = {total:0, rows:[]};
 		return;
 	}
-	ebx.stdout = rs;
+	ebx.stdOut = rs;
 })();
 %>

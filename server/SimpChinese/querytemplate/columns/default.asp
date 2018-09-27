@@ -1,14 +1,14 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-	if(!ebx.stdin['id']){ 
-		ebx.stdout = {total:0, rows:[]};
+	if(!ebx.stdIn['id']){ 
+		ebx.stdOut = {total:0, rows:[]};
 		return;
 	}
-	var id = ebx.validInt(ebx.stdin['id']);
+	var id = ebx.validInt(ebx.stdIn['id']);
 	
 	if(id == 0){ 
-		ebx.stdout = {total:0, rows:[]};
+		ebx.stdOut = {total:0, rows:[]};
 		return;
 	}
 	
@@ -16,10 +16,10 @@
 		rs = ebx.dbx.open(sql, 1, 1);
 	
 	if(rs.eof){
-		ebx.stdout = {total:0, rows:[]};
+		ebx.stdOut = {total:0, rows:[]};
 		return;
 	}
 	
-	ebx.stdout = ebx.convertBinToRs(rs('Columns').value);
+	ebx.stdOut = ebx.convertBinToRs(rs('Columns').value);
 })();
 %>

@@ -5,7 +5,7 @@
 				var target = this,
 					editstatus = $(target).tabs('getTab', index).panel('options').editstatus;
 				if(editstatus){
-					ebx.EditStatusMessager(editstatus,title,function(){
+					ebx.editStatusMessager(editstatus,title,function(){
 						var opts = $(target).tabs('options');
 						var bc = opts.onBeforeClose;
 						opts.onBeforeClose = function(){};  // allowed to close now

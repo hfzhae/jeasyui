@@ -16,6 +16,6 @@
 		}
 	}
 	
-	ebx.stdout = rs;
+	ebx.stdOut = rs;
 })();
 %>

@@ -1,11 +1,11 @@
 <!-- #include file="../Common.asp" -->
 <%
 (function(){
-	var id = ebx.validInt(ebx.stdin["id"]),
-		sql = "select a.int1,a.int2,a.billmemo,a.isdeleted,a.auditid,a.updatedate,a.createdate,u.title as owner,c.title as custom,a.Organization,a.billdate,s.title as stockname,a.stock, o.title as operatorname,a.operator,i.title as InvoiceTypename,a.InvoiceType,a.InvoiceNum,a.InvoiceMemo,v.title as VIPCustomname,a.VIPCustomID,a.UUID,r.title as Currencyname,a.Currency,a.Relation,sm.title as CheckTypename,a.CheckType from " + TableName + " a,biuser u,bicustom c,bistock s,biuser o,biInvoiceType i, biVIPCustom v,biCurrency r,biSettlement sm where a.CheckType=sm.id and r.id=a.Currency and a.VIPCustomID=v.id and a.InvoiceType=i.id and a.Operator=o.id and a.Stock=s.id and a.Organization=c.id and a.owner=u.id and a.id=" + id,
+	var id = ebx.validInt(ebx.stdIn["id"]),
+		sql = "select a.int1,a.int2,a.billmemo,a.isDeleted,a.auditid,a.updatedate,a.createdate,u.title as owner,c.title as custom,a.Organization,a.billdate,s.title as stockname,a.stock, o.title as operatorname,a.operator,i.title as InvoiceTypename,a.InvoiceType,a.InvoiceNum,a.InvoiceMemo,v.title as VIPCustomname,a.VIPCustomID,a.UUID,r.title as Currencyname,a.Currency,a.Relation,sm.title as CheckTypename,a.CheckType from " + TableName + " a,biuser u,bicustom c,bistock s,biuser o,biInvoiceType i, biVIPCustom v,biCurrency r,biSettlement sm where a.CheckType=sm.id and r.id=a.Currency and a.VIPCustomID=v.id and a.InvoiceType=i.id and a.Operator=o.id and a.Stock=s.id and a.Organization=c.id and a.owner=u.id and a.id=" + id,
 		rs,
 		data = [],
-		isdeleted = 0,
+		isDeleted = 0,
 		auditid = 0,
 		updatedate = new Date(), 
 		createdate = new Date(), 
@@ -37,7 +37,7 @@
 	if(id > 0){
 		rs = ebx.dbx.open(sql, 1, 1)
 		if(!rs.eof){
-			isdeleted = rs("isdeleted").value;
+			isDeleted = rs("isDeleted").value;
 			auditid = rs("auditid").value;
 			updatedate = rs("updatedate").value;
 			billdate = rs("billdate").value;
@@ -68,7 +68,7 @@
 	}
 	data = {total:28,rows:[
 		{name:"单据号",value:id,group:"系统生成",func:"",rowstyle:"color:#999;",field:""},
-		{name:"删除",value:isdeleted,group:"系统生成",render:"boolRender",rowstyle:"color:#999;",fieldstyle:"color:#f00;"},
+		{name:"删除",value:isDeleted,group:"系统生成",render:"boolRender",rowstyle:"color:#999;",fieldstyle:"color:#f00;"},
 		{name:"审核",value:auditid,group:"系统生成",render:"boolRender",rowstyle:"color:#999;",fieldstyle:"color:#009;"},
 		{name:"创建时间",value:new Date(createdate).Format("yyyy-MM-dd hh:mm:ss"),group:"系统生成",rowstyle:"color:#999;"},
 		{name:"更新时间",value:new Date(updatedate).Format("yyyy-MM-dd hh:mm:ss"),group:"系统生成",rowstyle:"color:#999;"},
@@ -203,6 +203,6 @@
 		{name:"备注",value:billmemo,group:"其他",editor:"text",field:"billmemo"},
 
 	]};
-	ebx.stdout = data;
+	ebx.stdOut = data;
 })();
 %>
